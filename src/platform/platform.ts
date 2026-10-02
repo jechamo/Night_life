@@ -1,0 +1,34 @@
+import type { BiometricsService } from './biometrics/biometrics'
+import type { CameraService } from './camera/camera'
+import type { DeepLinksService } from './deep-links/deep-links'
+import type { DeviceIdService } from './device-id/device-id'
+import type { FileDownloadService } from './file-download/file-download'
+import type { GeolocationService } from './geolocation/geolocation'
+import type { HapticsService } from './haptics/haptics'
+import type { InAppBrowserService } from './in-app-browser/in-app-browser'
+import type { NotificationsService } from './notifications/notifications'
+import type { PreferencesService } from './preferences/preferences'
+import type { SecureStorageService } from './secure-storage/secure-storage'
+import type { ShareService } from './share/share'
+import type { PlatformRuntime } from './types'
+
+/**
+ * Every device capability the app uses (PRD 3.3 point 1). Features receive this
+ * object through `usePlatform()` and never touch browser/device APIs directly.
+ * Payments are a strategy selected per flags (see payments/select-payment-provider).
+ */
+export interface Platform {
+  runtime: PlatformRuntime
+  geolocation: GeolocationService
+  camera: CameraService
+  haptics: HapticsService
+  secureStorage: SecureStorageService
+  preferences: PreferencesService
+  share: ShareService
+  deviceId: DeviceIdService
+  biometrics: BiometricsService
+  notifications: NotificationsService
+  deepLinks: DeepLinksService
+  browser: InAppBrowserService
+  files: FileDownloadService
+}

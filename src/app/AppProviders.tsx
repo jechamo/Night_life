@@ -1,0 +1,36 @@
+import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
+import type { ReactNode } from 'react'
+import { PlatformProvider, type Platform } from '@/platform'
+import { MotionPreferencesProvider } from '@/shared/motion/MotionPreferencesProvider'
+import { ServicesProvider } from '@/shared/services/ServicesProvider'
+import type { AppServices } from '@/shared/services/services'
+import { ThemeProvider } from '@/shared/theme/ThemeProvider'
+import type { InitialSettings } from './bootstrap'
+
+export function AppProviders({
+  platform,
+  services,
+  queryClient,
+  settings,
+  children,
+}: {
+  platform: Platform
+  services: AppServices
+  queryClient: QueryClient
+  settings: InitialSettings
+  children: ReactNode
+}) {
+  return (
+    <PlatformProvider platform={platform}>
+      <ServicesProvider services={services}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider initialThemeId={settings.themeId}>
+            <MotionPreferencesProvider initialReduceMotion={settings.reduceMotion}>
+              {children}
+            </MotionPreferencesProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </ServicesProvider>
+    </PlatformProvider>
+  )
+}

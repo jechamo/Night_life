@@ -1,0 +1,225 @@
+@import 'tailwindcss';
+@import './fonts.css';
+@import './themes.generated.css';
+
+/*
+ * Design tokens (PRD 8.2): Tailwind utilities read the CSS variables generated
+ * from src/shared/theme/themes.ts, so switching `data-theme` re-skins everything.
+ */
+@theme inline {
+  --color-background: var(--nl-background);
+  --color-surface: var(--nl-surface);
+  --color-surface-raised: var(--nl-surface-raised);
+  --color-glass: var(--nl-glass);
+  --color-glass-border: var(--nl-glass-border);
+  --color-foreground: var(--nl-foreground);
+  --color-muted-foreground: var(--nl-muted-foreground);
+  --color-primary: var(--nl-primary);
+  --color-primary-foreground: var(--nl-primary-foreground);
+  --color-secondary: var(--nl-secondary);
+  --color-secondary-foreground: var(--nl-secondary-foreground);
+  --color-border: var(--nl-border);
+  --color-ring: var(--nl-ring);
+  --color-live: var(--nl-live);
+  --color-success: var(--nl-success);
+  --color-warning: var(--nl-warning);
+  --color-danger: var(--nl-danger);
+  --color-danger-foreground: var(--nl-danger-foreground);
+  --color-glow: var(--nl-glow);
+
+  --color-accent-nightclub: var(--nl-accent-nightclub);
+  --color-accent-club: var(--nl-accent-club);
+  --color-accent-pub: var(--nl-accent-pub);
+  --color-accent-bar: var(--nl-accent-bar);
+  --color-accent-dive-bar: var(--nl-accent-dive-bar);
+  --color-accent-lounge: var(--nl-accent-lounge);
+  --color-accent-terrace: var(--nl-accent-terrace);
+  --color-accent-beach-club: var(--nl-accent-beach-club);
+  --color-accent-event: var(--nl-accent-event);
+
+  --font-sans: var(--nl-font-body);
+  --font-display: var(--nl-font-display);
+  --font-mono: var(--nl-font-mono);
+  --font-label: var(--nl-font-label);
+
+  --radius-theme: var(--nl-radius);
+}
+
+/* Floating glass layer (PRD 8.1): the UI floats over the night map. */
+@utility glass {
+  background-color: var(--nl-glass);
+  border: 1px solid var(--nl-glass-border);
+  -webkit-backdrop-filter: blur(var(--nl-glass-blur)) saturate(140%);
+  backdrop-filter: blur(var(--nl-glass-blur)) saturate(140%);
+}
+
+/*
+ * Opaque-enough glass for persistent chrome (tab bar, sheets): content scrolling
+ * underneath must never lower the contrast of their labels (WCAG AA).
+ */
+@utility glass-strong {
+  background-color: color-mix(in srgb, var(--nl-surface) 94%, transparent);
+  border: 1px solid var(--nl-glass-border);
+  -webkit-backdrop-filter: blur(var(--nl-glass-blur)) saturate(140%);
+  backdrop-filter: blur(var(--nl-glass-blur)) saturate(140%);
+}
+
+/* Mono is about high contrast: no decorative glows behind the content. */
+:root[data-theme='mono'] .nl-ambience {
+  display: none;
+}
+
+/* Safe areas for notches and home indicators (PRD 3.3, Capacitor-ready). */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility px-safe {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+/* 44px minimum touch targets (PRD 3.3). */
+@utility touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--nl-background);
+    color: var(--nl-foreground);
+    font-family: var(--nl-font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--nl-font-display);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--nl-ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--nl-primary);
+    color: var(--nl-primary-foreground);
+  }
+}
+
+/*
+ * Signature "live" motion (PRD 8.4). Only transform and opacity are animated
+ * (PRD 3.2). When motion is reduced (OS, app setting or Mono theme) the
+ * provider sets data-motion="reduced" and everything degrades to fades.
+ */
+@keyframes nl-live-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes nl-fade-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes nl-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes nl-glitch {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-2px, 1px);
+  }
+  40% {
+    transform: translate(2px, -1px);
+  }
+  60% {
+    transform: translate(-1px, -1px);
+  }
+  80% {
+    transform: translate(1px, 1px);
+  }
+}
+
+.nl-live-ring {
+  animation: nl-live-ring 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+.nl-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--nl-glass-border), transparent);
+  animation: nl-shimmer 1.4s ease-in-out infinite;
+}
+
+.nl-glitch {
+  animation: nl-glitch 0.28s steps(2, end) 1;
+}
+
+:root[data-motion='reduced'] .nl-live-ring {
+  animation: nl-fade-pulse 2s ease-in-out infinite;
+  transform: none;
+}
+
+:root[data-motion='reduced'] .nl-shimmer::after {
+  animation: nl-fade-pulse 1.6s ease-in-out infinite;
+  transform: none;
+}
+
+:root[data-motion='reduced'] .nl-glitch {
+  animation: none;
+}
+
+/* Theme switch crossfade (View Transitions API, PRD 3.1). Opacity only. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:root[data-motion='reduced']::view-transition-old(root),
+:root[data-motion='reduced']::view-transition-new(root) {
+  animation-duration: 150ms;
+}

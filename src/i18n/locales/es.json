@@ -1,0 +1,167 @@
+{
+  "app": {
+    "name": "Nightlife Connect",
+    "slogan": "Tu noche, segura y conectada."
+  },
+  "tabs": {
+    "label": "Navegación principal",
+    "discover": "Descubre",
+    "tonight": "Esta Noche",
+    "chats": "Chats",
+    "profile": "Perfil"
+  },
+  "common": {
+    "back": "Volver",
+    "close": "Cerrar",
+    "comingSoon": "Próximamente",
+    "retry": "Reintentar",
+    "on": "Activado",
+    "off": "Desactivado",
+    "skipToContent": "Saltar al contenido"
+  },
+  "errors": {
+    "generic": {
+      "title": "Algo no ha ido bien",
+      "description": "Inténtalo de nuevo en unos segundos."
+    },
+    "notFound": {
+      "title": "Aquí no hay fiesta",
+      "description": "La página que buscas no existe.",
+      "action": "Ir a Descubre"
+    }
+  },
+  "placeholders": {
+    "upcomingBlock": "Llega en el Bloque {{block}}",
+    "discover": {
+      "title": "El mapa de la noche",
+      "description": "Mapa 3D nocturno con locales, eventos y quién hay en directo."
+    },
+    "tonight": {
+      "title": "Esta Noche",
+      "description": "Aquí Ahora y Esta Noche Voy, con la pila de swipe y los matches en tiempo real."
+    },
+    "chats": {
+      "title": "Tus chats",
+      "description": "Tus matches y conversaciones en tiempo real."
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "appearance": "Apariencia",
+    "testing": "Pruebas",
+    "themes": "Temas",
+    "themesHint": "5 estilos, todos gratis",
+    "settings": "Ajustes",
+    "settingsHint": "Movimiento e idioma",
+    "designKit": "Kit de componentes",
+    "designKitHint": "Herramienta de pruebas"
+  },
+  "themes": {
+    "title": "Temas",
+    "description": "Cambia el aspecto de toda la app al instante. Todos cumplen el contraste AA.",
+    "active": "Tema activo",
+    "free": "Gratis",
+    "neon-noir": {
+      "name": "Neon Noir",
+      "description": "Negro profundo, violeta y cian con brillo suave."
+    },
+    "cyberpunk": {
+      "name": "Cyberpunk",
+      "description": "Magenta, amarillo ácido y cian. Para el techno."
+    },
+    "velvet": {
+      "name": "Velvet",
+      "description": "Burdeos, negro cálido y dorado. Elegante y pausado."
+    },
+    "sunset": {
+      "name": "Sunset",
+      "description": "Naranjas y rosas sobre azul noche. Terrazas y verano."
+    },
+    "mono": {
+      "name": "Mono",
+      "description": "Alto contraste y movimiento mínimo."
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "reduceMotion": {
+      "label": "Reducir movimiento",
+      "description": "Sustituye las animaciones por fundidos suaves.",
+      "systemActive": "Tu sistema ya pide reducir el movimiento: se respeta siempre.",
+      "themeActive": "El tema Mono usa siempre movimiento mínimo."
+    },
+    "language": {
+      "label": "Idioma",
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "venueTypes": {
+    "nightclub": "Discoteca",
+    "club": "Club",
+    "pub": "Pub",
+    "bar": "Bar",
+    "dive_bar": "Garito",
+    "lounge": "Lounge",
+    "terrace": "Terraza",
+    "beach_club": "Beach club",
+    "event": "Evento"
+  },
+  "badges": {
+    "verified": "Foto verificada",
+    "live": "En directo",
+    "sponsored": "Patrocinado",
+    "unconfirmed": "No confirmado",
+    "hereNow": "Aquí Ahora"
+  },
+  "designKit": {
+    "title": "Kit de componentes",
+    "description": "Componentes base pintados con el tema activo. Solo visible con las herramientas de prueba activadas.",
+    "sections": {
+      "buttons": "Botones",
+      "chips": "Chips por tipo de lugar",
+      "badges": "Badges",
+      "live": "Estadísticas en directo",
+      "segmented": "Selector",
+      "skeletons": "Carga",
+      "sheet": "Bottom sheet",
+      "services": "Flags y entitlements (simulados)"
+    },
+    "buttons": {
+      "primary": "Esta Noche Voy",
+      "secondary": "Estoy Aquí",
+      "glass": "Ver perfiles",
+      "ghost": "Votar",
+      "danger": "Reportar"
+    },
+    "segmented": {
+      "label": "Mostrar",
+      "all": "Todo",
+      "venues": "Locales",
+      "events": "Eventos"
+    },
+    "stats": {
+      "people": "personas",
+      "averageAge": "edad media",
+      "green": "en verde",
+      "simulate": "Simular llegada"
+    },
+    "sheet": {
+      "open": "Abrir ficha de ejemplo",
+      "title": "{{name}}",
+      "body": "Ficha con física de muelle. Arrastra hacia abajo o usa el botón para cerrarla.",
+      "dragHint": "Arrastra para cerrar"
+    },
+    "services": {
+      "paywall": "Estado del paywall",
+      "paywallStates": {
+        "hidden": "Oculto",
+        "coming_soon": "Próximamente",
+        "checkout": "Checkout (modo test)"
+      },
+      "entitlement": "Ventaja «{{key}}»",
+      "granted": "Concedida",
+      "denied": "Denegada"
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "app": {
+    "name": "Nightlife Connect",
+    "slogan": "Your night, safe and connected."
+  },
+  "tabs": {
+    "label": "Main navigation",
+    "discover": "Discover",
+    "tonight": "Tonight",
+    "chats": "Chats",
+    "profile": "Profile"
+  },
+  "common": {
+    "back": "Back",
+    "close": "Close",
+    "comingSoon": "Coming soon",
+    "retry": "Try again",
+    "on": "On",
+    "off": "Off",
+    "skipToContent": "Skip to content"
+  },
+  "errors": {
+    "generic": {
+      "title": "Something went wrong",
+      "description": "Please try again in a few seconds."
+    },
+    "notFound": {
+      "title": "No party here",
+      "description": "The page you are looking for does not exist.",
+      "action": "Go to Discover"
+    }
+  },
+  "placeholders": {
+    "upcomingBlock": "Arrives in Block {{block}}",
+    "discover": {
+      "title": "The night map",
+      "description": "3D night map with venues, events and who is there, live."
+    },
+    "tonight": {
+      "title": "Tonight",
+      "description": "Here Now and Going Tonight, with the swipe stack and real-time matches."
+    },
+    "chats": {
+      "title": "Your chats",
+      "description": "Your matches and real-time conversations."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "appearance": "Appearance",
+    "testing": "Testing",
+    "themes": "Themes",
+    "themesHint": "5 styles, all free",
+    "settings": "Settings",
+    "settingsHint": "Motion and language",
+    "designKit": "Component kit",
+    "designKitHint": "Testing tool"
+  },
+  "themes": {
+    "title": "Themes",
+    "description": "Change the look of the whole app instantly. All of them meet AA contrast.",
+    "active": "Active theme",
+    "free": "Free",
+    "neon-noir": {
+      "name": "Neon Noir",
+      "description": "Deep black, violet and cyan with a soft glow."
+    },
+    "cyberpunk": {
+      "name": "Cyberpunk",
+      "description": "Magenta, acid yellow and cyan. Made for techno."
+    },
+    "velvet": {
+      "name": "Velvet",
+      "description": "Burgundy, warm black and gold. Elegant and unhurried."
+    },
+    "sunset": {
+      "name": "Sunset",
+      "description": "Oranges and pinks over night blue. Terraces and summer."
+    },
+    "mono": {
+      "name": "Mono",
+      "description": "High contrast and minimal motion."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "reduceMotion": {
+      "label": "Reduce motion",
+      "description": "Replaces animations with gentle fades.",
+      "systemActive": "Your system already asks for reduced motion: it is always respected.",
+      "themeActive": "The Mono theme always uses minimal motion."
+    },
+    "language": {
+      "label": "Language",
+      "es": "Español",
+      "en": "English"
+    }
+  },
+  "venueTypes": {
+    "nightclub": "Nightclub",
+    "club": "Club",
+    "pub": "Pub",
+    "bar": "Bar",
+    "dive_bar": "Dive bar",
+    "lounge": "Lounge",
+    "terrace": "Terrace",
+    "beach_club": "Beach club",
+    "event": "Event"
+  },
+  "badges": {
+    "verified": "Verified photo",
+    "live": "Live",
+    "sponsored": "Sponsored",
+    "unconfirmed": "Unconfirmed",
+    "hereNow": "Here Now"
+  },
+  "designKit": {
+    "title": "Component kit",
+    "description": "Base components painted with the active theme. Only visible while test tools are enabled.",
+    "sections": {
+      "buttons": "Buttons",
+      "chips": "Venue type chips",
+      "badges": "Badges",
+      "live": "Live stats",
+      "segmented": "Segmented control",
+      "skeletons": "Loading",
+      "sheet": "Bottom sheet",
+      "services": "Flags and entitlements (mocked)"
+    },
+    "buttons": {
+      "primary": "Going tonight",
+      "secondary": "I'm here",
+      "glass": "See profiles",
+      "ghost": "Vote",
+      "danger": "Report"
+    },
+    "segmented": {
+      "label": "Show",
+      "all": "All",
+      "venues": "Venues",
+      "events": "Events"
+    },
+    "stats": {
+      "people": "people",
+      "averageAge": "average age",
+      "green": "open to flirt",
+      "simulate": "Simulate arrival"
+    },
+    "sheet": {
+      "open": "Open sample venue",
+      "title": "{{name}}",
+      "body": "Spring-physics sheet. Drag it down or use the button to close it.",
+      "dragHint": "Drag to close"
+    },
+    "services": {
+      "paywall": "Paywall state",
+      "paywallStates": {
+        "hidden": "Hidden",
+        "coming_soon": "Coming soon",
+        "checkout": "Checkout (test mode)"
+      },
+      "entitlement": "Advantage “{{key}}”",
+      "granted": "Granted",
+      "denied": "Denied"
+    }
+  }
+}
