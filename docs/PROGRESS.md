@@ -3,18 +3,18 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                              | Estado                        |
-| --------------------------------------------------- | ----------------------------- |
-| 1 – Cimientos, diseño y arquitectura                | ✅ Terminado, pendiente de OK |
-| 2 – Onboarding, legal y verificación (mock)         | ⏳                            |
-| 3 – App principal y experiencia de match (mock)     | ⏳                            |
-| 4 – Paneles, web pública y pantallas de pago (mock) | ⏳                            |
-| 5 – Backend base, legal y modo pruebas              | ⏳                            |
-| 6 – Verificaciones reales                           | ⏳                            |
-| 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                            |
-| 8 – Ligar, match en tiempo real y chat              | ⏳                            |
-| 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                            |
-| 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                            |
+| Bloque                                              | Estado                                       |
+| --------------------------------------------------- | -------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02) |
+| 2 – Onboarding, legal y verificación (mock)         | ⏳                                           |
+| 3 – App principal y experiencia de match (mock)     | ⏳                                           |
+| 4 – Paneles, web pública y pantallas de pago (mock) | ⏳                                           |
+| 5 – Backend base, legal y modo pruebas              | ⏳                                           |
+| 6 – Verificaciones reales                           | ⏳                                           |
+| 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                           |
+| 8 – Ligar, match en tiempo real y chat              | ⏳                                           |
+| 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                           |
+| 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                           |
 
 ---
 
