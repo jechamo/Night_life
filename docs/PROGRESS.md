@@ -79,6 +79,14 @@ Ver ADR 0001-0005. Las más relevantes:
    selector, ficha con muelle (arrástrala hacia abajo) y estado de flags/entitlements.
 5. `npm run check` (tipos, lint, formato y 136 tests) y `npm run build` (sin advertencias).
 
+### Despliegue
+
+- Vercel, proyecto `nightlife-connect` (equipo chaplications-projects): https://nightlife-connect-beige.vercel.app
+- Protegido con Vercel Authentication (requiere sesión de Vercel) hasta el lanzamiento.
+- Toolbar/feedback de Vercel desactivados (scripts de terceros, ADR 0002).
+- Pendiente (propietario): conectar el repo en Vercel → Settings → Git para desplegar en cada push
+  (el conector de Vercel usado no tiene permiso para enlazar GitHub).
+
 ### Puerta de seguridad
 
 Ver `docs/SECURITY.md` → Bloque 1: sin hallazgos críticos ni altos.
