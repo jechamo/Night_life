@@ -45,6 +45,11 @@ export function createFakePlatform(overrides: Partial<Platform> = {}): Platform 
       downloadJson: () => Promise.resolve(ok(undefined)),
       downloadBlob: () => Promise.resolve(ok(undefined)),
     },
+    images: {
+      sanitize: (file) => Promise.resolve(ok(file)),
+      createPreviewUrl: () => 'blob:test-preview',
+      revokePreviewUrl: () => undefined,
+    },
     ...overrides,
   }
 }

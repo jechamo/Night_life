@@ -6,7 +6,7 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | Bloque                                              | Estado                                       |
 | --------------------------------------------------- | -------------------------------------------- |
 | 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02) |
-| 2 – Onboarding, legal y verificación (mock)         | ⏳                                           |
+| 2 – Onboarding, legal y verificación (mock)         | ✅ Terminado, pendiente de OK                |
 | 3 – App principal y experiencia de match (mock)     | ⏳                                           |
 | 4 – Paneles, web pública y pantallas de pago (mock) | ⏳                                           |
 | 5 – Backend base, legal y modo pruebas              | ⏳                                           |
@@ -98,3 +98,72 @@ Ver `docs/SECURITY.md` → Bloque 1: sin hallazgos críticos ni altos.
 - Bloque 2: onboarding completo, firma legal, consentimientos y Centro de verificación (mock).
 - Dudas abiertas para el propietario (ver respuesta del Bloque 1): proveedor SMS, contrato de Yoti,
   textos legales (abogado), dominio definitivo, datos de empresa.
+
+---
+
+## Bloque 2 — Onboarding, legal y verificación (mock) (2026-10-02)
+
+### Qué se hizo
+
+- **Bienvenida animada** (3 pantallas con gesto o botones): firma del tema activo (con _fallback_
+  "ciudad en directo" mientras no haya imagen) y escenas neutras tintadas con el tema.
+- **Onboarding completo** con máquina de estados pura y probada (PRD 5.2):
+  1. Fecha de nacimiento en pantalla neutra (no muestra el límite de edad). Menor ⇒ no se crea
+     cuenta ni se guarda nada.
+  2. Documentos legales (Términos, Normas, Privacidad, versionados y legibles en ficha) con
+     3 casillas **no premarcadas**, "Firmo y acepto" y "No acepto" igual de visible.
+  3. Teléfono + OTP (prefijo, E.164, reenvío con cuenta atrás, errores tipados genéricos:
+     número baneado, límite de SMS, código erróneo, demasiados intentos) y email opcional.
+  4. Consentimientos (orientación con **firma** explícita art. 9, ubicación precisa con permiso
+     del navegador, promociones LSSI, analítica), todos desactivados por defecto, con base legal
+     y consecuencia; sin ubicación se elige ciudad.
+  5. Perfil: 2-5 fotos **recodificadas en el dispositivo sin EXIF**, nombre, género, bio y
+     Anthem (próximamente).
+  6. Preferencias (solo con consentimiento de orientación): a quién y rango de edad 18-60+.
+  7. Elegir tema → entrada en la app.
+- **Información por capas** en cada formulario con enlace a la Política de Privacidad.
+- **Centro de verificación** (teléfono, edad, foto, identidad) con estados simulados, revisión
+  humana, aviso de IA y "nunca guardamos…".
+- **Verificación de edad** (pantalla informativa + otro método), **foto** e **identidad** con
+  consentimiento explícito, y **simulador del proveedor** (sandbox, solo testers).
+- **Bloqueo "Verifica tu edad"** para ver perfiles, likes, chat, "Voy", check-in visible, crear
+  eventos y promos de alcohol (probado desde Esta Noche).
+- **Perfil → Consentimientos** para retirar o dar consentimientos igual de fácil.
+- Herramienta de pruebas "Reiniciar onboarding".
+- Imágenes de la sección 1 de `docs/design/IMAGE_PROMPTS.md` integradas (WebP, sin EXIF).
+
+### Decisiones
+
+Ver ADR 0006. Bio limitada a 300 caracteres (el PRD no fija límite). Prefijos de teléfono de
+España y países vecinos de la UE.
+
+### Desviaciones
+
+- Las firmas de tema (5 imágenes) aún no existen: se usa un _fallback_ CSS animado.
+- "Ya tengo cuenta" se añade con Supabase Auth en el Bloque 5.
+- PDF firmado y email: Bloque 5 (PRD 11.2).
+
+### Hecho cuando
+
+- ✅ El flujo se puede recorrer completo (test de integración + recorrido con Playwright).
+- ✅ No hay casillas premarcadas (comprobado en tests: firma legal, consentimientos y firma de
+  orientación empiezan desmarcados).
+
+### Cómo probarlo
+
+1. Abre la app: si no has hecho el onboarding verás la bienvenida.
+2. Fecha adulta → firma → teléfono cualquiera (+34 6xx xxx xxx) → código **123456** (se muestra
+   en modo pruebas). El número +34 600 000 000 simula un teléfono baneado.
+3. Consentimientos → perfil (2 fotos) → preferencias → tema.
+4. Esta Noche → "Ver perfiles" ⇒ "Verifica tu edad" → Continuar con Yoti → simulador → Aprobado.
+5. Perfil → Reiniciar onboarding para repetirlo. Prueba también una fecha de menor y "No acepto".
+
+### Puerta de seguridad
+
+Ver `docs/SECURITY.md` → Bloque 2: sin hallazgos críticos ni altos.
+
+### Pendiente
+
+- Imágenes: firmas de tema (prioridad 1) y las de los bloques 3 y 5.
+- Bloque 3: Descubre (mapa simulado, ficha, "Quién hay"), Esta Noche (swipe y match), Chats,
+  Perfil y Crear evento.

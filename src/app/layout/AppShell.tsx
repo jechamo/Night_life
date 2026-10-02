@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
+import { AgeGateProvider } from '@/features/verification/hooks/use-age-gate'
 import { TabBar } from './TabBar'
 
 /**
@@ -23,7 +24,9 @@ export function AppShell() {
         className="relative flex-1 overflow-y-auto pb-[calc(7rem+env(safe-area-inset-bottom))]"
       >
         <div className="mx-auto w-full max-w-3xl">
-          <Outlet />
+          <AgeGateProvider>
+            <Outlet />
+          </AgeGateProvider>
         </div>
       </main>
       <TabBar />

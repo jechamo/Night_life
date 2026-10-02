@@ -19,6 +19,15 @@ if (isDom && !window.matchMedia) {
   })
 }
 
+// jsdom lacks ResizeObserver; Radix Slider measures its thumbs with it.
+if (isDom && typeof globalThis.ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+}
+
 beforeAll(async () => {
   if (isDom) await initI18n('es')
 })

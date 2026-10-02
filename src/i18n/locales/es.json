@@ -17,7 +17,17 @@
     "retry": "Reintentar",
     "on": "Activado",
     "off": "Desactivado",
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "continue": "Continuar",
+    "next": "Siguiente",
+    "skip": "Saltar",
+    "exit": "Salir",
+    "save": "Guardar cambios",
+    "saved": "Guardado",
+    "optional": "Opcional",
+    "required": "Obligatoria",
+    "stepOf": "Paso {{current}} de {{total}}",
+    "read": "Leer"
   },
   "errors": {
     "generic": {
@@ -163,5 +173,318 @@
       "granted": "Concedida",
       "denied": "Denegada"
     }
+  },
+  "onboarding": {
+    "welcome": {
+      "slides": {
+        "live": {
+          "title": "Mira dónde hay ambiente, ahora",
+          "body": "Gente, edad media y ambiente en directo en locales y eventos cerca de ti."
+        },
+        "connect": {
+          "title": "Conoce gente antes y durante la noche",
+          "body": "«Esta Noche Voy» y «Aquí Ahora»: haz match con quien va a estar donde tú."
+        },
+        "safe": {
+          "title": "Tu noche, segura y conectada",
+          "body": "Solo adultos verificados, bloqueo y reportes al instante y herramientas de seguridad."
+        }
+      },
+      "start": "Empezar",
+      "slideLabel": "Pantalla {{current}} de {{total}}",
+      "goToSlide": "Ir a la pantalla {{n}}"
+    },
+    "birthdate": {
+      "title": "¿Cuál es tu fecha de nacimiento?",
+      "body": "La usamos para mostrar tu edad y para las estadísticas. Nadie verá tu fecha exacta.",
+      "label": "Fecha de nacimiento",
+      "errors": {
+        "invalid": "Introduce una fecha válida.",
+        "future": "La fecha no puede ser futura.",
+        "implausible": "Revisa el año que has escrito."
+      }
+    },
+    "notEligible": {
+      "title": "No podemos crear tu cuenta",
+      "body": "Nightlife Connect solo está disponible para personas adultas. No hemos guardado ningún dato."
+    },
+    "legal": {
+      "title": "Antes de empezar",
+      "body": "Lee los documentos y marca cada casilla. Ninguna viene marcada.",
+      "version": "Versión {{version}}",
+      "checks": {
+        "adult": "Confirmo que soy mayor de 18 años.",
+        "terms": "Acepto los Términos y Condiciones y las Normas de la Comunidad.",
+        "privacy": "He leído la Política de Privacidad."
+      },
+      "sign": "Firmo y acepto",
+      "decline": "No acepto",
+      "lawyerNote": "Borrador pendiente de revisión legal."
+    },
+    "legalDeclined": {
+      "title": "Sin aceptar no podemos continuar",
+      "body": "Para usar la app necesitas aceptar los Términos, las Normas y haber leído la Política de Privacidad. No hemos creado ninguna cuenta.",
+      "review": "Revisar los documentos"
+    },
+    "phone": {
+      "title": "Tu teléfono",
+      "body": "Te enviaremos un código por SMS. Solo puede haber una cuenta por teléfono.",
+      "prefix": "Prefijo",
+      "number": "Número de móvil",
+      "send": "Enviar código",
+      "codeTitle": "Introduce el código",
+      "codeSentTo": "Lo hemos enviado al {{phone}}.",
+      "codeLabel": "Código de 6 dígitos",
+      "verify": "Verificar",
+      "resendIn": "Puedes pedir otro en {{seconds}} s",
+      "resend": "Reenviar código",
+      "changeNumber": "Cambiar número",
+      "testHint": "Modo pruebas: el código es {{code}}.",
+      "emailLabel": "Email (opcional)",
+      "emailHint": "Para enviarte tus documentos firmados. Te mandaremos un enlace para verificarlo.",
+      "emailInvalid": "Revisa el email.",
+      "errors": {
+        "invalid_phone": "Revisa el número de teléfono.",
+        "rate_limited": "Has pedido demasiados códigos. Espera unos minutos.",
+        "blocked": "No podemos completar el alta con este número.",
+        "network": "No hay conexión. Inténtalo de nuevo.",
+        "wrong_code": "El código no es correcto.",
+        "expired": "El código ha caducado. Pide otro.",
+        "too_many_attempts": "Demasiados intentos. Pide un código nuevo más tarde."
+      }
+    },
+    "consents": {
+      "title": "Tu privacidad, tus reglas",
+      "body": "Nada viene activado. Decide qué permites; puedes cambiarlo cuando quieras en Perfil → Consentimientos.",
+      "basisLabel": "Base legal",
+      "withoutLabel": "Si no lo activas",
+      "items": {
+        "orientation": {
+          "title": "Orientación y preferencias",
+          "description": "A quién te interesa conocer y en qué rango de edad, para mostrarte personas compatibles.",
+          "basis": "Consentimiento explícito con firma (art. 9.2.a RGPD)",
+          "without": "No verás perfiles compatibles ni tendrás matches."
+        },
+        "precise_location": {
+          "title": "Ubicación precisa",
+          "description": "Para el mapa, lo que hay cerca y el check-in. Nunca mostramos tu ubicación exacta a nadie.",
+          "basis": "Consentimiento",
+          "without": "Exploras eligiendo ciudad y no podrás hacer check-in."
+        },
+        "marketing": {
+          "title": "Promociones y Flash Alerts",
+          "description": "Ofertas de locales y avisos dentro de la app.",
+          "basis": "Consentimiento (LSSI-CE art. 21)",
+          "without": "No recibirás promociones."
+        },
+        "analytics": {
+          "title": "Analítica",
+          "description": "Métricas de uso agregadas para mejorar la app. Sin grabación de sesiones.",
+          "basis": "Consentimiento",
+          "without": "No mediremos cómo usas la app."
+        }
+      },
+      "city": "Ciudad para explorar",
+      "cityPlaceholder": "Elige una ciudad",
+      "cityRequired": "Elige una ciudad o activa la ubicación.",
+      "locationBlocked": "El navegador ha bloqueado la ubicación. Elige una ciudad o actívala en los ajustes del navegador.",
+      "orientationSheet": {
+        "title": "Consentimiento explícito",
+        "body": "Tu orientación y tus preferencias son datos especialmente protegidos. Solo los usamos para emparejarte, nunca para publicidad, y puedes retirar el consentimiento cuando quieras.",
+        "check": "Doy mi consentimiento explícito para que se traten mi orientación y mis preferencias con la finalidad de mostrarme personas compatibles.",
+        "sign": "Firmo y consiento",
+        "cancel": "Ahora no"
+      }
+    },
+    "profile": {
+      "title": "Tu perfil",
+      "body": "Así te verán las personas con la edad verificada.",
+      "name": "Nombre",
+      "nameError": "Escribe un nombre de 2 a 30 caracteres.",
+      "gender": "Género",
+      "genders": {
+        "woman": "Mujer",
+        "man": "Hombre",
+        "non_binary": "No binario",
+        "other": "Otro"
+      },
+      "genderError": "Elige una opción.",
+      "photos": "Fotos",
+      "photosHint": "De 2 a 5. La primera es la principal. Se suben sin datos de ubicación.",
+      "photosError": "Añade al menos 2 fotos.",
+      "addPhoto": "Añadir foto",
+      "removePhoto": "Quitar la foto {{n}}",
+      "mainPhoto": "Principal",
+      "photoErrors": {
+        "unsupported_type": "Usa una foto JPG, PNG, WebP o AVIF.",
+        "too_large": "La foto es demasiado grande (máximo 15 MB).",
+        "decode_failed": "No hemos podido leer esa foto."
+      },
+      "bio": "Sobre ti (opcional)",
+      "anthemTitle": "Tu Anthem",
+      "anthemHint": "Podrás elegir tu canción conectando Spotify desde tu perfil. Próximamente.",
+      "photoAlt": "Foto {{n}}"
+    },
+    "preferences": {
+      "title": "¿A quién quieres conocer?",
+      "body": "Solo se usa para emparejarte. Puedes cambiarlo cuando quieras.",
+      "interestedIn": "Me interesa",
+      "options": {
+        "women": "Mujeres",
+        "men": "Hombres",
+        "non_binary": "Personas no binarias"
+      },
+      "interestedInError": "Elige al menos una opción.",
+      "age": "Edad",
+      "ageMin": "Edad mínima",
+      "ageMax": "Edad máxima"
+    },
+    "theme": {
+      "title": "Elige tu estilo",
+      "body": "Puedes cambiarlo cuando quieras en Perfil → Temas.",
+      "finish": "Entrar en la noche"
+    },
+    "layered": {
+      "title": "Información básica sobre protección de datos",
+      "controller": "Responsable",
+      "controllerValue": "[DATOS EMPRESA]",
+      "purpose": "Finalidad",
+      "basis": "Base legal",
+      "rights": "Derechos",
+      "rightsValue": "Acceso, rectificación, supresión, oposición, limitación y portabilidad.",
+      "more": "Política de Privacidad completa",
+      "forms": {
+        "phone": {
+          "purpose": "Crear y proteger tu cuenta (acceso y antifraude).",
+          "basis": "Contrato e interés legítimo."
+        },
+        "profile": {
+          "purpose": "Mostrar tu perfil a otras personas adultas verificadas.",
+          "basis": "Contrato."
+        },
+        "consents": {
+          "purpose": "Los tratamientos opcionales que elijas abajo.",
+          "basis": "Tu consentimiento, que puedes retirar cuando quieras."
+        }
+      }
+    }
+  },
+  "verification": {
+    "center": {
+      "title": "Centro de verificación",
+      "description": "Comprobamos lo necesario sin conocer tu identidad: solo guardamos sí o no.",
+      "neverStored": "Nunca guardamos DNI, imágenes de documentos, selfies, vídeos ni datos faciales."
+    },
+    "levels": {
+      "phone": {
+        "title": "Teléfono",
+        "description": "Verificado al crear la cuenta."
+      },
+      "age": {
+        "title": "Mayoría de edad",
+        "description": "Obligatoria para ver perfiles, dar likes, chatear, marcar «Voy» y crear eventos."
+      },
+      "photo": {
+        "title": "Foto verificada",
+        "description": "Badge ✓, prioridad en el swipe y aparecer en «Solo verificados»."
+      },
+      "identity": {
+        "title": "Identidad verificada",
+        "description": "Confirma que eres quien dices ser. Nunca mostramos tu nombre real ni tu DNI."
+      }
+    },
+    "states": {
+      "not_started": "Sin verificar",
+      "pending": "En curso",
+      "manual_review": "En revisión humana",
+      "verified": "Verificado",
+      "failed": "No superada",
+      "reverification_required": "Hay que repetirla"
+    },
+    "actions": {
+      "start": "Verificar",
+      "retry": "Repetir",
+      "requestReview": "Pedir revisión humana",
+      "continuePending": "Continuar"
+    },
+    "aiNotice": {
+      "title": "Aviso sobre inteligencia artificial",
+      "body": "Este paso usa un sistema de IA que puede equivocarse. Si no estás de acuerdo con el resultado, una persona lo revisará. Si lo prefieres, usa otro método."
+    },
+    "age": {
+      "title": "Verifica tu mayoría de edad",
+      "body": "Lo hace Yoti, un proveedor especializado. Nosotros solo recibimos si eres mayor de edad o no.",
+      "how1": "Estimación facial con detección de vida: normalmente no hace falta documento.",
+      "how2": "Si no es concluyente, puedes usar tu documento con un selfie o Digital ID en el mismo proceso.",
+      "start": "Continuar con Yoti",
+      "otherMethod": "Prefiero usar mi documento",
+      "unavailable": "La verificación no está disponible ahora mismo. Inténtalo más tarde."
+    },
+    "photo": {
+      "title": "Foto verificada",
+      "body": "Haz un selfie en vivo haciendo un gesto y lo comparamos con tus fotos. Las imágenes se borran al terminar y no guardamos datos faciales.",
+      "consent": "Doy mi consentimiento explícito para comparar un selfie en vivo con mis fotos de perfil (art. 9.2.a RGPD).",
+      "start": "Hacer el selfie"
+    },
+    "identity": {
+      "title": "Identidad verificada",
+      "body": "Documento y selfie mediante Yoti. Solo guardamos que tu identidad está verificada: nunca tu nombre real, tu DNI ni tu fecha de nacimiento.",
+      "consent": "Doy mi consentimiento explícito para verificar mi identidad con Yoti.",
+      "start": "Continuar con Yoti"
+    },
+    "sandbox": {
+      "title": "Simulador del proveedor",
+      "body": "Modo pruebas (verification_mode = sandbox): elige qué devolvería el proveedor. Así se simula su webhook firmado.",
+      "liveMode": "El proveedor real todavía no está conectado (llega en el Bloque 6).",
+      "documentStep": "El proveedor pide ahora documento con selfie.",
+      "outcomes": {
+        "approved": "Aprobado",
+        "inconclusive": "No concluyente",
+        "denied": "Rechazado",
+        "borderline": "Coincidencia dudosa (60-85 %)"
+      }
+    },
+    "result": {
+      "verified": "¡Verificación completada!",
+      "manual_review": "Una persona revisará tu verificación.",
+      "failed": "No hemos podido verificarte. Puedes pedir revisión humana o repetirla.",
+      "pending": "Tu verificación sigue en curso."
+    },
+    "gate": {
+      "title": "Verifica tu edad",
+      "body": "Para {{action}} necesitamos confirmar que eres mayor de edad. Es gratis y solo guardamos sí o no.",
+      "pending": "Tu verificación está en curso. Te avisaremos al terminar.",
+      "review": "Una persona está revisando tu verificación.",
+      "verifyNow": "Verificar ahora",
+      "notNow": "Ahora no",
+      "actions": {
+        "view_profiles": "ver perfiles",
+        "like": "dar like",
+        "chat": "chatear",
+        "going_tonight": "marcar «Esta Noche Voy»",
+        "visible_check_in": "hacer check-in visible",
+        "create_event": "crear eventos",
+        "alcohol_promos": "recibir promociones de alcohol"
+      }
+    }
+  },
+  "consentSettings": {
+    "title": "Consentimientos",
+    "description": "Puedes retirar cualquier consentimiento igual de fácil que lo diste.",
+    "lastChange": "Último cambio: {{date}}"
+  },
+  "profileMenu": {
+    "privacy": "Privacidad y seguridad",
+    "verification": "Centro de verificación",
+    "verificationHint": "Edad, foto e identidad",
+    "consents": "Consentimientos",
+    "consentsHint": "Decide qué permites",
+    "resetOnboarding": "Reiniciar onboarding",
+    "resetOnboardingHint": "Vuelve a la bienvenida (solo pruebas)"
+  },
+  "tonightPreview": {
+    "viewProfiles": "Ver perfiles",
+    "goingTonight": "Esta Noche Voy",
+    "verifiedReady": "Edad verificada: el swipe llega en el Bloque 3."
   }
 }

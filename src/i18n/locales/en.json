@@ -17,7 +17,17 @@
     "retry": "Try again",
     "on": "On",
     "off": "Off",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "continue": "Continue",
+    "next": "Next",
+    "skip": "Skip",
+    "exit": "Exit",
+    "save": "Save changes",
+    "saved": "Saved",
+    "optional": "Optional",
+    "required": "Required",
+    "stepOf": "Step {{current}} of {{total}}",
+    "read": "Read"
   },
   "errors": {
     "generic": {
@@ -163,5 +173,318 @@
       "granted": "Granted",
       "denied": "Denied"
     }
+  },
+  "onboarding": {
+    "welcome": {
+      "slides": {
+        "live": {
+          "title": "See where the vibe is, right now",
+          "body": "People, average age and atmosphere live in venues and events near you."
+        },
+        "connect": {
+          "title": "Meet people before and during the night",
+          "body": "“Going Tonight” and “Here Now”: match with whoever will be where you are."
+        },
+        "safe": {
+          "title": "Your night, safe and connected",
+          "body": "Verified adults only, instant block and report, and safety tools."
+        }
+      },
+      "start": "Get started",
+      "slideLabel": "Screen {{current}} of {{total}}",
+      "goToSlide": "Go to screen {{n}}"
+    },
+    "birthdate": {
+      "title": "What is your date of birth?",
+      "body": "We use it to show your age and for statistics. Nobody will see your exact date.",
+      "label": "Date of birth",
+      "errors": {
+        "invalid": "Enter a valid date.",
+        "future": "The date cannot be in the future.",
+        "implausible": "Check the year you typed."
+      }
+    },
+    "notEligible": {
+      "title": "We can't create your account",
+      "body": "Nightlife Connect is only available to adults. We have not stored any data."
+    },
+    "legal": {
+      "title": "Before you start",
+      "body": "Read the documents and tick each box. None is pre-ticked.",
+      "version": "Version {{version}}",
+      "checks": {
+        "adult": "I confirm I am over 18.",
+        "terms": "I accept the Terms and Conditions and the Community Guidelines.",
+        "privacy": "I have read the Privacy Policy."
+      },
+      "sign": "I sign and accept",
+      "decline": "I don't accept",
+      "lawyerNote": "Draft pending legal review."
+    },
+    "legalDeclined": {
+      "title": "We can't continue without your acceptance",
+      "body": "To use the app you need to accept the Terms and Guidelines and read the Privacy Policy. No account has been created.",
+      "review": "Review the documents"
+    },
+    "phone": {
+      "title": "Your phone",
+      "body": "We'll send you a code by SMS. Only one account per phone number.",
+      "prefix": "Prefix",
+      "number": "Mobile number",
+      "send": "Send code",
+      "codeTitle": "Enter the code",
+      "codeSentTo": "We sent it to {{phone}}.",
+      "codeLabel": "6-digit code",
+      "verify": "Verify",
+      "resendIn": "You can request another in {{seconds}} s",
+      "resend": "Resend code",
+      "changeNumber": "Change number",
+      "testHint": "Test mode: the code is {{code}}.",
+      "emailLabel": "Email (optional)",
+      "emailHint": "To send you your signed documents. We'll send a link to verify it.",
+      "emailInvalid": "Check the email.",
+      "errors": {
+        "invalid_phone": "Check the phone number.",
+        "rate_limited": "Too many codes requested. Wait a few minutes.",
+        "blocked": "We can't complete sign-up with this number.",
+        "network": "No connection. Please try again.",
+        "wrong_code": "That code is not correct.",
+        "expired": "The code has expired. Request a new one.",
+        "too_many_attempts": "Too many attempts. Request a new code later."
+      }
+    },
+    "consents": {
+      "title": "Your privacy, your rules",
+      "body": "Nothing is switched on. Decide what you allow; you can change it any time in Profile → Consents.",
+      "basisLabel": "Legal basis",
+      "withoutLabel": "If you leave it off",
+      "items": {
+        "orientation": {
+          "title": "Orientation and preferences",
+          "description": "Who you want to meet and in which age range, to show you compatible people.",
+          "basis": "Explicit signed consent (GDPR art. 9.2.a)",
+          "without": "You won't see compatible profiles or get matches."
+        },
+        "precise_location": {
+          "title": "Precise location",
+          "description": "For the map, what's nearby and check-ins. We never show your exact location to anyone.",
+          "basis": "Consent",
+          "without": "You explore by choosing a city and can't check in."
+        },
+        "marketing": {
+          "title": "Promotions and Flash Alerts",
+          "description": "Venue offers and in-app alerts.",
+          "basis": "Consent (Spanish LSSI-CE art. 21)",
+          "without": "You won't receive promotions."
+        },
+        "analytics": {
+          "title": "Analytics",
+          "description": "Aggregated usage metrics to improve the app. No session recording.",
+          "basis": "Consent",
+          "without": "We won't measure how you use the app."
+        }
+      },
+      "city": "City to explore",
+      "cityPlaceholder": "Choose a city",
+      "cityRequired": "Choose a city or turn on location.",
+      "locationBlocked": "Your browser blocked location. Choose a city or enable it in your browser settings.",
+      "orientationSheet": {
+        "title": "Explicit consent",
+        "body": "Your orientation and preferences are specially protected data. We only use them to match you, never for advertising, and you can withdraw consent at any time.",
+        "check": "I give my explicit consent to the processing of my orientation and preferences in order to be shown compatible people.",
+        "sign": "I sign and consent",
+        "cancel": "Not now"
+      }
+    },
+    "profile": {
+      "title": "Your profile",
+      "body": "This is how age-verified people will see you.",
+      "name": "Name",
+      "nameError": "Enter a name of 2 to 30 characters.",
+      "gender": "Gender",
+      "genders": {
+        "woman": "Woman",
+        "man": "Man",
+        "non_binary": "Non-binary",
+        "other": "Other"
+      },
+      "genderError": "Choose an option.",
+      "photos": "Photos",
+      "photosHint": "2 to 5. The first one is your main photo. Uploaded without location data.",
+      "photosError": "Add at least 2 photos.",
+      "addPhoto": "Add photo",
+      "removePhoto": "Remove photo {{n}}",
+      "mainPhoto": "Main",
+      "photoErrors": {
+        "unsupported_type": "Use a JPG, PNG, WebP or AVIF photo.",
+        "too_large": "The photo is too large (15 MB max).",
+        "decode_failed": "We couldn't read that photo."
+      },
+      "bio": "About you (optional)",
+      "anthemTitle": "Your Anthem",
+      "anthemHint": "You'll be able to pick your song by connecting Spotify from your profile. Coming soon.",
+      "photoAlt": "Photo {{n}}"
+    },
+    "preferences": {
+      "title": "Who do you want to meet?",
+      "body": "Only used to match you. You can change it any time.",
+      "interestedIn": "I'm interested in",
+      "options": {
+        "women": "Women",
+        "men": "Men",
+        "non_binary": "Non-binary people"
+      },
+      "interestedInError": "Choose at least one option.",
+      "age": "Age",
+      "ageMin": "Minimum age",
+      "ageMax": "Maximum age"
+    },
+    "theme": {
+      "title": "Choose your style",
+      "body": "You can change it any time in Profile → Themes.",
+      "finish": "Into the night"
+    },
+    "layered": {
+      "title": "Basic data protection information",
+      "controller": "Controller",
+      "controllerValue": "[COMPANY DATA]",
+      "purpose": "Purpose",
+      "basis": "Legal basis",
+      "rights": "Rights",
+      "rightsValue": "Access, rectification, erasure, objection, restriction and portability.",
+      "more": "Full Privacy Policy",
+      "forms": {
+        "phone": {
+          "purpose": "Create and protect your account (access and anti-fraud).",
+          "basis": "Contract and legitimate interest."
+        },
+        "profile": {
+          "purpose": "Show your profile to other verified adults.",
+          "basis": "Contract."
+        },
+        "consents": {
+          "purpose": "The optional processing you choose below.",
+          "basis": "Your consent, which you can withdraw at any time."
+        }
+      }
+    }
+  },
+  "verification": {
+    "center": {
+      "title": "Verification centre",
+      "description": "We check what's needed without knowing who you are: we only store yes or no.",
+      "neverStored": "We never store ID numbers, document images, selfies, videos or face data."
+    },
+    "levels": {
+      "phone": {
+        "title": "Phone",
+        "description": "Verified when you created your account."
+      },
+      "age": {
+        "title": "Age (18+)",
+        "description": "Required to view profiles, like, chat, mark “Going” and create events."
+      },
+      "photo": {
+        "title": "Verified photo",
+        "description": "✓ badge, priority in the swipe and appearing in “Verified only”."
+      },
+      "identity": {
+        "title": "Verified identity",
+        "description": "Confirms you are who you say. We never show your real name or ID."
+      }
+    },
+    "states": {
+      "not_started": "Not verified",
+      "pending": "In progress",
+      "manual_review": "In human review",
+      "verified": "Verified",
+      "failed": "Not passed",
+      "reverification_required": "Needs to be redone"
+    },
+    "actions": {
+      "start": "Verify",
+      "retry": "Try again",
+      "requestReview": "Request human review",
+      "continuePending": "Continue"
+    },
+    "aiNotice": {
+      "title": "Artificial intelligence notice",
+      "body": "This step uses an AI system that can make mistakes. If you disagree with the result, a person will review it. If you prefer, use another method."
+    },
+    "age": {
+      "title": "Verify you are an adult",
+      "body": "Yoti, a specialised provider, does it. We only receive whether you are an adult or not.",
+      "how1": "Facial age estimation with liveness detection: usually no document needed.",
+      "how2": "If it's inconclusive, you can use your ID with a selfie or a Digital ID in the same flow.",
+      "start": "Continue with Yoti",
+      "otherMethod": "I'd rather use my ID",
+      "unavailable": "Verification isn't available right now. Please try later."
+    },
+    "photo": {
+      "title": "Verified photo",
+      "body": "Take a live selfie with a gesture and we compare it with your photos. Images are deleted at the end and we keep no face data.",
+      "consent": "I give my explicit consent to compare a live selfie with my profile photos (GDPR art. 9.2.a).",
+      "start": "Take the selfie"
+    },
+    "identity": {
+      "title": "Verified identity",
+      "body": "ID and selfie through Yoti. We only store that your identity is verified: never your real name, ID number or date of birth.",
+      "consent": "I give my explicit consent to verify my identity with Yoti.",
+      "start": "Continue with Yoti"
+    },
+    "sandbox": {
+      "title": "Provider simulator",
+      "body": "Test mode (verification_mode = sandbox): choose what the provider would return. This simulates its signed webhook.",
+      "liveMode": "The real provider is not connected yet (arrives in Block 6).",
+      "documentStep": "The provider now asks for an ID with a selfie.",
+      "outcomes": {
+        "approved": "Approved",
+        "inconclusive": "Inconclusive",
+        "denied": "Rejected",
+        "borderline": "Borderline match (60-85%)"
+      }
+    },
+    "result": {
+      "verified": "Verification complete!",
+      "manual_review": "A person will review your verification.",
+      "failed": "We couldn't verify you. You can request human review or try again.",
+      "pending": "Your verification is still in progress."
+    },
+    "gate": {
+      "title": "Verify your age",
+      "body": "To {{action}} we need to confirm you're an adult. It's free and we only store yes or no.",
+      "pending": "Your verification is in progress. We'll let you know when it's done.",
+      "review": "A person is reviewing your verification.",
+      "verifyNow": "Verify now",
+      "notNow": "Not now",
+      "actions": {
+        "view_profiles": "view profiles",
+        "like": "like someone",
+        "chat": "chat",
+        "going_tonight": "mark “Going Tonight”",
+        "visible_check_in": "check in visibly",
+        "create_event": "create events",
+        "alcohol_promos": "receive alcohol promotions"
+      }
+    }
+  },
+  "consentSettings": {
+    "title": "Consents",
+    "description": "You can withdraw any consent as easily as you gave it.",
+    "lastChange": "Last change: {{date}}"
+  },
+  "profileMenu": {
+    "privacy": "Privacy and safety",
+    "verification": "Verification centre",
+    "verificationHint": "Age, photo and identity",
+    "consents": "Consents",
+    "consentsHint": "Decide what you allow",
+    "resetOnboarding": "Restart onboarding",
+    "resetOnboardingHint": "Back to the welcome screens (testing only)"
+  },
+  "tonightPreview": {
+    "viewProfiles": "View profiles",
+    "goingTonight": "Going Tonight",
+    "verifiedReady": "Age verified: the swipe arrives in Block 3."
   }
 }

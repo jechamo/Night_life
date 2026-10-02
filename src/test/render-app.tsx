@@ -10,9 +10,13 @@ import { createFakePlatform } from '@/platform/testing'
 /** Renders the real route tree with a fake platform and mocked services. */
 export function renderApp(
   path: string,
-  options: { services?: MockServiceOptions; settings?: Partial<InitialSettings> } = {},
+  options: {
+    services?: MockServiceOptions
+    settings?: Partial<InitialSettings>
+    platform?: Parameters<typeof createFakePlatform>[0]
+  } = {},
 ) {
-  const platform = createFakePlatform()
+  const platform = createFakePlatform(options.platform)
   const router = createMemoryRouter(routes, { initialEntries: [path] })
   const queryClient = createQueryClient()
   queryClient.setDefaultOptions({ queries: { retry: false } })
@@ -25,7 +29,12 @@ export function renderApp(
   const utils = render(
     <AppProviders
       platform={platform}
-      services={createMockServices(options.services)}
+      services={createMockServices({
+        latencyMs: 0,
+        preferences: platform.preferences,
+        ...options.services,
+        state: { onboarded: true, ...options.services?.state },
+      })}
       queryClient={queryClient}
       settings={settings}
     >

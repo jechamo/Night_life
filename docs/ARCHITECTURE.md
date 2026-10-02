@@ -24,6 +24,7 @@ implementaciones `*.web.ts` de la plataforma (ESLint lo impide).
 src/
   app/            arranque, proveedores, router, layout (AppShell, TabBar)
   features/       una carpeta por funcionalidad (components, hooks, services, types, tests)
+    onboarding/ legal/ consents/ verification/      (Bloque 2)
     discover/ tonight/ chats/ profile/ themes/ settings/ design-kit/
   shared/
     ui/           componentes base estilo ShadCN (Button, Chip, Badge, BottomSheet…)
@@ -59,7 +60,8 @@ docs/             PRD, progreso, arquitectura, API, seguridad, ADR
 | Feature flag         | `useFeatureFlag` (frontend) / `feature_enabled()` (SQL, Bloque 5)              |
 | Result tipado        | `Result<T, E>` en servicios y plataforma: nunca se lanza a la UI               |
 
-Pendientes por bloque: Observer/Realtime (7-8), State machines (2, 6, 7, 9), Idempotency key y
+State machine: onboarding (`onboardingReducer`) y estados de verificación (Bloque 2).
+Pendientes por bloque: Observer/Realtime (7-8), State machines (7, 9), Idempotency key y
 Transactional outbox (9).
 
 ## Estado y datos

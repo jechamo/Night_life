@@ -29,6 +29,19 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
   de corta duración con rotación (Bloque 5).
 - `workbox-build` arrastra `glob@11` (aviso de deprecación, sin CVE). Solo en build.
 
+## Controles añadidos (Bloque 2)
+
+| Riesgo                                 | Control                                                                                                                                                               | Dónde                                              |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Menores (6.15 E)                       | Pantalla de edad neutra (no revela el límite); menor ⇒ estado terminal sin datos; casilla "soy mayor de 18" en la firma; bloqueo "Verifica tu edad" que falla cerrado | `onboarding-machine.ts`, `verification.ts` + tests |
+| Privacidad por defecto                 | Ningún consentimiento ni casilla premarcada; orientación (art. 9) exige firma explícita; revocar es un toque                                                          | `consents.ts`, `OrientationConsentSheet` + tests   |
+| Fotos (API4/D)                         | Recodificación en el dispositivo (canvas) ⇒ sin EXIF/GPS; tipos y tamaño limitados (15 MB)                                                                            | `platform/images`                                  |
+| Datos personales en cliente            | Fecha, teléfono, nombre y fotos solo en memoria durante el onboarding; el mock persistente no guarda datos personales                                                 | ADR 0006                                           |
+| Enumeración / abuso de OTP (A07, API6) | Errores genéricos (número baneado = "no podemos completar el alta"), límites de envío y de intentos simulados; el teléfono solo se muestra enmascarado                | `PhoneStep`, mock                                  |
+| Bypass de verificación (6.14)          | Simulador solo con `verification_mode = sandbox` **y** rol `tester`                                                                                                   | `ProviderSandboxScreen`                            |
+| XSS (A05)                              | Documentos legales como texto estructurado, nunca HTML                                                                                                                | `LegalDocumentSheet`                               |
+| IA (6.12 C)                            | Aviso previo de IA con revisión humana y método alternativo                                                                                                           | `AiNotice`                                         |
+
 ## Modelo de amenazas (STRIDE) — esqueleto, se completa por bloques
 
 | Área                                  | Bloque | Estado                                          |
@@ -52,3 +65,12 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Dependencias añadidas: revisadas (oficiales, mantenidas); `npm audit`: 0 vulnerabilidades.
 - Auditoría de red (Playwright, build de producción): 0 orígenes externos, 0 errores de consola.
 - Puntos de 6.15 aplicados: A01 (lista blanca), A02 (cabeceras), A03, A05, A09, A10, API5 (UI).
+
+### Bloque 2 — 2026-10-02 ✅ sin hallazgos críticos ni altos
+
+- Security Advisors de Supabase: 0 avisos (sin cambios de esquema en este bloque).
+- RLS / migraciones / Edge Functions nuevas: ninguna (bloque de frontend con mocks).
+- Dependencias añadidas: `react-hook-form`, `@hookform/resolvers`, `date-fns` (lista 3.5); `npm audit`: 0.
+- Auditoría de red (Playwright, recorrido completo del onboarding): 0 orígenes externos
+  (solo URLs `blob:` locales de las vistas previas de fotos), 0 errores de consola.
+- Sin `dangerouslySetInnerHTML`, sin `console.log`, sin acceso a almacenamiento fuera de `src/platform`.

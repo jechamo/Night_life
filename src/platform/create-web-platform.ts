@@ -5,6 +5,7 @@ import { createWebDeviceId } from './device-id/device-id.web'
 import { createWebFileDownload } from './file-download/file-download.web'
 import { createWebGeolocation } from './geolocation/geolocation.web'
 import { createWebHaptics } from './haptics/haptics.web'
+import { createWebImages } from './images/images.web'
 import { createWebInAppBrowser } from './in-app-browser/in-app-browser.web'
 import { createWebNotifications } from './notifications/notifications.web'
 import type { Platform } from './platform'
@@ -34,5 +35,6 @@ export function createWebPlatform({ appUrl }: WebPlatformOptions = {}): Platform
     deepLinks: createWebDeepLinks(appUrl || window.location.origin),
     browser: createWebInAppBrowser(),
     files: createWebFileDownload(),
+    images: createWebImages(),
   }
 }

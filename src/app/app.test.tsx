@@ -8,11 +8,13 @@ describe('app shell', () => {
   it('redirects to Discover and marks the active tab', async () => {
     const { router } = renderApp('/')
     const nav = await screen.findByRole('navigation', { name: 'Navegación principal' })
-    expect(router.state.location.pathname).toBe('/discover')
+    await waitFor(() => expect(router.state.location.pathname).toBe('/discover'))
     expect(within(nav).getAllByRole('link')).toHaveLength(4)
-    expect(within(nav).getByRole('link', { name: 'Descubre' })).toHaveAttribute(
-      'aria-current',
-      'page',
+    await waitFor(() =>
+      expect(within(nav).getByRole('link', { name: 'Descubre' })).toHaveAttribute(
+        'aria-current',
+        'page',
+      ),
     )
   })
 

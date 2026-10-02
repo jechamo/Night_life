@@ -20,7 +20,7 @@ const settings = await loadInitialSettings(platform)
 await initI18n(settings.language)
 
 // Blocks 1-4: mocked services (PRD 11.1 point 6). Block 5 swaps in Supabase.
-const services = createMockServices()
+const services = createMockServices({ preferences: platform.preferences })
 
 const container = document.getElementById('root')
 if (!container) throw new Error('Missing #root element')

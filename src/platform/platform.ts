@@ -5,6 +5,7 @@ import type { DeviceIdService } from './device-id/device-id'
 import type { FileDownloadService } from './file-download/file-download'
 import type { GeolocationService } from './geolocation/geolocation'
 import type { HapticsService } from './haptics/haptics'
+import type { ImagesService } from './images/images'
 import type { InAppBrowserService } from './in-app-browser/in-app-browser'
 import type { NotificationsService } from './notifications/notifications'
 import type { PreferencesService } from './preferences/preferences'
@@ -31,4 +32,5 @@ export interface Platform {
   deepLinks: DeepLinksService
   browser: InAppBrowserService
   files: FileDownloadService
+  images: ImagesService
 }

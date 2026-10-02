@@ -1,3 +1,7 @@
+import type { ConsentService } from '@/features/consents/services/consent-service'
+import type { LegalService } from '@/features/legal/services/legal-service'
+import type { OnboardingService } from '@/features/onboarding/services/onboarding-service'
+import type { VerificationService } from '@/features/verification/services/verification-service'
 import type { EntitlementService } from '@/shared/entitlements/entitlement-service'
 import type { FlagService } from '@/shared/flags/flag-service'
 import type { SessionService } from '@/shared/session/session-service'
@@ -10,4 +14,8 @@ export interface AppServices {
   flags: FlagService
   entitlements: EntitlementService
   session: SessionService
+  onboarding: OnboardingService
+  legal: LegalService
+  consents: ConsentService
+  verification: VerificationService
 }

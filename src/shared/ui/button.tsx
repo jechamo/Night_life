@@ -7,7 +7,7 @@ import { PRESS_SCALE } from '@/shared/motion/presets'
 
 export const buttonVariants = cva(
   [
-    'touch-target inline-flex select-none items-center justify-center gap-2 rounded-full font-medium',
+    'touch-target inline-flex select-none items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap',
     'transition-opacity disabled:pointer-events-none disabled:opacity-50',
     '[&_svg]:size-5 [&_svg]:shrink-0',
   ],
