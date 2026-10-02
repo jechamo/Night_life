@@ -34,6 +34,7 @@ import { PersonScreen } from '@/features/matching/screens/PersonScreen'
 import { SwipeScreen } from '@/features/matching/screens/SwipeScreen'
 import { ConsentsSettingsScreen } from '@/features/consents/ConsentsSettingsScreen'
 import { OnboardingScreen } from '@/features/onboarding/screens/OnboardingScreen'
+import { LoginScreen } from '@/features/onboarding/screens/LoginScreen'
 import { WelcomeScreen } from '@/features/onboarding/screens/WelcomeScreen'
 import { AgeVerificationScreen } from '@/features/verification/screens/AgeVerificationScreen'
 import { OptionalVerificationScreen } from '@/features/verification/screens/OptionalVerificationScreen'
@@ -64,6 +65,7 @@ const IdentityVerification = () => <OptionalVerificationScreen level="identity" 
 export const routes: RouteObject[] = [
   { path: 'welcome', element: screen(WelcomeScreen), errorElement: <RouteErrorScreen /> },
   { path: 'onboarding', element: screen(OnboardingScreen), errorElement: <RouteErrorScreen /> },
+  { path: 'login', element: screen(LoginScreen), errorElement: <RouteErrorScreen /> },
   // Public legal website: no login, outside the app shell (PRD 5.1).
   {
     path: 'legal',

@@ -5,6 +5,7 @@ import {
   FlaskConical,
   Heart,
   LayoutDashboard,
+  LogOut,
   Mail,
   Palette,
   RotateCcw,
@@ -22,6 +23,7 @@ import { FeatureGate } from '@/shared/flags/FeatureGate'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { hasRole } from '@/shared/session/roles'
 import { useRoles } from '@/shared/session/use-roles'
+import { useSignOut } from '@/shared/session/use-sign-out'
 import { GlassCard } from '@/shared/ui/card'
 import { ListRow } from '@/shared/ui/list-row'
 import { ScreenHeader } from '@/shared/ui/screen-header'
@@ -68,6 +70,7 @@ export function ProfileScreen() {
   const reset = useResetOnboarding()
   const paywall = usePaywallState()
   const isAdmin = hasRole(useRoles(), 'admin')
+  const signOut = useSignOut()
   const [prefsOpen, setPrefsOpen] = useState(false)
   return (
     <>
@@ -167,6 +170,20 @@ export function ProfileScreen() {
           )}
         </GlassCard>
       </Section>
+      <div className="px-safe mt-8">
+        <GlassCard className="p-0">
+          <ActionRow
+            icon={LogOut}
+            tone="text-muted-foreground"
+            label={t('profileMenu.signOut')}
+            onClick={() =>
+              signOut.mutate(undefined, {
+                onSuccess: () => void navigate('/welcome', { replace: true }),
+              })
+            }
+          />
+        </GlassCard>
+      </div>
       {/* Test tools are double-gated: flag here (UI) and role + flag on the server (PRD 6.15 API5). */}
       <FeatureGate flag="test_tools_enabled" is="on">
         <Section title={t('profile.testing')}>

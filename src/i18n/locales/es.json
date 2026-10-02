@@ -367,6 +367,11 @@
           "basis": "Tu consentimiento, que puedes retirar cuando quieras."
         }
       }
+    },
+    "login": {
+      "cta": "Ya tengo cuenta",
+      "title": "Entrar",
+      "body": "Te enviamos un código por SMS a tu número."
     }
   },
   "verification": {
@@ -506,7 +511,8 @@
     "privacyDataHint": "Descarga o elimina tus datos",
     "legalHint": "Documentos públicos y tus derechos",
     "business": "Locales y equipo",
-    "adminHint": "Moderación, pagos y pruebas"
+    "adminHint": "Moderación, pagos y pruebas",
+    "signOut": "Cerrar sesión"
   },
   "tonightPreview": {
     "viewProfiles": "Ver perfiles",
@@ -1078,8 +1084,16 @@
     "emptyBody": "Aquí aparecerán los documentos que firmes.",
     "signedOn": "Versión {{version}} · firmado el {{date}}",
     "outdated": "Hay una versión nueva: te pediremos aceptarla.",
-    "download": "Descargar justificante",
-    "pdfSoon": "El PDF firmado y la copia por email llegan con el backend (Bloque 5)."
+    "download": "Descargar justificante (JSON)",
+    "downloadPdf": "Descargar PDF firmado",
+    "email": "Enviármelo por email",
+    "emailSent": "Te lo hemos enviado por email.",
+    "pdfFailed": "No hemos podido generar el PDF. Inténtalo más tarde.",
+    "emailErrors": {
+      "no_email": "Añade y confirma un email en tu cuenta para recibirlo.",
+      "not_configured": "El envío por email aún no está activado. Puedes descargar el PDF.",
+      "failed": "No hemos podido enviarlo. Lo reintentaremos."
+    }
   },
   "privacyData": {
     "title": "Privacidad y datos",
@@ -1261,15 +1275,19 @@
       "dataRequests": "Derechos",
       "legalDocs": "Documentos legales",
       "settings": "Configuración",
-      "audit": "Auditoría"
+      "audit": "Auditoría",
+      "users": "Usuarios"
     },
     "mfa": {
       "title": "Segundo factor",
       "body": "El admin exige un segundo factor (TOTP) en cada sesión.",
       "code": "Código de 6 dígitos",
-      "hint": "En pruebas: 123456.",
+      "hint": "Código de tu app de autenticación. En el modo simulado: 123456.",
       "wrong": "Código incorrecto.",
-      "verify": "Verificar"
+      "verify": "Verificar",
+      "enroll": "Configurar el segundo factor",
+      "scan": "Escanea el código con tu app de autenticación (Google Authenticator, Authy…) e introduce el código de 6 dígitos.",
+      "qrAlt": "Código QR para la app de autenticación"
     },
     "dashboard": {
       "body": "Datos simulados del entorno de pruebas.",
@@ -1302,7 +1320,12 @@
       "end": "Finalizar",
       "revoke": "Retirar",
       "done": "Marcar como resuelta",
-      "publish": "Publicar"
+      "publish": "Publicar",
+      "grant_tester": "Dar tester",
+      "revoke_tester": "Quitar tester",
+      "grant_venue_manager": "Dar gestor de local",
+      "revoke_venue_manager": "Quitar gestor",
+      "grant_admin": "Dar admin"
     },
     "sections": {
       "verifications": {
@@ -1360,6 +1383,10 @@
       "audit": {
         "title": "Auditoría",
         "body": "Registro inmutable de las acciones del admin."
+      },
+      "users": {
+        "title": "Usuarios y roles",
+        "body": "Asigna o retira roles (tester, gestor de local, admin). Los teléfonos se muestran enmascarados y cada consulta se audita."
       }
     },
     "flags": {

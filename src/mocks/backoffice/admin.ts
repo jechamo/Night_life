@@ -79,6 +79,17 @@ export function createMockAdminService(
         }))
       case 'audit':
         return config.audit
+      case 'users':
+        return [
+          {
+            id: 'me',
+            title: 'Tú (cuenta simulada)',
+            subtitle: '••• 222',
+            status: 'active',
+            createdAt: new Date(Date.now() - 86_400_000).toISOString(),
+            facts: [...config.roles],
+          },
+        ]
       default:
         return null
     }
@@ -113,6 +124,13 @@ export function createMockAdminService(
         world.places = world.places.map((p) =>
           p.id === id && isEvent(p) ? { ...p, event: { ...p.event, status: status as never } } : p,
         )
+      } else if (section === 'users') {
+        const [verb, ...rest] = action.split('_')
+        const role = rest.join('_') as (typeof config.roles)[number]
+        config.roles =
+          verb === 'grant'
+            ? [...new Set([...config.roles, role])]
+            : config.roles.filter((r) => r !== role)
       } else if (section === 'entitlements') {
         const index = Number(id.split('-').at(-1))
         config.entitlements = config.entitlements.map((e, i) =>
@@ -277,6 +295,9 @@ export function createMockAdminService(
       config.roles = [...roles]
       audit(config, 'roles.simulate', roles.join(', '))
     },
+    mode: 'mock',
+    mfaStatus: () => Promise.resolve({ enrolled: true, verified: config.mfaOk }),
+    enrollMfa: () => Promise.resolve({ qrCode: '', secret: 'MOCK-TOTP-SECRET' }),
     async verifyMfa(code) {
       await wait()
       config.mfaOk = code === '123456'

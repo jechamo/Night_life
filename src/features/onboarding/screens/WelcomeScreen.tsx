@@ -8,7 +8,7 @@ import { TintedScene } from '@/shared/images/TintedScene'
 import { cn } from '@/shared/lib/cn'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
+import { Button, ButtonLink } from '@/shared/ui/button'
 import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { useOnboardingStatus } from '../hooks/use-onboarding-status'
 
@@ -121,6 +121,9 @@ export function WelcomeScreen() {
             </Button>
           </div>
         )}
+        <ButtonLink to="/login" variant="ghost" size="sm" block>
+          {t('onboarding.login.cta')}
+        </ButtonLink>
       </footer>
     </div>
   )

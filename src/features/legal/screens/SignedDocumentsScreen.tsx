@@ -1,4 +1,4 @@
-import { Download, FileCheck2 } from 'lucide-react'
+import { Download, FileCheck2, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePlatform } from '@/platform'
@@ -7,7 +7,12 @@ import { GlassCard } from '@/shared/ui/card'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { LegalDocumentSheet } from '../components/LegalDocumentSheet'
-import { useLegalDocuments, useSignedDocuments } from '../hooks/use-legal-documents'
+import {
+  useDownloadSignedPdf,
+  useEmailSignedDocuments,
+  useLegalDocuments,
+  useSignedDocuments,
+} from '../hooks/use-legal-documents'
 import type { LegalDocument } from '../model/legal'
 
 /** "Documentos firmados" (PRD 5.1, 6.1): what I signed, which version and when. */
@@ -17,6 +22,8 @@ export function SignedDocumentsScreen() {
   const { data: signed = [] } = useSignedDocuments()
   const { data: documents = [] } = useLegalDocuments(signed.map((s) => s.slug))
   const [open, setOpen] = useState<LegalDocument | null>(null)
+  const pdf = useDownloadSignedPdf()
+  const email = useEmailSignedDocuments()
 
   return (
     <>
@@ -61,8 +68,39 @@ export function SignedDocumentsScreen() {
                 )
               })}
             </GlassCard>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Button variant="outline" block disabled={pdf.isPending} onClick={() => pdf.mutate()}>
+                <Download aria-hidden />
+                {t('signedDocs.downloadPdf')}
+              </Button>
+              <Button
+                variant="outline"
+                block
+                disabled={email.isPending}
+                onClick={() => email.mutate()}
+              >
+                <Mail aria-hidden />
+                {t('signedDocs.email')}
+              </Button>
+            </div>
+            {pdf.data && !pdf.data.ok && (
+              <p role="alert" className="text-sm text-danger">
+                {t('signedDocs.pdfFailed')}
+              </p>
+            )}
+            {email.data && (
+              <p
+                role={email.data.ok ? 'status' : 'alert'}
+                className={email.data.ok ? 'text-sm text-success' : 'text-sm text-warning'}
+              >
+                {email.data.ok
+                  ? t('signedDocs.emailSent')
+                  : t(`signedDocs.emailErrors.${email.data.error}`)}
+              </p>
+            )}
             <Button
-              variant="outline"
+              variant="ghost"
+              size="sm"
               block
               onClick={() =>
                 void files.downloadJson('nightlife-connect-firmas.json', {
@@ -71,10 +109,8 @@ export function SignedDocumentsScreen() {
                 })
               }
             >
-              <Download aria-hidden />
               {t('signedDocs.download')}
             </Button>
-            <p className="text-xs text-muted-foreground">{t('signedDocs.pdfSoon')}</p>
           </>
         )}
       </div>

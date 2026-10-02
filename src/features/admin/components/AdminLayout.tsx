@@ -14,6 +14,7 @@ import {
   Store,
   ToggleRight,
   UserCheck,
+  Users,
   type LucideIcon,
 } from 'lucide-react'
 import { useState } from 'react'
@@ -29,6 +30,7 @@ import { useMfaSession } from '../hooks/use-admin'
 
 type NavKey =
   | 'dashboard'
+  | 'users'
   | 'verifications'
   | 'reports'
   | 'appeals'
@@ -46,6 +48,7 @@ type NavKey =
 
 const NAV: readonly { key: NavKey; to: string; icon: LucideIcon }[] = [
   { key: 'dashboard', to: '/admin', icon: Gauge },
+  { key: 'users', to: '/admin/s/users', icon: Users },
   { key: 'verifications', to: '/admin/s/verifications', icon: UserCheck },
   { key: 'reports', to: '/admin/s/reports', icon: ShieldAlert },
   { key: 'appeals', to: '/admin/s/appeals', icon: Scale },
@@ -64,13 +67,37 @@ const NAV: readonly { key: NavKey; to: string; icon: LucideIcon }[] = [
 
 function MfaGate() {
   const { t } = useTranslation()
-  const { verify } = useMfaSession()
+  const { verify, enroll, enrolled } = useMfaSession()
   const [code, setCode] = useState('')
+  const enrolment = enroll.data
   return (
     <main className="pt-safe px-safe flex min-h-dvh items-center justify-center bg-background">
       <GlassCard className="w-full max-w-sm space-y-4">
         <h1 className="text-2xl font-semibold">{t('admin.mfa.title')}</h1>
         <p className="text-sm text-muted-foreground">{t('admin.mfa.body')}</p>
+        {!enrolled && !enrolment && (
+          <Button
+            block
+            variant="secondary"
+            disabled={enroll.isPending}
+            onClick={() => enroll.mutate()}
+          >
+            {t('admin.mfa.enroll')}
+          </Button>
+        )}
+        {enrolment && (
+          <div className="space-y-2 text-center">
+            <p className="text-sm">{t('admin.mfa.scan')}</p>
+            {enrolment.qrCode && (
+              <img
+                src={enrolment.qrCode}
+                alt={t('admin.mfa.qrAlt')}
+                className="mx-auto size-48 rounded-xl bg-white p-2"
+              />
+            )}
+            <p className="font-mono text-xs break-all text-muted-foreground">{enrolment.secret}</p>
+          </div>
+        )}
         <form
           className="space-y-4"
           onSubmit={(event) => {
@@ -88,7 +115,11 @@ function MfaGate() {
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
           />
-          <Button type="submit" block disabled={code.length !== 6 || verify.isPending}>
+          <Button
+            type="submit"
+            block
+            disabled={code.length !== 6 || verify.isPending || (!enrolled && !enrolment)}
+          >
             {t('admin.mfa.verify')}
           </Button>
         </form>
@@ -107,8 +138,8 @@ function MfaGate() {
 export function AdminLayout() {
   const { t } = useTranslation()
   const { roles, isPending } = useRolesState()
-  const { verified } = useMfaSession()
-  if (isPending) return <div className="min-h-dvh bg-background" aria-busy="true" />
+  const { verified, pending: mfaPending } = useMfaSession()
+  if (isPending || mfaPending) return <div className="min-h-dvh bg-background" aria-busy="true" />
   if (!hasRole(roles, 'admin')) return <Navigate to="/profile" replace />
   if (!verified) return <MfaGate />
 

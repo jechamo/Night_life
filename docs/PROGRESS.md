@@ -9,7 +9,7 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                  |
 | 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                  |
 | 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                |
-| 5 – Backend base, legal y modo pruebas              | ⏳                                           |
+| 5 – Backend base, legal y modo pruebas              | 🚧 En curso                                  |
 | 6 – Verificaciones reales                           | ⏳                                           |
 | 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                           |
 | 8 – Ligar, match en tiempo real y chat              | ⏳                                           |
@@ -314,3 +314,23 @@ Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
 
 - Bloque 5: Supabase (esquema, RLS, roles, `app_settings`), Auth con OTP, perfiles, Storage,
   documentos y firma, generador de datos de prueba con `is_test` y purga.
+
+---
+
+## Bloque 5 — Backend base, legal y modo pruebas (en curso)
+
+Plan (ADR 0009): esquema completo con RLS, roles y `app_settings`; alta con teléfono + OTP
+(teléfonos de prueba); perfiles y Storage privado; documentos versionados, firma inmutable,
+PDF y email; generador de datos `is_test` y purga; admin real (flags, configuración, roles,
+auditoría, MFA TOTP). Composición híbrida: lo de los bloques 6-9 sigue simulado.
+
+Estado:
+
+- ✅ Migraciones aplicadas: `core`, `users_and_legal`, `places_social_moderation`,
+  `payments_and_storage`.
+- ⏳ Pendientes de aprobación del propietario (contienen `DELETE` dentro de funciones):
+  `rpc_block5`, `purge_test_data`, `seed_legal_documents`, `grants`.
+- ✅ Edge Functions desplegadas: `signed-documents`, `delete-account`, `test-tools`.
+- ✅ Adaptadores Supabase en `src/adapters/supabase` y raíz de composición (`src/app/services.ts`).
+- ⏳ Configuración en el panel de Supabase: proveedor de teléfono y teléfonos de prueba.
+- ⏳ Tests de RLS (`supabase/tests/rls.sql`), variables en Vercel y prueba de alta real.

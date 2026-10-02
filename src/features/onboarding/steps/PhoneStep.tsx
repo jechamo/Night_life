@@ -1,5 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { LayeredInfoBox } from '@/features/legal/components/LayeredInfoBox'
 import { MOCK_OTP_CODE } from '@/mocks/mock-auth-services'
 import { Illustration } from '@/shared/images/Illustration'
@@ -23,10 +25,21 @@ import type { StepProps } from './types'
 type Phase = 'enter' | 'code' | 'email'
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-/** Phone + OTP (PRD 5.2.4). Limits and ban checks are enforced by the server. */
-export function PhoneStep({ dispatch }: StepProps) {
+/**
+ * Phone + OTP (PRD 5.2.4). Limits and ban checks are enforced by the server.
+ * `mode="login"` is the "Ya tengo cuenta" flow: same screen, no onboarding progress.
+ * If the verified number already has a finished account, it goes straight to the app.
+ */
+export function PhoneStep({
+  dispatch,
+  mode = 'signup',
+  onBack,
+}: StepProps & { mode?: 'signup' | 'login'; onBack?: () => void }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { onboarding } = useServices()
+  const login = mode === 'login'
   const testTools = useFeatureFlag('test_tools_enabled') === 'on'
   const [phase, setPhase] = useState<Phase>('enter')
   const [prefix, setPrefix] = useState<CountryPrefix>('+34')
@@ -61,8 +74,17 @@ export function PhoneStep({ dispatch }: StepProps) {
     setBusy(true)
     setError(null)
     const result = await onboarding.verifyOtp(phone, code)
+    if (!result.ok) {
+      setBusy(false)
+      return setError(result.error)
+    }
+    const status = await onboarding.getStatus()
     setBusy(false)
-    if (!result.ok) return setError(result.error)
+    if (status === 'completed') {
+      await queryClient.invalidateQueries()
+      return void navigate('/discover', { replace: true })
+    }
+    if (login) return void navigate('/onboarding', { replace: true })
     setPhase('email')
   }
 
@@ -101,7 +123,7 @@ export function PhoneStep({ dispatch }: StepProps) {
   if (phase === 'code' && phone) {
     return (
       <OnboardingStepLayout
-        step="phone"
+        step={login ? undefined : 'phone'}
         title={t('onboarding.phone.codeTitle')}
         description={t('onboarding.phone.codeSentTo', { phone: maskPhone(phone) })}
         onBack={() => setPhase('enter')}
@@ -152,10 +174,10 @@ export function PhoneStep({ dispatch }: StepProps) {
 
   return (
     <OnboardingStepLayout
-      step="phone"
-      title={t('onboarding.phone.title')}
-      description={t('onboarding.phone.body')}
-      onBack={() => dispatch({ type: 'BACK' })}
+      step={login ? undefined : 'phone'}
+      title={login ? t('onboarding.login.title') : t('onboarding.phone.title')}
+      description={login ? t('onboarding.login.body') : t('onboarding.phone.body')}
+      onBack={onBack ?? (() => dispatch({ type: 'BACK' }))}
       hero={<Illustration name="phoneOtp" className="mt-2 size-36" />}
       footer={
         <Button block size="lg" disabled={!national || busy} onClick={onSend}>

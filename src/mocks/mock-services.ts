@@ -100,7 +100,13 @@ export function createMockServices(options: MockServiceOptions = {}): AppService
     consents: createMockConsentService(store, wait),
     verification: createMockVerificationService(store, wait),
     flags: createFlagService({ load: () => Promise.resolve({ ...config.flags }) }),
-    session: { getRoles: () => Promise.resolve([...config.roles]) },
+    session: {
+      getRoles: () => Promise.resolve([...config.roles]),
+      signOut: async () => {
+        await store.update((s) => ({ ...s, onboarded: false }))
+      },
+      onChange: () => () => undefined,
+    },
     entitlements: { getMine: () => Promise.resolve([...config.entitlements]) },
   }
 }

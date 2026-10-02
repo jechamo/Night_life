@@ -34,7 +34,8 @@ const restrictedDeviceGlobals = [
 ].map((name) => ({ name, message: PLATFORM_ONLY }))
 
 export default defineConfig(
-  { ignores: ['dist', 'dev-dist', 'coverage', 'node_modules'] },
+  // Edge Functions run on Deno and are checked by the Supabase runtime, not this config.
+  { ignores: ['dist', 'dev-dist', 'coverage', 'node_modules', 'supabase/functions'] },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
@@ -82,6 +83,23 @@ export default defineConfig(
       'no-restricted-properties': 'off',
       'no-restricted-globals': 'off',
       'no-restricted-imports': 'off',
+    },
+  },
+  {
+    // Adapters are the only layer that talks to Supabase (PRD 3.4, ADR 0009).
+    files: ['src/adapters/supabase/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/platform/*/web', '@/platform/**/*.web'],
+              message: 'Import platform services through the Platform object.',
+            },
+          ],
+        },
+      ],
     },
   },
   {

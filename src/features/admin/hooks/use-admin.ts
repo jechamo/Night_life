@@ -22,16 +22,29 @@ export function useAdminSettings() {
   return useQuery({ queryKey: [...adminKey, 'settings'], queryFn: () => admin.settings() })
 }
 
-/** Simulated TOTP session: kept in the query cache only (never persisted). */
+/** Second factor of this session (TOTP; `aal2` on the server). Enrol once, verify per session. */
 export function useMfaSession() {
   const queryClient = useQueryClient()
-  const { data } = useQuery({ queryKey: mfaKey, queryFn: () => false, staleTime: Infinity })
   const { admin } = useServices()
+  const status = useQuery({
+    queryKey: mfaKey,
+    queryFn: () => admin.mfaStatus(),
+    staleTime: Infinity,
+  })
+  const refresh = () => queryClient.invalidateQueries({ queryKey: mfaKey })
   const verify = useMutation({
     mutationFn: (code: string) => admin.verifyMfa(code),
-    onSuccess: (ok) => queryClient.setQueryData(mfaKey, ok),
+    onSuccess: refresh,
   })
-  return { verified: data === true, verify }
+  const enroll = useMutation({ mutationFn: () => admin.enrollMfa() })
+  return {
+    pending: status.isPending,
+    enrolled: status.data?.enrolled ?? false,
+    verified: status.data?.verified ?? false,
+    mode: admin.mode,
+    verify,
+    enroll,
+  }
 }
 
 /** Admin writes touch many readers (flags, entitlements, places...): refresh broadly. */

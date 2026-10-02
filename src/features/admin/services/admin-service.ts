@@ -25,6 +25,7 @@ export interface AdminRow {
 }
 
 export const ADMIN_SECTIONS = [
+  'users',
   'verifications',
   'reports',
   'appeals',
@@ -82,5 +83,10 @@ export interface AdminService {
   grantEntitlement(input: { user: string; key: EntitlementKey; days: number | null }): Promise<void>
   runTestTool(tool: TestTool): Promise<string>
   setSimulatedRoles(roles: readonly Role[]): Promise<void>
+  /** `mock` = simulated back-office (roles can be simulated); `live` = Supabase. */
+  readonly mode: 'mock' | 'live'
+  /** Second factor (TOTP, PRD 6.12 E): enrolment and the level of this session. */
+  mfaStatus(): Promise<{ enrolled: boolean; verified: boolean }>
+  enrollMfa(): Promise<{ qrCode: string; secret: string }>
   verifyMfa(code: string): Promise<boolean>
 }

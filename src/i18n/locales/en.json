@@ -367,6 +367,11 @@
           "basis": "Your consent, which you can withdraw at any time."
         }
       }
+    },
+    "login": {
+      "cta": "I already have an account",
+      "title": "Sign in",
+      "body": "We'll text a code to your number."
     }
   },
   "verification": {
@@ -506,7 +511,8 @@
     "privacyDataHint": "Download or delete your data",
     "legalHint": "Public documents and your rights",
     "business": "Venues and team",
-    "adminHint": "Moderation, payments and testing"
+    "adminHint": "Moderation, payments and testing",
+    "signOut": "Sign out"
   },
   "tonightPreview": {
     "viewProfiles": "View profiles",
@@ -1078,8 +1084,16 @@
     "emptyBody": "Documents you sign will show up here.",
     "signedOn": "Version {{version}} · signed on {{date}}",
     "outdated": "There's a new version: we'll ask you to accept it.",
-    "download": "Download receipt",
-    "pdfSoon": "The signed PDF and the email copy arrive with the backend (Block 5)."
+    "download": "Download receipt (JSON)",
+    "downloadPdf": "Download signed PDF",
+    "email": "Email it to me",
+    "emailSent": "We've emailed it to you.",
+    "pdfFailed": "We couldn't generate the PDF. Try again later.",
+    "emailErrors": {
+      "no_email": "Add and confirm an email on your account to receive it.",
+      "not_configured": "Email delivery isn't active yet. You can download the PDF.",
+      "failed": "We couldn't send it. We'll retry."
+    }
   },
   "privacyData": {
     "title": "Privacy & data",
@@ -1261,15 +1275,19 @@
       "dataRequests": "Rights",
       "legalDocs": "Legal documents",
       "settings": "Settings",
-      "audit": "Audit"
+      "audit": "Audit",
+      "users": "Users"
     },
     "mfa": {
       "title": "Second factor",
       "body": "The admin requires a second factor (TOTP) every session.",
       "code": "6-digit code",
-      "hint": "In testing: 123456.",
+      "hint": "Code from your authenticator app. In simulated mode: 123456.",
       "wrong": "Wrong code.",
-      "verify": "Verify"
+      "verify": "Verify",
+      "enroll": "Set up the second factor",
+      "scan": "Scan the code with your authenticator app (Google Authenticator, Authy…) and enter the 6-digit code.",
+      "qrAlt": "QR code for the authenticator app"
     },
     "dashboard": {
       "body": "Simulated data from the test environment.",
@@ -1302,7 +1320,12 @@
       "end": "End",
       "revoke": "Revoke",
       "done": "Mark resolved",
-      "publish": "Publish"
+      "publish": "Publish",
+      "grant_tester": "Grant tester",
+      "revoke_tester": "Revoke tester",
+      "grant_venue_manager": "Grant venue manager",
+      "revoke_venue_manager": "Revoke manager",
+      "grant_admin": "Grant admin"
     },
     "sections": {
       "verifications": {
@@ -1360,6 +1383,10 @@
       "audit": {
         "title": "Audit",
         "body": "Immutable log of admin actions."
+      },
+      "users": {
+        "title": "Users and roles",
+        "body": "Grant or revoke roles (tester, venue manager, admin). Phones are masked and every lookup is audited."
       }
     },
     "flags": {

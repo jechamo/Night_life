@@ -69,6 +69,13 @@ export function createMockLegalService(store: MockStore, wait: Wait): LegalServi
       return signed
     },
     getSigned: async () => (await store.read()).signed,
+    // Simulated: the real PDF and email come from the `signed-documents` Edge Function.
+    downloadSignedPdf: () =>
+      Promise.resolve(ok(new Blob(['%PDF-1.4\n% mock\n'], { type: 'application/pdf' }))),
+    async emailSignedDocuments() {
+      await wait()
+      return ok('sent' as const)
+    },
   }
 }
 

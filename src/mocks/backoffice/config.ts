@@ -29,7 +29,10 @@ export interface MockConfig {
   }[]
   redeemAttempts: number
   rows: Record<
-    Exclude<AdminSection, 'audit' | 'events' | 'subscriptions' | 'entitlements' | 'promoCodes'>,
+    Exclude<
+      AdminSection,
+      'audit' | 'events' | 'subscriptions' | 'entitlements' | 'promoCodes' | 'users'
+    >,
     AdminRow[]
   >
   audit: AdminRow[]

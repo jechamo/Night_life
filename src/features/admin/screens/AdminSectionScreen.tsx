@@ -15,6 +15,16 @@ import { ADMIN_SECTIONS, type AdminRow, type AdminSection } from '../services/ad
 const ACTIONS: Partial<
   Record<AdminSection, { on: readonly string[]; actions: readonly AdminAction[] }>
 > = {
+  users: {
+    on: ['active'],
+    actions: [
+      'grant_tester',
+      'revoke_tester',
+      'grant_venue_manager',
+      'revoke_venue_manager',
+      'grant_admin',
+    ],
+  },
   verifications: { on: ['pending'], actions: ['approve', 'reject'] },
   reports: { on: ['open'], actions: ['warn', 'suspend', 'dismiss'] },
   appeals: { on: ['pending'], actions: ['accept', 'reject'] },
@@ -27,6 +37,11 @@ const ACTIONS: Partial<
   legalDocs: { on: ['inactive'], actions: ['publish'] },
 }
 type AdminAction =
+  | 'grant_tester'
+  | 'revoke_tester'
+  | 'grant_venue_manager'
+  | 'revoke_venue_manager'
+  | 'grant_admin'
   | 'approve'
   | 'reject'
   | 'warn'

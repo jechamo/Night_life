@@ -10,6 +10,7 @@ import { MultiChoice } from '@/shared/ui/choice-group'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
+import { useServices } from '@/shared/services/ServicesProvider'
 import { useRunTestTool, useSetSimulatedRoles } from '../hooks/use-admin'
 import type { TestTool } from '../services/admin-service'
 
@@ -100,6 +101,7 @@ function SimulatedRoles() {
 /** Test tools (PRD 6.14): double-gated by role and `test_tools_enabled`, all audited. */
 export function AdminTestToolsScreen() {
   const { t } = useTranslation()
+  const { admin } = useServices()
   return (
     <>
       <ScreenHeader title={t('admin.nav.testTools')} description={t('admin.tools.body')} />
@@ -117,9 +119,11 @@ export function AdminTestToolsScreen() {
         <Section title={t('admin.tools.title')}>
           <Tools />
         </Section>
-        <Section title={t('admin.tools.roles')}>
-          <SimulatedRoles />
-        </Section>
+        {admin.mode === 'mock' && (
+          <Section title={t('admin.tools.roles')}>
+            <SimulatedRoles />
+          </Section>
+        )}
       </FeatureGate>
     </>
   )
