@@ -31,6 +31,7 @@ export function renderApp(
       platform={platform}
       services={createMockServices({
         latencyMs: 0,
+        realtime: false,
         preferences: platform.preferences,
         ...options.services,
         state: { onboarded: true, ...options.services?.state },

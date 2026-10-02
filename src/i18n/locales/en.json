@@ -480,11 +480,318 @@
     "consents": "Consents",
     "consentsHint": "Decide what you allow",
     "resetOnboarding": "Restart onboarding",
-    "resetOnboardingHint": "Back to the welcome screens (testing only)"
+    "resetOnboardingHint": "Back to the welcome screens (testing only)",
+    "me": "Your profile",
+    "ageVerified": "Age verified",
+    "preferences": "Preferences",
+    "preferencesHint": "Who you want to meet",
+    "premium": "Premium",
+    "premiumCheckout": "Available in test mode",
+    "about": "About",
+    "legal": "Legal",
+    "contact": "Contact",
+    "trafficLight": {
+      "title": "Traffic light",
+      "green": "Open",
+      "yellow": "Friendship",
+      "red": "Invisible",
+      "greenHint": "You appear in swipes and are open to flirting.",
+      "yellowHint": "You appear with the “Friendship only” label.",
+      "redHint": "You don't appear in swipes. You can still use the map and your chats."
+    },
+    "discreet": {
+      "title": "Discreet mode",
+      "body": "You count in the statistics but don't appear in the “Going” or “Here Now” lists."
+    }
   },
   "tonightPreview": {
     "viewProfiles": "View profiles",
     "goingTonight": "Going Tonight",
     "verifiedReady": "Age verified: the swipe arrives in Block 3."
+  },
+  "places": {
+    "mapLabel": "Night map of venues and events",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "recenter": "Re-centre map",
+    "search": "Search venues, events or streets",
+    "listView": "Show as list",
+    "mapView": "Show map",
+    "createEvent": "Create event",
+    "nearby": "Near you",
+    "noResults": "Nothing matches these filters. Try removing some.",
+    "peopleCount_one": "{{count}} person",
+    "peopleCount_other": "{{count}} people",
+    "fewPeople": "Fewer than 5 people",
+    "lessThan": "<{{count}}",
+    "ageShort": "average age {{age}}",
+    "whoIsThere": "Who's there",
+    "people": "people",
+    "averageAge": "average age",
+    "green": "open to flirt",
+    "ratio": "Women {{women}}% · Men {{men}}% · Other {{other}}%",
+    "privacyNote": "For privacy, with fewer than 5 people we show nothing else.",
+    "goingTonight": "going tonight",
+    "openNow": "Open now",
+    "closed": "Closed",
+    "hours": "Opening hours",
+    "price": "Price",
+    "priceLevel": "Price level {{level}} of 4",
+    "address": "Address",
+    "actions": "Actions",
+    "viewProfiles": "View profiles",
+    "vote": "Vote",
+    "going": {
+      "cta": "Going Tonight",
+      "active": "Going tonight ✓",
+      "outsideWindow": "“Going Tonight” can be marked from 18:00 until 06:00.",
+      "testNote": "Test mode: allowed outside the time window."
+    },
+    "checkIn": {
+      "cta": "I'm Here",
+      "leave": "Leave",
+      "until": "You're here until {{time}}.",
+      "invisible": "Invisible check-in until you verify your age",
+      "done": "You're at {{place}}!",
+      "simulate": "Pretend I'm here (testing)",
+      "errors": {
+        "too_far": "You need to be within 150 m of the place to check in.",
+        "no_location": "We can't tell where you are. Turn on location to check in."
+      }
+    },
+    "vibe": {
+      "title": "Vibe Check",
+      "vote": "Vote the vibe",
+      "noVotes": "No votes yet tonight.",
+      "needsCheckIn": "Check in here to vote.",
+      "options": {
+        "fire": "On fire",
+        "music": "Great music",
+        "chill": "Chilled",
+        "packed": "Packed",
+        "friendly": "Friendly"
+      }
+    },
+    "lostFound": {
+      "title": "Lost & found",
+      "empty": "No posts in the last 48 hours.",
+      "new": "Post a notice",
+      "reply": "Reply",
+      "edit": "Edit",
+      "delete": "Delete",
+      "publish": "Post",
+      "errors": {
+        "no_recent_check_in": "You need to have checked in here in the last 12 hours.",
+        "too_long": "280 characters max.",
+        "empty": "Write something."
+      }
+    },
+    "event": {
+      "title": "Event",
+      "status": {
+        "unconfirmed": "Unconfirmed",
+        "confirmed": "Confirmed",
+        "official": "Official",
+        "hidden": "Under review",
+        "deleted": "Deleted",
+        "archived": "Finished"
+      },
+      "origin": {
+        "user": "Created by a user",
+        "venue": "Organised by the venue",
+        "import": "Public listings"
+      },
+      "safety": "Unconfirmed event: go with friends, meet in busy places and report anything odd.",
+      "confirm": "I confirm it exists ({{count}}/{{total}})",
+      "errors": {
+        "already": "You already confirmed it.",
+        "notAvailable": "This event no longer needs confirmations."
+      },
+      "report": "Report",
+      "reportTitle": "Report reason",
+      "reasons": {
+        "fake": "It's fake",
+        "dangerous": "It's dangerous",
+        "inappropriate": "It's inappropriate"
+      },
+      "reported": "Thanks. A person will review it."
+    },
+    "filters": {
+      "title": "Filters",
+      "types": "Type",
+      "minPeople": "Number of people",
+      "averageAge": "Average age",
+      "green": "% open to flirt",
+      "distance": "Distance",
+      "price": "Max price",
+      "openNow": "Open now",
+      "sort": "Sort by",
+      "any": "Any",
+      "reset": "Reset",
+      "apply": "Show results",
+      "sorts": {
+        "distance": "Distance",
+        "most_people": "Most people",
+        "least_people": "Fewest people",
+        "average_age": "Average age",
+        "rating": "Top rated"
+      }
+    }
+  },
+  "matching": {
+    "modes": {
+      "here": "Here Now",
+      "tonight": "Going Tonight"
+    },
+    "youAreHere": "You're here",
+    "youAreGoing": "You're going tonight",
+    "noCheckIn": {
+      "title": "You haven't checked in yet",
+      "body": "Check in somewhere to see who's with you first."
+    },
+    "noGoing": {
+      "title": "Where are you going tonight?",
+      "body": "Mark “Going Tonight” on a place to meet who else is going."
+    },
+    "liveNow": "Busy right now",
+    "goingTonightList": "Where people are going tonight",
+    "everyone": "Everyone nearby",
+    "likesLeft_one": "{{count}} like left today",
+    "likesLeft_other": "{{count}} likes left today",
+    "likesUnlimited": "Unlimited likes",
+    "onlyVerified": "Verified only",
+    "deckLabel": "Profile stack",
+    "deckHint": "Swipe right to like and left to pass, or use the arrow keys.",
+    "cardLabel": "{{name}}, {{age}}",
+    "prevPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "viewProfile": "View {{name}}'s profile",
+    "stampLike": "LIKE",
+    "stampPass": "PASS",
+    "like": "Like",
+    "pass": "Pass",
+    "undo": "Undo",
+    "commonPlace": "Shared place: {{place}}",
+    "friendshipOnly": "Friendship only",
+    "anthem": "Anthem: {{title}} by {{artist}}",
+    "empty": {
+      "title": "You've seen everyone here",
+      "body": "These nearby places have people right now:"
+    },
+    "notice": {
+      "newPeople_one": "{{count}} new person at {{place}}",
+      "newPeople_other": "{{count}} new people at {{place}}",
+      "view": "View"
+    },
+    "limit": {
+      "title": "You've used today's likes",
+      "body": "You get 5 free likes again tomorrow. Viewing profiles, chatting and verifying are always free.",
+      "premium": "Premium gives you unlimited likes.",
+      "comingSoon": "Premium is coming soon."
+    },
+    "match": {
+      "here": "Match at {{place}}!",
+      "tonight": "You're both going to {{place}} tonight!",
+      "generic": "It's a match!",
+      "subtitle": "You and {{name}} like each other.",
+      "icebreakers": "Icebreakers (you can edit them)",
+      "message": "Your message",
+      "write": "Write now",
+      "keepLooking": "Keep looking"
+    },
+    "icebreakers": {
+      "hereNow": "How's the vibe at {{place}}?",
+      "tonight": "What time are you getting to {{place}}?",
+      "artist": "{{artist}} too? Which song is yours?",
+      "generic": {
+        "plan": "What's your perfect plan for tonight?",
+        "song": "If your song comes on: dance floor or bar?",
+        "spot": "What's your favourite spot around here?"
+      }
+    },
+    "likesYou": {
+      "title": "Who liked you",
+      "count_one": "{{count}} person",
+      "count_other": "{{count}} people",
+      "premium": "Premium shows who liked you.",
+      "hidden": "Hidden profile"
+    }
+  },
+  "chats": {
+    "empty": {
+      "title": "No matches yet",
+      "body": "Go to Tonight and swipe. When you match, you can talk here."
+    },
+    "newMatches": "New matches",
+    "conversations": "Conversations",
+    "you": "You",
+    "unread_one": "{{count}} unread message",
+    "unread_other": "{{count}} unread messages",
+    "placeholder": "Write a message",
+    "send": "Send",
+    "sent": "Sent",
+    "read": "Read",
+    "typing": "{{name}} is typing"
+  },
+  "safety": {
+    "unavailable": "This profile is no longer available",
+    "reasons": {
+      "possible_minor": "Possible minor",
+      "harassment": "Harassment",
+      "feel_followed": "I feel followed",
+      "fake_profile": "Fake profile",
+      "inappropriate": "Inappropriate content",
+      "spam": "Spam or scam",
+      "other": "Other"
+    },
+    "report": {
+      "cta": "Report",
+      "title": "Report {{name}}",
+      "body": "Tell us what happened. {{name}} won't know it was you.",
+      "reason": "Reason",
+      "comment": "Details (optional)",
+      "humanReview": "A person will review the report. If there is serious risk, we alert the authorities.",
+      "confirm": "Send report"
+    },
+    "block": {
+      "cta": "Block",
+      "title": "Block {{name}}?",
+      "body": "You'll stop seeing each other instantly, also at venues, and the match is deleted.",
+      "confirm": "Block"
+    },
+    "unmatch": {
+      "cta": "Delete match",
+      "title": "Delete the match with {{name}}?",
+      "body": "It's deleted for both of you, with the conversation.",
+      "confirm": "Delete"
+    }
+  },
+  "events": {
+    "categories": {
+      "party": "Party",
+      "concert": "Concert",
+      "meetup": "Meetup",
+      "other": "Other"
+    },
+    "create": {
+      "title": "Create event",
+      "body": "Up to {{max}} events a day, public places only.",
+      "name": "Event name",
+      "category": "Type",
+      "place": "Public place",
+      "placePlaceholder": "Choose a place",
+      "start": "Starts",
+      "end": "Ends",
+      "description": "Description (optional)",
+      "rules": "It will be published as “Unconfirmed” until {{count}} different people confirm it exists within {{hours}} hours. Otherwise it is deleted.",
+      "publicPlace": "I confirm it is a public, open place.",
+      "submit": "Publish event"
+    },
+    "errors": {
+      "not_verified": "Verify your age to create events.",
+      "daily_limit": "You've already created 2 events today.",
+      "duplicate": "There's already a similar event at that place and time.",
+      "not_public": "Events can only be created in public places."
+    }
   }
 }

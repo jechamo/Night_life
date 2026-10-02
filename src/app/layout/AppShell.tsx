@@ -1,36 +1,53 @@
 import { useTranslation } from 'react-i18next'
-import { Outlet } from 'react-router'
+import { Outlet, useMatches } from 'react-router'
+import { MatchCelebrationProvider } from '@/features/matching/components/MatchCelebration'
 import { AgeGateProvider } from '@/features/verification/hooks/use-age-gate'
+import { RealtimeBridge } from '@/shared/realtime/RealtimeBridge'
 import { TabBar } from './TabBar'
 
+const isFullBleed = (handle: unknown) =>
+  typeof handle === 'object' &&
+  handle !== null &&
+  (handle as { fullBleed?: boolean }).fullBleed === true
+
 /**
- * App frame: night ambience behind, scrollable content, floating tab bar.
- * Uses 100dvh and safe areas so it behaves the same in a browser, an installed
- * PWA and a Capacitor WebView (PRD 3.3).
+ * App frame: night ambience behind, scrollable content (or a full-bleed screen such
+ * as the map), floating tab bar. 100dvh + safe areas: same behaviour in browser,
+ * installed PWA and Capacitor WebView (PRD 3.3).
  */
 export function AppShell() {
   const { t } = useTranslation()
+  const fullBleed = useMatches().some((match) => isFullBleed(match.handle))
   return (
-    <div className="relative flex h-dvh flex-col overflow-hidden bg-background">
-      <a
-        href="#main"
-        className="glass fixed top-2 left-2 z-50 -translate-y-24 rounded-full px-4 py-2 focus:translate-y-[env(safe-area-inset-top)]"
-      >
-        {t('common.skipToContent')}
-      </a>
-      <NightAmbience />
-      <main
-        id="main"
-        className="relative flex-1 overflow-y-auto pb-[calc(7rem+env(safe-area-inset-bottom))]"
-      >
-        <div className="mx-auto w-full max-w-3xl">
-          <AgeGateProvider>
-            <Outlet />
-          </AgeGateProvider>
-        </div>
-      </main>
-      <TabBar />
-    </div>
+    <MatchCelebrationProvider>
+      <RealtimeBridge />
+      <div className="relative flex h-dvh flex-col overflow-hidden bg-background">
+        <a
+          href="#main"
+          className="glass fixed top-2 left-2 z-50 -translate-y-24 rounded-full px-4 py-2 focus:translate-y-[env(safe-area-inset-top)]"
+        >
+          {t('common.skipToContent')}
+        </a>
+        <NightAmbience />
+        <AgeGateProvider>
+          {fullBleed ? (
+            <main id="main" className="relative flex-1">
+              <Outlet />
+            </main>
+          ) : (
+            <main
+              id="main"
+              className="relative flex-1 overflow-y-auto pb-[calc(7rem+env(safe-area-inset-bottom))]"
+            >
+              <div className="mx-auto w-full max-w-3xl">
+                <Outlet />
+              </div>
+            </main>
+          )}
+        </AgeGateProvider>
+        <TabBar />
+      </div>
+    </MatchCelebrationProvider>
   )
 }
 

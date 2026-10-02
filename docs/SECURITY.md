@@ -42,6 +42,19 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 | XSS (A05)                              | Documentos legales como texto estructurado, nunca HTML                                                                                                                | `LegalDocumentSheet`                               |
 | IA (6.12 C)                            | Aviso previo de IA con revisión humana y método alternativo                                                                                                           | `AiNotice`                                         |
 
+## Controles añadidos (Bloque 3)
+
+| Riesgo                           | Control                                                                                                                                                                                                           | Dónde                              |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Privacidad de estadísticas (4.3) | `presentStats`: con menos de 5 personas solo "Menos de 5"; filtros de edad excluyen lugares bajo umbral                                                                                                           | `places/model/stats.ts` + tests    |
+| Seguimiento / acoso (6.15 D, E)  | Nunca se muestra la ubicación exacta ni la hora de check-in de otras personas; bloqueo mutuo e instantáneo (oculta en swipes y borra match); motivo "Me siento seguido/a"; modo discreto; semáforo rojo invisible | `matching.ts`, `SafetySheet`, mock |
+| Check-in (6.3)                   | Posición leída una vez vía plataforma, comprobación de 150 m y solo "lugar + hora"; sin verificar, check-in invisible                                                                                             | `attendance.ts`, `useCheckIn`      |
+| Scraping de perfiles (API6)      | Ver perfiles exige edad verificada (pantalla y ruta directa); el servidor limitará consultas en el Bloque 8                                                                                                       | `SwipeScreen`, `PersonScreen`      |
+| Eventos trampa (6.15 E)          | Solo lugares públicos (casilla obligatoria), 3 confirmaciones en 24 h, 3 reportes "falso" ⇒ oculto, aviso de seguridad en no confirmados, máx. 2/día, antiduplicados                                              | `events.ts` + tests                |
+| XSS (A05)                        | Mensajes, objetos perdidos, bios y descripciones como texto plano (sin HTML)                                                                                                                                      | `MessageBubble`, `LostFoundPanel`  |
+| Abuso de likes (API6)            | Límite diario de 5 (ilimitado solo con entitlement); el servidor lo aplicará                                                                                                                                      | `likesRemaining` + tests           |
+| Patrocinios (6.11)               | Solo si cumplen los filtros, máx. 2 arriba y 1/5, etiqueta siempre visible, no alteran datos                                                                                                                      | `sponsored.ts` + tests             |
+
 ## Modelo de amenazas (STRIDE) — esqueleto, se completa por bloques
 
 | Área                                  | Bloque | Estado                                          |
@@ -74,3 +87,12 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Auditoría de red (Playwright, recorrido completo del onboarding): 0 orígenes externos
   (solo URLs `blob:` locales de las vistas previas de fotos), 0 errores de consola.
 - Sin `dangerouslySetInnerHTML`, sin `console.log`, sin acceso a almacenamiento fuera de `src/platform`.
+
+### Bloque 3 — 2026-10-02 ✅ sin hallazgos críticos ni altos
+
+- Security Advisors de Supabase: 0 avisos (sin cambios de esquema).
+- RLS / migraciones / Edge Functions nuevas: ninguna (frontend con mocks).
+- Dependencias añadidas: ninguna. `npm audit`: 0 vulnerabilidades.
+- Auditoría de red (Playwright: mapa, ficha, swipe, match, chat, perfil, crear evento; 5 temas y
+  escritorio): 0 orígenes externos, 0 errores de consola. Avatares SVG `data:` (permitido por CSP).
+- Sin `dangerouslySetInnerHTML` ni `console.log`; APIs del dispositivo solo vía `src/platform`.

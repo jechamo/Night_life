@@ -1,27 +1,92 @@
 import {
+  Crown,
+  FileText,
   FlaskConical,
+  Heart,
+  Mail,
   Palette,
   RotateCcw,
   ShieldCheck,
   SlidersHorizontal,
   ToggleLeft,
 } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { useResetOnboarding } from '@/features/onboarding/hooks/use-onboarding-status'
 import { FeatureGate } from '@/shared/flags/FeatureGate'
+import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { GlassCard } from '@/shared/ui/card'
 import { ListRow } from '@/shared/ui/list-row'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
+import { MyProfileCard } from './components/MyProfileCard'
+import { PreferencesSheet } from './components/PreferencesSheet'
 
+function ActionRow({
+  icon: Icon,
+  label,
+  hint,
+  onClick,
+  tone = 'text-primary',
+}: {
+  icon: typeof Heart
+  label: string
+  hint?: string
+  onClick: () => void
+  tone?: string
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex min-h-14 w-full items-center gap-3 px-4 py-3 text-left transition-opacity active:opacity-70"
+    >
+      <span
+        className={`flex size-10 items-center justify-center rounded-full bg-surface-raised ${tone}`}
+      >
+        <Icon className="size-5" aria-hidden />
+      </span>
+      <span className="flex-1">
+        <span className="block font-medium">{label}</span>
+        {hint && <span className="block text-sm text-muted-foreground">{hint}</span>}
+      </span>
+    </button>
+  )
+}
+
+/** Perfil (PRD 5.3). Premium row follows the payment flags (PRD 6.13). */
 export function ProfileScreen() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const reset = useResetOnboarding()
+  const paywall = usePaywallState()
+  const [prefsOpen, setPrefsOpen] = useState(false)
   return (
     <>
-      <ScreenHeader title={t('profile.title')} description={t('app.slogan')} />
+      <ScreenHeader title={t('profile.title')} />
+      <MyProfileCard />
+      <Section title={t('profileMenu.me')}>
+        <GlassCard className="divide-y divide-border p-0">
+          <ActionRow
+            icon={Heart}
+            label={t('profileMenu.preferences')}
+            hint={t('profileMenu.preferencesHint')}
+            onClick={() => setPrefsOpen(true)}
+          />
+          {paywall !== 'hidden' && (
+            <ActionRow
+              icon={Crown}
+              tone="text-warning"
+              label={t('profileMenu.premium')}
+              hint={
+                paywall === 'checkout' ? t('profileMenu.premiumCheckout') : t('common.comingSoon')
+              }
+              onClick={() => undefined}
+            />
+          )}
+        </GlassCard>
+      </Section>
       <Section title={t('profileMenu.privacy')}>
         <GlassCard className="divide-y divide-border p-0">
           <ListRow
@@ -54,6 +119,22 @@ export function ProfileScreen() {
           />
         </GlassCard>
       </Section>
+      <Section title={t('profileMenu.about')}>
+        <GlassCard className="divide-y divide-border p-0">
+          <ActionRow
+            icon={FileText}
+            label={t('profileMenu.legal')}
+            hint={t('common.comingSoon')}
+            onClick={() => undefined}
+          />
+          <ActionRow
+            icon={Mail}
+            label={t('profileMenu.contact')}
+            hint={t('common.comingSoon')}
+            onClick={() => undefined}
+          />
+        </GlassCard>
+      </Section>
       {/* Test tools are double-gated: flag here (UI) and role + flag on the server (PRD 6.15 API5). */}
       <FeatureGate flag="test_tools_enabled" is="on">
         <Section title={t('profile.testing')}>
@@ -64,29 +145,21 @@ export function ProfileScreen() {
               label={t('profile.designKit')}
               hint={t('profile.designKitHint')}
             />
-            <button
-              type="button"
-              disabled={reset.isPending}
+            <ActionRow
+              icon={RotateCcw}
+              tone="text-warning"
+              label={t('profileMenu.resetOnboarding')}
+              hint={t('profileMenu.resetOnboardingHint')}
               onClick={() =>
                 reset.mutate(undefined, {
                   onSuccess: () => void navigate('/welcome', { replace: true }),
                 })
               }
-              className="flex min-h-14 w-full items-center gap-3 px-4 py-3 text-left transition-opacity active:opacity-70"
-            >
-              <span className="flex size-10 items-center justify-center rounded-full bg-surface-raised text-warning">
-                <RotateCcw className="size-5" aria-hidden />
-              </span>
-              <span className="flex-1">
-                <span className="block font-medium">{t('profileMenu.resetOnboarding')}</span>
-                <span className="block text-sm text-muted-foreground">
-                  {t('profileMenu.resetOnboardingHint')}
-                </span>
-              </span>
-            </button>
+            />
           </GlassCard>
         </Section>
       </FeatureGate>
+      <PreferencesSheet open={prefsOpen} onClose={() => setPrefsOpen(false)} />
     </>
   )
 }

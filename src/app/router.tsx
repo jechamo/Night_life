@@ -1,6 +1,11 @@
 import type { ComponentType } from 'react'
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
+import { ChatScreen } from '@/features/chats/ChatScreen'
 import { ChatsScreen } from '@/features/chats/ChatsScreen'
+import { CreateEventScreen } from '@/features/events/CreateEventScreen'
+import { LikesYouScreen } from '@/features/matching/screens/LikesYouScreen'
+import { PersonScreen } from '@/features/matching/screens/PersonScreen'
+import { SwipeScreen } from '@/features/matching/screens/SwipeScreen'
 import { ConsentsSettingsScreen } from '@/features/consents/ConsentsSettingsScreen'
 import { OnboardingScreen } from '@/features/onboarding/screens/OnboardingScreen'
 import { WelcomeScreen } from '@/features/onboarding/screens/WelcomeScreen'
@@ -42,9 +47,15 @@ export const routes: RouteObject[] = [
     errorElement: <RouteErrorScreen />,
     children: [
       { index: true, element: <Navigate to="/discover" replace /> },
-      { path: 'discover', element: screen(DiscoverScreen) },
+      { path: 'discover', element: screen(DiscoverScreen), handle: { fullBleed: true } },
       { path: 'tonight', element: screen(TonightScreen) },
+      { path: 'tonight/swipe', element: screen(SwipeScreen) },
+      { path: 'tonight/swipe/:placeId', element: screen(SwipeScreen) },
+      { path: 'tonight/likes', element: screen(LikesYouScreen) },
+      { path: 'people/:personId', element: screen(PersonScreen) },
       { path: 'chats', element: screen(ChatsScreen) },
+      { path: 'chats/:matchId', element: screen(ChatScreen) },
+      { path: 'events/new', element: screen(CreateEventScreen) },
       { path: 'profile', element: screen(ProfileScreen) },
       { path: 'profile/themes', element: screen(ThemesScreen) },
       { path: 'profile/settings', element: screen(SettingsScreen) },

@@ -6,8 +6,8 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | Bloque                                              | Estado                                       |
 | --------------------------------------------------- | -------------------------------------------- |
 | 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02) |
-| 2 – Onboarding, legal y verificación (mock)         | ✅ Terminado, pendiente de OK                |
-| 3 – App principal y experiencia de match (mock)     | ⏳                                           |
+| 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                  |
+| 3 – App principal y experiencia de match (mock)     | ✅ Terminado, pendiente de OK                |
 | 4 – Paneles, web pública y pantallas de pago (mock) | ⏳                                           |
 | 5 – Backend base, legal y modo pruebas              | ⏳                                           |
 | 6 – Verificaciones reales                           | ⏳                                           |
@@ -167,3 +167,71 @@ Ver `docs/SECURITY.md` → Bloque 2: sin hallazgos críticos ni altos.
 - Imágenes: firmas de tema (prioridad 1) y las de los bloques 3 y 5.
 - Bloque 3: Descubre (mapa simulado, ficha, "Quién hay"), Esta Noche (swipe y match), Chats,
   Perfil y Crear evento.
+
+---
+
+## Bloque 3 — App principal y experiencia de match (mock) (2026-10-02)
+
+### Qué se hizo
+
+- **Descubre**: mapa 3D nocturno simulado a pantalla completa con pines (personas + edad media,
+  halo en directo, "Patrocinado", "No confirmado"), heatmap que respira, vuelo de cámara al pin,
+  zoom/recentrar, buscador de cristal, selector Todo/Locales/Eventos, chips por tipo, filtros
+  completos (gratis) con orden, vista de lista con patrocinados (máx. 2 arriba y 1 de cada 5) y
+  botón "+ Crear evento". En escritorio: mapa a la izquierda y panel a la derecha.
+- **Ficha** (bottom sheet con muelle): "Quién hay" con contadores en directo y umbral de 5,
+  reparto por género, "van esta noche", horario, precio, dirección, acciones (Esta Noche Voy,
+  Estoy Aquí con animación de check-in, Ver perfiles, Votar, Objetos perdidos), Vibe Check y,
+  en eventos, estado, aviso de seguridad, "Confirmo que existe" (3/3) y "Reportar".
+- **Esta Noche**: Aquí Ahora / Esta Noche Voy, lugares con gente (transición de elemento
+  compartido), acceso a "Quién te ha dado like".
+- **Swipe** (pieza estrella): pila con profundidad (siguiente tarjeta escalada y desenfocada),
+  fotos por toques laterales con progreso, arrastre con inclinación, sellos ME GUSTA / PASO con
+  opacidad proporcional, salida por velocidad o vuelta elástica, vibración (nativo), botones y
+  teclado equivalentes, "Aquí Ahora", Anthem con ecualizador, "Lugar en común", "Solo amistad",
+  filtro gratuito "Solo verificados", límite de 5 likes/día (ilimitados con entitlement),
+  "Deshacer" (entitlement) con rebobinado, aviso "N personas nuevas en X", estado vacío con
+  lugares cercanos.
+- **Match**: fotos que vuelan y se juntan, partículas del tema, título contextual ("¡Match en
+  X!" / "¡Los dos vais a X esta noche!"), ambos Anthems, rompehielos por reglas editables,
+  "Escribir ahora" (lleva el mensaje al chat) y "Seguir mirando". También llega por realtime.
+- **Chats**: nuevos matches, conversaciones con no leídos, chat con indicador de escritura y
+  de leído, eliminar match, bloquear (mutuo e instantáneo) y reportar (incl. "posible menor" y
+  "Me siento seguido/a").
+- **Perfil**: tarjeta con badges y Anthem, semáforo (abierto/amistad/invisible), modo discreto,
+  preferencias, Premium según flags, privacidad, apariencia, legal/contacto (próximamente).
+- **Crear evento**: solo con edad verificada, lugar público confirmado, máx. 2/día,
+  antiduplicados, publicado como "No confirmado".
+- Perfil de otra persona, "Quién te ha dado like" (desenfocado sin `see_likes` si hay paywall).
+- Reglas puras y probadas, mundo simulado y realtime falso (ADR 0007).
+
+### Hecho cuando
+
+- ✅ Los momentos firma y el match están implementados y fluidos en móvil (vuelo de cámara,
+  ficha con muelle, contadores, pulso en directo, heatmap, swipe con física, sellos, match con
+  partículas, check-in animado, sello en badges). Probado con arrastre real en Chromium móvil.
+- ✅ Funciona con los 5 temas (capturas de mapa, ficha y swipe en Neon Noir, Cyberpunk, Velvet,
+  Sunset y Mono); con "reducir movimiento" todo pasa a fundidos.
+
+### Cómo probarlo
+
+1. Descubre → toca un pin → ficha. "Estoy Aquí" fuera del local ⇒ "Simular que estoy aquí".
+2. Esta Noche → Ver perfiles (pide verificar la edad la primera vez: usa el simulador).
+3. Desliza o usa los botones; Lucía, Alex, Nerea, Clara e Inés ya te han dado like ⇒ match.
+4. "Escribir ahora" → el chat responde y muestra "escribiendo" y "leído".
+5. Perfil → semáforo y modo discreto; "+ Crear evento" desde Descubre.
+
+### Desviaciones
+
+- Mapa simulado (no Mapbox) y ubicación fija en el centro del distrito hasta el Bloque 7.
+- Avatares ilustrados por código y portadas por tipo hasta tener las imágenes GPT.
+- Legal y Contacto en Perfil quedan "Próximamente" (web pública en el Bloque 4).
+
+### Puerta de seguridad
+
+Ver `docs/SECURITY.md` → Bloque 3: sin hallazgos críticos ni altos.
+
+### Pendiente
+
+- Bloque 4: panel de locales, admin (pagos, flags, herramientas de prueba), web pública legal y
+  pantallas de pago (paywall, checkout, Mi suscripción, canjear código, DM de pago).

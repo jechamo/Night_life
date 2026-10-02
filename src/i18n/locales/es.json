@@ -480,11 +480,318 @@
     "consents": "Consentimientos",
     "consentsHint": "Decide qué permites",
     "resetOnboarding": "Reiniciar onboarding",
-    "resetOnboardingHint": "Vuelve a la bienvenida (solo pruebas)"
+    "resetOnboardingHint": "Vuelve a la bienvenida (solo pruebas)",
+    "me": "Tu perfil",
+    "ageVerified": "Edad verificada",
+    "preferences": "Preferencias",
+    "preferencesHint": "A quién quieres conocer",
+    "premium": "Premium",
+    "premiumCheckout": "Disponible en modo pruebas",
+    "about": "Información",
+    "legal": "Legal",
+    "contact": "Contacto",
+    "trafficLight": {
+      "title": "Semáforo",
+      "green": "Abierto",
+      "yellow": "Amistad",
+      "red": "Invisible",
+      "greenHint": "Apareces en los swipes y estás abierto/a a ligar.",
+      "yellowHint": "Apareces con la etiqueta «Solo amistad».",
+      "redHint": "No apareces en los swipes. Puedes seguir usando el mapa y tus chats."
+    },
+    "discreet": {
+      "title": "Modo discreto",
+      "body": "Cuentas en las estadísticas, pero no apareces en las listas de «Van» ni «Aquí Ahora»."
+    }
   },
   "tonightPreview": {
     "viewProfiles": "Ver perfiles",
     "goingTonight": "Esta Noche Voy",
     "verifiedReady": "Edad verificada: el swipe llega en el Bloque 3."
+  },
+  "places": {
+    "mapLabel": "Mapa nocturno de locales y eventos",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "recenter": "Centrar el mapa",
+    "search": "Busca locales, eventos o calles",
+    "listView": "Ver como lista",
+    "mapView": "Ver mapa",
+    "createEvent": "Crear evento",
+    "nearby": "Cerca de ti",
+    "noResults": "No hay nada con estos filtros. Prueba a quitar alguno.",
+    "peopleCount_one": "{{count}} persona",
+    "peopleCount_other": "{{count}} personas",
+    "fewPeople": "Menos de 5 personas",
+    "lessThan": "<{{count}}",
+    "ageShort": "{{age}} años de media",
+    "whoIsThere": "Quién hay",
+    "people": "personas",
+    "averageAge": "edad media",
+    "green": "en verde",
+    "ratio": "Mujeres {{women}} % · Hombres {{men}} % · Otros {{other}} %",
+    "privacyNote": "Por privacidad, con menos de 5 personas no mostramos más datos.",
+    "goingTonight": "van esta noche",
+    "openNow": "Abierto ahora",
+    "closed": "Cerrado",
+    "hours": "Horario",
+    "price": "Precio",
+    "priceLevel": "Nivel de precio {{level}} de 4",
+    "address": "Dirección",
+    "actions": "Acciones",
+    "viewProfiles": "Ver perfiles",
+    "vote": "Votar",
+    "going": {
+      "cta": "Esta Noche Voy",
+      "active": "Voy esta noche ✓",
+      "outsideWindow": "«Esta Noche Voy» se puede marcar desde las 18:00 hasta las 06:00.",
+      "testNote": "Modo pruebas: se permite fuera de horario."
+    },
+    "checkIn": {
+      "cta": "Estoy Aquí",
+      "leave": "Salir de aquí",
+      "until": "Estás aquí hasta las {{time}}.",
+      "invisible": "Check-in invisible hasta que verifiques tu edad",
+      "done": "¡Estás en {{place}}!",
+      "simulate": "Simular que estoy aquí (pruebas)",
+      "errors": {
+        "too_far": "Tienes que estar a menos de 150 m del lugar para hacer check-in.",
+        "no_location": "No podemos saber dónde estás. Activa la ubicación para hacer check-in."
+      }
+    },
+    "vibe": {
+      "title": "Vibe Check",
+      "vote": "Vota el ambiente",
+      "noVotes": "Aún no hay votos esta noche.",
+      "needsCheckIn": "Haz check-in aquí para votar.",
+      "options": {
+        "fire": "Ambientazo",
+        "music": "Buena música",
+        "chill": "Tranquilo",
+        "packed": "A tope",
+        "friendly": "Buen rollo"
+      }
+    },
+    "lostFound": {
+      "title": "Objetos perdidos",
+      "empty": "No hay avisos en las últimas 48 horas.",
+      "new": "Publicar aviso",
+      "reply": "Responder",
+      "edit": "Editar",
+      "delete": "Borrar",
+      "publish": "Publicar",
+      "errors": {
+        "no_recent_check_in": "Necesitas haber hecho check-in aquí en las últimas 12 horas.",
+        "too_long": "Máximo 280 caracteres.",
+        "empty": "Escribe algo."
+      }
+    },
+    "event": {
+      "title": "Evento",
+      "status": {
+        "unconfirmed": "No confirmado",
+        "confirmed": "Confirmado",
+        "official": "Oficial",
+        "hidden": "En revisión",
+        "deleted": "Eliminado",
+        "archived": "Terminado"
+      },
+      "origin": {
+        "user": "Creado por un usuario",
+        "venue": "Organizado por el local",
+        "import": "Agenda pública"
+      },
+      "safety": "Evento sin confirmar: ve acompañado, queda en sitios concurridos y avisa si algo no cuadra.",
+      "confirm": "Confirmo que existe ({{count}}/{{total}})",
+      "errors": {
+        "already": "Ya lo has confirmado.",
+        "notAvailable": "Este evento ya no necesita confirmaciones."
+      },
+      "report": "Reportar",
+      "reportTitle": "Motivo del reporte",
+      "reasons": {
+        "fake": "Es falso",
+        "dangerous": "Es peligroso",
+        "inappropriate": "Es inapropiado"
+      },
+      "reported": "Gracias. Lo revisará una persona."
+    },
+    "filters": {
+      "title": "Filtros",
+      "types": "Tipo",
+      "minPeople": "Cantidad de personas",
+      "averageAge": "Edad media",
+      "green": "% en verde",
+      "distance": "Distancia",
+      "price": "Precio máximo",
+      "openNow": "Abierto ahora",
+      "sort": "Ordenar por",
+      "any": "Cualquiera",
+      "reset": "Restablecer",
+      "apply": "Ver resultados",
+      "sorts": {
+        "distance": "Distancia",
+        "most_people": "Más gente",
+        "least_people": "Menos gente",
+        "average_age": "Edad media",
+        "rating": "Mejor valorado"
+      }
+    }
+  },
+  "matching": {
+    "modes": {
+      "here": "Aquí Ahora",
+      "tonight": "Esta Noche Voy"
+    },
+    "youAreHere": "Estás aquí",
+    "youAreGoing": "Vas esta noche",
+    "noCheckIn": {
+      "title": "Aún no has hecho check-in",
+      "body": "Haz check-in en un lugar para ver primero a quien está contigo."
+    },
+    "noGoing": {
+      "title": "¿Dónde vas esta noche?",
+      "body": "Marca «Esta Noche Voy» en un lugar para conocer a quien también va."
+    },
+    "liveNow": "Con gente ahora",
+    "goingTonightList": "Donde va la gente esta noche",
+    "everyone": "Todo el mundo cerca",
+    "likesLeft_one": "Te queda {{count}} like hoy",
+    "likesLeft_other": "Te quedan {{count}} likes hoy",
+    "likesUnlimited": "Likes ilimitados",
+    "onlyVerified": "Solo verificados",
+    "deckLabel": "Pila de perfiles",
+    "deckHint": "Desliza a la derecha para dar like y a la izquierda para pasar, o usa las flechas.",
+    "cardLabel": "{{name}}, {{age}}",
+    "prevPhoto": "Foto anterior",
+    "nextPhoto": "Foto siguiente",
+    "viewProfile": "Ver el perfil de {{name}}",
+    "stampLike": "ME GUSTA",
+    "stampPass": "PASO",
+    "like": "Me gusta",
+    "pass": "Paso",
+    "undo": "Deshacer",
+    "commonPlace": "Lugar en común: {{place}}",
+    "friendshipOnly": "Solo amistad",
+    "anthem": "Anthem: {{title}} de {{artist}}",
+    "empty": {
+      "title": "Has visto a todos los de aquí",
+      "body": "Estos lugares cercanos tienen gente ahora mismo:"
+    },
+    "notice": {
+      "newPeople_one": "{{count}} persona nueva en {{place}}",
+      "newPeople_other": "{{count}} personas nuevas en {{place}}",
+      "view": "Ver"
+    },
+    "limit": {
+      "title": "Has usado tus likes de hoy",
+      "body": "Mañana vuelves a tener 5 likes gratis. Ver perfiles, chatear y verificarte siempre es gratis.",
+      "premium": "Con Premium tienes likes ilimitados.",
+      "comingSoon": "Premium llegará próximamente."
+    },
+    "match": {
+      "here": "¡Match en {{place}}!",
+      "tonight": "¡Los dos vais a {{place}} esta noche!",
+      "generic": "¡Es un match!",
+      "subtitle": "A {{name}} y a ti os gustáis.",
+      "icebreakers": "Rompehielos (puedes editarlos)",
+      "message": "Tu mensaje",
+      "write": "Escribir ahora",
+      "keepLooking": "Seguir mirando"
+    },
+    "icebreakers": {
+      "hereNow": "¿Qué tal está el ambiente en {{place}}?",
+      "tonight": "¿A qué hora llegas a {{place}}?",
+      "artist": "¿{{artist}} también? ¿Cuál es tu canción?",
+      "generic": {
+        "plan": "¿Cuál es tu plan perfecto para esta noche?",
+        "song": "Si suena tu canción, ¿a la pista o a la barra?",
+        "spot": "¿Cuál es tu sitio favorito de la zona?"
+      }
+    },
+    "likesYou": {
+      "title": "Quién te ha dado like",
+      "count_one": "{{count}} persona",
+      "count_other": "{{count}} personas",
+      "premium": "Con Premium ves quién te ha dado like.",
+      "hidden": "Perfil oculto"
+    }
+  },
+  "chats": {
+    "empty": {
+      "title": "Aún no tienes matches",
+      "body": "Ve a Esta Noche y desliza. Cuando haya match, podréis hablar aquí."
+    },
+    "newMatches": "Nuevos matches",
+    "conversations": "Conversaciones",
+    "you": "Tú",
+    "unread_one": "{{count}} mensaje sin leer",
+    "unread_other": "{{count}} mensajes sin leer",
+    "placeholder": "Escribe un mensaje",
+    "send": "Enviar",
+    "sent": "Enviado",
+    "read": "Leído",
+    "typing": "{{name}} está escribiendo"
+  },
+  "safety": {
+    "unavailable": "Este perfil ya no está disponible",
+    "reasons": {
+      "possible_minor": "Posible menor",
+      "harassment": "Acoso",
+      "feel_followed": "Me siento seguido/a",
+      "fake_profile": "Perfil falso",
+      "inappropriate": "Contenido inapropiado",
+      "spam": "Spam o estafa",
+      "other": "Otro motivo"
+    },
+    "report": {
+      "cta": "Reportar",
+      "title": "Reportar a {{name}}",
+      "body": "Cuéntanos qué ha pasado. {{name}} no sabrá que has sido tú.",
+      "reason": "Motivo",
+      "comment": "Detalles (opcional)",
+      "humanReview": "Una persona revisará el reporte. Si hay riesgo grave, avisamos a las autoridades.",
+      "confirm": "Enviar reporte"
+    },
+    "block": {
+      "cta": "Bloquear",
+      "title": "¿Bloquear a {{name}}?",
+      "body": "Dejaréis de veros mutuamente al instante, también en los lugares, y se borrará el match.",
+      "confirm": "Bloquear"
+    },
+    "unmatch": {
+      "cta": "Eliminar match",
+      "title": "¿Eliminar el match con {{name}}?",
+      "body": "Se elimina para los dos, con la conversación.",
+      "confirm": "Eliminar"
+    }
+  },
+  "events": {
+    "categories": {
+      "party": "Fiesta",
+      "concert": "Concierto",
+      "meetup": "Quedada",
+      "other": "Otro"
+    },
+    "create": {
+      "title": "Crear evento",
+      "body": "Máximo {{max}} eventos al día y solo en lugares públicos.",
+      "name": "Nombre del evento",
+      "category": "Tipo",
+      "place": "Lugar público",
+      "placePlaceholder": "Elige un lugar",
+      "start": "Empieza",
+      "end": "Termina",
+      "description": "Descripción (opcional)",
+      "rules": "Se publicará como «No confirmado» hasta que {{count}} personas distintas confirmen que existe en {{hours}} horas. Si no, se borra.",
+      "publicPlace": "Confirmo que es un lugar público y abierto.",
+      "submit": "Publicar evento"
+    },
+    "errors": {
+      "not_verified": "Verifica tu edad para crear eventos.",
+      "daily_limit": "Ya has creado 2 eventos hoy.",
+      "duplicate": "Ya existe un evento parecido en ese sitio y a esa hora.",
+      "not_public": "Solo se pueden crear eventos en lugares públicos."
+    }
   }
 }

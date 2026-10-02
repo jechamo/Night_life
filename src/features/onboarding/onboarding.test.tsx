@@ -126,9 +126,8 @@ describe('"Verifica tu edad" gate', () => {
     expect(await screen.findByText('¡Verificación completada!')).toBeInTheDocument()
 
     await router.navigate('/tonight')
-    await user.click(await screen.findByRole('button', { name: 'Ver perfiles' }))
-    expect(
-      await screen.findByText('Edad verificada: el swipe llega en el Bloque 3.'),
-    ).toBeInTheDocument()
+    await user.click((await screen.findAllByRole('button', { name: 'Ver perfiles' }))[0]!)
+    await waitFor(() => expect(router.state.location.pathname).toBe('/tonight/swipe'))
+    expect(await screen.findByRole('button', { name: 'Me gusta' })).toBeInTheDocument()
   })
 })

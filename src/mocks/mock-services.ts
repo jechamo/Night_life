@@ -12,6 +12,15 @@ import {
   createMockVerificationService,
 } from './mock-auth-services'
 import { createMockStore, latency, type MockState } from './mock-store'
+import { createMockAttendanceService, createMockPlacesService } from './world/place-services'
+import { createMockRealtime } from './world/realtime'
+import {
+  createMockChatService,
+  createMockMatchingService,
+  createMockProfileService,
+} from './world/social-services'
+import { createWorldState } from './world/world-state'
+import { hasEntitlement } from '@/shared/entitlements/entitlements'
 
 export interface MockServiceOptions {
   flags?: Partial<FeatureFlags>
@@ -23,6 +32,8 @@ export interface MockServiceOptions {
   state?: Partial<MockState>
   /** Artificial latency per call; 0 in tests. */
   latencyMs?: number
+  /** Fake realtime timers (off in tests). */
+  realtime?: boolean
 }
 
 /** A tester account with one tester-granted advantage, as in the PRD testing mode (6.14). */
@@ -41,13 +52,26 @@ export function createMockServices(options: MockServiceOptions = {}): AppService
   const flags = { ...INITIAL_FLAG_VALUES, ...options.flags }
   const store = createMockStore(options.preferences ?? createMemoryPreferences(), options.state)
   const wait = () => latency(options.latencyMs ?? 350)
+  const world = createWorldState()
+  const realtime = options.realtime ?? true
+  const entitlements = options.entitlements ?? MOCK_ENTITLEMENTS
+  const unlimitedLikes = () =>
+    flags.premium_enabled === 'on' && hasEntitlement(entitlements, 'unlimited_likes', new Date())
   return {
+    places: createMockPlacesService(world, store, wait),
+    attendance: createMockAttendanceService(world, wait, {
+      ignoreTonightWindow: () => flags.test_tools_enabled === 'on',
+    }),
+    matching: createMockMatchingService(world, wait, { unlimitedLikes, realtime }),
+    chat: createMockChatService(world, wait, { realtime }),
+    profile: createMockProfileService(world, wait),
+    realtime: createMockRealtime(world, realtime),
     onboarding: createMockOnboardingService(store, wait),
     legal: createMockLegalService(store, wait),
     consents: createMockConsentService(store, wait),
     verification: createMockVerificationService(store, wait),
     flags: createFlagService({ load: () => Promise.resolve(flags) }),
     session: { getRoles: () => Promise.resolve(options.roles ?? MOCK_ROLES) },
-    entitlements: { getMine: () => Promise.resolve(options.entitlements ?? MOCK_ENTITLEMENTS) },
+    entitlements: { getMine: () => Promise.resolve(entitlements) },
   }
 }
