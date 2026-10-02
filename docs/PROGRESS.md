@@ -15,6 +15,7 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 8 – Ligar, match en tiempo real y chat              | ⏳                                           |
 | 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                           |
 | 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                           |
+| 11 – Apps nativas y pagos en tiendas (propuesto)    | 📝 Propuesto, ver docs/MONETIZATION.md       |
 
 ---
 
