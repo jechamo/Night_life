@@ -1,8 +1,7 @@
 import { Moon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet } from 'react-router'
-import { useLanguage } from '@/i18n/use-language'
-import { SegmentedControl } from '@/shared/ui/segmented-control'
+import { LanguageSwitch } from '@/shared/ui/language-switch'
 
 /**
  * Public legal website (PRD 5.1 "Web pública, sin login"). Lives outside the app shell
@@ -10,7 +9,6 @@ import { SegmentedControl } from '@/shared/ui/segmented-control'
  */
 export function PublicLayout() {
   const { t } = useTranslation()
-  const { language, setLanguage } = useLanguage()
   return (
     <div className="min-h-dvh bg-background text-foreground">
       <header className="pt-safe px-safe border-b border-border">
@@ -19,15 +17,7 @@ export function PublicLayout() {
             <Moon className="size-5 text-primary" aria-hidden />
             {t('app.name')}
           </Link>
-          <SegmentedControl
-            label={t('settings.language.label')}
-            value={language}
-            options={[
-              { value: 'es', label: 'ES' },
-              { value: 'en', label: 'EN' },
-            ]}
-            onChange={setLanguage}
-          />
+          <LanguageSwitch />
         </div>
       </header>
       <main className="px-safe mx-auto max-w-3xl pb-16">

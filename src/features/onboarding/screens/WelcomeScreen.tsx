@@ -9,6 +9,7 @@ import { cn } from '@/shared/lib/cn'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
+import { LanguageSwitch } from '@/shared/ui/language-switch'
 import { useOnboardingStatus } from '../hooks/use-onboarding-status'
 
 const SLIDES = ['live', 'connect', 'safe'] as const
@@ -52,8 +53,9 @@ export function WelcomeScreen() {
           <SlideArt slide={slide} />
         </motion.div>
       </AnimatePresence>
-      <div className="pt-safe px-safe flex min-h-16 items-center pt-4">
+      <div className="pt-safe px-safe flex min-h-16 items-center justify-between gap-3 pt-4">
         <Badge tone="live">{t('app.name')}</Badge>
+        <LanguageSwitch />
       </div>
       <motion.section
         aria-roledescription="carousel"

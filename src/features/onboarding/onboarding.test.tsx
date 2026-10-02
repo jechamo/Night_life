@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
+import { PREFERENCE_KEYS } from '@/shared/config/preferences'
 import { ok } from '@/shared/lib/result'
 import { renderApp } from '@/test/render-app'
 
@@ -129,5 +130,18 @@ describe('"Verifica tu edad" gate', () => {
     await user.click((await screen.findAllByRole('button', { name: 'Ver perfiles' }))[0]!)
     await waitFor(() => expect(router.state.location.pathname).toBe('/tonight/swipe'))
     expect(await screen.findByRole('button', { name: 'Me gusta' })).toBeInTheDocument()
+  })
+})
+
+describe('language on the welcome screen', () => {
+  it('lets you pick ES/EN before signing up and remembers it', async () => {
+    const user = userEvent.setup()
+    const { platform } = renderApp('/welcome', fresh)
+    await user.click(await screen.findByRole('radio', { name: 'EN' }))
+    expect(await screen.findByText('See where the vibe is, right now')).toBeInTheDocument()
+    await expect(platform.preferences.get(PREFERENCE_KEYS.language)).resolves.toBe('en')
+    // Back to Spanish so the shared i18n instance doesn't leak into other tests.
+    await user.click(screen.getByRole('radio', { name: 'ES' }))
+    expect(await screen.findByText('Mira dónde hay ambiente, ahora')).toBeInTheDocument()
   })
 })
