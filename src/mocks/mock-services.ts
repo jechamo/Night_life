@@ -21,6 +21,15 @@ import {
 } from './world/social-services'
 import { createWorldState } from './world/world-state'
 import { hasEntitlement } from '@/shared/entitlements/entitlements'
+import { createMockAdminService } from './backoffice/admin'
+import { createMockConfig } from './backoffice/config'
+import {
+  createMockModerationService,
+  createMockPrivacyService,
+  createMockSafetyService,
+  createMockVenuePanelService,
+} from './backoffice/others'
+import { createMockPremiumService } from './backoffice/premium'
 
 export interface MockServiceOptions {
   flags?: Partial<FeatureFlags>
@@ -36,8 +45,11 @@ export interface MockServiceOptions {
   realtime?: boolean
 }
 
-/** A tester account with one tester-granted advantage, as in the PRD testing mode (6.14). */
-export const MOCK_ROLES: readonly Role[] = ['user', 'tester']
+/**
+ * The mock account holds every role so the owner can walk through every panel; the
+ * admin can simulate other role sets (Admin → Herramientas de prueba).
+ */
+export const MOCK_ROLES: readonly Role[] = ['user', 'tester', 'venue_manager', 'admin']
 export const MOCK_ENTITLEMENTS: readonly Entitlement[] = [
   {
     key: 'see_likes',
@@ -49,20 +61,37 @@ export const MOCK_ENTITLEMENTS: readonly Entitlement[] = [
 ]
 
 export function createMockServices(options: MockServiceOptions = {}): AppServices {
-  const flags = { ...INITIAL_FLAG_VALUES, ...options.flags }
+  const config = createMockConfig(
+    { ...INITIAL_FLAG_VALUES, ...options.flags },
+    options.roles ?? MOCK_ROLES,
+    options.entitlements ?? MOCK_ENTITLEMENTS,
+  )
   const store = createMockStore(options.preferences ?? createMemoryPreferences(), options.state)
   const wait = () => latency(options.latencyMs ?? 350)
   const world = createWorldState()
   const realtime = options.realtime ?? true
-  const entitlements = options.entitlements ?? MOCK_ENTITLEMENTS
   const unlimitedLikes = () =>
-    flags.premium_enabled === 'on' && hasEntitlement(entitlements, 'unlimited_likes', new Date())
+    config.flags.premium_enabled === 'on' &&
+    hasEntitlement(config.entitlements, 'unlimited_likes', new Date())
+  const premium = createMockPremiumService(config, wait, {
+    isRedLight: (id) => world.people.find((p) => p.id === id)?.trafficLight === 'red',
+  })
   return {
+    premium,
+    admin: createMockAdminService(config, world, store, premium, wait),
+    venuePanel: createMockVenuePanelService(world, config, wait),
+    privacy: createMockPrivacyService(world, store, config, wait),
+    moderation: createMockModerationService(config, wait),
+    safety: createMockSafetyService(wait),
     places: createMockPlacesService(world, store, wait),
     attendance: createMockAttendanceService(world, wait, {
-      ignoreTonightWindow: () => flags.test_tools_enabled === 'on',
+      ignoreTonightWindow: () => config.flags.test_tools_enabled === 'on',
     }),
-    matching: createMockMatchingService(world, wait, { unlimitedLikes, realtime }),
+    matching: createMockMatchingService(world, wait, {
+      unlimitedLikes,
+      realtime,
+      onReport: (report) => config.myReports.unshift(report),
+    }),
     chat: createMockChatService(world, wait, { realtime }),
     profile: createMockProfileService(world, wait),
     realtime: createMockRealtime(world, realtime),
@@ -70,8 +99,8 @@ export function createMockServices(options: MockServiceOptions = {}): AppService
     legal: createMockLegalService(store, wait),
     consents: createMockConsentService(store, wait),
     verification: createMockVerificationService(store, wait),
-    flags: createFlagService({ load: () => Promise.resolve(flags) }),
-    session: { getRoles: () => Promise.resolve(options.roles ?? MOCK_ROLES) },
-    entitlements: { getMine: () => Promise.resolve(entitlements) },
+    flags: createFlagService({ load: () => Promise.resolve({ ...config.flags }) }),
+    session: { getRoles: () => Promise.resolve([...config.roles]) },
+    entitlements: { getMine: () => Promise.resolve([...config.entitlements]) },
   }
 }

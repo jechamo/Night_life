@@ -3,7 +3,7 @@
 Documento vivo (PRD 3.4, 6.15 API9). Cada entrada: propósito, autenticación, rol y límites.
 Se eliminan las funciones sin uso y **ninguna función de prueba es accesible en producción**.
 
-## Estado (Bloque 1)
+## Estado (Bloque 4)
 
 Aún no hay Edge Functions ni RPC desplegadas: los bloques 1-4 usan mocks
 (`src/mocks/`). El proyecto Supabase `Nightlife_Connect` existe y está sano, sin esquema
@@ -11,23 +11,29 @@ de aplicación todavía.
 
 ## Puertos de cliente ya definidos (contratos a implementar)
 
-| Puerto (frontend)                                                  | Implementación prevista                                                          | Bloque |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------ |
-| `FlagSource.load()`                                                | Lectura de `app_settings` (flags) vía servicio Supabase                          | 5      |
-| `EntitlementService.getMine()`                                     | Tabla `entitlements` (RLS: solo el propietario)                                  | 5      |
-| `SessionService.getRoles()`                                        | Tabla `user_roles` (RLS)                                                         | 5      |
-| `OnboardingService` (OTP, alta, estado)                            | Supabase Auth (teléfono + OTP) + Edge Function de alta (límites, HMAC de baneos) | 5      |
-| `LegalService` (documentos y firmas)                               | Tablas `legal_documents` y `consent_records`                                     | 5      |
-| `ConsentService`                                                   | `consent_records` (append-only)                                                  | 5      |
-| `VerificationService` (estado, inicio, revisión)                   | Edge Functions de Yoti + `verification_status`                                   | 6      |
-| `PlacesService` (lugares, eventos, Vibe Check, objetos perdidos)   | PostGIS + RPC/Edge Functions (límites, ciclo de vida con pg_cron)                | 7      |
-| `AttendanceService` (check-in 150 m, Esta Noche Voy)               | Edge Function de check-in (distancia en servidor, solo lugar+hora)               | 7      |
-| `MatchingService` (candidatos, likes, matches, bloqueos, reportes) | RPC/Edge Functions con compatibilidad y límites en servidor                      | 8-9    |
-| `ChatService`                                                      | Tabla `messages` + Realtime (RLS: solo participantes)                            | 8      |
-| `ProfileService`                                                   | `profiles` / vista pública                                                       | 5      |
-| `RealtimeService`                                                  | Supabase Realtime (estadísticas, match, mensajes)                                | 7-8    |
-| `CheckoutGateway.createCheckoutSession()`                          | Edge Function `create-checkout-session`                                          | 9      |
-| `CheckoutGateway.createPortalSession()`                            | Edge Function `create-portal-session`                                            | 9      |
+| Puerto (frontend)                                                                  | Implementación prevista                                                          | Bloque |
+| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ |
+| `FlagSource.load()`                                                                | Lectura de `app_settings` (flags) vía servicio Supabase                          | 5      |
+| `EntitlementService.getMine()`                                                     | Tabla `entitlements` (RLS: solo el propietario)                                  | 5      |
+| `SessionService.getRoles()`                                                        | Tabla `user_roles` (RLS)                                                         | 5      |
+| `OnboardingService` (OTP, alta, estado)                                            | Supabase Auth (teléfono + OTP) + Edge Function de alta (límites, HMAC de baneos) | 5      |
+| `LegalService` (documentos y firmas)                                               | Tablas `legal_documents` y `consent_records`                                     | 5      |
+| `ConsentService`                                                                   | `consent_records` (append-only)                                                  | 5      |
+| `VerificationService` (estado, inicio, revisión)                                   | Edge Functions de Yoti + `verification_status`                                   | 6      |
+| `PlacesService` (lugares, eventos, Vibe Check, objetos perdidos)                   | PostGIS + RPC/Edge Functions (límites, ciclo de vida con pg_cron)                | 7      |
+| `AttendanceService` (check-in 150 m, Esta Noche Voy)                               | Edge Function de check-in (distancia en servidor, solo lugar+hora)               | 7      |
+| `MatchingService` (candidatos, likes, matches, bloqueos, reportes)                 | RPC/Edge Functions con compatibilidad y límites en servidor                      | 8-9    |
+| `ChatService`                                                                      | Tabla `messages` + Realtime (RLS: solo participantes)                            | 8      |
+| `ProfileService`                                                                   | `profiles` / vista pública                                                       | 5      |
+| `RealtimeService`                                                                  | Supabase Realtime (estadísticas, match, mensajes)                                | 7-8    |
+| `PremiumService` (estado, compra, cancelar, desistir, canjear, DM de pago)         | Edge Functions de pago + `entitlements`/`credits`/`invoices` (RLS)               | 9      |
+| `AdminService` (dashboard, colas, acciones, flags, ajustes, códigos, herramientas) | RPC `security definer` con rol admin + `aal2`, auditadas                         | 5-9    |
+| `VenuePanelService` (claims, ficha, estadísticas, eventos, patrocinio)             | RPC con rol `venue_manager` y estadísticas agregadas con umbral                  | 7-9    |
+| `PrivacyService` (exportar, borrar con OTP, sesiones)                              | Edge Functions `export-my-data` y `delete-account` (reautenticación)             | 9      |
+| `ModerationService` (reportes, decisiones, apelaciones, aviso DSA, estado)         | Tablas de moderación + Edge Function pública de avisos DSA (límite por IP)       | 9      |
+| `SafetyService` (contactos SOS)                                                    | Tabla `emergency_contacts` (RLS: solo el propietario)                            | 9      |
+| `CheckoutGateway.createCheckoutSession()`                                          | Edge Function `create-checkout-session`                                          | 9      |
+| `CheckoutGateway.createPortalSession()`                                            | Edge Function `create-portal-session`                                            | 9      |
 
 ## Previstas (PRD)
 

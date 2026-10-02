@@ -18,6 +18,10 @@ export const FLAG_SCHEMAS = {
   flash_alerts_push_enabled: onOff,
   verification_mode: z.enum(['sandbox', 'live']),
   test_tools_enabled: onOff,
+  // ADR 0008: store billing, sponsored swipe cards and travel mode (Block 11).
+  store_payments_enabled: onOff,
+  sponsored_cards_enabled: onOff,
+  travel_mode_enabled: onOff,
 } as const
 
 export type FlagKey = keyof typeof FLAG_SCHEMAS
@@ -34,6 +38,9 @@ export const SAFE_FLAG_DEFAULTS: Readonly<FeatureFlags> = {
   flash_alerts_push_enabled: 'off',
   verification_mode: 'live',
   test_tools_enabled: 'off',
+  store_payments_enabled: 'off',
+  sponsored_cards_enabled: 'off',
+  travel_mode_enabled: 'off',
 }
 
 /** Initial values from PRD 6.13 (what the admin seeds in `app_settings`). */
@@ -47,6 +54,9 @@ export const INITIAL_FLAG_VALUES: Readonly<FeatureFlags> = {
   flash_alerts_push_enabled: 'off',
   verification_mode: 'sandbox',
   test_tools_enabled: 'on',
+  store_payments_enabled: 'off',
+  sponsored_cards_enabled: 'off',
+  travel_mode_enabled: 'off',
 }
 
 /**

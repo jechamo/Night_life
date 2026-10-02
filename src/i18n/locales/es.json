@@ -502,7 +502,11 @@
     "discreet": {
       "title": "Modo discreto",
       "body": "Cuentas en las estadísticas, pero no apareces en las listas de «Van» ni «Aquí Ahora»."
-    }
+    },
+    "privacyDataHint": "Descarga o elimina tus datos",
+    "legalHint": "Documentos públicos y tus derechos",
+    "business": "Locales y equipo",
+    "adminHint": "Moderación, pagos y pruebas"
   },
   "tonightPreview": {
     "viewProfiles": "Ver perfiles",
@@ -792,6 +796,714 @@
       "daily_limit": "Ya has creado 2 eventos hoy.",
       "duplicate": "Ya existe un evento parecido en ese sitio y a esa hora.",
       "not_public": "Solo se pueden crear eventos en lugares públicos."
+    }
+  },
+  "premium": {
+    "title": "Premium",
+    "subtitle": "Más comodidad y ventaja. Lo básico y la seguridad siempre gratis.",
+    "hidden": {
+      "title": "Todo gratis por ahora",
+      "body": "Todavía no hay planes de pago. Disfruta de la app completa."
+    },
+    "freeTitle": "Siempre gratis",
+    "free": {
+      "map": "Mapa en directo, estadísticas y eventos",
+      "filters": "Buscador y todos los filtros",
+      "verification": "Verificación de edad e identidad",
+      "safety": "Herramientas de seguridad y SOS",
+      "profiles": "Ver perfiles completos",
+      "chat": "Chat con tus matches",
+      "likes": "5 likes al día"
+    },
+    "plansTitle": "Planes",
+    "extrasTitle": "Extras sueltos",
+    "continue": "Continuar",
+    "comingSoon": {
+      "title": "Próximamente",
+      "body": "Los pagos aún no están abiertos. Te avisamos cuando lo estén."
+    },
+    "notifyMe": "Avísame",
+    "notifyMeNeedsConsent": "Para avisarte necesitamos tu permiso de comunicaciones comerciales (Ajustes › Privacidad).",
+    "notNow": "Ahora no",
+    "redeem": {
+      "cta": "Canjear código",
+      "title": "Canjear código",
+      "body": "Introduce tu código promocional (formato XXXX-XXXX-XXXX).",
+      "label": "Código",
+      "submit": "Canjear",
+      "success": "¡Listo! Tienes {{product}} durante {{days}} días.",
+      "errors": {
+        "invalid": "Ese código no es válido.",
+        "expired": "Ese código ha caducado.",
+        "used": "Ese código ya se ha usado.",
+        "rate_limited": "Demasiados intentos. Prueba más tarde."
+      }
+    },
+    "mine": {
+      "cta": "Mi suscripción",
+      "title": "Mi suscripción",
+      "endsOn": "Termina el {{date}}. No se renovará.",
+      "renewsOn": "Se renueva el {{date}}.",
+      "ended": "Esta suscripción ha terminado.",
+      "cancel": "Cancelar suscripción",
+      "resume": "Reactivar renovación",
+      "withdraw": "Desistir y pedir reembolso",
+      "withdrawHint": "Tienes 14 días desde la compra para desistir: se te devuelve el importe y pierdes las ventajas.",
+      "none": "No tienes ninguna suscripción activa.",
+      "oneNight": "Pase de una noche activo hasta las {{time}}.",
+      "credits": "Tus créditos",
+      "invoices": "Facturas",
+      "refunded": "reembolsada",
+      "noInvoices": "Aún no tienes facturas."
+    },
+    "products": {
+      "pass_monthly": {
+        "name": "Pase",
+        "tagline": "Sal sin límites"
+      },
+      "vip_monthly": {
+        "name": "Pase VIP",
+        "tagline": "Todo el Pase y entrada por la puerta grande"
+      },
+      "one_night": {
+        "name": "Pase de una noche",
+        "tagline": "Ventajas del Pase hasta las 06:00"
+      },
+      "sparks_5": {
+        "name": "5 Chispas",
+        "tagline": "Que sepan que has sentido la chispa"
+      },
+      "spotlight_1": {
+        "name": "Foco",
+        "tagline": "30 min primero en tu local o zona"
+      },
+      "paid_dm_1": {
+        "name": "Mensaje directo",
+        "tagline": "Escribe antes del match"
+      }
+    },
+    "perMonth": "al mes",
+    "oneTime": "pago único",
+    "vatIncluded": "IVA incluido",
+    "mostComplete": "El más completo",
+    "benefits": {
+      "unlimited_likes": "Likes ilimitados",
+      "see_likes": "Ver quién te ha dado like",
+      "incognito": "Modo incógnito",
+      "boost": "Acceso a Foco",
+      "undo": "Deshacer el último swipe",
+      "premium_themes": "Temas extra",
+      "travel_mode": "Modo viaje",
+      "priority_likes": "Prioridad: tus likes se ven antes",
+      "no_sponsored_cards": "Sin tarjetas patrocinadas"
+    },
+    "credits_one": "{{count}} {{kind}}",
+    "credits_other": "{{count}} {{kind}}",
+    "creditsPerWeek_one": "{{count}} {{kind}} por semana",
+    "creditsPerWeek_other": "{{count}} {{kind}} por semana",
+    "creditKinds": {
+      "spark_one": "Chispa",
+      "spark_other": "Chispas",
+      "spotlight_one": "Foco",
+      "spotlight_other": "Focos",
+      "paid_dm_one": "Mensaje directo",
+      "paid_dm_other": "Mensajes directos"
+    },
+    "checkout": {
+      "title": "Confirmar compra",
+      "net": "Precio sin IVA",
+      "vat": "IVA (21 %)",
+      "totalMonthly": "Total al mes",
+      "total": "Total",
+      "renewal": "Se renueva cada mes por {{price}} hasta que canceles.",
+      "cancel": "Cancela cuando quieras en dos toques desde Mi suscripción; mantienes las ventajas hasta el final del periodo.",
+      "oneNight": "Pago único. Las ventajas caducan a las 06:00.",
+      "credits": "Pago único. Los créditos no caducan.",
+      "withdrawal": "Derecho de desistimiento de {{days}} días con reembolso completo desde Mi suscripción.",
+      "provider": "El pago lo procesa una pasarela segura; nunca vemos ni guardamos tu tarjeta.",
+      "secure": "Pago seguro y cifrado",
+      "subscribe": "Suscribirme y pagar",
+      "pay": "Pagar",
+      "conditions": "Condiciones de Premium"
+    },
+    "errors": {
+      "payments_disabled": "Los pagos no están disponibles ahora mismo.",
+      "not_allowed": "Tu cuenta aún no puede comprar.",
+      "already_subscribed": "Ya tienes una suscripción activa.",
+      "gateway_error": "La pasarela de pago no responde. Inténtalo de nuevo."
+    },
+    "testCheckout": {
+      "title": "Pasarela de prueba",
+      "body": "Modo test: no se cobra nada. Tarjeta de prueba 4242 4242 4242 4242.",
+      "pay": "Pagar con tarjeta de prueba",
+      "cancel": "Cancelar el pago"
+    },
+    "return": {
+      "success": "¡Pago completado!",
+      "successBody": "Tus ventajas ya están activas.",
+      "cancelled": "Pago cancelado",
+      "cancelledBody": "No se ha cobrado nada."
+    },
+    "status": {
+      "active": "Activa",
+      "cancel_at_period_end": "Cancelada",
+      "withdrawn": "Desistida",
+      "expired": "Caducada"
+    },
+    "paidDm": {
+      "title": "Mensaje directo a {{name}}",
+      "body_one": "Te queda {{count}} mensaje directo.",
+      "body_other": "Te quedan {{count}} mensajes directos.",
+      "sent": "Mensaje enviado. Aparecerá en su bandeja como solicitud.",
+      "send": "Enviar",
+      "buy": "Conseguir mensajes",
+      "errors": {
+        "disabled": "Los mensajes directos no están disponibles.",
+        "no_credits": "No te quedan mensajes directos.",
+        "red_light": "Esta persona tiene el semáforo en rojo: no acepta mensajes sin match."
+      },
+      "cta": "Mensaje directo"
+    },
+    "seePlans": "Ver Premium"
+  },
+  "publicWeb": {
+    "title": "Información legal",
+    "intro": "Documentos públicos de Nightlife Connect y cómo ejercer tus derechos. No necesitas cuenta.",
+    "index": "Información legal",
+    "openApp": "Abrir la app",
+    "footerNav": "Enlaces legales",
+    "documents": "Documentos",
+    "rights": "Tus derechos",
+    "version": "Versión {{version}} · en vigor desde {{date}}",
+    "draftNotice": "Borrador pendiente de revisión legal. Los datos marcados entre corchetes se completarán antes del lanzamiento.",
+    "notPublished": {
+      "title": "Documento no disponible",
+      "body": "Este documento no existe o todavía no está publicado."
+    },
+    "docs": {
+      "legal_notice": "Aviso legal",
+      "terms": "Términos y Condiciones",
+      "community": "Normas de la Comunidad",
+      "privacy": "Política de Privacidad",
+      "cookies": "Cookies y tecnologías similares",
+      "ranking": "Clasificación y patrocinados",
+      "venues": "Condiciones para locales y organizadores",
+      "sponsorship": "Condiciones de patrocinio",
+      "third_parties": "Lista de terceros",
+      "premium": "Condiciones de Premium"
+    },
+    "deleteAccount": {
+      "title": "Eliminar cuenta y derechos",
+      "hint": "Borra tu cuenta o pide tus datos",
+      "intro": "Puedes eliminar tu cuenta cuando quieras, gratis y sin dar explicaciones.",
+      "howTitle": "Cómo eliminarla",
+      "steps": {
+        "open": "Abre Nightlife Connect e inicia sesión.",
+        "privacy": "Ve a Perfil › Privacidad y datos › Eliminar mi cuenta.",
+        "code": "Confirma con el código que te enviamos por SMS.",
+        "done": "Listo: se borra al momento y te enviamos la confirmación."
+      },
+      "inApp": "Ir a Privacidad y datos",
+      "whatTitle": "Qué se borra",
+      "what": {
+        "profile": "Tu perfil, fotos, preferencias y orientación.",
+        "messages": "Tus mensajes, también los enviados.",
+        "matches": "Likes, matches, check-ins y eventos.",
+        "verification": "Los resultados de verificación (las imágenes nunca se guardan).",
+        "thirdParties": "Tus datos en los proveedores (por ejemplo, el cliente en la pasarela de pago).",
+        "subscription": "Las suscripciones activas se cancelan antes del borrado."
+      },
+      "keptTitle": "Qué se conserva (bloqueado)",
+      "kept": "Solo lo que exige la ley: facturas durante 6 años, evidencias de consentimiento hasta que prescriban las acciones y bans por hash mientras duren. Nadie puede usarlos para otra cosa.",
+      "rightsTitle": "Otros derechos",
+      "rights": "Acceso, rectificación, oposición, limitación y portabilidad desde Perfil › Privacidad y datos, o por email a [DATOS EMPRESA: email de privacidad]. Respondemos en un máximo de 1 mes. Puedes reclamar ante la AEPD."
+    },
+    "illegal": {
+      "title": "Notificar contenido ilegal",
+      "hint": "Formulario del Reglamento de Servicios Digitales",
+      "intro": "Si crees que algo publicado en Nightlife Connect es ilegal, cuéntanos dónde está y por qué. Lo revisa siempre una persona.",
+      "url": "Dónde está el contenido",
+      "urlHint": "Enlace, nombre del perfil o del evento, lo más exacto posible.",
+      "reason": "Motivo",
+      "reasons": {
+        "minor": "Posible menor de edad",
+        "sexual": "Contenido sexual no consentido",
+        "violence": "Violencia o amenazas",
+        "hate": "Odio o discriminación",
+        "fraud": "Estafa o fraude",
+        "privacy": "Datos personales sin permiso",
+        "ip": "Propiedad intelectual",
+        "other": "Otro"
+      },
+      "explanation": "Explica por qué es ilegal",
+      "explanationHint": "Mínimo 20 caracteres.",
+      "email": "Tu email",
+      "emailHint": "Para enviarte la referencia y la decisión.",
+      "emailInvalid": "Revisa el email.",
+      "goodFaith": "Declaro de buena fe que la información de este aviso es exacta y completa.",
+      "privacy": "Usamos estos datos solo para tramitar el aviso (DSA art. 16). Más información en la Política de Privacidad.",
+      "submit": "Enviar aviso",
+      "sentTitle": "Aviso recibido",
+      "sentBody": "Tu referencia es {{reference}}. Te escribiremos con la decisión y sus motivos."
+    },
+    "contact": {
+      "title": "Contacto",
+      "hint": "Soporte, privacidad y punto de contacto DSA",
+      "intro": "[DATOS EMPRESA: razón social, NIF y domicilio]. Respondemos en español e inglés.",
+      "channels": {
+        "general": {
+          "title": "Soporte",
+          "body": "[DATOS EMPRESA: email de soporte]"
+        },
+        "privacy": {
+          "title": "Privacidad y derechos",
+          "body": "[DATOS EMPRESA: email del responsable de privacidad]"
+        },
+        "dsa": {
+          "title": "Punto de contacto DSA",
+          "body": "Autoridades y usuarios: [DATOS EMPRESA: email DSA]"
+        },
+        "venues": {
+          "title": "Locales y patrocinio",
+          "body": "[DATOS EMPRESA: email comercial]"
+        }
+      }
+    }
+  },
+  "signedDocs": {
+    "title": "Documentos firmados",
+    "hint": "Qué firmaste, versión y fecha",
+    "body": "Evidencia de lo que aceptaste y cuándo. Se guarda de forma inmutable.",
+    "emptyTitle": "Sin documentos firmados",
+    "emptyBody": "Aquí aparecerán los documentos que firmes.",
+    "signedOn": "Versión {{version}} · firmado el {{date}}",
+    "outdated": "Hay una versión nueva: te pediremos aceptarla.",
+    "download": "Descargar justificante",
+    "pdfSoon": "El PDF firmado y la copia por email llegan con el backend (Bloque 5)."
+  },
+  "privacyData": {
+    "title": "Privacidad y datos",
+    "body": "Tus datos son tuyos: descárgalos, revisa tus solicitudes o elimina la cuenta.",
+    "yourData": "Tus datos",
+    "exportBody": "Descarga todo lo que guardamos sobre ti en un archivo JSON.",
+    "export": "Descargar mis datos",
+    "exported": "Descarga lista.",
+    "requests": "Tus solicitudes",
+    "noRequests": "Aún no has hecho ninguna solicitud.",
+    "kinds": {
+      "export": "Exportación",
+      "delete": "Eliminación",
+      "rectify": "Rectificación",
+      "object": "Oposición"
+    },
+    "done": "Completada",
+    "dueOn": "Respuesta antes del {{date}}",
+    "sessions": "Sesiones",
+    "logoutBody": "Cierra la sesión en todos tus dispositivos, también en este.",
+    "logoutAll": "Cerrar todas las sesiones",
+    "loggedOut": "Sesiones cerradas.",
+    "deleteTitle": "Eliminar cuenta",
+    "deleteBody": "Se borra todo al momento, incluidos tus mensajes. Las suscripciones activas se cancelan antes. Solo se conserva bloqueado lo que exige la ley.",
+    "deleteStart": "Eliminar mi cuenta",
+    "otpLabel": "Código de confirmación",
+    "otpHint": "Te lo hemos enviado por SMS. En pruebas: 123456.",
+    "wrongCode": "Código incorrecto.",
+    "deleteConfirm": "Eliminar definitivamente"
+  },
+  "moderationCenter": {
+    "title": "Moderación y apelaciones",
+    "hint": "Decisiones sobre tu cuenta y tus reportes",
+    "body": "Cada decisión se explica y puedes recurrirla. Siempre la revisa una persona.",
+    "decisions": "Decisiones sobre tu cuenta",
+    "noDecisions": "No hay decisiones sobre tu cuenta.",
+    "actions": {
+      "warning": "Aviso",
+      "content_removed": "Contenido retirado",
+      "suspension": "Suspensión"
+    },
+    "appeal": "Recurrir",
+    "appealLabel": "Por qué no estás de acuerdo",
+    "appealHint": "Mínimo 10 caracteres. Lo revisará una persona distinta.",
+    "appealSend": "Enviar apelación",
+    "appealStatus": {
+      "pending": "Apelación en revisión",
+      "accepted": "Apelación aceptada",
+      "rejected": "Apelación rechazada"
+    },
+    "myReports": "Tus reportes",
+    "noReports": "No has enviado reportes.",
+    "reportStatus": {
+      "open": "En revisión",
+      "actioned": "Se tomaron medidas",
+      "dismissed": "Sin infracción"
+    }
+  },
+  "suspended": {
+    "title": "Cuenta suspendida",
+    "body": "Hemos suspendido tu cuenta de forma cautelar mientras revisamos varios reportes. Te explicamos los motivos en Moderación.",
+    "humanReview": "Una persona revisará tu caso",
+    "appeal": "Ver motivos y recurrir",
+    "delete": "Eliminar mi cuenta"
+  },
+  "sos": {
+    "title": "SOS",
+    "hint": "Contactos de confianza y 112",
+    "body": "Si algo va mal, llama al 112 o avisa a tus contactos de confianza.",
+    "call112": "Llamar al 112",
+    "share": "Avisar a un contacto",
+    "shareTitle": "Estoy de fiesta",
+    "shareText": "Te aviso desde Nightlife Connect: estoy de fiesta esta noche. Si no te escribo, llámame.",
+    "shared": "Aviso enviado.",
+    "copied": "Mensaje copiado: pégalo en tu chat.",
+    "contacts": "Contactos de confianza",
+    "contactsBody": "Hasta 3. Solo tú puedes verlos.",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "phoneInvalid": "Revisa el teléfono.",
+    "add": "Añadir contacto",
+    "remove": "Quitar"
+  },
+  "venuePanel": {
+    "title": "Panel de locales",
+    "hint": "Gestiona la ficha de tu local",
+    "body": "Gratis para locales: edita tu ficha, publica eventos oficiales y consulta estadísticas agregadas.",
+    "myVenues": "Tus locales",
+    "noVenues": "Todavía no gestionas ningún local.",
+    "manage": "Estadísticas, ficha, eventos y patrocinio",
+    "claimStatus": {
+      "pending": "En revisión",
+      "approved": "Aprobado",
+      "rejected": "Rechazado"
+    },
+    "claim": {
+      "title": "Reclamar un local",
+      "body": "¿Gestionas un local? Pide el control de su ficha. Una persona revisa cada solicitud.",
+      "search": "Busca tu local",
+      "evidence": "Cómo acreditas que lo gestionas",
+      "evidenceHint": "Por ejemplo: CIF, factura a nombre del local o email del dominio. Mínimo 10 caracteres.",
+      "submit": "Enviar solicitud",
+      "sent": "Solicitud enviada para {{name}}. Te avisaremos cuando se revise.",
+      "already": "Ya has reclamado este local."
+    },
+    "stats": {
+      "title": "Estadísticas",
+      "byHour": "Afluencia media por hora (última semana)",
+      "chartLabel": "Gráfico de barras de afluencia por hora",
+      "averageAge": "Edad media",
+      "green": "En verde",
+      "checkInsWeek": "Check-ins esta semana",
+      "goingTonight": "Van esta noche",
+      "threshold": "Siempre agregadas y anónimas. Con menos de 5 personas no se muestran edad ni semáforo."
+    },
+    "pro": {
+      "title": "Estadísticas Pro",
+      "body": "Comparativa con tu zona, tendencias por día y exportación. Suscripción mensual para locales."
+    },
+    "edit": {
+      "title": "Ficha",
+      "description": "Descripción",
+      "hours": "Horario",
+      "price": "Precio"
+    },
+    "event": {
+      "sectionTitle": "Evento oficial",
+      "title": "Nombre del evento",
+      "start": "Empieza",
+      "end": "Termina",
+      "description": "Descripción",
+      "official": "Los eventos de locales verificados salen como «Oficial», sin esperar confirmaciones.",
+      "submit": "Publicar evento",
+      "created": "Evento publicado."
+    },
+    "sponsor": {
+      "title": "Patrocinio",
+      "tiers": {
+        "featured": {
+          "name": "Destacado",
+          "body": "Pin destacado en el mapa de tu zona."
+        },
+        "featured_plus": {
+          "name": "Destacado Plus",
+          "body": "Destacado + primeras posiciones en las listas que cumplan los filtros."
+        },
+        "top": {
+          "name": "Top",
+          "body": "Plus + Flash Alerts a quien lo haya consentido."
+        }
+      },
+      "from": "Desde",
+      "to": "Hasta",
+      "rules": "Siempre con la etiqueta «Patrocinado», nunca altera los datos y solo aparece si cumple los filtros del usuario.",
+      "submit": "Solicitar patrocinio",
+      "status": {
+        "requested": "Solicitado",
+        "active": "Activo"
+      },
+      "invoice": "Te enviaremos la factura. El equipo lo activa al recibir el pago."
+    }
+  },
+  "admin": {
+    "title": "Admin",
+    "exit": "Salir",
+    "navLabel": "Secciones del admin",
+    "nav": {
+      "dashboard": "Dashboard",
+      "verifications": "Verificaciones",
+      "reports": "Moderación",
+      "appeals": "Apelaciones",
+      "bans": "Bans",
+      "claims": "Locales y claims",
+      "events": "Eventos",
+      "sponsorships": "Patrocinios",
+      "payments": "Pagos",
+      "flags": "Feature flags",
+      "testTools": "Herramientas de prueba",
+      "dataRequests": "Derechos",
+      "legalDocs": "Documentos legales",
+      "settings": "Configuración",
+      "audit": "Auditoría"
+    },
+    "mfa": {
+      "title": "Segundo factor",
+      "body": "El admin exige un segundo factor (TOTP) en cada sesión.",
+      "code": "Código de 6 dígitos",
+      "hint": "En pruebas: 123456.",
+      "wrong": "Código incorrecto.",
+      "verify": "Verificar"
+    },
+    "dashboard": {
+      "body": "Datos simulados del entorno de pruebas.",
+      "users": "Usuarios",
+      "ageVerified": "Con edad verificada",
+      "matchesToday": "Matches hoy",
+      "testRevenue": "Ingresos (test)",
+      "pendingReports": "Reportes pendientes",
+      "pendingVerifications": "Verificaciones por revisar",
+      "pendingClaims": "Claims pendientes",
+      "openDataRequests": "Solicitudes de derechos abiertas"
+    },
+    "section": {
+      "note": "Nota / motivo",
+      "noteHint": "Obligatoria para decisiones que afectan a una persona: se le envía explicada.",
+      "emptyTitle": "Nada pendiente",
+      "emptyBody": "No hay elementos en esta sección."
+    },
+    "actions": {
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "warn": "Avisar",
+      "suspend": "Suspender",
+      "dismiss": "Desestimar",
+      "accept": "Aceptar",
+      "lift": "Levantar ban",
+      "hide": "Ocultar",
+      "delete": "Borrar",
+      "activate": "Activar",
+      "end": "Finalizar",
+      "revoke": "Retirar",
+      "done": "Marcar como resuelta",
+      "publish": "Publicar"
+    },
+    "sections": {
+      "verifications": {
+        "title": "Verificaciones",
+        "body": "Casos dudosos y revisiones pedidas. Nunca se guardan imágenes."
+      },
+      "reports": {
+        "title": "Moderación",
+        "body": "Reportes y avisos DSA. 3 reportes válidos en 6 h suspenden de forma cautelar."
+      },
+      "appeals": {
+        "title": "Apelaciones",
+        "body": "Las revisa una persona distinta de quien decidió."
+      },
+      "bans": {
+        "title": "Bans",
+        "body": "Por hash de teléfono y dispositivo; nunca se guarda el dato en claro."
+      },
+      "claims": {
+        "title": "Locales y claims",
+        "body": "Solicitudes para gestionar la ficha de un local."
+      },
+      "events": {
+        "title": "Eventos",
+        "body": "Eventos de usuarios, de locales e importados."
+      },
+      "sponsorships": {
+        "title": "Patrocinios",
+        "body": "Factura manual y activación por el admin en el MVP."
+      },
+      "subscriptions": {
+        "title": "Suscripciones",
+        "body": "Suscripciones activas y su estado."
+      },
+      "entitlements": {
+        "title": "Entitlements",
+        "body": "Ventajas concedidas: única fuente de verdad de lo que es de pago."
+      },
+      "promoCodes": {
+        "title": "Códigos promocionales",
+        "body": "Códigos activos, usos y caducidad."
+      },
+      "paymentEvents": {
+        "title": "Eventos de pago",
+        "body": "Webhooks recibidos (idempotentes)."
+      },
+      "dataRequests": {
+        "title": "Derechos",
+        "body": "Solicitudes RGPD. Plazo legal: 1 mes."
+      },
+      "legalDocs": {
+        "title": "Documentos legales",
+        "body": "Versiones publicadas. Publicar una versión nueva obliga a reaceptar."
+      },
+      "audit": {
+        "title": "Auditoría",
+        "body": "Registro inmutable de las acciones del admin."
+      }
+    },
+    "flags": {
+      "body": "Se aplican al momento, sin redesplegar, y quedan en la auditoría.",
+      "paywallNow": "Paywall resultante para ti",
+      "paywall": {
+        "hidden": "Oculto",
+        "coming_soon": "Próximamente",
+        "checkout": "Checkout"
+      },
+      "help": {
+        "payments_mode": "disabled = sin pagos · test = claves de prueba · live = cobros reales.",
+        "payments_audience": "Quién puede pagar: nadie, solo testers o todos.",
+        "paywall_visibility": "Qué ve quien no puede pagar.",
+        "premium_enabled": "Interruptor general de Premium.",
+        "paid_dm_enabled": "Mensaje directo de pago sin match.",
+        "sponsorship_self_service_enabled": "Autoservicio de patrocinio para locales.",
+        "flash_alerts_push_enabled": "Flash Alerts por push (V2).",
+        "verification_mode": "sandbox solo para testers; nunca bypass para usuarios normales.",
+        "test_tools_enabled": "Herramientas de prueba. Apagar antes del lanzamiento.",
+        "store_payments_enabled": "Compras en App Store / Google Play (Bloque 11).",
+        "sponsored_cards_enabled": "Tarjetas patrocinadas de locales en el swipe (Bloque 11).",
+        "travel_mode_enabled": "Modo viaje (Bloque 11)."
+      }
+    },
+    "payments": {
+      "body": "Modo {{mode}} · audiencia {{audience}}.",
+      "catalog": "Catálogo",
+      "product": "Producto",
+      "kind": "Tipo",
+      "price": "Precio (IVA incl.)",
+      "kinds": {
+        "subscription": "Suscripción",
+        "one_night": "Pase de una noche",
+        "credits": "Créditos"
+      },
+      "records": "Registros",
+      "promoTitle": "Crear código promocional",
+      "days": "Días",
+      "maxUses": "Usos máximos",
+      "createCode": "Crear código",
+      "codeCreated": "Código creado: {{code}}",
+      "grantTitle": "Conceder entitlement",
+      "user": "Usuario",
+      "userHint": "ID o alias del usuario.",
+      "entitlement": "Entitlement",
+      "daysOrForever": "Días (0 = sin fin)",
+      "grant": "Conceder",
+      "granted": "Concedido y auditado."
+    },
+    "tools": {
+      "title": "Simuladores",
+      "body": "Solo con test_tools_enabled y rol tester/admin. Todo queda auditado.",
+      "offTitle": "Herramientas apagadas",
+      "offBody": "Activa test_tools_enabled en Feature flags para usarlas.",
+      "run": "Ejecutar",
+      "confirm": "Sí, ejecutar",
+      "cancel": "Cancelar",
+      "result": "{{tool}}: {{result}}",
+      "roles": "Roles simulados",
+      "rolesBody": "Cambia tus roles para probar cada vista. El rol admin se mantiene.",
+      "items": {
+        "generate_test_city": {
+          "name": "Generar ciudad de prueba",
+          "body": "Locales reales importados, eventos ficticios y perfiles is_test con avatares ilustrados."
+        },
+        "fill_venue": {
+          "name": "Llenar un local",
+          "body": "Añade 25 check-ins de prueba al Pub Candil."
+        },
+        "test_like_me": {
+          "name": "Que me den like",
+          "body": "Un perfil de prueba compatible te da like: verás el match en directo."
+        },
+        "send_test_messages": {
+          "name": "Enviar mensajes de prueba",
+          "body": "Tu último match te escribe."
+        },
+        "simulate_stripe_webhook": {
+          "name": "Webhook de Stripe",
+          "body": "Simula una compra de Pase VIP confirmada por la pasarela."
+        },
+        "simulate_yoti_webhook": {
+          "name": "Webhook de Yoti",
+          "body": "Marca tu edad como verificada."
+        },
+        "expire_everything": {
+          "name": "Adelantar caducidades",
+          "body": "Eventos de 24 h, check-ins y objetos perdidos."
+        },
+        "reset_likes": {
+          "name": "Reiniciar likes",
+          "body": "Vuelve a tener los likes gratis de hoy."
+        },
+        "simulate_suspension": {
+          "name": "Simular suspensión",
+          "body": "Suspende tu cuenta para ver la pantalla de cuenta suspendida."
+        },
+        "purge_test_data": {
+          "name": "Purgar datos de prueba",
+          "body": "Borra matches, mensajes y likes de prueba."
+        }
+      }
+    },
+    "settings": {
+      "body": "Límites de app_settings. Cada cambio queda en la auditoría.",
+      "range": "Entre {{min}} y {{max}}",
+      "invalid": "Fuera de rango.",
+      "items": {
+        "free_daily_likes": "Likes gratis al día",
+        "age_threshold": "Umbral de estimación de edad",
+        "check_in_radius_m": "Radio de check-in (m)",
+        "stats_min_people": "Mínimo de personas para estadísticas",
+        "event_confirmations": "Confirmaciones para un evento",
+        "reports_strike_window_h": "Ventana de 3 strikes (h)"
+      }
+    },
+    "status": {
+      "pending": "Pendiente",
+      "open": "Abierto",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "approved": "Aprobado",
+      "rejected": "Rechazado",
+      "dismissed": "Desestimado",
+      "warned": "Avisado",
+      "suspended": "Suspendido",
+      "accepted": "Aceptado",
+      "lifted": "Levantado",
+      "ended": "Finalizado",
+      "done": "Resuelto",
+      "hidden": "Oculto",
+      "restored": "Restaurado",
+      "deleted": "Borrado",
+      "revoked": "Retirado",
+      "requested": "Solicitado",
+      "logged": "Registrado",
+      "expired": "Caducado",
+      "cancel_at_period_end": "Cancelada",
+      "withdrawn": "Desistida",
+      "unconfirmed": "No confirmado",
+      "confirmed": "Confirmado",
+      "official": "Oficial",
+      "cancelled": "Cancelado"
     }
   }
 }

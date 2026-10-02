@@ -2,7 +2,7 @@ import { Crown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { BottomSheet } from '@/shared/ui/bottom-sheet'
-import { Button } from '@/shared/ui/button'
+import { Button, ButtonLink } from '@/shared/ui/button'
 
 /** Daily free likes used up (PRD 6.6). Honest paywall: no fake urgency, clear "Ahora no". */
 export function LikeLimitSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -22,6 +22,11 @@ export function LikeLimitSheet({ open, onClose }: { open: boolean; onClose: () =
           <Crown className="size-5 shrink-0 text-warning" aria-hidden />
           {paywall === 'checkout' ? t('matching.limit.premium') : t('matching.limit.comingSoon')}
         </p>
+      )}
+      {paywall !== 'hidden' && (
+        <ButtonLink to="/premium" block className="mb-3" onClick={onClose}>
+          {t('premium.seePlans')}
+        </ButtonLink>
       )}
       <Button block variant="outline" onClick={onClose}>
         {t('verification.gate.notNow')}

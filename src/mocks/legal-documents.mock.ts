@@ -1,5 +1,6 @@
 import type { Language } from '@/i18n'
 import type { LegalDocument, LegalDocumentSlug } from '@/features/legal/model/legal'
+import { getPublicLegalDraft } from './legal-public.mock'
 
 /**
  * DRAFT legal texts for the mock phase (PRD 6.1). They must be written/reviewed by a
@@ -202,7 +203,7 @@ export function getMockLegalDocument(
   slug: LegalDocumentSlug,
   language: Language,
 ): LegalDocument | null {
-  const draft = (language === 'en' ? EN : ES)[slug]
+  const draft = (language === 'en' ? EN : ES)[slug] ?? getPublicLegalDraft(slug, language)
   return draft
     ? { slug, version: MOCK_LEGAL_VERSION, effectiveAt: MOCK_LEGAL_EFFECTIVE_AT, ...draft }
     : null

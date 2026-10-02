@@ -1,4 +1,4 @@
-# Monetización — propuesta (pendiente de aprobación)
+# Monetización — aprobada (2026-10-02)
 
 Análisis pedido por el propietario: cobrar como las apps de citas líderes (suscripciones por
 niveles, compras sueltas y publicidad), pagando por Google Play / App Store, sin parecer una
@@ -96,10 +96,11 @@ Las ventajas siguen siendo **entitlements** (suscripciones y pase de una noche) 
 Flags nuevos: `store_payments_enabled` (off), `sponsored_cards_enabled` (off),
 `travel_mode_enabled` (off). Todo sigue apagado por defecto y se activa sin redesplegar.
 
-## 6. Decisiones pendientes
+## 6. Decisiones (aprobadas por el propietario: "lo que recomiendes")
 
-1. ¿Web con Stripe además de las tiendas? (recomendado: sí)
-2. ¿Permiso para RevenueCat o validación propia con Edge Functions? (más rápido: RevenueCat)
-3. ¿Catálogo y nombres (Pase, Pase VIP, Pase de una noche, Chispa, Foco, Modo viaje)?
-4. ¿Sin anuncios de terceros y con tarjetas patrocinadas de locales?
-5. ¿Retirar `advanced_filters` y dejar todos los filtros gratis?
+1. Web con Stripe **y** apps con compras de App Store / Google Play, un único catálogo.
+2. RevenueCat autorizado para el Bloque 11 (se revisa su tarifa vigente antes de integrarlo);
+   si no compensa, validación propia con Edge Functions.
+3. Catálogo y nombres: Pase, Pase VIP, Pase de una noche, Chispa, Foco, Mensaje directo, Modo viaje.
+4. Sin anuncios de terceros; tarjetas patrocinadas de locales en el swipe (Bloque 11).
+5. Todos los filtros gratis: se retira `advanced_filters`.

@@ -1,9 +1,11 @@
-import { Ban, Flag, SearchCheck } from 'lucide-react'
+import { Ban, Flag, SearchCheck, Send } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
+import { PaidDmSheet } from '@/features/premium/components/PaidDmSheet'
 import { useVerificationSnapshot } from '@/features/verification/hooks/use-verification'
 import { canPerform } from '@/features/verification/model/verification'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 import { Button, ButtonLink } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { ScreenHeader } from '@/shared/ui/screen-header'
@@ -20,6 +22,8 @@ export function PersonScreen() {
   const { data: verification } = useVerificationSnapshot()
   const { data: person, isPending } = usePerson(personId)
   const [action, setAction] = useState<SafetyAction | null>(null)
+  const [dmOpen, setDmOpen] = useState(false)
+  const paidDm = useFeatureFlag('paid_dm_enabled')
 
   if (!verification || isPending) return <Skeleton className="m-4 h-96" />
   if (!canPerform('view_profiles', verification)) {
@@ -57,6 +61,12 @@ export function PersonScreen() {
         </ul>
         <ProfileHighlights profile={person} />
         {person.bio && <p className="leading-relaxed">{person.bio}</p>}
+        {paidDm === 'on' && (
+          <Button block variant="glass" onClick={() => setDmOpen(true)}>
+            <Send aria-hidden />
+            {t('premium.paidDm.cta')}
+          </Button>
+        )}
         <div className="grid grid-cols-2 gap-3">
           <Button variant="outline" onClick={() => setAction('report')}>
             <Flag aria-hidden />
@@ -68,6 +78,12 @@ export function PersonScreen() {
           </Button>
         </div>
       </div>
+      <PaidDmSheet
+        open={dmOpen}
+        personId={person.id}
+        name={person.name}
+        onClose={() => setDmOpen(false)}
+      />
       <SafetySheet
         action={action}
         personId={person.id}

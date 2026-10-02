@@ -2,6 +2,12 @@ import type { ConsentService } from '@/features/consents/services/consent-servic
 import type { LegalService } from '@/features/legal/services/legal-service'
 import type { OnboardingService } from '@/features/onboarding/services/onboarding-service'
 import type { VerificationService } from '@/features/verification/services/verification-service'
+import type { AdminService } from '@/features/admin/services/admin-service'
+import type { ModerationService } from '@/features/moderation/services/moderation-service'
+import type { PremiumService } from '@/features/premium/services/premium-service'
+import type { PrivacyService } from '@/features/privacy/services/privacy-service'
+import type { SafetyService } from '@/features/safety/services/safety-service'
+import type { VenuePanelService } from '@/features/venue-panel/services/venue-panel-service'
 import type { AttendanceService } from '@/features/attendance/services/attendance-service'
 import type { ChatService } from '@/features/chats/services/chat-service'
 import type { MatchingService } from '@/features/matching/services/matching-service'
@@ -30,4 +36,10 @@ export interface AppServices {
   chat: ChatService
   profile: ProfileService
   realtime: RealtimeService
+  premium: PremiumService
+  admin: AdminService
+  venuePanel: VenuePanelService
+  privacy: PrivacyService
+  moderation: ModerationService
+  safety: SafetyService
 }

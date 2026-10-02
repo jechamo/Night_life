@@ -7,15 +7,15 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | --------------------------------------------------- | -------------------------------------------- |
 | 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02) |
 | 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                  |
-| 3 – App principal y experiencia de match (mock)     | ✅ Terminado, pendiente de OK                |
-| 4 – Paneles, web pública y pantallas de pago (mock) | ⏳                                           |
+| 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                  |
+| 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                |
 | 5 – Backend base, legal y modo pruebas              | ⏳                                           |
 | 6 – Verificaciones reales                           | ⏳                                           |
 | 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                           |
 | 8 – Ligar, match en tiempo real y chat              | ⏳                                           |
 | 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                           |
 | 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                           |
-| 11 – Apps nativas y pagos en tiendas (propuesto)    | 📝 Propuesto, ver docs/MONETIZATION.md       |
+| 11 – Apps nativas y pagos en tiendas                | ⏳ Añadido al plan (docs/MONETIZATION.md)    |
 
 ---
 
@@ -236,3 +236,81 @@ Ver `docs/SECURITY.md` → Bloque 3: sin hallazgos críticos ni altos.
 
 - Bloque 4: panel de locales, admin (pagos, flags, herramientas de prueba), web pública legal y
   pantallas de pago (paywall, checkout, Mi suscripción, canjear código, DM de pago).
+
+---
+
+## Bloque 4 — Paneles, web pública y pantallas de pago (mock) (2026-10-02)
+
+### Qué se hizo
+
+- **Catálogo propio** (docs/MONETIZATION.md, ADR 0008): Pase, Pase VIP, Pase de una noche,
+  Chispas, Foco y Mensaje directo, con precios con IVA, créditos y entitlements; se retira
+  `advanced_filters` (todos los filtros gratis) y se añaden `travel_mode`, `priority_likes` y
+  `no_sponsored_cards`. Flags nuevos (apagados): `store_payments_enabled`,
+  `sponsored_cards_enabled`, `travel_mode_enabled`.
+- **Paywall** según flags: oculto / "Próximamente" con "Avísame" (exige consentimiento
+  comercial) / checkout. Comparativa "Siempre gratis", "Ahora no", canjear código y Mi suscripción.
+- **Checkout** con precio sin IVA, IVA, total, renovación, cómo cancelar, desistimiento de 14
+  días, proveedor y "Suscribirme y pagar"; **pasarela de prueba** (tarjeta 4242) que simula el
+  webhook y concede los entitlements.
+- **Mi suscripción**: cancelar (2 toques), reactivar, desistir con reembolso (visible los 14
+  días), pase de una noche, créditos y facturas. **Canjear código** con límite de intentos.
+- **Mensaje directo de pago** en el perfil de otra persona (solo con `paid_dm_enabled`), respeta
+  el semáforo rojo. Enlaces a Premium desde Perfil, límite de likes y "Quién te ha dado like".
+- **Usuario**: Privacidad y datos (exportar JSON, solicitudes con plazo, cerrar todas las
+  sesiones, eliminar cuenta con OTP), Documentos firmados, Moderación y apelaciones (decisiones
+  explicadas, recurrir una vez, mis reportes), SOS Lite (112, avisar a un contacto, hasta 3
+  contactos) y **Cuenta suspendida** (la app redirige si la cuenta está suspendida).
+- **Web pública sin login** (`/legal`): índice, documentos versionados (Aviso legal, Términos,
+  Normas, Privacidad, Cookies, Clasificación y patrocinados, Locales, Patrocinio, Terceros —con
+  Vercel en lugar de Lovable— y Premium solo cuando hay compra), eliminar cuenta y derechos
+  (URL para Google Play), formulario DSA de contenido ilegal con referencia, y contacto (punto
+  DSA). Selector ES/EN. `robots.txt` permite solo `/legal`.
+- **Panel de locales** (`/venue`): reclamar ficha con prueba, mis locales, estadísticas
+  agregadas por hora con umbral, editar ficha, evento oficial, solicitar patrocinio (Destacado,
+  Destacado Plus, Top) y aviso de "Estadísticas Pro".
+- **Admin** (`/admin`, rol admin + segundo factor simulado): dashboard; colas genéricas de
+  verificaciones, moderación, apelaciones, bans, claims, eventos, patrocinios, suscripciones,
+  entitlements, códigos, eventos de pago, derechos, documentos legales y auditoría, con acciones
+  y nota obligatoria en decisiones que afectan a una persona; **Feature flags** editables (el
+  paywall cambia en directo) y auditados; **Pagos** (catálogo, crear códigos, conceder
+  entitlements); **Herramientas de prueba** (10 simuladores y roles simulados) y
+  **Configuración** con límites acotados. Barra lateral en escritorio.
+
+### Hecho cuando
+
+- ✅ Todas las pantallas se pueden navegar (rutas conectadas; recorrido con Playwright en móvil
+  y escritorio; tests de integración de paywall, compra, cancelar/desistir, canjear, admin,
+  web legal, privacidad, moderación, SOS, panel de locales y DM de pago).
+- ✅ El paywall cambia según los flags simulados (tests: tester ⇒ checkout, usuario ⇒
+  Próximamente, `premium_enabled = off` ⇒ oculto, audiencia `none` + oculto ⇒ nada; y cambio
+  en directo desde Admin → Feature flags).
+
+### Cómo probarlo
+
+1. Perfil → Premium → Continuar → Suscribirme y pagar → "Pagar con tarjeta de prueba" →
+   Mi suscripción: cancela, reactiva o desiste. Canjea `NITE-TEST-0001`.
+2. Perfil → Admin → código **123456** → Feature flags: pon `premium_enabled = off` o
+   `payments_audience = none` y vuelve a Premium. Herramientas de prueba: "Que me den like",
+   "Llenar un local", "Simular suspensión"… (el estado simulado se reinicia al recargar).
+3. Perfil → Locales y equipo → Panel de locales → Bar Cobalto.
+4. Perfil → Privacidad y datos: descargar datos, eliminar cuenta (código 123456), SOS, moderación.
+5. Abre `/legal` sin sesión (o desde Perfil → Legal).
+6. `npm run check` (235 tests) y `npm run build`.
+
+### Desviaciones
+
+- Los pagos son una simulación local (pasarela de prueba propia); Stripe real llega en el
+  Bloque 9 y las tiendas en el Bloque 11.
+- El segundo factor del admin es simulado (código fijo); en el Bloque 5 se usará MFA TOTP de
+  Supabase Auth (`aal2`) comprobado en el servidor.
+- PDF firmado y email: Bloque 5. Los textos legales siguen siendo borradores para el abogado.
+
+### Puerta de seguridad
+
+Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
+
+### Pendiente
+
+- Bloque 5: Supabase (esquema, RLS, roles, `app_settings`), Auth con OTP, perfiles, Storage,
+  documentos y firma, generador de datos de prueba con `is_test` y purga.

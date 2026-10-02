@@ -21,3 +21,8 @@ export function useSignDocuments() {
       legal.sign(documents),
   })
 }
+
+export function useSignedDocuments() {
+  const { legal } = useServices()
+  return useQuery({ queryKey: ['legal', 'signed'], queryFn: () => legal.getSigned() })
+}

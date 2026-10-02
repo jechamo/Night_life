@@ -6,11 +6,14 @@
 export const ENTITLEMENT_KEYS = [
   'unlimited_likes',
   'see_likes',
-  'advanced_filters',
   'incognito',
   'boost',
   'undo',
   'premium_themes',
+  // docs/MONETIZATION.md (ADR 0008). `advanced_filters` was dropped: every filter is free.
+  'travel_mode',
+  'priority_likes',
+  'no_sponsored_cards',
 ] as const
 export type EntitlementKey = (typeof ENTITLEMENT_KEYS)[number]
 

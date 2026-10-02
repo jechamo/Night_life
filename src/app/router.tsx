@@ -1,5 +1,31 @@
 import type { ComponentType } from 'react'
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
+import { AdminLayout } from '@/features/admin/components/AdminLayout'
+import { AdminDashboardScreen } from '@/features/admin/screens/AdminDashboardScreen'
+import { AdminFlagsScreen } from '@/features/admin/screens/AdminFlagsScreen'
+import { AdminPaymentsScreen } from '@/features/admin/screens/AdminPaymentsScreen'
+import { AdminSectionScreen } from '@/features/admin/screens/AdminSectionScreen'
+import { AdminSettingsScreen } from '@/features/admin/screens/AdminSettingsScreen'
+import { AdminTestToolsScreen } from '@/features/admin/screens/AdminTestToolsScreen'
+import { SignedDocumentsScreen } from '@/features/legal/screens/SignedDocumentsScreen'
+import { ModerationScreen } from '@/features/moderation/screens/ModerationScreen'
+import { SuspendedScreen } from '@/features/moderation/screens/SuspendedScreen'
+import { CheckoutScreen } from '@/features/premium/screens/CheckoutScreen'
+import { MySubscriptionScreen } from '@/features/premium/screens/MySubscriptionScreen'
+import { PaywallScreen } from '@/features/premium/screens/PaywallScreen'
+import { PurchaseReturnScreen } from '@/features/premium/screens/PurchaseReturnScreen'
+import { RedeemScreen } from '@/features/premium/screens/RedeemScreen'
+import { TestCheckoutScreen } from '@/features/premium/screens/TestCheckoutScreen'
+import { PrivacyDataScreen } from '@/features/privacy/screens/PrivacyDataScreen'
+import { PublicLayout } from '@/features/public/PublicLayout'
+import { ContactScreen } from '@/features/public/screens/ContactScreen'
+import { DeleteAccountInfoScreen } from '@/features/public/screens/DeleteAccountInfoScreen'
+import { IllegalContentScreen } from '@/features/public/screens/IllegalContentScreen'
+import { LegalDocumentScreen } from '@/features/public/screens/LegalDocumentScreen'
+import { LegalIndexScreen } from '@/features/public/screens/LegalIndexScreen'
+import { SosScreen } from '@/features/safety/screens/SosScreen'
+import { VenueDetailScreen } from '@/features/venue-panel/screens/VenueDetailScreen'
+import { VenuePanelScreen } from '@/features/venue-panel/screens/VenuePanelScreen'
 import { ChatScreen } from '@/features/chats/ChatScreen'
 import { ChatsScreen } from '@/features/chats/ChatsScreen'
 import { CreateEventScreen } from '@/features/events/CreateEventScreen'
@@ -38,6 +64,42 @@ const IdentityVerification = () => <OptionalVerificationScreen level="identity" 
 export const routes: RouteObject[] = [
   { path: 'welcome', element: screen(WelcomeScreen), errorElement: <RouteErrorScreen /> },
   { path: 'onboarding', element: screen(OnboardingScreen), errorElement: <RouteErrorScreen /> },
+  // Public legal website: no login, outside the app shell (PRD 5.1).
+  {
+    path: 'legal',
+    element: <PublicLayout />,
+    errorElement: <RouteErrorScreen />,
+    children: [
+      { index: true, element: screen(LegalIndexScreen) },
+      { path: 'delete-account', element: screen(DeleteAccountInfoScreen) },
+      { path: 'illegal-content', element: screen(IllegalContentScreen) },
+      { path: 'contact', element: screen(ContactScreen) },
+      { path: ':slug', element: screen(LegalDocumentScreen) },
+    ],
+  },
+  { path: 'suspended', element: screen(SuspendedScreen), errorElement: <RouteErrorScreen /> },
+  {
+    path: 'suspended/moderation',
+    element: screen(ModerationScreen),
+    errorElement: <RouteErrorScreen />,
+  },
+  {
+    path: 'admin',
+    element: (
+      <RequireOnboarded allowSuspended>
+        <AdminLayout />
+      </RequireOnboarded>
+    ),
+    errorElement: <RouteErrorScreen />,
+    children: [
+      { index: true, element: screen(AdminDashboardScreen) },
+      { path: 's/:section', element: screen(AdminSectionScreen) },
+      { path: 'flags', element: screen(AdminFlagsScreen) },
+      { path: 'payments', element: screen(AdminPaymentsScreen) },
+      { path: 'test-tools', element: screen(AdminTestToolsScreen) },
+      { path: 'settings', element: screen(AdminSettingsScreen) },
+    ],
+  },
   {
     element: (
       <RequireOnboarded>
@@ -61,6 +123,18 @@ export const routes: RouteObject[] = [
       { path: 'profile/settings', element: screen(SettingsScreen) },
       { path: 'profile/verification', element: screen(VerificationCenterScreen) },
       { path: 'profile/consents', element: screen(ConsentsSettingsScreen) },
+      { path: 'profile/privacy', element: screen(PrivacyDataScreen) },
+      { path: 'profile/documents', element: screen(SignedDocumentsScreen) },
+      { path: 'profile/moderation', element: screen(ModerationScreen) },
+      { path: 'profile/sos', element: screen(SosScreen) },
+      { path: 'premium', element: screen(PaywallScreen) },
+      { path: 'premium/checkout/:code', element: screen(CheckoutScreen) },
+      { path: 'premium/test-checkout/:code', element: screen(TestCheckoutScreen) },
+      { path: 'premium/return', element: screen(PurchaseReturnScreen) },
+      { path: 'premium/subscription', element: screen(MySubscriptionScreen) },
+      { path: 'premium/redeem', element: screen(RedeemScreen) },
+      { path: 'venue', element: screen(VenuePanelScreen) },
+      { path: 'venue/:placeId', element: screen(VenueDetailScreen) },
       { path: 'verification/age', element: screen(AgeVerificationScreen) },
       { path: 'verification/photo', element: screen(PhotoVerification) },
       { path: 'verification/identity', element: screen(IdentityVerification) },

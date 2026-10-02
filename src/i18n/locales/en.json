@@ -502,7 +502,11 @@
     "discreet": {
       "title": "Discreet mode",
       "body": "You count in the statistics but don't appear in the “Going” or “Here Now” lists."
-    }
+    },
+    "privacyDataHint": "Download or delete your data",
+    "legalHint": "Public documents and your rights",
+    "business": "Venues and team",
+    "adminHint": "Moderation, payments and testing"
   },
   "tonightPreview": {
     "viewProfiles": "View profiles",
@@ -792,6 +796,714 @@
       "daily_limit": "You've already created 2 events today.",
       "duplicate": "There's already a similar event at that place and time.",
       "not_public": "Events can only be created in public places."
+    }
+  },
+  "premium": {
+    "title": "Premium",
+    "subtitle": "More comfort and an edge. The basics and safety are always free.",
+    "hidden": {
+      "title": "Everything is free for now",
+      "body": "There are no paid plans yet. Enjoy the full app."
+    },
+    "freeTitle": "Always free",
+    "free": {
+      "map": "Live map, stats and events",
+      "filters": "Search and every filter",
+      "verification": "Age and identity verification",
+      "safety": "Safety tools and SOS",
+      "profiles": "Full profiles",
+      "chat": "Chat with your matches",
+      "likes": "5 likes a day"
+    },
+    "plansTitle": "Plans",
+    "extrasTitle": "Extras",
+    "continue": "Continue",
+    "comingSoon": {
+      "title": "Coming soon",
+      "body": "Payments aren't open yet. We'll let you know when they are."
+    },
+    "notifyMe": "Notify me",
+    "notifyMeNeedsConsent": "To notify you we need your consent to marketing messages (Settings › Privacy).",
+    "notNow": "Not now",
+    "redeem": {
+      "cta": "Redeem code",
+      "title": "Redeem code",
+      "body": "Enter your promo code (format XXXX-XXXX-XXXX).",
+      "label": "Code",
+      "submit": "Redeem",
+      "success": "Done! You have {{product}} for {{days}} days.",
+      "errors": {
+        "invalid": "That code isn't valid.",
+        "expired": "That code has expired.",
+        "used": "That code has already been used.",
+        "rate_limited": "Too many attempts. Try again later."
+      }
+    },
+    "mine": {
+      "cta": "My subscription",
+      "title": "My subscription",
+      "endsOn": "Ends on {{date}}. It won't renew.",
+      "renewsOn": "Renews on {{date}}.",
+      "ended": "This subscription has ended.",
+      "cancel": "Cancel subscription",
+      "resume": "Turn renewal back on",
+      "withdraw": "Withdraw and get a refund",
+      "withdrawHint": "You have 14 days from purchase to withdraw: you get your money back and lose the perks.",
+      "none": "You don't have an active subscription.",
+      "oneNight": "One-night pass active until {{time}}.",
+      "credits": "Your credits",
+      "invoices": "Invoices",
+      "refunded": "refunded",
+      "noInvoices": "No invoices yet."
+    },
+    "products": {
+      "pass_monthly": {
+        "name": "Pass",
+        "tagline": "Go out without limits"
+      },
+      "vip_monthly": {
+        "name": "VIP Pass",
+        "tagline": "Everything in Pass, through the front door"
+      },
+      "one_night": {
+        "name": "One-night pass",
+        "tagline": "Pass perks until 6 am"
+      },
+      "sparks_5": {
+        "name": "5 Sparks",
+        "tagline": "Let them know you felt the spark"
+      },
+      "spotlight_1": {
+        "name": "Spotlight",
+        "tagline": "30 min first in your venue or area"
+      },
+      "paid_dm_1": {
+        "name": "Direct message",
+        "tagline": "Write before the match"
+      }
+    },
+    "perMonth": "per month",
+    "oneTime": "one-time payment",
+    "vatIncluded": "VAT included",
+    "mostComplete": "Most complete",
+    "benefits": {
+      "unlimited_likes": "Unlimited likes",
+      "see_likes": "See who liked you",
+      "incognito": "Incognito mode",
+      "boost": "Spotlight access",
+      "undo": "Undo your last swipe",
+      "premium_themes": "Extra themes",
+      "travel_mode": "Travel mode",
+      "priority_likes": "Priority: your likes are seen first",
+      "no_sponsored_cards": "No sponsored cards"
+    },
+    "credits_one": "{{count}} {{kind}}",
+    "credits_other": "{{count}} {{kind}}",
+    "creditsPerWeek_one": "{{count}} {{kind}} a week",
+    "creditsPerWeek_other": "{{count}} {{kind}} a week",
+    "creditKinds": {
+      "spark_one": "Spark",
+      "spark_other": "Sparks",
+      "spotlight_one": "Spotlight",
+      "spotlight_other": "Spotlights",
+      "paid_dm_one": "Direct message",
+      "paid_dm_other": "Direct messages"
+    },
+    "checkout": {
+      "title": "Confirm purchase",
+      "net": "Price before VAT",
+      "vat": "VAT (21%)",
+      "totalMonthly": "Total per month",
+      "total": "Total",
+      "renewal": "Renews every month for {{price}} until you cancel.",
+      "cancel": "Cancel any time in two taps from My subscription; you keep the perks until the end of the period.",
+      "oneNight": "One-time payment. Perks expire at 6 am.",
+      "credits": "One-time payment. Credits don't expire.",
+      "withdrawal": "{{days}}-day right of withdrawal with a full refund from My subscription.",
+      "provider": "Payment is handled by a secure gateway; we never see or store your card.",
+      "secure": "Secure, encrypted payment",
+      "subscribe": "Subscribe and pay",
+      "pay": "Pay",
+      "conditions": "Premium terms"
+    },
+    "errors": {
+      "payments_disabled": "Payments aren't available right now.",
+      "not_allowed": "Your account can't purchase yet.",
+      "already_subscribed": "You already have an active subscription.",
+      "gateway_error": "The payment gateway isn't responding. Try again."
+    },
+    "testCheckout": {
+      "title": "Test gateway",
+      "body": "Test mode: nothing is charged. Test card 4242 4242 4242 4242.",
+      "pay": "Pay with test card",
+      "cancel": "Cancel payment"
+    },
+    "return": {
+      "success": "Payment complete!",
+      "successBody": "Your perks are now active.",
+      "cancelled": "Payment cancelled",
+      "cancelledBody": "Nothing was charged."
+    },
+    "status": {
+      "active": "Active",
+      "cancel_at_period_end": "Cancelled",
+      "withdrawn": "Withdrawn",
+      "expired": "Expired"
+    },
+    "paidDm": {
+      "title": "Direct message to {{name}}",
+      "body_one": "You have {{count}} direct message left.",
+      "body_other": "You have {{count}} direct messages left.",
+      "sent": "Message sent. It will show up in their inbox as a request.",
+      "send": "Send",
+      "buy": "Get messages",
+      "errors": {
+        "disabled": "Direct messages aren't available.",
+        "no_credits": "You have no direct messages left.",
+        "red_light": "This person is on red: they don't accept messages without a match."
+      },
+      "cta": "Direct message"
+    },
+    "seePlans": "See Premium"
+  },
+  "publicWeb": {
+    "title": "Legal information",
+    "intro": "Nightlife Connect public documents and how to exercise your rights. No account needed.",
+    "index": "Legal information",
+    "openApp": "Open the app",
+    "footerNav": "Legal links",
+    "documents": "Documents",
+    "rights": "Your rights",
+    "version": "Version {{version}} · effective {{date}}",
+    "draftNotice": "Draft pending legal review. Data in square brackets will be filled in before launch.",
+    "notPublished": {
+      "title": "Document not available",
+      "body": "This document doesn't exist or hasn't been published yet."
+    },
+    "docs": {
+      "legal_notice": "Legal notice",
+      "terms": "Terms and Conditions",
+      "community": "Community Guidelines",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookies and similar technologies",
+      "ranking": "Ranking and sponsored content",
+      "venues": "Terms for venues and organisers",
+      "sponsorship": "Sponsorship terms",
+      "third_parties": "Third-party list",
+      "premium": "Premium terms"
+    },
+    "deleteAccount": {
+      "title": "Delete account and rights",
+      "hint": "Delete your account or request your data",
+      "intro": "You can delete your account whenever you want, for free and without giving reasons.",
+      "howTitle": "How to delete it",
+      "steps": {
+        "open": "Open Nightlife Connect and sign in.",
+        "privacy": "Go to Profile › Privacy & data › Delete my account.",
+        "code": "Confirm with the code we text you.",
+        "done": "Done: it's erased immediately and we send you a confirmation."
+      },
+      "inApp": "Go to Privacy & data",
+      "whatTitle": "What is deleted",
+      "what": {
+        "profile": "Your profile, photos, preferences and orientation.",
+        "messages": "Your messages, including the ones you sent.",
+        "matches": "Likes, matches, check-ins and events.",
+        "verification": "Verification results (images are never stored).",
+        "thirdParties": "Your data at our providers (e.g. the customer at the payment gateway).",
+        "subscription": "Active subscriptions are cancelled before erasure."
+      },
+      "keptTitle": "What is kept (locked)",
+      "kept": "Only what the law requires: invoices for 6 years, consent evidence until claims expire and hash bans while they last. Nobody can use them for anything else.",
+      "rightsTitle": "Other rights",
+      "rights": "Access, rectification, objection, restriction and portability from Profile › Privacy & data, or by email to [COMPANY DATA: privacy email]. We answer within 1 month. You can complain to the Spanish DPA (AEPD)."
+    },
+    "illegal": {
+      "title": "Report illegal content",
+      "hint": "Digital Services Act form",
+      "intro": "If you think something on Nightlife Connect is illegal, tell us where it is and why. A person always reviews it.",
+      "url": "Where the content is",
+      "urlHint": "Link, profile or event name, as exact as possible.",
+      "reason": "Reason",
+      "reasons": {
+        "minor": "Possible minor",
+        "sexual": "Non-consensual sexual content",
+        "violence": "Violence or threats",
+        "hate": "Hate or discrimination",
+        "fraud": "Scam or fraud",
+        "privacy": "Personal data without permission",
+        "ip": "Intellectual property",
+        "other": "Other"
+      },
+      "explanation": "Explain why it is illegal",
+      "explanationHint": "At least 20 characters.",
+      "email": "Your email",
+      "emailHint": "To send you the reference and the decision.",
+      "emailInvalid": "Check the email.",
+      "goodFaith": "I declare in good faith that the information in this notice is accurate and complete.",
+      "privacy": "We only use this data to handle the notice (DSA art. 16). More in the Privacy Policy.",
+      "submit": "Send notice",
+      "sentTitle": "Notice received",
+      "sentBody": "Your reference is {{reference}}. We'll write to you with the decision and its reasons."
+    },
+    "contact": {
+      "title": "Contact",
+      "hint": "Support, privacy and DSA point of contact",
+      "intro": "[COMPANY DATA: legal name, tax ID and address]. We answer in Spanish and English.",
+      "channels": {
+        "general": {
+          "title": "Support",
+          "body": "[COMPANY DATA: support email]"
+        },
+        "privacy": {
+          "title": "Privacy and rights",
+          "body": "[COMPANY DATA: privacy officer email]"
+        },
+        "dsa": {
+          "title": "DSA point of contact",
+          "body": "Authorities and users: [COMPANY DATA: DSA email]"
+        },
+        "venues": {
+          "title": "Venues and sponsorship",
+          "body": "[COMPANY DATA: sales email]"
+        }
+      }
+    }
+  },
+  "signedDocs": {
+    "title": "Signed documents",
+    "hint": "What you signed, version and date",
+    "body": "Evidence of what you accepted and when. Stored immutably.",
+    "emptyTitle": "No signed documents",
+    "emptyBody": "Documents you sign will show up here.",
+    "signedOn": "Version {{version}} · signed on {{date}}",
+    "outdated": "There's a new version: we'll ask you to accept it.",
+    "download": "Download receipt",
+    "pdfSoon": "The signed PDF and the email copy arrive with the backend (Block 5)."
+  },
+  "privacyData": {
+    "title": "Privacy & data",
+    "body": "Your data is yours: download it, check your requests or delete your account.",
+    "yourData": "Your data",
+    "exportBody": "Download everything we hold about you as a JSON file.",
+    "export": "Download my data",
+    "exported": "Download ready.",
+    "requests": "Your requests",
+    "noRequests": "You haven't made any requests yet.",
+    "kinds": {
+      "export": "Export",
+      "delete": "Erasure",
+      "rectify": "Rectification",
+      "object": "Objection"
+    },
+    "done": "Completed",
+    "dueOn": "Answer by {{date}}",
+    "sessions": "Sessions",
+    "logoutBody": "Sign out on all your devices, including this one.",
+    "logoutAll": "Sign out everywhere",
+    "loggedOut": "Sessions closed.",
+    "deleteTitle": "Delete account",
+    "deleteBody": "Everything is erased immediately, including your messages. Active subscriptions are cancelled first. Only what the law requires is kept, locked.",
+    "deleteStart": "Delete my account",
+    "otpLabel": "Confirmation code",
+    "otpHint": "We texted it to you. In testing: 123456.",
+    "wrongCode": "Wrong code.",
+    "deleteConfirm": "Delete permanently"
+  },
+  "moderationCenter": {
+    "title": "Moderation & appeals",
+    "hint": "Decisions about your account and your reports",
+    "body": "Every decision is explained and you can appeal it. A person always reviews it.",
+    "decisions": "Decisions about your account",
+    "noDecisions": "There are no decisions about your account.",
+    "actions": {
+      "warning": "Warning",
+      "content_removed": "Content removed",
+      "suspension": "Suspension"
+    },
+    "appeal": "Appeal",
+    "appealLabel": "Why you disagree",
+    "appealHint": "At least 10 characters. A different person will review it.",
+    "appealSend": "Send appeal",
+    "appealStatus": {
+      "pending": "Appeal under review",
+      "accepted": "Appeal accepted",
+      "rejected": "Appeal rejected"
+    },
+    "myReports": "Your reports",
+    "noReports": "You haven't sent any reports.",
+    "reportStatus": {
+      "open": "Under review",
+      "actioned": "Action taken",
+      "dismissed": "No violation"
+    }
+  },
+  "suspended": {
+    "title": "Account suspended",
+    "body": "We've temporarily suspended your account while we review several reports. The reasons are in Moderation.",
+    "humanReview": "A person will review your case",
+    "appeal": "See reasons and appeal",
+    "delete": "Delete my account"
+  },
+  "sos": {
+    "title": "SOS",
+    "hint": "Trusted contacts and 112",
+    "body": "If something goes wrong, call 112 or alert your trusted contacts.",
+    "call112": "Call 112",
+    "share": "Alert a contact",
+    "shareTitle": "I'm out tonight",
+    "shareText": "Heads-up from Nightlife Connect: I'm out tonight. If you don't hear from me, call me.",
+    "shared": "Alert sent.",
+    "copied": "Message copied: paste it in your chat.",
+    "contacts": "Trusted contacts",
+    "contactsBody": "Up to 3. Only you can see them.",
+    "name": "Name",
+    "phone": "Phone",
+    "phoneInvalid": "Check the phone number.",
+    "add": "Add contact",
+    "remove": "Remove"
+  },
+  "venuePanel": {
+    "title": "Venue panel",
+    "hint": "Manage your venue's page",
+    "body": "Free for venues: edit your page, publish official events and see aggregated stats.",
+    "myVenues": "Your venues",
+    "noVenues": "You don't manage any venue yet.",
+    "manage": "Stats, page, events and sponsorship",
+    "claimStatus": {
+      "pending": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "claim": {
+      "title": "Claim a venue",
+      "body": "Do you run a venue? Ask to manage its page. A person reviews every request.",
+      "search": "Find your venue",
+      "evidence": "How you prove you run it",
+      "evidenceHint": "For example: tax ID, an invoice in the venue's name or a domain email. At least 10 characters.",
+      "submit": "Send request",
+      "sent": "Request sent for {{name}}. We'll let you know once it's reviewed.",
+      "already": "You've already claimed this venue."
+    },
+    "stats": {
+      "title": "Stats",
+      "byHour": "Average attendance per hour (last week)",
+      "chartLabel": "Bar chart of attendance per hour",
+      "averageAge": "Average age",
+      "green": "On green",
+      "checkInsWeek": "Check-ins this week",
+      "goingTonight": "Going tonight",
+      "threshold": "Always aggregated and anonymous. Below 5 people, age and traffic light are hidden."
+    },
+    "pro": {
+      "title": "Pro Stats",
+      "body": "Comparison with your area, trends by day and export. Monthly subscription for venues."
+    },
+    "edit": {
+      "title": "Page",
+      "description": "Description",
+      "hours": "Opening hours",
+      "price": "Price"
+    },
+    "event": {
+      "sectionTitle": "Official event",
+      "title": "Event name",
+      "start": "Starts",
+      "end": "Ends",
+      "description": "Description",
+      "official": "Events from verified venues show as \"Official\" without waiting for confirmations.",
+      "submit": "Publish event",
+      "created": "Event published."
+    },
+    "sponsor": {
+      "title": "Sponsorship",
+      "tiers": {
+        "featured": {
+          "name": "Featured",
+          "body": "Featured pin on your area's map."
+        },
+        "featured_plus": {
+          "name": "Featured Plus",
+          "body": "Featured + top positions in lists that match the filters."
+        },
+        "top": {
+          "name": "Top",
+          "body": "Plus + Flash Alerts to people who consented."
+        }
+      },
+      "from": "From",
+      "to": "To",
+      "rules": "Always labelled \"Sponsored\", never alters data and only shows if it matches the user's filters.",
+      "submit": "Request sponsorship",
+      "status": {
+        "requested": "Requested",
+        "active": "Active"
+      },
+      "invoice": "We'll send you the invoice. The team activates it once paid."
+    }
+  },
+  "admin": {
+    "title": "Admin",
+    "exit": "Exit",
+    "navLabel": "Admin sections",
+    "nav": {
+      "dashboard": "Dashboard",
+      "verifications": "Verifications",
+      "reports": "Moderation",
+      "appeals": "Appeals",
+      "bans": "Bans",
+      "claims": "Venues & claims",
+      "events": "Events",
+      "sponsorships": "Sponsorships",
+      "payments": "Payments",
+      "flags": "Feature flags",
+      "testTools": "Test tools",
+      "dataRequests": "Rights",
+      "legalDocs": "Legal documents",
+      "settings": "Settings",
+      "audit": "Audit"
+    },
+    "mfa": {
+      "title": "Second factor",
+      "body": "The admin requires a second factor (TOTP) every session.",
+      "code": "6-digit code",
+      "hint": "In testing: 123456.",
+      "wrong": "Wrong code.",
+      "verify": "Verify"
+    },
+    "dashboard": {
+      "body": "Simulated data from the test environment.",
+      "users": "Users",
+      "ageVerified": "Age verified",
+      "matchesToday": "Matches today",
+      "testRevenue": "Revenue (test)",
+      "pendingReports": "Pending reports",
+      "pendingVerifications": "Verifications to review",
+      "pendingClaims": "Pending claims",
+      "openDataRequests": "Open rights requests"
+    },
+    "section": {
+      "note": "Note / reason",
+      "noteHint": "Required for decisions that affect a person: it's sent to them explained.",
+      "emptyTitle": "Nothing pending",
+      "emptyBody": "There are no items in this section."
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "warn": "Warn",
+      "suspend": "Suspend",
+      "dismiss": "Dismiss",
+      "accept": "Accept",
+      "lift": "Lift ban",
+      "hide": "Hide",
+      "delete": "Delete",
+      "activate": "Activate",
+      "end": "End",
+      "revoke": "Revoke",
+      "done": "Mark resolved",
+      "publish": "Publish"
+    },
+    "sections": {
+      "verifications": {
+        "title": "Verifications",
+        "body": "Borderline cases and requested reviews. Images are never stored."
+      },
+      "reports": {
+        "title": "Moderation",
+        "body": "Reports and DSA notices. 3 valid reports in 6 h trigger a precautionary suspension."
+      },
+      "appeals": {
+        "title": "Appeals",
+        "body": "Reviewed by a different person from who decided."
+      },
+      "bans": {
+        "title": "Bans",
+        "body": "By phone and device hash; the raw value is never stored."
+      },
+      "claims": {
+        "title": "Venues & claims",
+        "body": "Requests to manage a venue's page."
+      },
+      "events": {
+        "title": "Events",
+        "body": "User, venue and imported events."
+      },
+      "sponsorships": {
+        "title": "Sponsorships",
+        "body": "Manual invoice and admin activation in the MVP."
+      },
+      "subscriptions": {
+        "title": "Subscriptions",
+        "body": "Active subscriptions and their status."
+      },
+      "entitlements": {
+        "title": "Entitlements",
+        "body": "Granted perks: the single source of truth for what is paid."
+      },
+      "promoCodes": {
+        "title": "Promo codes",
+        "body": "Active codes, uses and expiry."
+      },
+      "paymentEvents": {
+        "title": "Payment events",
+        "body": "Webhooks received (idempotent)."
+      },
+      "dataRequests": {
+        "title": "Rights",
+        "body": "GDPR requests. Legal deadline: 1 month."
+      },
+      "legalDocs": {
+        "title": "Legal documents",
+        "body": "Published versions. Publishing a new version requires re-acceptance."
+      },
+      "audit": {
+        "title": "Audit",
+        "body": "Immutable log of admin actions."
+      }
+    },
+    "flags": {
+      "body": "Applied instantly, without redeploying, and written to the audit log.",
+      "paywallNow": "Resulting paywall for you",
+      "paywall": {
+        "hidden": "Hidden",
+        "coming_soon": "Coming soon",
+        "checkout": "Checkout"
+      },
+      "help": {
+        "payments_mode": "disabled = no payments · test = test keys · live = real charges.",
+        "payments_audience": "Who can pay: nobody, testers only or everyone.",
+        "paywall_visibility": "What people who can't pay see.",
+        "premium_enabled": "Premium master switch.",
+        "paid_dm_enabled": "Paid direct message without a match.",
+        "sponsorship_self_service_enabled": "Sponsorship self-service for venues.",
+        "flash_alerts_push_enabled": "Flash Alerts via push (V2).",
+        "verification_mode": "sandbox for testers only; never a bypass for normal users.",
+        "test_tools_enabled": "Test tools. Turn off before launch.",
+        "store_payments_enabled": "App Store / Google Play purchases (Block 11).",
+        "sponsored_cards_enabled": "Sponsored venue cards in the swipe (Block 11).",
+        "travel_mode_enabled": "Travel mode (Block 11)."
+      }
+    },
+    "payments": {
+      "body": "Mode {{mode}} · audience {{audience}}.",
+      "catalog": "Catalog",
+      "product": "Product",
+      "kind": "Type",
+      "price": "Price (VAT incl.)",
+      "kinds": {
+        "subscription": "Subscription",
+        "one_night": "One-night pass",
+        "credits": "Credits"
+      },
+      "records": "Records",
+      "promoTitle": "Create promo code",
+      "days": "Days",
+      "maxUses": "Max uses",
+      "createCode": "Create code",
+      "codeCreated": "Code created: {{code}}",
+      "grantTitle": "Grant entitlement",
+      "user": "User",
+      "userHint": "User ID or alias.",
+      "entitlement": "Entitlement",
+      "daysOrForever": "Days (0 = no end)",
+      "grant": "Grant",
+      "granted": "Granted and audited."
+    },
+    "tools": {
+      "title": "Simulators",
+      "body": "Only with test_tools_enabled and the tester/admin role. Everything is audited.",
+      "offTitle": "Tools are off",
+      "offBody": "Turn on test_tools_enabled in Feature flags to use them.",
+      "run": "Run",
+      "confirm": "Yes, run",
+      "cancel": "Cancel",
+      "result": "{{tool}}: {{result}}",
+      "roles": "Simulated roles",
+      "rolesBody": "Change your roles to test each view. The admin role stays on.",
+      "items": {
+        "generate_test_city": {
+          "name": "Generate test city",
+          "body": "Real imported venues, fictional events and is_test profiles with illustrated avatars."
+        },
+        "fill_venue": {
+          "name": "Fill a venue",
+          "body": "Adds 25 test check-ins to Pub Candil."
+        },
+        "test_like_me": {
+          "name": "Get a like",
+          "body": "A compatible test profile likes you: you'll see the match live."
+        },
+        "send_test_messages": {
+          "name": "Send test messages",
+          "body": "Your latest match writes to you."
+        },
+        "simulate_stripe_webhook": {
+          "name": "Stripe webhook",
+          "body": "Simulates a VIP Pass purchase confirmed by the gateway."
+        },
+        "simulate_yoti_webhook": {
+          "name": "Yoti webhook",
+          "body": "Marks your age as verified."
+        },
+        "expire_everything": {
+          "name": "Fast-forward expiries",
+          "body": "24 h events, check-ins and lost & found."
+        },
+        "reset_likes": {
+          "name": "Reset likes",
+          "body": "Get today's free likes back."
+        },
+        "simulate_suspension": {
+          "name": "Simulate suspension",
+          "body": "Suspends your account to see the suspended screen."
+        },
+        "purge_test_data": {
+          "name": "Purge test data",
+          "body": "Deletes test matches, messages and likes."
+        }
+      }
+    },
+    "settings": {
+      "body": "Limits from app_settings. Every change is audited.",
+      "range": "Between {{min}} and {{max}}",
+      "invalid": "Out of range.",
+      "items": {
+        "free_daily_likes": "Free likes per day",
+        "age_threshold": "Age estimation threshold",
+        "check_in_radius_m": "Check-in radius (m)",
+        "stats_min_people": "Minimum people for stats",
+        "event_confirmations": "Confirmations for an event",
+        "reports_strike_window_h": "3-strike window (h)"
+      }
+    },
+    "status": {
+      "pending": "Pending",
+      "open": "Open",
+      "active": "Active",
+      "inactive": "Inactive",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "dismissed": "Dismissed",
+      "warned": "Warned",
+      "suspended": "Suspended",
+      "accepted": "Accepted",
+      "lifted": "Lifted",
+      "ended": "Ended",
+      "done": "Resolved",
+      "hidden": "Hidden",
+      "restored": "Restored",
+      "deleted": "Deleted",
+      "revoked": "Revoked",
+      "requested": "Requested",
+      "logged": "Logged",
+      "expired": "Expired",
+      "cancel_at_period_end": "Cancelled",
+      "withdrawn": "Withdrawn",
+      "unconfirmed": "Unconfirmed",
+      "confirmed": "Confirmed",
+      "official": "Official",
+      "cancelled": "Cancelled"
     }
   }
 }

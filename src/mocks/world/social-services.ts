@@ -2,6 +2,7 @@ import type { ChatService } from '@/features/chats/services/chat-service'
 import { isMutuallyCompatible, FREE_DAILY_LIKES } from '@/features/matching/model/matching'
 import type { Candidate } from '@/features/matching/model/people'
 import type { Match, MatchingService } from '@/features/matching/services/matching-service'
+import type { MyReport } from '@/features/moderation/services/moderation-service'
 import type { ProfileService } from '@/features/profile/services/profile-service'
 import { err, ok } from '@/shared/lib/result'
 import { contextFor, emit, type WorldState } from './world-state'
@@ -19,7 +20,11 @@ const REPLIES = [
 export function createMockMatchingService(
   state: WorldState,
   wait: Wait,
-  options: { unlimitedLikes: () => boolean; realtime: boolean },
+  options: {
+    unlimitedLikes: () => boolean
+    realtime: boolean
+    onReport?: (report: MyReport) => void
+  },
 ): MatchingService {
   const available = (excludePassed = true) =>
     state.people.filter(
@@ -111,8 +116,16 @@ export function createMockMatchingService(
         state.messages = state.messages.filter((m) => m.matchId !== match.id)
       }
     },
-    async report() {
+    async report(personId, reason) {
       await wait()
+      const person = state.people.find((p) => p.id === personId)
+      options.onReport?.({
+        id: crypto.randomUUID(),
+        aboutName: person?.name ?? '—',
+        reason,
+        createdAt: new Date().toISOString(),
+        status: 'open',
+      })
     },
   }
 }

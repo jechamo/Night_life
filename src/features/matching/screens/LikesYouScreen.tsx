@@ -26,10 +26,18 @@ export function LikesYouScreen() {
         backTo="/tonight"
       />
       {locked && paywall !== 'hidden' && (
-        <p className="glass mx-4 mt-4 flex items-center gap-2 rounded-2xl p-3 text-sm">
+        <Link
+          to="/premium"
+          className="glass mx-4 mt-4 flex items-center gap-2 rounded-2xl p-3 text-sm transition-opacity active:opacity-70"
+        >
           <Crown className="size-5 shrink-0 text-warning" aria-hidden />
-          {paywall === 'checkout' ? t('matching.likesYou.premium') : t('matching.limit.comingSoon')}
-        </p>
+          <span className="flex-1">
+            {paywall === 'checkout'
+              ? t('matching.likesYou.premium')
+              : t('matching.limit.comingSoon')}
+          </span>
+          <span className="font-semibold text-primary">{t('premium.seePlans')}</span>
+        </Link>
       )}
       <ul className="px-safe mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {people.map((person) => (

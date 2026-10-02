@@ -26,6 +26,7 @@ src/
   features/       una carpeta por funcionalidad (components, hooks, services, types, tests)
     onboarding/ legal/ consents/ verification/      (Bloque 2)
     places/ attendance/ matching/ chats/ events/    (Bloque 3)
+    premium/ admin/ venue-panel/ privacy/ moderation/ safety/ public/  (Bloque 4)
     discover/ tonight/ chats/ profile/ themes/ settings/ design-kit/
   shared/
     ui/           componentes base estilo ShadCN (Button, Chip, Badge, BottomSheet…)
@@ -63,6 +64,11 @@ docs/             PRD, progreso, arquitectura, API, seguridad, ADR
 
 State machine: onboarding (`onboardingReducer`) y estados de verificación (Bloque 2).
 Observer: `RealtimeBridge` escribe los eventos realtime en la caché de TanStack Query (Bloque 3).
+Policy: catálogo único (`premium/model/catalog.ts`) con IVA, desistimiento y transiciones de
+suscripción puras (Bloque 4). Rutas: la web pública (`/legal`) y el admin tienen su propio
+layout fuera del `AppShell`; el admin exige rol + segundo factor y `RequireOnboarded`
+redirige a `/suspended` si la cuenta está suspendida. El back-office simulado
+(`src/mocks/backoffice`) es mutable para que el admin cambie flags y roles en directo.
 Pendientes por bloque: State machines (7, 9), Idempotency key y
 Transactional outbox (9).
 

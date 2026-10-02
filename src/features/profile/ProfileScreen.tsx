@@ -1,13 +1,17 @@
 import {
   Crown,
+  Database,
   FileText,
   FlaskConical,
   Heart,
+  LayoutDashboard,
   Mail,
   Palette,
   RotateCcw,
   ShieldCheck,
+  Siren,
   SlidersHorizontal,
+  Store,
   ToggleLeft,
 } from 'lucide-react'
 import { useState } from 'react'
@@ -16,6 +20,8 @@ import { useNavigate } from 'react-router'
 import { useResetOnboarding } from '@/features/onboarding/hooks/use-onboarding-status'
 import { FeatureGate } from '@/shared/flags/FeatureGate'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
+import { hasRole } from '@/shared/session/roles'
+import { useRoles } from '@/shared/session/use-roles'
 import { GlassCard } from '@/shared/ui/card'
 import { ListRow } from '@/shared/ui/list-row'
 import { ScreenHeader } from '@/shared/ui/screen-header'
@@ -61,6 +67,7 @@ export function ProfileScreen() {
   const navigate = useNavigate()
   const reset = useResetOnboarding()
   const paywall = usePaywallState()
+  const isAdmin = hasRole(useRoles(), 'admin')
   const [prefsOpen, setPrefsOpen] = useState(false)
   return (
     <>
@@ -82,7 +89,7 @@ export function ProfileScreen() {
               hint={
                 paywall === 'checkout' ? t('profileMenu.premiumCheckout') : t('common.comingSoon')
               }
-              onClick={() => undefined}
+              onClick={() => void navigate('/premium')}
             />
           )}
         </GlassCard>
@@ -101,6 +108,13 @@ export function ProfileScreen() {
             label={t('profileMenu.consents')}
             hint={t('profileMenu.consentsHint')}
           />
+          <ListRow
+            to="/profile/privacy"
+            icon={Database}
+            label={t('privacyData.title')}
+            hint={t('profileMenu.privacyDataHint')}
+          />
+          <ListRow to="/profile/sos" icon={Siren} label={t('sos.title')} hint={t('sos.hint')} />
         </GlassCard>
       </Section>
       <Section title={t('profile.appearance')}>
@@ -121,18 +135,36 @@ export function ProfileScreen() {
       </Section>
       <Section title={t('profileMenu.about')}>
         <GlassCard className="divide-y divide-border p-0">
-          <ActionRow
+          <ListRow
+            to="/legal"
             icon={FileText}
             label={t('profileMenu.legal')}
-            hint={t('common.comingSoon')}
-            onClick={() => undefined}
+            hint={t('profileMenu.legalHint')}
           />
-          <ActionRow
+          <ListRow
+            to="/legal/contact"
             icon={Mail}
             label={t('profileMenu.contact')}
-            hint={t('common.comingSoon')}
-            onClick={() => undefined}
+            hint={t('publicWeb.contact.hint')}
           />
+        </GlassCard>
+      </Section>
+      <Section title={t('profileMenu.business')}>
+        <GlassCard className="divide-y divide-border p-0">
+          <ListRow
+            to="/venue"
+            icon={Store}
+            label={t('venuePanel.title')}
+            hint={t('venuePanel.hint')}
+          />
+          {isAdmin && (
+            <ListRow
+              to="/admin"
+              icon={LayoutDashboard}
+              label={t('admin.title')}
+              hint={t('profileMenu.adminHint')}
+            />
+          )}
         </GlassCard>
       </Section>
       {/* Test tools are double-gated: flag here (UI) and role + flag on the server (PRD 6.15 API5). */}

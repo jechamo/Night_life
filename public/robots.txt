@@ -1,3 +1,4 @@
-# The app is private (18+, logged-in). Public legal pages will be allowed in Block 4.
+# The app is private (18+, logged-in). Only the public legal website can be crawled.
 User-agent: *
+Allow: /legal
 Disallow: /

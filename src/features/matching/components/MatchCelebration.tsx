@@ -1,6 +1,7 @@
 import { MessageCircle } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { createContext, use, useCallback, useMemo, useState, type ReactNode } from 'react'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { useMyProfile } from '@/features/profile/use-my-profile'
@@ -11,9 +12,7 @@ import { matchTitle, suggestIcebreakers, type Icebreaker } from '../model/matchi
 import type { Match } from '../services/matching-service'
 import { AnthemChip } from './AnthemChip'
 
-type T = ReturnType<typeof useTranslation>['t']
-
-function icebreakerText(t: T, ice: Icebreaker): string {
+function icebreakerText(t: TFunction, ice: Icebreaker): string {
   const place = ice.params.place ?? ''
   switch (ice.key) {
     case 'hereNow':

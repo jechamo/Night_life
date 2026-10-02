@@ -1,0 +1,240 @@
+import type { ModerationService } from '@/features/moderation/services/moderation-service'
+import type { PrivacyService } from '@/features/privacy/services/privacy-service'
+import type { SafetyService, EmergencyContact } from '@/features/safety/services/safety-service'
+import type {
+  ManagedVenue,
+  VenuePanelService,
+} from '@/features/venue-panel/services/venue-panel-service'
+import { err, ok } from '@/shared/lib/result'
+import type { MockStore } from '../mock-store'
+import type { WorldState } from '../world/world-state'
+import { audit, type MockConfig } from './config'
+
+type Wait = () => Promise<void>
+
+export function createMockVenuePanelService(
+  world: WorldState,
+  config: MockConfig,
+  wait: Wait,
+): VenuePanelService {
+  const venueFrom = (
+    placeId: string,
+    claimStatus: ManagedVenue['claimStatus'],
+  ): ManagedVenue | null => {
+    const place = world.places.find((p) => p.id === placeId)
+    return place
+      ? {
+          placeId,
+          name: place.name,
+          claimStatus,
+          description: '',
+          hours: place.hours,
+          price: place.price,
+          sponsorship: null,
+        }
+      : null
+  }
+  let venues: ManagedVenue[] = [venueFrom('v-cobalto', 'approved')!]
+  const replace = (placeId: string, fn: (v: ManagedVenue) => ManagedVenue) => {
+    venues = venues.map((v) => (v.placeId === placeId ? fn(v) : v))
+    return venues.find((v) => v.placeId === placeId)!
+  }
+  return {
+    myVenues: () => Promise.resolve(venues),
+    async claim(placeId, evidence) {
+      await wait()
+      if (venues.some((v) => v.placeId === placeId)) return err('already_claimed')
+      const venue = venueFrom(placeId, 'pending')
+      if (!venue) return err('already_claimed')
+      venues = [...venues, venue]
+      config.rows.claims.unshift({
+        id: `cl-${placeId}`,
+        title: venue.name,
+        subtitle: `Prueba: ${evidence.slice(0, 80)}`,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        facts: ['venue_manager'],
+      })
+      return ok(venue)
+    },
+    async update(placeId, patch) {
+      await wait()
+      world.places = world.places.map((p) =>
+        p.id === placeId
+          ? {
+              ...p,
+              ...(patch.hours ? { hours: patch.hours } : {}),
+              ...(patch.price ? { price: patch.price } : {}),
+            }
+          : p,
+      )
+      return replace(placeId, (v) => ({ ...v, ...patch }))
+    },
+    async stats(placeId) {
+      await wait()
+      const place = world.places.find((p) => p.id === placeId)
+      const peak = Math.max(place?.stats.people ?? 0, 8)
+      const curve = [0.05, 0.1, 0.2, 0.35, 0.55, 0.8, 1, 0.85, 0.5, 0.2]
+      return {
+        byHour: curve.map((c, i) => ({ hour: (20 + i) % 24, people: Math.round(peak * c) })),
+        averageAge: place && place.stats.people >= 5 ? place.stats.averageAge : null,
+        greenPercent: place && place.stats.people >= 5 ? place.stats.greenPercent : null,
+        checkInsWeek: peak * 6,
+        goingTonight: place?.stats.goingTonight ?? 0,
+      }
+    },
+    async requestSponsorship(placeId, tier, from, to) {
+      await wait()
+      const venue = replace(placeId, (v) => ({
+        ...v,
+        sponsorship: { tier, status: 'requested', from, to },
+      }))
+      config.rows.sponsorships.unshift({
+        id: `sp-${placeId}`,
+        title: venue.name,
+        subtitle: `${tier} · ${from} → ${to} · factura pendiente`,
+        status: 'requested',
+        createdAt: new Date().toISOString(),
+        facts: [tier],
+      })
+      return venue
+    },
+    async createOfficialEvent(placeId, input) {
+      await wait()
+      const place = world.places.find((p) => p.id === placeId)
+      if (!place) return
+      world.places.push({
+        ...place,
+        id: `e-${crypto.randomUUID()}`,
+        name: input.title,
+        type: 'event',
+        sponsored: false,
+        stats: { people: 0, averageAge: null, greenPercent: null, ratio: null, goingTonight: 0 },
+        event: {
+          status: 'official',
+          origin: 'venue',
+          startsAt: input.startsAt,
+          endsAt: input.endsAt,
+          createdAt: new Date().toISOString(),
+          confirmations: 0,
+          fakeReports: 0,
+          description: input.description,
+        },
+      })
+    },
+  }
+}
+
+export function createMockPrivacyService(
+  world: WorldState,
+  store: MockStore,
+  config: MockConfig,
+  wait: Wait,
+): PrivacyService {
+  const requests = [] as Awaited<ReturnType<PrivacyService['requests']>>
+  return {
+    async exportMyData() {
+      await wait()
+      const due = new Date(Date.now() + 30 * 86_400_000).toISOString()
+      requests.unshift({
+        id: crypto.randomUUID(),
+        kind: 'export',
+        createdAt: new Date().toISOString(),
+        dueAt: due,
+        status: 'done',
+      })
+      const s = await store.read()
+      // Everything we hold about the user, machine-readable (GDPR art. 15/20).
+      return {
+        exportedAt: new Date().toISOString(),
+        profile: world.me,
+        verification: s.verification,
+        consents: s.consents,
+        signedDocuments: s.signed,
+        attendance: world.attendance,
+        matches: world.matches.map((m) => ({
+          id: m.id,
+          with: m.person.name,
+          createdAt: m.createdAt,
+        })),
+        messagesSent: world.messages
+          .filter((m) => m.fromMe)
+          .map(({ text, sentAt }) => ({ text, sentAt })),
+        premium: { subscription: config.premium.subscription, invoices: config.premium.invoices },
+      }
+    },
+    requests: () => Promise.resolve([...requests]),
+    requestDeletionCode: () => wait(),
+    async deleteAccount(otp) {
+      await wait()
+      if (otp !== '123456') return err('wrong_code')
+      // Active subscriptions are cancelled before erasure (PRD 6.12 G).
+      config.premium.subscription = null
+      world.matches = []
+      world.messages = []
+      await store.update((s) => ({
+        ...s,
+        onboarded: false,
+        signed: [],
+        verification: {
+          age: { state: 'not_started' },
+          photo: { state: 'not_started' },
+          identity: { state: 'not_started' },
+        },
+      }))
+      audit(config, 'account.delete', 'self-service')
+      return ok(undefined)
+    },
+    async logoutEverywhere() {
+      await wait()
+    },
+  }
+}
+
+export function createMockModerationService(config: MockConfig, wait: Wait): ModerationService {
+  return {
+    myReports: () => Promise.resolve([...config.myReports]),
+    decisions: () => Promise.resolve(config.decisions.map((d) => ({ ...d }))),
+    async appeal(decisionId, text) {
+      await wait()
+      const decision = config.decisions.find((d) => d.id === decisionId)
+      if (!decision || decision.appeal) return err('already_appealed')
+      decision.appeal = { status: 'pending', text }
+      config.rows.appeals.unshift({
+        id: `ap-${decisionId}`,
+        title: 'Tú',
+        subtitle: `«${text.slice(0, 80)}»`,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        facts: [decision.action],
+      })
+      return ok({ ...decision })
+    },
+    async submitIllegalContentNotice({ url, reason }) {
+      await wait()
+      const id = `DSA-${Date.now().toString(36).toUpperCase()}`
+      config.rows.reports.unshift({
+        id,
+        title: `Aviso DSA ${id}`,
+        subtitle: `${reason} · ${url.slice(0, 60)}`,
+        status: 'open',
+        createdAt: new Date().toISOString(),
+        facts: ['dsa_notice'],
+      })
+      return id
+    },
+    accountStatus: () => Promise.resolve(config.suspended ? 'suspended' : 'active'),
+  }
+}
+
+export function createMockSafetyService(wait: Wait): SafetyService {
+  let contacts: EmergencyContact[] = []
+  return {
+    contacts: () => Promise.resolve([...contacts]),
+    async saveContacts(next) {
+      await wait()
+      contacts = next.slice(0, 3).map((c) => ({ ...c, id: crypto.randomUUID() }))
+      return [...contacts]
+    },
+  }
+}

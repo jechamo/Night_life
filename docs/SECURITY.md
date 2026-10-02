@@ -55,6 +55,21 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 | Abuso de likes (API6)            | Límite diario de 5 (ilimitado solo con entitlement); el servidor lo aplicará                                                                                                                                      | `likesRemaining` + tests           |
 | Patrocinios (6.11)               | Solo si cumplen los filtros, máx. 2 arriba y 1/5, etiqueta siempre visible, no alteran datos                                                                                                                      | `sponsored.ts` + tests             |
 
+## Controles añadidos (Bloque 4)
+
+| Riesgo                           | Control                                                                                                                                                        | Dónde                                        |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| A01 / API5 admin                 | Rutas de admin solo con rol `admin` + segundo factor (simulado; `aal2` en el Bloque 5); la sesión MFA solo vive en memoria; el guard espera a los roles        | `AdminLayout`, `useMfaSession`               |
+| API5 herramientas de prueba      | Doble puerta (rol + `test_tools_enabled`), confirmación en las destructivas y auditoría de cada ejecución                                                      | `AdminTestToolsScreen`, mock admin           |
+| A09 auditoría                    | Cambios de flags, configuración, decisiones, códigos, entitlements y roles quedan en el registro de auditoría                                                  | `backoffice/config.ts`                       |
+| DSA art. 16-17-20                | Formulario público de contenido ilegal con declaración de buena fe y referencia; decisiones con nota obligatoria; apelación única revisada por otra persona    | `IllegalContentScreen`, `AdminSectionScreen` |
+| Pagos (A08)                      | El cliente nunca concede ventajas: la compra pasa por el servicio (webhook simulado) y se releen los entitlements; checkout inaccesible si no se puede comprar | `use-premium.ts`, `CheckoutScreen`           |
+| Fuerza bruta de códigos (API4)   | Formato largo `XXXX-XXXX-XXXX` y límite de intentos                                                                                                            | `catalog.ts`, mock premium                   |
+| Borrado de cuenta (A07)          | Reautenticación por OTP; se cancela la suscripción antes; se limpia la caché del cliente                                                                       | `PrivacyDataScreen`                          |
+| Privacidad de estadísticas (4.3) | Panel de locales solo con datos agregados y umbral de 5                                                                                                        | `VenueDetailScreen`                          |
+| Validación de entrada            | Límites de longitud en todos los campos; valores de flags validados por su esquema; configuración acotada a min/max                                            | formularios, `AdminFlagsScreen`              |
+| Indexación                       | `robots.txt` solo permite `/legal`                                                                                                                             | `public/robots.txt`                          |
+
 ## Modelo de amenazas (STRIDE) — esqueleto, se completa por bloques
 
 | Área                                  | Bloque | Estado                                          |
@@ -66,7 +81,7 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 | Reportes / moderación                 | 9      | Pendiente                                       |
 | Eventos de usuarios                   | 7      | Pendiente                                       |
 | Pagos y entitlements                  | 9      | Pendiente (política de cliente lista y probada) |
-| Herramientas de prueba y admin        | 4-5    | Pendiente (gate de UI listo)                    |
+| Herramientas de prueba y admin        | 4-5    | UI con rol + MFA + flag (servidor en Bloque 5)  |
 
 ## Puertas de seguridad por bloque
 
@@ -96,3 +111,17 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Auditoría de red (Playwright: mapa, ficha, swipe, match, chat, perfil, crear evento; 5 temas y
   escritorio): 0 orígenes externos, 0 errores de consola. Avatares SVG `data:` (permitido por CSP).
 - Sin `dangerouslySetInnerHTML` ni `console.log`; APIs del dispositivo solo vía `src/platform`.
+
+### Bloque 4 — 2026-10-02 ✅ sin hallazgos críticos ni altos
+
+- Security Advisors de Supabase (seguridad y rendimiento): 0 avisos (sin cambios de esquema).
+- RLS / migraciones / Edge Functions nuevas: ninguna (frontend con mocks).
+- Dependencias añadidas: ninguna. `npm audit`: 0 vulnerabilidades.
+- Auditoría de red (Playwright: paywall, checkout, Mi suscripción, canjear, privacidad,
+  documentos, moderación, SOS, panel de locales, admin con MFA, flags, herramientas,
+  suspensión y web legal sin login; móvil y escritorio, varios temas): 0 orígenes externos,
+  0 errores de consola.
+- Sin `dangerouslySetInnerHTML`; textos legales como texto plano; APIs del dispositivo solo vía
+  `src/platform` (descarga JSON y compartir); el enlace al 112 es un `tel:` estándar.
+- Riesgo aceptado (temporal): MFA de admin y pasarela simulados en cliente; no hay backend, así
+  que no protegen nada real. Se sustituyen por comprobaciones en servidor en los bloques 5 y 9.
