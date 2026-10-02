@@ -93,7 +93,7 @@ Ver `docs/SECURITY.md` → Bloque 1: sin hallazgos críticos ni altos.
 
 ### Pendiente / para el siguiente bloque
 
-- Imágenes: el propietario genera con GPT las de `docs/design/IMAGE_PROMPTS.md` (sección A para el Bloque 2).
+- Imágenes: el propietario genera con GPT las de `docs/design/IMAGE_PROMPTS.md` (firmas por tema, neutras tintables y contenido; prioridad 1 para el Bloque 2).
 
 - Bloque 2: onboarding completo, firma legal, consentimientos y Centro de verificación (mock).
 - Dudas abiertas para el propietario (ver respuesta del Bloque 1): proveedor SMS, contrato de Yoti,
