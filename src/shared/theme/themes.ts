@@ -122,7 +122,7 @@ const neonNoir: ThemeDefinition = {
   radius: '1.25rem',
   glassBlur: '20px',
   motion: 'standard',
-  map: { lightPreset: 'night', theme: 'default' },
+  map: { lightPreset: 'night', theme: 'monochrome' },
   heatmap: [
     'rgba(34, 211, 238, 0)',
     'rgba(34, 211, 238, 0.55)',
@@ -172,7 +172,7 @@ const cyberpunk: ThemeDefinition = {
   radius: '0.75rem',
   glassBlur: '16px',
   motion: 'expressive',
-  map: { lightPreset: 'night', theme: 'default' },
+  map: { lightPreset: 'night', theme: 'monochrome' },
   heatmap: [
     'rgba(0, 240, 255, 0)',
     'rgba(0, 240, 255, 0.6)',
@@ -222,7 +222,7 @@ const velvet: ThemeDefinition = {
   radius: '0.875rem',
   glassBlur: '24px',
   motion: 'calm',
-  map: { lightPreset: 'night', theme: 'faded' },
+  map: { lightPreset: 'night', theme: 'monochrome' },
   heatmap: [
     'rgba(159, 43, 69, 0)',
     'rgba(159, 43, 69, 0.6)',
@@ -272,7 +272,7 @@ const sunset: ThemeDefinition = {
   radius: '1.5rem',
   glassBlur: '20px',
   motion: 'standard',
-  map: { lightPreset: 'dusk', theme: 'default' },
+  map: { lightPreset: 'dusk', theme: 'monochrome' },
   heatmap: [
     'rgba(255, 111, 165, 0)',
     'rgba(255, 111, 165, 0.55)',

@@ -85,7 +85,7 @@ export function PlacePin({
         </span>
         <span
           className={cn(
-            'relative flex size-11 items-center justify-center rounded-full border-2 bg-[var(--pin)] text-background shadow-[0_0_24px_var(--pin)]',
+            'relative flex size-11 items-center justify-center rounded-full border-2 bg-[var(--pin)] text-background shadow-[0_0_14px_var(--pin),0_0_42px_var(--pin)]',
             selected ? 'border-foreground' : 'border-background',
           )}
         >

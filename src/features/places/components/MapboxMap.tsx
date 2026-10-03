@@ -22,13 +22,11 @@ const FOCUS_ZOOM = 15
 function heatData(places: readonly Place[]): FeatureCollection<Point> {
   return {
     type: 'FeatureCollection',
-    features: places
-      .filter((p) => p.stats.people > 0)
-      .map((p) => ({
-        type: 'Feature',
-        properties: { people: p.stats.people },
-        geometry: { type: 'Point', coordinates: [p.location.lng, p.location.lat] },
-      })),
+    features: places.map((p) => ({
+      type: 'Feature',
+      properties: { people: p.stats.people },
+      geometry: { type: 'Point', coordinates: [p.location.lng, p.location.lat] },
+    })),
   }
 }
 
@@ -138,9 +136,10 @@ export const MapboxMap = forwardRef<
         type: 'heatmap',
         source: HEAT_SOURCE,
         paint: {
-          'heatmap-weight': ['interpolate', ['linear'], ['get', 'people'], 0, 0, 40, 1],
-          'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 11, 18, 16, 48],
-          'heatmap-opacity': 0.55,
+          // Every venue keeps a dim glow on the dark basemap; crowds make it brighter.
+          'heatmap-weight': ['interpolate', ['linear'], ['get', 'people'], 0, 0.35, 40, 1],
+          'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 11, 22, 16, 60],
+          'heatmap-opacity': 0.75,
         },
       })
       applyTheme(map, latest.current.theme)
