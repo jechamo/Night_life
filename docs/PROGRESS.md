@@ -10,7 +10,7 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                           |
 | 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                         |
 | 5 – Backend base, legal y modo pruebas              | ✅ Terminado; pendiente de OK                         |
-| 6 – Verificaciones reales                           | 🛠️ Código listo; pendiente aplicar MCP de Supabase y prueba Veriff |
+| 6 – Verificaciones reales                           | 🛠️ Frontend en producción; pendiente aplicar Supabase y Veriff E2E |
 | 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                                    |
 | 8 – Ligar, match en tiempo real y chat              | ⏳                                                    |
 | 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                                    |
@@ -36,6 +36,9 @@ y se inicia el Bloque 6; no se avanza al Bloque 7.
   borrado best-effort de la sesión en Veriff.
 - Foto verificada sigue simulada (comparación selfie2selfie en el Bloque 12).
 - Tests de la app: **266/266**. `npm audit --omit=dev`: 0 vulnerabilidades.
+- Frontend desplegado en Vercel producción: SHA `6e74d8d`,
+  `dpl_Ds4c21t16NkrDVr3KqACVobve6RQ`, READY,
+  https://nightlife-connect-beige.vercel.app
 - MCP de Supabase autenticado pero sin permiso de `apply_migration` / `execute_sql` /
   `deploy_edge_function` / Advisors (`MCP error -32600`). La migración
   `20261003114550_verification_block6.sql` y las funciones `verification`,
