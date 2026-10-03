@@ -20,3 +20,5 @@ node_modules/.tmp
 !.vscode/extensions.json
 *.log
 .vercel
+.tmp/
+supabase/.temp/

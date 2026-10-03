@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { LayeredInfoBox } from '@/features/legal/components/LayeredInfoBox'
-import { MOCK_OTP_CODE } from '@/mocks/mock-auth-services'
 import { Illustration } from '@/shared/images/Illustration'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 import { useServices } from '@/shared/services/ServicesProvider'
+import { useSignOut } from '@/shared/session/use-sign-out'
 import { Button } from '@/shared/ui/button'
 import { TextField } from '@/shared/ui/text-field'
 import { OnboardingStepLayout } from '../components/OnboardingStepLayout'
@@ -22,7 +22,7 @@ import {
 import type { RequestOtpError, VerifyOtpError } from '../services/onboarding-service'
 import type { StepProps } from './types'
 
-type Phase = 'enter' | 'code' | 'email'
+type Phase = 'enter' | 'code' | 'email' | 'no_account'
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /**
@@ -39,6 +39,7 @@ export function PhoneStep({
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { onboarding } = useServices()
+  const signOut = useSignOut()
   const login = mode === 'login'
   const testTools = useFeatureFlag('test_tools_enabled') === 'on'
   const [phase, setPhase] = useState<Phase>('enter')
@@ -49,12 +50,15 @@ export function PhoneStep({
   const [email, setEmail] = useState('')
   const [error, setError] = useState<RequestOtpError | VerifyOtpError | null>(null)
   const [busy, setBusy] = useState(false)
+  const [otpVerified, setOtpVerified] = useState(false)
   const [resendAt, setResendAt] = useState<number | null>(null)
   const secondsLeft = useCountdown(resendAt)
 
   const sendCode = async (target: string) => {
     setBusy(true)
     setError(null)
+    setOtpVerified(false)
+    setCode('')
     const result = await onboarding.requestOtp(target)
     setBusy(false)
     if (!result.ok) return setError(result.error)
@@ -73,23 +77,67 @@ export function PhoneStep({
     if (!phone) return
     setBusy(true)
     setError(null)
-    const result = await onboarding.verifyOtp(phone, code)
-    if (!result.ok) {
+    try {
+      if (!otpVerified) {
+        const result = await onboarding.verifyOtp(phone, code)
+        if (!result.ok) return setError(result.error)
+        setOtpVerified(true)
+      }
+      const status = await onboarding.getStatus()
+      if (status === 'completed') {
+        await queryClient.invalidateQueries()
+        return void navigate('/discover', { replace: true })
+      }
+      setPhase(login ? 'no_account' : 'email')
+    } catch {
+      setError('network')
+    } finally {
       setBusy(false)
-      return setError(result.error)
     }
-    const status = await onboarding.getStatus()
-    setBusy(false)
-    if (status === 'completed') {
-      await queryClient.invalidateQueries()
-      return void navigate('/discover', { replace: true })
+  }
+
+  const changeNumber = () => {
+    setError(null)
+    const clearForm = () => {
+      setOtpVerified(false)
+      setCode('')
+      setPhone(null)
+      setPhase('enter')
     }
-    if (login) return void navigate('/onboarding', { replace: true })
-    setPhase('email')
+    if (!otpVerified) return clearForm()
+    signOut.mutate(undefined, {
+      onSuccess: clearForm,
+      onError: () => setError('network'),
+    })
   }
 
   const emailInvalid = email !== '' && !EMAIL.test(email)
   const errorText = error ? t(`onboarding.phone.errors.${error}`) : undefined
+
+  if (phase === 'no_account') {
+    return (
+      <OnboardingStepLayout
+        title={t('onboarding.login.noAccountTitle')}
+        description={t('onboarding.login.noAccountBody')}
+      >
+        {errorText && (
+          <p role="alert" className="text-sm text-danger">
+            {errorText}
+          </p>
+        )}
+        <Button
+          block
+          onClick={() => void navigate('/onboarding', { replace: true })}
+          disabled={signOut.isPending}
+        >
+          {t('onboarding.login.noAccountComplete')}
+        </Button>
+        <Button block variant="outline" onClick={changeNumber} disabled={signOut.isPending}>
+          {t('onboarding.login.noAccountOtherNumber')}
+        </Button>
+      </OnboardingStepLayout>
+    )
+  }
 
   if (phase === 'email' && phone) {
     return (
@@ -126,7 +174,7 @@ export function PhoneStep({
         step={login ? undefined : 'phone'}
         title={t('onboarding.phone.codeTitle')}
         description={t('onboarding.phone.codeSentTo', { phone: maskPhone(phone) })}
-        onBack={() => setPhase('enter')}
+        onBack={changeNumber}
         footer={
           <Button
             block
@@ -134,7 +182,7 @@ export function PhoneStep({
             disabled={!isOtpFormat(code) || busy}
             onClick={() => void onVerify()}
           >
-            {t('onboarding.phone.verify')}
+            {t(otpVerified ? 'common.retry' : 'onboarding.phone.verify')}
           </Button>
         }
       >
@@ -148,9 +196,9 @@ export function PhoneStep({
           error={errorText}
           className="font-display text-center text-2xl tracking-[0.5em]"
         />
-        {testTools && (
+        {testTools && onboarding.testOtpCode && (
           <p className="text-sm text-live">
-            {t('onboarding.phone.testHint', { code: MOCK_OTP_CODE })}
+            {t('onboarding.phone.testHint', { code: onboarding.testOtpCode })}
           </p>
         )}
         <div className="flex flex-wrap gap-2">
@@ -164,7 +212,7 @@ export function PhoneStep({
               ? t('onboarding.phone.resendIn', { seconds: secondsLeft })
               : t('onboarding.phone.resend')}
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => setPhase('enter')}>
+          <Button variant="ghost" size="sm" onClick={changeNumber} disabled={signOut.isPending}>
             {t('onboarding.phone.changeNumber')}
           </Button>
         </div>

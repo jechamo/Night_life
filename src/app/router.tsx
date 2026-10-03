@@ -50,6 +50,7 @@ import { ScreenErrorBoundary } from '@/shared/errors/ScreenErrorBoundary'
 import { AppShell } from './layout/AppShell'
 import { NotFoundScreen } from './NotFoundScreen'
 import { RequireOnboarded } from './RequireOnboarded'
+import { RedirectIfOnboarded } from './RedirectIfOnboarded'
 import { RouteErrorScreen } from './RouteErrorScreen'
 
 /** Every screen gets its own error boundary (PRD 3.4). */
@@ -63,9 +64,21 @@ const IdentityVerification = () => <OptionalVerificationScreen level="identity" 
 
 // Pure SPA routes (no SSR), WebView-compatible (PRD 3.3 point 2).
 export const routes: RouteObject[] = [
-  { path: 'welcome', element: screen(WelcomeScreen), errorElement: <RouteErrorScreen /> },
-  { path: 'onboarding', element: screen(OnboardingScreen), errorElement: <RouteErrorScreen /> },
-  { path: 'login', element: screen(LoginScreen), errorElement: <RouteErrorScreen /> },
+  {
+    path: 'welcome',
+    element: <RedirectIfOnboarded>{screen(WelcomeScreen)}</RedirectIfOnboarded>,
+    errorElement: <RouteErrorScreen />,
+  },
+  {
+    path: 'onboarding',
+    element: <RedirectIfOnboarded>{screen(OnboardingScreen)}</RedirectIfOnboarded>,
+    errorElement: <RouteErrorScreen />,
+  },
+  {
+    path: 'login',
+    element: <RedirectIfOnboarded>{screen(LoginScreen)}</RedirectIfOnboarded>,
+    errorElement: <RouteErrorScreen />,
+  },
   // Public legal website: no login, outside the app shell (PRD 5.1).
   {
     path: 'legal',

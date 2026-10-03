@@ -3,19 +3,21 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                              | Estado                                       |
-| --------------------------------------------------- | -------------------------------------------- |
-| 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02) |
-| 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                  |
-| 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                  |
-| 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                |
-| 5 – Backend base, legal y modo pruebas              | ✅ Terminado, falta tu prueba de alta        |
-| 6 – Verificaciones reales                           | ⏳                                           |
-| 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                           |
-| 8 – Ligar, match en tiempo real y chat              | ⏳                                           |
-| 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                           |
-| 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                           |
-| 11 – Apps nativas y pagos en tiendas                | ⏳ Añadido al plan (docs/MONETIZATION.md)    |
+| Bloque                                              | Estado                                          |
+| --------------------------------------------------- | ----------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02)    |
+| 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                     |
+| 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                     |
+| 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                   |
+| 5 – Backend base, legal y modo pruebas              | 🛠️ Acceso corregido; prueba operativa pendiente |
+| 6 – Verificaciones en desarrollo y pruebas          | ⏳                                              |
+| 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                              |
+| 8 – Ligar, match en tiempo real y chat              | ⏳                                              |
+| 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                              |
+| 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                              |
+| 11 – Apps nativas y pagos en tiendas                | ⏳ Añadido al plan (docs/MONETIZATION.md)       |
+
+| 12 – Contratación, costes, activación live y lanzamiento | ⏳ |
 
 ---
 
@@ -385,3 +387,24 @@ Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
 ### Puerta de seguridad
 
 Ver `docs/SECURITY.md` → Bloque 5.
+
+## Bloque 5 — Corrección de acceso y cierre operativo (2026-10-03)
+
+- Guards en bienvenida/login/alta: una sesión terminada entra en Descubre; se conservan las restricciones de suspensión.
+- Login pendiente: aviso tras OTP válido, completar alta o cerrar sesión antes de usar otro número.
+- Fallos de Auth/BBDD no se interpretan como alta pendiente; reintento sin consumir otra vez el OTP.
+- Perfil → Cuenta → Cerrar sesión, justo después de Privacidad. Reset y pista OTP únicamente en mock.
+- Caché privada reiniciada al cambiar de identidad; un fallo al cerrar sesión no se presenta como éxito.
+- Español/inglés y tests de acceso/caché/errores: `npm run check` pasa en la copia aislada, 256/256 tests.
+- `npm audit`: 0 vulnerabilidades. Build y comprobación del despliegue se verifican antes de entregar.
+- RLS: 33/33, con rollback; después permanecen 1 perfil real, 10 consentimientos y 2 fotos, sin fixtures.
+- Imágenes guardadas en commit independiente. Backend/migración del bloque 6 excluidos de este cierre.
+- Política aprobada: proveedores gratuitos o simulación persistida; Veriff primero al retomar el bloque 6.
+- Bloque 12 añadido para contratación, costes y activación live; commit/push y OK obligatorio al cerrar cada bloque.
+
+### Validación operativa pendiente
+
+- Entrar con la cuenta del propietario y su OTP en el despliegue actualizado; comprobar registros de Auth.
+- Con sesión y MFA reales: Generar ciudad de prueba y Purgar; comprobar aislamiento y preservación de datos reales.
+- No se marca este cierre operativo como terminado hasta tener evidencia de estas pruebas.
+- El trabajo local previo del bloque 6 se conserva; no se continúa sin OK al cierre del bloque 5.

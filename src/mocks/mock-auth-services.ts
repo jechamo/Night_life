@@ -22,6 +22,7 @@ export function createMockOnboardingService(store: MockStore, wait: Wait): Onboa
   let sends = 0
   let wrongAttempts = 0
   return {
+    testOtpCode: MOCK_OTP_CODE,
     getStatus: async () => ((await store.read()).onboarded ? 'completed' : 'pending'),
     async requestOtp(phone) {
       await wait()

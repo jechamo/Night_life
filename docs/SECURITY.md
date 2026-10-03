@@ -159,3 +159,17 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Dependencias añadidas: `@supabase/supabase-js` (lista 3.5). `npm audit`: 0 vulnerabilidades.
 - Riesgo aceptado (temporal): envío de email con Gmail del propietario y SMTP propio; teléfonos
   de prueba con OTP fijo (se quitan antes del lanzamiento, PRD 6.14).
+
+### Bloque 5 — Corrección de login y cierre de sesión (2026-10-03)
+
+- No hay migraciones ni nuevas Edge Functions en esta corrección. No se despliega el trabajo pendiente del bloque 6.
+- RLS remoto: 33/33 en transacción con rollback; cuenta real/evidencias/fotos conservadas.
+- Guard y consulta de perfil fallan cerrados ante error; no confunden fallo de conexión con cuenta incompleta.
+- No se publican códigos de teléfonos reales ni se conceden permisos por la presencia de una pista mock.
+- La caché se limpia al cerrar sesión y se reinicia al cambiar de identidad. Los fallos de signOut se propagan.
+- Advisors actuales: 1 WARN previo `auth_leaked_password_protection`; 55 INFO de índices sin uso.
+  Esta app utiliza OTP de teléfono, no contraseñas. No se activa un plan de pago para resolver el aviso.
+  [Remediación oficial](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+- Generación/purga y acceso real con OTP/MFA: pendientes de sesión del propietario; no se simula su MFA.
+- Los resultados de proveedor en test permanecerán separados de live según PRD 11.3.
+- `npm audit`: 0 vulnerabilidades; check aislado de bloque 5: 256/256 tests, TypeScript, ESLint y formato correctos.

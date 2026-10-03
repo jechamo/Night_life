@@ -10,6 +10,8 @@ export type VerifyOtpError = 'wrong_code' | 'expired' | 'too_many_attempts' | 'n
  * client only maps the typed errors to generic, translated messages.
  */
 export interface OnboardingService {
+  /** Public hint for the local mock only; real Auth codes are never exposed. */
+  readonly testOtpCode?: string
   getStatus(): Promise<'pending' | 'completed'>
   requestOtp(phone: string): Promise<Result<{ resendAfterSeconds: number }, RequestOtpError>>
   verifyOtp(phone: string, code: string): Promise<Result<void, VerifyOtpError>>

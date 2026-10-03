@@ -24,6 +24,7 @@ import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { hasRole } from '@/shared/session/roles'
 import { useRoles } from '@/shared/session/use-roles'
 import { useSignOut } from '@/shared/session/use-sign-out'
+import { useServices } from '@/shared/services/ServicesProvider'
 import { GlassCard } from '@/shared/ui/card'
 import { ListRow } from '@/shared/ui/list-row'
 import { ScreenHeader } from '@/shared/ui/screen-header'
@@ -71,6 +72,7 @@ export function ProfileScreen() {
   const paywall = usePaywallState()
   const isAdmin = hasRole(useRoles(), 'admin')
   const signOut = useSignOut()
+  const { onboarding } = useServices()
   const [prefsOpen, setPrefsOpen] = useState(false)
   return (
     <>
@@ -118,6 +120,20 @@ export function ProfileScreen() {
             hint={t('profileMenu.privacyDataHint')}
           />
           <ListRow to="/profile/sos" icon={Siren} label={t('sos.title')} hint={t('sos.hint')} />
+        </GlassCard>
+      </Section>
+      <Section title={t('profileMenu.account')}>
+        <GlassCard className="p-0">
+          <ActionRow
+            icon={LogOut}
+            tone="text-muted-foreground"
+            label={t('profileMenu.signOut')}
+            onClick={() =>
+              signOut.mutate(undefined, {
+                onSuccess: () => void navigate('/welcome', { replace: true }),
+              })
+            }
+          />
         </GlassCard>
       </Section>
       <Section title={t('profile.appearance')}>
@@ -170,20 +186,6 @@ export function ProfileScreen() {
           )}
         </GlassCard>
       </Section>
-      <div className="px-safe mt-8">
-        <GlassCard className="p-0">
-          <ActionRow
-            icon={LogOut}
-            tone="text-muted-foreground"
-            label={t('profileMenu.signOut')}
-            onClick={() =>
-              signOut.mutate(undefined, {
-                onSuccess: () => void navigate('/welcome', { replace: true }),
-              })
-            }
-          />
-        </GlassCard>
-      </div>
       {/* Test tools are double-gated: flag here (UI) and role + flag on the server (PRD 6.15 API5). */}
       <FeatureGate flag="test_tools_enabled" is="on">
         <Section title={t('profile.testing')}>
@@ -194,17 +196,19 @@ export function ProfileScreen() {
               label={t('profile.designKit')}
               hint={t('profile.designKitHint')}
             />
-            <ActionRow
-              icon={RotateCcw}
-              tone="text-warning"
-              label={t('profileMenu.resetOnboarding')}
-              hint={t('profileMenu.resetOnboardingHint')}
-              onClick={() =>
-                reset.mutate(undefined, {
-                  onSuccess: () => void navigate('/welcome', { replace: true }),
-                })
-              }
-            />
+            {onboarding.testOtpCode && (
+              <ActionRow
+                icon={RotateCcw}
+                tone="text-warning"
+                label={t('profileMenu.resetOnboarding')}
+                hint={t('profileMenu.resetOnboardingHint')}
+                onClick={() =>
+                  reset.mutate(undefined, {
+                    onSuccess: () => void navigate('/welcome', { replace: true }),
+                  })
+                }
+              />
+            )}
           </GlassCard>
         </Section>
       </FeatureGate>

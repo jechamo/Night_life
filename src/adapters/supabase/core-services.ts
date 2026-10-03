@@ -33,7 +33,8 @@ export function createSessionService(db: Db): SessionService {
         .filter((r): r is Role => (ROLES as readonly string[]).includes(r))
     },
     async signOut() {
-      await db.auth.signOut({ scope: 'local' })
+      const { error } = await db.auth.signOut({ scope: 'local' })
+      if (error) throw new Error('sign_out_failed')
     },
     onChange(listener) {
       const { data } = db.auth.onAuthStateChange((event) => {

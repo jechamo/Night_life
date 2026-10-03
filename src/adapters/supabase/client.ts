@@ -34,9 +34,16 @@ export async function currentUserId(db: Db): Promise<string | null> {
 
 /** True once `complete_onboarding` has run for the signed-in user. */
 export async function isOnboarded(db: Db): Promise<boolean> {
-  const uid = await currentUserId(db)
+  const { data: auth, error: sessionError } = await db.auth.getSession()
+  if (sessionError) throw new Error('session_unavailable')
+  const uid = auth.session?.user.id
   if (!uid) return false
-  const { data } = await db.from('profiles').select('onboarded_at').eq('id', uid).maybeSingle()
+  const { data, error } = await db
+    .from('profiles')
+    .select('onboarded_at')
+    .eq('id', uid)
+    .maybeSingle()
+  if (error) throw new Error('profile_unavailable')
   return Boolean(data?.onboarded_at)
 }
 

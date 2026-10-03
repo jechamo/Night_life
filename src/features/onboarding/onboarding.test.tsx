@@ -19,7 +19,7 @@ const fresh = {
 async function passBirthdate(date: string) {
   const input = await screen.findByLabelText('Fecha de nacimiento')
   fireEvent.change(input, { target: { value: date } })
-  fireEvent.click(screen.getByRole('button', { name: 'Continuar' }))
+  fireEvent.click(await screen.findByRole('button', { name: 'Continuar' }))
 }
 
 describe('onboarding (Block 2 "done when")', () => {

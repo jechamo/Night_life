@@ -372,7 +372,11 @@
     "login": {
       "cta": "I already have an account",
       "title": "Sign in",
-      "body": "We'll text a code to your number."
+      "body": "We'll text a code to your number.",
+      "noAccountTitle": "This number has no completed account",
+      "noAccountBody": "You can finish signing up or sign in with another number.",
+      "noAccountComplete": "Finish signing up",
+      "noAccountOtherNumber": "Use another number"
     }
   },
   "verification": {
@@ -513,7 +517,8 @@
     "legalHint": "Public documents and your rights",
     "business": "Venues and team",
     "adminHint": "Moderation, payments and testing",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "account": "Account"
   },
   "tonightPreview": {
     "viewProfiles": "View profiles",

@@ -26,21 +26,22 @@ export function renderApp(
     language: 'es',
     ...options.settings,
   }
+  const services = createMockServices({
+    latencyMs: 0,
+    realtime: false,
+    preferences: platform.preferences,
+    ...options.services,
+    state: { onboarded: true, ...options.services?.state },
+  })
   const utils = render(
     <AppProviders
       platform={platform}
-      services={createMockServices({
-        latencyMs: 0,
-        realtime: false,
-        preferences: platform.preferences,
-        ...options.services,
-        state: { onboarded: true, ...options.services?.state },
-      })}
+      services={services}
       queryClient={queryClient}
       settings={settings}
     >
       <RouterProvider router={router} />
     </AppProviders>,
   )
-  return { ...utils, platform, router }
+  return { ...utils, platform, router, services, queryClient }
 }

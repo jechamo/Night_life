@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Navigate } from 'react-router'
 import { useAccountStatus } from '@/features/moderation/hooks/use-moderation'
 import { useOnboardingStatus } from '@/features/onboarding/hooks/use-onboarding-status'
+import { GenericErrorFallback } from '@/shared/errors/ScreenErrorBoundary'
 
 /**
  * The app is only reachable after the mandatory onboarding (PRD 5.2), and a suspended
@@ -15,10 +16,11 @@ export function RequireOnboarded({
   children: ReactNode
   allowSuspended?: boolean
 }) {
-  const { data, isPending } = useOnboardingStatus()
+  const { data, isPending, isError, refetch } = useOnboardingStatus()
   const status = useAccountStatus()
   if (isPending || (!allowSuspended && status.isPending))
     return <div className="min-h-dvh bg-background" aria-busy="true" />
+  if (isError) return <GenericErrorFallback onRetry={() => void refetch()} />
   if (data !== 'completed') return <Navigate to="/welcome" replace />
   if (!allowSuspended && status.data === 'suspended') return <Navigate to="/suspended" replace />
   return children

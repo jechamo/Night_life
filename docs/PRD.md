@@ -1246,16 +1246,16 @@ Antes de generar código:
   - Las RLS están probadas.
   - Los datos de prueba no son visibles para un usuario normal.
 
-**Bloque 6 – Verificaciones reales**
+**Bloque 6 – Verificaciones en desarrollo y pruebas**
 - **PRD:** 6.2.
 - **Incluye:**
-  - Yoti (sandbox/live): webhook firmado y `verification_status`.
+  - Veriff primero en test; conservar Yoti como alternativa: webhook firmado y `verification_status`.
   - Foto verificada.
   - Identidad verificada.
   - Badges.
   - Bloqueo real de funciones.
   - Bans por hash.
-  - Simulador de webhook de Yoti.
+  - Simulaciones persistidas de edad, identidad y foto; integración gratuita cuando esté disponible.
 - **Hecho cuando:** una cuenta no verificada no puede ligar y no se guarda ninguna imagen ni documento.
 
 **Bloque 7 – Mapa, lugares, eventos y estadísticas reales**
@@ -1326,7 +1326,44 @@ Antes de generar código:
 
 ---
 
-## ANEXO A – ACTIVAR LOS PAGOS (sin código)
+**Bloque 11 – App nativa y pagos de tiendas en pruebas**
+- Capacitor y servicios nativos según el Anexo B; catálogo y entitlements según la monetización aprobada.
+- RevenueCat Test Store sin contratar cuentas de pago de Apple/Google.
+- Restauración y notificaciones de compras en test, o simulación persistida si no hay acceso gratuito.
+- Publicación, cuotas de desarrollador y validación real de tiendas se completan en el Bloque 12.
+
+**Bloque 12 – Contratación, costes, activación live y lanzamiento**
+- Presupuestos y aprobación explícita de costes; contratos y revisión legal de terceros.
+- Configurar credenciales live, cuentas de tiendas, productos y precios definitivos.
+- Validar verificaciones reales, pagos/reembolsos y publicación con las puertas de seguridad completas.
+- Los resultados de prueba no se convierten en pruebas de identidad ni compras live: requieren validación real.
+- Aplicar el Anexo A y las tareas de publicación del Anexo B exclusivamente en este bloque.
+
+### 11.3. Integración sin cargos (decisión del propietario, 2026-10-03)
+
+Esta política se aplica a todos los proveedores y prevalece sobre las activaciones live de los
+bloques anteriores. Primero se usa sandbox/demo/prueba gratuita; si no está disponible, se ofrece
+simulación explícita mediante botones con resultados persistidos en las tablas funcionales de
+Supabase, permisos de tester/admin, aislamiento, auditoría e idempotencia. No basta un mock local
+ni un registro de auditoría sin actualizar el estado de la funcionalidad.
+
+Se acepta registrar tarjeta únicamente para una prueba sin cargos ni renovación de pago. No
+contratar ni ampliar planes, ni cambiar automáticamente a un entorno facturable. Al caducar o
+agotar una prueba se deshabilitan las llamadas externas y se ofrece simulación explícita.
+
+Selección para pruebas: Veriff primero (Yoti conservado como alternativa); Mapbox Demo sin tarjeta;
+Google Places solo con prueba gratuita elegible; Stripe test; RevenueCat Test Store; Spotify solo
+con una cuenta de desarrollo ya elegible, sin contratar Premium. SMS/correo/push usan las cuentas
+gratuitas disponibles o simulación persistida; Auth mantiene teléfonos de prueba. Eventos usan
+fuentes gratuitas autorizadas o fixtures persistidos. Hosting sin ampliaciones y analítica opcional
+desactivada. Detalles y fuentes en `docs/PROVIDERS.md`.
+
+En los bloques 6–11 el cierre requiere desarrollo y pruebas completos, con validaciones live
+pendientes identificadas para el Bloque 12. Cada cierre incluye commit, push y despliegue validado,
+y pide OK antes de comenzar el siguiente bloque. Migraciones/funciones y despliegues se realizan
+directamente mediante MCP de Supabase y Vercel, respectivamente.
+
+## ANEXO A – ACTIVAR LOS PAGOS (Bloque 12)
 1. Cuenta de Stripe en live verificada (empresa y banco). IVA y facturación revisados con la gestoría (Stripe Tax si aplica).
 2. Crear en Stripe live los mismos productos y precios. Copiar los IDs live en `plans`.
 3. Añadir a Supabase Secrets: `STRIPE_SECRET_KEY_LIVE` y `STRIPE_WEBHOOK_SECRET_LIVE`.

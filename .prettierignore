@@ -5,3 +5,5 @@ node_modules
 package-lock.json
 src/styles/themes.generated.css
 docs/PRD.md
+docs/PRD/
+.tmp

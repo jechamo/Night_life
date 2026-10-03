@@ -13,6 +13,7 @@ Este repositorio sustituye al "Knowledge" de Lovable (ADR 0002).
 - Checklist "Hecho cuando" con ✅/❌, cómo probarlo, actualizar `docs/PROGRESS.md` y `docs/SECURITY.md`.
 - Puerta de seguridad (PRD 11.1.7): Security Advisors de Supabase, revisión de RLS/migraciones/Edge
   Functions, `npm audit`, auditoría de red.
+- Hacer commit y push del bloque validado; comunicar SHA, URL del despliegue y resultados.
 - Terminar con: **"Bloque X terminado. ¿Me das OK para pasar al Bloque X+1?"** y no continuar sin OK.
 
 ## Reglas
@@ -27,6 +28,9 @@ Este repositorio sustituye al "Knowledge" de Lovable (ADR 0002).
 - Bloques 1-4: mocks solo en `src/mocks/`. Desde el Bloque 5: datos reales y `is_test`.
 - Supabase: proyecto `Nightlife_Connect` (ref `ocrpfeqfqzchhrghqcfb`, eu-west-1). Cambios de esquema
   siempre con migraciones versionadas; nada destructivo sin confirmación explícita.
+- Migraciones y Edge Functions con MCP de Supabase; despliegues y comprobaciones con MCP de Vercel.
+- Antes del Bloque 12 no contratar, ampliar planes ni activar proveedores facturables. Usar
+  pruebas gratuitas sin cargos o simulación persistida en Supabase (PRD 11.3).
 
 ## Comandos
 

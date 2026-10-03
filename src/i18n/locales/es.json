@@ -372,7 +372,11 @@
     "login": {
       "cta": "Ya tengo cuenta",
       "title": "Entrar",
-      "body": "Te enviamos un código por SMS a tu número."
+      "body": "Te enviamos un código por SMS a tu número.",
+      "noAccountTitle": "Este número no tiene una cuenta terminada",
+      "noAccountBody": "Puedes completar el alta o entrar con otro número.",
+      "noAccountComplete": "Completar el alta",
+      "noAccountOtherNumber": "Usar otro número"
     }
   },
   "verification": {
@@ -513,7 +517,8 @@
     "legalHint": "Documentos públicos y tus derechos",
     "business": "Locales y equipo",
     "adminHint": "Moderación, pagos y pruebas",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "account": "Cuenta"
   },
   "tonightPreview": {
     "viewProfiles": "Ver perfiles",
