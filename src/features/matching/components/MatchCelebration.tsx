@@ -165,18 +165,17 @@ function MatchOverlay({ match, onClose }: { match: Match; onClose: () => void })
         <Button
           size="lg"
           disabled={send.isPending}
-          onClick={async () => {
+          onClick={() => {
             // A written message is SENT here, so the conversation exists straight away.
-            if (message) {
-              try {
-                await send.mutateAsync(message)
-              } catch {
-                onClose()
-                return void navigate(`/chats/${match.id}`, { state: { draft: message } })
-              }
+            const open = (state?: { draft: string }) => {
+              onClose()
+              void navigate(`/chats/${match.id}`, { state })
             }
-            onClose()
-            void navigate(`/chats/${match.id}`)
+            if (!message) return open()
+            send.mutate(message, {
+              onSuccess: () => open(),
+              onError: () => open({ draft: message }),
+            })
           }}
         >
           <MessageCircle aria-hidden />
