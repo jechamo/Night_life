@@ -2,6 +2,24 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Evidencia final de pruebas del Bloque 6 — 2026-10-03
+
+- Check **285/285**, build correcto; SQL **54/54** y RLS **33/33** con rollback.
+  npm audit completo: 0 vulnerabilidades. Advisors: WARN previo de protección de
+  contraseñas, 2 INFO esperados en tablas privadas cerradas y 23 INFO de índices sin uso.
+- API Test real, rechazo y aprobación HMAC entregados con HTTP 200; revisión solicitada
+  persistida en la cola real y autoaprobación rechazada con 403. Identidad Test y foto
+  simulada conservadas al recargar; sus resultados permanecen en sandbox.
+- RPC de auditoría de borrado solo service_role, sesión Veriff final y estado HTTP acotado;
+  sin cuerpos del proveedor. La API devuelve 403 y el registro dice pending, nunca borrado.
+  Habilitación por soporte y validación del borrado pasan al Bloque 12 por decisión expresa.
+- No se aceptan resultados live derivados de pruebas. El simulador explícito de edad no
+  altera el acceso global a Veriff; sigue exigiendo rol, herramientas y modo sandbox.
+- No se debilitó disponibilidad global para provocar un fallo: auto-review rechazó esa
+  actualización; cobertura alternativa con transacción revertida y pruebas de interfaz.
+- Las entradas siguientes conservan el historial; las cifras y pendientes anteriores
+  quedan sustituidos por esta evidencia y el cierre operativo registrado en PROGRESS.md.
+
 ## Bloque 6 — auditoría de cierre, 2026-10-03
 
 - Idempotencia por evento (sesión + intento + estado + hora), no por intento: una

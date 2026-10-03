@@ -2,8 +2,9 @@
 
 Estado: migraciones y Edge Functions aplicadas y revisadas en Nightlife_Connect. La creación
 real de sesión Test, el webhook firmado de rechazo y la revisión solicitada están comprobados.
-La aprobación Test de extremo a extremo es parte del Bloque 6 y sigue pendiente; las validaciones
-de personas reales y la activación live pertenecen al Bloque 12.
+La aprobación Test firmada también está comprobada, con identidad persistida en sandbox.
+Las validaciones de personas reales, la activación live y la habilitación/prueba del borrado
+del proveedor pertenecen al Bloque 12 por decisión del propietario (2026-10-03).
 
 ## Plan
 
@@ -65,8 +66,9 @@ Station mostró 14 días de trial el 2026-10-03: se fijó un corte conservador e
 están disponibles en Test; foto usa simulación independiente; Yoti live sigue deshabilitado.
 
 Una sesión creada desde la app llegó a Veriff Test a las 17:48 UTC del 2026-10-03.
-Mientras figure «Not started», Station solo ofrece caducarla. Es necesario completar el
-flujo de captura directamente en Veriff para probar decisiones positivas/negativas/revisión.
+El propietario completó personalmente dos flujos de captura. Station entregó decisiones de
+rechazo y aprobación con HTTP 200; la solicitud de revisión aparece en la cola real del admin.
+Station Test no ofrece forzar `review`; ese payload se cubre en las pruebas automatizadas.
 No introducir documentos, selfies ni enlaces de sesión en el repositorio o en los logs.
 
 ## Revisión humana
@@ -79,9 +81,19 @@ acciones quedan auditadas.
 
 ## Borrado en Veriff
 
-Se borra la sesión del proveedor solo con resultado final confirmado en Supabase (nivel
+Se solicita el borrado de la sesión del proveedor solo con resultado final confirmado en Supabase (nivel
 aprobado o caducado). Identidad no requiere acreditar edad; edad aprobada sin fecha de
 nacimiento permanece en revisión. Rechazos y revisiones conservan la evidencia del proveedor.
+
+La integración actual devuelve 403: DELETE requiere habilitación por soporte de Veriff.
+`record_verification_cleanup` registra HTTP y estado aceptado/pendiente sin guardar cuerpos
+del proveedor. La respuesta 403 no acredita borrado. Por decisión del propietario, habilitación
+y comprobación real quedan en el Bloque 12; no bloquean el cierre de pruebas del Bloque 6.
+[Documentación de borrado](https://devdocs.veriff.com/apidocs/v1sessionsid-3).
+
+En sandbox, el tester también puede escoger explícitamente «Usar simulación de prueba»
+para edad aunque Veriff esté disponible. Es una sesión propia persistida; no cambia la
+disponibilidad global del proveedor ni acredita edad real.
 
 ## Documentación de los proveedores
 

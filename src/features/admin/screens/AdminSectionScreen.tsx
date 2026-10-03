@@ -146,6 +146,15 @@ function RowCard({ section, row }: { section: AdminSection; row: AdminRow }) {
               </Button>
             ))}
           </div>
+          {act.isError && (
+            <p role="alert" className="text-sm text-danger">
+              {t(
+                section === 'verifications'
+                  ? 'admin.section.verificationFailed'
+                  : 'admin.section.actionFailed',
+              )}
+            </p>
+          )}
         </div>
       )}
     </GlassCard>
@@ -161,7 +170,7 @@ export function AdminSectionScreen() {
 
 function SectionList({ section }: { section: AdminSection }) {
   const { t } = useTranslation()
-  const { data: rows, isPending } = useAdminList(section)
+  const { data: rows, isPending, isError, refetch } = useAdminList(section)
   return (
     <>
       <ScreenHeader
@@ -169,7 +178,17 @@ function SectionList({ section }: { section: AdminSection }) {
         description={t(`admin.sections.${section}.body`)}
       />
       <div className="px-safe mt-4 space-y-3">
-        {!isPending && rows?.length === 0 && (
+        {isError && (
+          <GlassCard className="space-y-3">
+            <p role="alert" className="text-sm text-danger">
+              {t('admin.section.loadFailed')}
+            </p>
+            <Button variant="outline" onClick={() => void refetch()}>
+              {t('common.retry')}
+            </Button>
+          </GlassCard>
+        )}
+        {!isPending && !isError && rows?.length === 0 && (
           <EmptyState
             icon={Inbox}
             title={t('admin.section.emptyTitle')}

@@ -1,4 +1,3 @@
-// Generated from the deployed Supabase schema (MCP generate_typescript_types).
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
@@ -1708,6 +1707,10 @@ export type Database = {
       feature_enabled: { Args: { _key: string }; Returns: boolean }
       has_entitlement: { Args: { _key: string }; Returns: boolean }
       purge_test_data: { Args: never; Returns: number }
+      record_verification_cleanup: {
+        Args: { p_http_status: number; p_session: string }
+        Returns: undefined
+      }
       request_verification_review: { Args: { p_level: string }; Returns: Json }
       save_consents: {
         Args: { p_choices: Json; p_city?: string }

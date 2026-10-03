@@ -448,8 +448,8 @@
     },
     "sandbox": {
       "title": "Simulador del proveedor",
-      "body": "Modo pruebas (verification_mode = sandbox): elige qué devolvería el proveedor. Así se simula su webhook firmado.",
-      "liveMode": "El simulador interno solo está disponible para testers en sandbox con verification_provider = simulator, o para la foto mientras Veriff está activo.",
+      "body": "Modo pruebas: elige un resultado simulado. Se guarda en tu cuenta y no acredita una verificación real.",
+      "liveMode": "El simulador solo está disponible para cuentas autorizadas en el entorno de pruebas.",
       "documentStep": "El proveedor pide ahora documento con selfie.",
       "outcomes": {
         "approved": "Aprobado",
@@ -1319,6 +1319,9 @@
     "section": {
       "note": "Nota / motivo",
       "noteHint": "Obligatoria para decisiones que afectan a una persona: se le envía explicada.",
+      "actionFailed": "No se pudo aplicar la decisión. Comprueba la conexión y los permisos.",
+      "verificationFailed": "No se pudo aplicar la decisión. Comprueba la conexión y los permisos; no puedes aprobar tu propia verificación.",
+      "loadFailed": "No se pudo cargar la lista. Reintenta la conexión.",
       "emptyTitle": "Nada pendiente",
       "emptyBody": "No hay elementos en esta sección."
     },

@@ -32,6 +32,16 @@ test('normal users never get the simulator fallback button', async () => {
   ).not.toBeInTheDocument()
 })
 
+test('testers can explicitly choose simulated age without calling the external provider', async () => {
+  const user = userEvent.setup()
+  const { services } = renderApp('/verification/age')
+  const start = vi.spyOn(services.verification, 'start')
+  await user.click(await screen.findByRole('button', { name: 'Usar simulación de prueba' }))
+  expect(start).toHaveBeenCalledOnce()
+  expect(start).toHaveBeenCalledWith('age', 'document', undefined, true)
+  expect(await screen.findByRole('button', { name: 'Aprobado' })).toBeInTheDocument()
+})
+
 test('return URL parameters cannot claim successful verification', async () => {
   renderApp('/profile/verification?level=age&result=verified')
   await screen.findByRole('button', { name: 'Actualizar estado' })

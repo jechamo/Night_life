@@ -3,20 +3,20 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                                   | Estado                                               |
-| -------------------------------------------------------- | ---------------------------------------------------- |
-| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02)         |
-| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                          |
-| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                          |
-| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                        |
-| 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                        |
-| 6 – Verificaciones reales                                | 🛠️ Revisión aplicada; decisiones Test E2E pendientes |
-| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                                   |
-| 8 – Ligar, match en tiempo real y chat                   | ⏳                                                   |
-| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                   |
-| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
-| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
-| 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
+| Bloque                                                   | Estado                                                |
+| -------------------------------------------------------- | ----------------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02)          |
+| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                           |
+| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                           |
+| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                         |
+| 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                         |
+| 6 – Verificaciones reales                                | 🛠️ Pruebas Test completadas; QA del último despliegue |
+| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                                    |
+| 8 – Ligar, match en tiempo real y chat                   | ⏳                                                    |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                    |
+| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                    |
+| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)             |
+| 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita              |
 
 ---
 
@@ -151,6 +151,27 @@ Migraciones nuevas: `20261003165824_verification_block6_fixes`,
 - Pendientes reales: aprobación de identidad Test, cola de admin y borrado final;
   publicar las correcciones auditadas
   de frontend y comprobar simulación persistida desde la UI. Bloque 7 no iniciado.
+
+### Validación final del Bloque 6 — 2026-10-03
+
+- Identidad Test aprobada: webhook firmado 200 a las 18:12 UTC, resultado en Supabase
+  `identity_verified=true`, `identity_mode=sandbox`; edad y foto permanecían independientes.
+- Foto simulada desde la UI: resultado propio persistido en Supabase y conservado tras
+  recargar, igual que identidad. No se modifican fotos originales ni el alta terminada.
+- Cola real del admin: revisión de edad visible; autoaprobación devuelve 403 y conserva
+  la revisión. Nuevo aviso de error y reintento cuando falla la consulta, con regresiones.
+- Simulación de edad explícita disponible para testers en sandbox sin desactivar Veriff
+  globalmente. Falta su recorrido en la versión final publicada.
+- `npm run check`: **285/285**, 34 archivos; TypeScript, ESLint y formato correctos.
+  Build final correcto. SQL **54/54**, RLS **33/33**, rollback; npm audit **0 vulnerabilidades**.
+- Migración MCP `20261003181620_verification_provider_cleanup_audit`; webhook v7 ACTIVE.
+  Borrado real devuelve **403**, auditado como pendiente sin conservar respuesta sensible.
+  El propietario traslada habilitación por soporte y prueba real al **Bloque 12**.
+- La revisión automática rechazó deshabilitar Veriff globalmente por afectar otros flujos.
+  No hubo cambio: caducidad se cubre con rollback y errores con pruebas de interfaz;
+  el recorrido final usa simulación propia explícita.
+- A petición del propietario, el Bloque 7 y la información de sitios se harán en Cursor.
+  No se implementan aquí ni se activan llamadas Mapbox/Places sin comprobar acceso sin cargos.
 
 ## Bloque 1 — Cimientos, diseño y arquitectura preparada (2026-10-02)
 

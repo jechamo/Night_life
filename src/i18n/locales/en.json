@@ -448,8 +448,8 @@
     },
     "sandbox": {
       "title": "Provider simulator",
-      "body": "Test mode (verification_mode = sandbox): choose what the provider would return. This simulates its signed webhook.",
-      "liveMode": "The internal simulator is only available to testers in sandbox with verification_provider = simulator, or for the photo while Veriff is active.",
+      "body": "Test mode: choose a simulated result. It is saved to your account and does not establish real verification.",
+      "liveMode": "The simulator is only available to authorized accounts in the test environment.",
       "documentStep": "The provider now asks for an ID with a selfie.",
       "outcomes": {
         "approved": "Approved",
@@ -1319,6 +1319,9 @@
     "section": {
       "note": "Note / reason",
       "noteHint": "Required for decisions that affect a person: it's sent to them explained.",
+      "actionFailed": "The decision could not be applied. Check your connection and permissions.",
+      "verificationFailed": "The decision could not be applied. Check your connection and permissions; you cannot approve your own verification.",
+      "loadFailed": "The list could not be loaded. Retry the connection.",
       "emptyTitle": "Nothing pending",
       "emptyBody": "There are no items in this section."
     },

@@ -31,6 +31,9 @@ do $$ begin
   begin update public.verification_status set age_verified = true;
   insert into _verification_results values('client cannot assign verification',false);
   exception when insufficient_privilege then insert into _verification_results values('client cannot assign verification',true); end;
+  begin perform public.record_verification_cleanup('00000000-0000-4000-8000-000000000096',200);
+  insert into _verification_results values('client cannot forge cleanup audit',false);
+  exception when insufficient_privilege then insert into _verification_results values('client cannot forge cleanup audit',true); end;
   begin perform public.complete_provider_verification('veriff','00000000-0000-4000-8000-000000000094','00000000-0000-4000-8000-000000000093','00000000-0000-4000-8000-000000000096','verified',true,true,now());
   insert into _verification_results values('client cannot complete provider',false);
   exception when insufficient_privilege then insert into _verification_results values('client cannot complete provider',true); end;
@@ -79,9 +82,11 @@ select set_config('request.jwt.claims','{"role":"service_role"}',true);
 select public.attach_verification_provider((select id from _veriff_session),'00000000-0000-4000-8000-000000000093');
 insert into _verification_results select 'veriff result accepted',public.complete_provider_verification('veriff','00000000-0000-4000-8000-000000000094','00000000-0000-4000-8000-000000000093',(select id from _veriff_session),'verified',true,true,now(),'document',18);
 insert into _verification_results select 'veriff duplicate idempotent',public.complete_provider_verification('veriff','00000000-0000-4000-8000-000000000094','00000000-0000-4000-8000-000000000093',(select id from _veriff_session),'verified',true,true,now(),'document',18);
+select public.record_verification_cleanup((select id from _veriff_session),403);
 reset role;
 insert into _verification_results select 'age session never grants identity',not identity_verified from public.verification_status where user_id = '00000000-0000-4000-8000-000000000092';
-insert into _verification_results select 'one minimal event persisted',count(*) = 1 from private.verification_notifications;
+insert into _verification_results select 'one minimal event persisted',count(*) = 1 from private.verification_notifications where session_id=(select id from _veriff_session);
+insert into _verification_results select 'cleanup failure audited without body',exists(select 1 from public.admin_audit_log where action='verification.provider_cleanup' and detail=(select id::text from _veriff_session)||':http=403:pending');
 -- Keep fixture sessions out of the hourly start limit.
 update public.verification_sessions set created_at = created_at - interval '2 hours' where user_id = '00000000-0000-4000-8000-000000000092';
 set local role authenticated;
@@ -106,6 +111,11 @@ set local role service_role;
 select set_config('request.jwt.claims','{"role":"service_role"}',true);
 insert into _verification_results select 'late veriff decision accepted',public.complete_provider_verification('veriff','00000000-0000-4000-8000-0000000000b1','00000000-0000-4000-8000-0000000000a1',(select id from _identity_session),'verified',true,true,now(),'document',18);
 insert into _verification_results select 'approval without proof accepted',public.complete_provider_verification('veriff','00000000-0000-4000-8000-0000000000b2','00000000-0000-4000-8000-0000000000a2',(select id from _age_session),'verified',false,true,now(),'document',18);
+do $$ begin
+  begin perform public.record_verification_cleanup((select id from _age_session),200);
+  insert into _verification_results values('review evidence cannot be marked deleted',false);
+  exception when invalid_parameter_value then insert into _verification_results values('review evidence cannot be marked deleted',true); end;
+end $$;
 reset role;
 insert into _verification_results select 'identity session grants identity',identity_verified and identity_mode = 'sandbox' from public.verification_status where user_id = '00000000-0000-4000-8000-000000000092';
 insert into _verification_results select 'approval without proof goes to review',state = 'manual_review' and reason = 'borderline' from public.verification_sessions where id = (select id from _age_session);

@@ -58,12 +58,18 @@ Deno.serve(async (req) => {
       shouldDeleteVeriffSession(event, finalSession.data.state)
     ) {
       // The runtime may stop right after the response; keep the provider deletion alive.
-      const deletion = deleteVeriffSession({
-        baseUrl: veriffBaseUrl(Deno.env.get('VERIFF_BASE_URL') ?? undefined),
-        apiKey,
-        secret,
-        sessionId: event.providerSessionId,
-      })
+      const deletion = (async () => {
+        const status = await deleteVeriffSession({
+          baseUrl: veriffBaseUrl(Deno.env.get('VERIFF_BASE_URL') ?? undefined),
+          apiKey,
+          secret,
+          sessionId: event.providerSessionId,
+        })
+        await db.rpc('record_verification_cleanup', {
+          p_session: event.referenceId,
+          p_http_status: status,
+        })
+      })()
       if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(deletion)
       else await deletion
     }

@@ -204,9 +204,9 @@ export async function deleteVeriffSession(input: {
   apiKey: string
   secret: string
   sessionId: string
-}): Promise<void> {
+}): Promise<number> {
   const signature = await hmacHex(input.secret, input.sessionId)
-  await fetch(`${input.baseUrl}/v1/sessions/${input.sessionId}`, {
+  const response = await fetch(`${input.baseUrl}/v1/sessions/${input.sessionId}`, {
     method: 'DELETE',
     redirect: 'error',
     signal: AbortSignal.timeout(10_000),
@@ -215,4 +215,6 @@ export async function deleteVeriffSession(input: {
       'X-HMAC-SIGNATURE': signature,
     },
   }).catch(() => undefined)
+  // Never read/log the provider body: retain only the status for the cleanup audit.
+  return response?.status ?? 0
 }

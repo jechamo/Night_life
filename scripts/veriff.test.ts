@@ -1,6 +1,7 @@
 // @vitest-environment node
-import { expect, test } from 'vitest'
+import { afterEach, expect, test, vi } from 'vitest'
 import {
+  deleteVeriffSession,
   hmacHex,
   minimizeVeriffDecision,
   parseVeriffSession,
@@ -9,6 +10,32 @@ import {
   veriffSessionRequest,
   yearsSince,
 } from '../supabase/functions/_shared/veriff.ts'
+
+afterEach(() => vi.unstubAllGlobals())
+
+test.each([200, 403])('Cleanup reports HTTP %i instead of hiding failure', async (status) => {
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status })))
+  expect(
+    await deleteVeriffSession({
+      baseUrl: 'https://api-saas.veriff.com',
+      apiKey: 'test',
+      secret: 'test',
+      sessionId: 'test',
+    }),
+  ).toBe(status)
+})
+
+test('Cleanup network failure remains pending without reading provider data', async () => {
+  vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')))
+  expect(
+    await deleteVeriffSession({
+      baseUrl: 'https://api-saas.veriff.com',
+      apiKey: 'test',
+      secret: 'test',
+      sessionId: 'test',
+    }),
+  ).toBe(0)
+})
 
 const sessionId = '12df6045-3846-3e45-946a-14fa6136d78b'
 const attemptId = '00bca969-b53a-4fad-b065-874d41a7b2b8'

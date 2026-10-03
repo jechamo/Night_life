@@ -49,10 +49,15 @@ Este documento fija el trabajo futuro; no declara configuradas las integraciones
 El Bloque 6 tiene Veriff test en código y ya aplicado en Nightlife_Connect (migración,
 `verification`, `veriff-webhook`, `yoti-webhook`), auditado el 2026-10-03.
 
-**Puerta del Bloque 6:** comprobar una decisión Test aprobada, otra rechazada y otra en
-revisión de extremo a extremo, su persistencia, la cola de admin y el borrado final en Veriff.
-La creación de sesión real y el webhook en la integración Nightlife TEST ya están comprobados.
-Las decisiones siguen pendientes de completar el flujo Test. No se posponen al Bloque 12.
+**Puerta del Bloque 6:** aprobación y rechazo firmados recibidos con HTTP 200; revisión
+solicitada persistida y visible en la cola real del admin; autoaprobación rechazada con 403.
+Station Test no ofrece forzar `review`; ese evento se cubre en las pruebas SQL y de parser.
+Foto simulada e identidad Test permanecen verificadas tras recargar, siempre en sandbox.
+
+**Excepción aprobada por el propietario (2026-10-03):** la API de borrado responde 403.
+Veriff requiere habilitar DELETE mediante soporte; su activación y la prueba de borrado real
+se trasladan al Bloque 12. El servidor registra el intento como pendiente, nunca como borrado.
+[Requisito oficial de Veriff](https://devdocs.veriff.com/apidocs/v1sessionsid-3).
 
 Registro actual: `private.verification_provider_access`. Veriff edad/identidad en Test;
 foto simulada; Yoti live no disponible. El 2026-10-03 Station mostró 14 días de trial:
