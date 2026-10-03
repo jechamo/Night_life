@@ -67,7 +67,7 @@ const NAV: readonly { key: NavKey; to: string; icon: LucideIcon }[] = [
 
 function MfaGate() {
   const { t } = useTranslation()
-  const { verify, enroll, enrolled } = useMfaSession()
+  const { verify, enroll, enrolled, mode } = useMfaSession()
   const [code, setCode] = useState('')
   const enrolment = enroll.data
   return (
@@ -119,7 +119,7 @@ function MfaGate() {
         >
           <TextField
             label={t('admin.mfa.code')}
-            hint={t('admin.mfa.hint')}
+            hint={mode === 'mock' ? t('admin.mfa.hintMock') : t('admin.mfa.hint')}
             error={verify.data === false ? t('admin.mfa.wrong') : undefined}
             inputMode="numeric"
             autoComplete="one-time-code"
