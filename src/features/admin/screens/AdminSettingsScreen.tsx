@@ -6,6 +6,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header'
 import { TextField } from '@/shared/ui/text-field'
 import { useAdminSettings, useSetSetting } from '../hooks/use-admin'
 import type { AdminSetting } from '../services/admin-service'
+import { ProviderQuotas } from '../components/ProviderQuotas'
 
 function SettingRow({ setting }: { setting: AdminSetting }) {
   const { t } = useTranslation()
@@ -49,6 +50,7 @@ export function AdminSettingsScreen() {
           <SettingRow key={s.key} setting={s} />
         ))}
       </div>
+      <ProviderQuotas />
     </>
   )
 }

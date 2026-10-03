@@ -22,6 +22,7 @@ const TOOLS: readonly TestTool[] = [
   'simulate_stripe_webhook',
   'simulate_yoti_webhook',
   'expire_everything',
+  'import_events',
   'reset_likes',
   'simulate_suspension',
   'purge_test_data',

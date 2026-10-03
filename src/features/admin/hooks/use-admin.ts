@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { FeatureFlags, FlagKey } from '@/shared/flags/flags'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { Role } from '@/shared/session/roles'
+import type { ProviderQuotaChange } from '../model/provider-quota'
+import type { VenueInput } from '../model/venue'
 import type { AdminSection, AdminService, AdminSetting, TestTool } from '../services/admin-service'
 
 const adminKey = ['admin'] as const
@@ -48,7 +50,7 @@ export function useMfaSession() {
 }
 
 /** Admin writes touch many readers (flags, entitlements, places...): refresh broadly. */
-function useAdminMutation<A>(fn: (admin: AdminService, args: A) => Promise<unknown>) {
+function useAdminMutation<A, R = unknown>(fn: (admin: AdminService, args: A) => Promise<R>) {
   const { admin } = useServices()
   const queryClient = useQueryClient()
   return useMutation({
@@ -91,6 +93,43 @@ export const useGrantEntitlement = () =>
 
 export const useRunTestTool = () =>
   useAdminMutation((admin, tool: TestTool) => admin.runTestTool(tool))
+
+export function useProviderQuotas() {
+  const { admin } = useServices()
+  return useQuery({
+    queryKey: [...adminKey, 'providers'],
+    queryFn: () => admin.providerQuotas(),
+    refetchInterval: 30_000,
+  })
+}
+
+export const useConfigureProvider = () =>
+  useAdminMutation((admin, change: ProviderQuotaChange) => admin.configureProvider(change))
+
+export const useSetMapToken = () =>
+  useAdminMutation((admin, token: string) => admin.setMapToken(token))
+
+export function useAdminVenues() {
+  const { admin } = useServices()
+  return useQuery({ queryKey: [...adminKey, 'venues'], queryFn: () => admin.venues() })
+}
+
+export const useSaveVenue = () =>
+  useAdminMutation(async (admin, a: { id: string | null; input: VenueInput }) => {
+    if (a.id) await admin.updateVenue(a.id, a.input)
+    else await admin.createVenue(a.input)
+  })
+
+export const useSeedTestVenues = () =>
+  useAdminMutation<void, number>((admin) => admin.seedTestVenues())
+
+export const useFillTestVenue = () =>
+  useAdminMutation((admin, a: { id: string; count: number }) => admin.fillTestVenue(a.id, a.count))
+
+export const useImportTestEvents = () =>
+  useAdminMutation((admin, a: { city: string; count: number }) =>
+    admin.importTestEvents(a.city, a.count),
+  )
 
 export const useSetSimulatedRoles = () =>
   useAdminMutation((admin, roles: readonly Role[]) => admin.setSimulatedRoles(roles))

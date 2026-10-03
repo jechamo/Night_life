@@ -82,7 +82,11 @@ Transactional outbox (9).
 
 ## Estado y datos
 
-- TanStack Query es la única caché de cliente; Realtime actualizará esa caché (Bloque 7-8).
+- TanStack Query es la única caché de cliente. Desde el Bloque 7, `RealtimeBridge` (en el
+  `AppShell`) escucha el Broadcast privado `place-stats:live|test` y escribe las cifras en
+  la caché de lugares; el chat se añadirá en el Bloque 8.
+- El mapa real (Mapbox GL JS) se carga con `lazy()` solo tras una reserva concedida por
+  `reserve_map_load()`; si no, se usa el mapa de prueba (ADR 0010).
 - Reintentos con _backoff_ exponencial (máx. 8 s) en consultas; sin reintentos en mutaciones.
 - Preferencias no sensibles (tema, idioma, reducir movimiento) vía `platform.preferences`,
   leídas antes del primer render.

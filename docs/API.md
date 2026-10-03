@@ -7,7 +7,8 @@ las verificaciones simuladas no están disponibles en modo live.
 ## Estado (Bloques 5–6)
 
 Backend base, Auth, legal, herramientas y verificación están desplegados en Nightlife_Connect.
-Veriff usa una integración Test. Mapa, matching, chat y pagos mantienen sus mocks hasta sus bloques.
+Veriff usa una integración Test. Desde el Bloque 7, lugares, asistencia, eventos y estadísticas
+son reales; matching, chat y pagos mantienen sus mocks hasta sus bloques.
 
 ## Puertos de cliente ya definidos (contratos a implementar)
 
@@ -87,3 +88,25 @@ RPC en `public` = envoltorios `SECURITY INVOKER` de implementaciones en `private
 | `admin_verification_reviews`     | Cola real de revisión                             | Admin + aal2                                                                | Sin imágenes/documentos                                          |
 | `admin_resolve_verification`     | Aprobar/rechazar revisión                         | Admin + aal2, sin autoaprobación ni cuentas baneadas                        | Auditado                                                         |
 | `record_verification_cleanup`    | Auditar resultado HTTP de borrado del proveedor   | Solo service_role; sesión Veriff final                                      | Sin cuerpos ni datos personales                                  |
+
+## Implementado (Bloque 7)
+
+Todas son envoltorios `public` SECURITY INVOKER sobre funciones `private`. Sin Edge
+Functions nuevas: Google Places y eventos externos siguen desactivados (ADR 0010).
+
+| Función                                                                        | Propósito                                          | Autenticación / condición                                    | Límites                                                                           |
+| ------------------------------------------------------------------------------ | -------------------------------------------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| `search_places`, `list_cities`, `get_place_stats`                              | Lugares cercanos y estadísticas                    | JWT registrado; `is_test` solo para tester/admin             | 120 búsquedas/h; umbral < 5 personas                                              |
+| `check_in`, `check_out`, `set_going`, `cancel_going`, `my_attendance`          | Asistencia                                         | JWT registrado; check-in a ≤ 150 m                           | 30/h por acción; un check-in activo                                               |
+| `who_is_there`                                                                 | Perfiles visibles en el local                      | JWT, edad verificada                                         | Solo perfiles visibles                                                            |
+| `create_event`, `get_event`, `confirm_event`, `report_event`, `list_events`    | Eventos de usuario                                 | JWT registrado                                               | 2 eventos/día, 30 confirmaciones/h, 30 reportes/h; sin confirmar → borrado a 24 h |
+| `vote_vibe`, `my_vibe`                                                         | Vibe Check                                         | JWT con check-in en el local                                 | 60/h                                                                              |
+| `lost_found_list`, `_post`, `_reply`, `_edit`, `_delete`                       | Objetos perdidos                                   | JWT registrado; editar/borrar solo lo propio                 | 30/h                                                                              |
+| `update_venue_details`                                                         | Editar ficha                                       | Gestor del local o admin, auditado                           | Longitudes acotadas; la app solo muestra webs https                               |
+| `reserve_map_load`                                                             | Reservar 1 carga de Mapbox y obtener token público | JWT registrado                                               | 30/h por usuario; cuota diaria/mensual                                            |
+| `admin_provider_access`, `admin_configure_provider`                            | Cuotas de Mapbox y Google                          | Admin + aal2; cambios auditados                              | Sin ampliaciones automáticas                                                      |
+| `admin_set_map_token`                                                          | Guardar token público de Mapbox                    | Admin + aal2, auditado                                       | Solo `pk.`, 23-300 caracteres                                                     |
+| `admin_list_venues`, `admin_create_venue`                                      | Catálogo propio                                    | Admin + aal2; altas auditadas                                | Nombre, ciudad y coordenadas obligatorios; máx. 500 en el listado                 |
+| `admin_upsert_venue_from_google`                                               | Guardar `place_id` + coordenadas                   | Solo service_role (sin función que la llame)                 | Coordenadas caducan a 30 días                                                     |
+| `cron_places_tick`                                                             | Estadísticas y caducidades bajo demanda            | Solo service_role (pg_cron llama a las privadas cada minuto) | Broadcast solo si cambian las cifras                                              |
+| `sim_seed_places`, `sim_fill_venue`, `sim_advance_expiry`, `sim_import_events` | Simuladores                                        | Tester/admin **y** `test_tools_enabled`                      | Solo entidades `is_test`; auditados                                               |

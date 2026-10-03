@@ -478,11 +478,14 @@ export type Database = {
           created_by: string | null
           description: string
           ends_at: string
+          external_id: string | null
+          hidden_at: string | null
           id: string
           is_test: boolean
           location: unknown
           origin: string
           place_name: string
+          source: string
           starts_at: string
           status: Database['public']['Enums']['event_status']
           title: string
@@ -495,11 +498,14 @@ export type Database = {
           created_by?: string | null
           description?: string
           ends_at: string
+          external_id?: string | null
+          hidden_at?: string | null
           id?: string
           is_test?: boolean
           location: unknown
           origin: string
           place_name: string
+          source?: string
           starts_at: string
           status?: Database['public']['Enums']['event_status']
           title: string
@@ -512,11 +518,14 @@ export type Database = {
           created_by?: string | null
           description?: string
           ends_at?: string
+          external_id?: string | null
+          hidden_at?: string | null
           id?: string
           is_test?: boolean
           location?: unknown
           origin?: string
           place_name?: string
+          source?: string
           starts_at?: string
           status?: Database['public']['Enums']['event_status']
           title?: string
@@ -1145,6 +1154,7 @@ export type Database = {
           created_at: string
           event_id: string | null
           id: string
+          night_date: string
           user_id: string
           venue_id: string | null
           vibe: string
@@ -1153,6 +1163,7 @@ export type Database = {
           created_at?: string
           event_id?: string | null
           id?: string
+          night_date?: string
           user_id: string
           venue_id?: string | null
           vibe: string
@@ -1161,6 +1172,7 @@ export type Database = {
           created_at?: string
           event_id?: string | null
           id?: string
+          night_date?: string
           user_id?: string
           venue_id?: string | null
           vibe?: string
@@ -1473,46 +1485,103 @@ export type Database = {
       }
       venues: {
         Row: {
+          accessibility: Json
           address: string
+          business_status: string
+          catalog_owned: boolean
+          city: string
           created_at: string
           description: string
+          dress_code: string
+          fixture_key: string | null
+          google_expires_at: string | null
+          google_fetched_at: string | null
+          google_maps_uri: string
           google_place_id: string | null
           hours: string
           id: string
           is_test: boolean
           location: unknown
+          location_source: string
+          min_age: number | null
+          music: string[]
           name: string
+          notes: string
+          opening_hours: Json
+          phone: string
+          photos: Json
           price: number
+          rating: number | null
+          rating_count: number
           type: Database['public']['Enums']['venue_type']
           updated_at: string
+          website: string
         }
         Insert: {
+          accessibility?: Json
           address: string
+          business_status?: string
+          catalog_owned?: boolean
+          city?: string
           created_at?: string
           description?: string
-          google_place_id?: string | null
-          hours?: string
-          id?: string
-          is_test?: boolean
-          location: unknown
-          name: string
-          price?: number
-          type: Database['public']['Enums']['venue_type']
-          updated_at?: string
-        }
-        Update: {
-          address?: string
-          created_at?: string
-          description?: string
+          dress_code?: string
+          fixture_key?: string | null
+          google_expires_at?: string | null
+          google_fetched_at?: string | null
+          google_maps_uri?: string
           google_place_id?: string | null
           hours?: string
           id?: string
           is_test?: boolean
           location?: unknown
-          name?: string
+          location_source?: string
+          min_age?: number | null
+          music?: string[]
+          name: string
+          notes?: string
+          opening_hours?: Json
+          phone?: string
+          photos?: Json
           price?: number
+          rating?: number | null
+          rating_count?: number
+          type: Database['public']['Enums']['venue_type']
+          updated_at?: string
+          website?: string
+        }
+        Update: {
+          accessibility?: Json
+          address?: string
+          business_status?: string
+          catalog_owned?: boolean
+          city?: string
+          created_at?: string
+          description?: string
+          dress_code?: string
+          fixture_key?: string | null
+          google_expires_at?: string | null
+          google_fetched_at?: string | null
+          google_maps_uri?: string
+          google_place_id?: string | null
+          hours?: string
+          id?: string
+          is_test?: boolean
+          location?: unknown
+          location_source?: string
+          min_age?: number | null
+          music?: string[]
+          name?: string
+          notes?: string
+          opening_hours?: Json
+          phone?: string
+          photos?: Json
+          price?: number
+          rating?: number | null
+          rating_count?: number
           type?: Database['public']['Enums']['venue_type']
           updated_at?: string
+          website?: string
         }
         Relationships: []
       }
@@ -1626,6 +1695,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_configure_provider: {
+        Args: {
+          p_capability: string
+          p_daily: number
+          p_enabled: boolean
+          p_monthly: number
+          p_observed_usage?: number
+        }
+        Returns: Json
+      }
+      admin_create_venue: { Args: { p: Json }; Returns: string }
       admin_dashboard: { Args: never; Returns: Json }
       admin_list_users: {
         Args: { p_limit?: number; p_query?: string }
@@ -1638,6 +1718,8 @@ export type Database = {
           roles: string[]
         }[]
       }
+      admin_list_venues: { Args: never; Returns: Json }
+      admin_provider_access: { Args: never; Returns: Json }
       admin_resolve_verification: {
         Args: { p_approve: boolean; p_note?: string; p_session: string }
         Returns: undefined
@@ -1646,6 +1728,7 @@ export type Database = {
         Args: { p_key: string; p_value: string }
         Returns: undefined
       }
+      admin_set_map_token: { Args: { p_token: string }; Returns: Json }
       admin_set_role: {
         Args: {
           p_granted: boolean
@@ -1658,6 +1741,7 @@ export type Database = {
         Args: { p_key: string; p_value: number }
         Returns: undefined
       }
+      admin_upsert_venue_from_google: { Args: { p: Json }; Returns: string }
       admin_verification_reviews: {
         Args: never
         Returns: {
@@ -1684,6 +1768,17 @@ export type Database = {
         Args: { p_consent?: boolean; p_level: string; p_method?: string }
         Returns: Json
       }
+      cancel_going: { Args: never; Returns: Json }
+      check_in: {
+        Args: {
+          p_lat: number
+          p_lng: number
+          p_place_id: string
+          p_visible?: boolean
+        }
+        Returns: Json
+      }
+      check_out: { Args: never; Returns: Json }
       check_signup: {
         Args: { p_device_id?: string; p_phone: string }
         Returns: string
@@ -1704,17 +1799,64 @@ export type Database = {
         }
         Returns: boolean
       }
+      confirm_event: { Args: { p_id: string }; Returns: Json }
+      create_event: { Args: { p: Json }; Returns: Json }
+      cron_places_tick: { Args: never; Returns: Json }
       feature_enabled: { Args: { _key: string }; Returns: boolean }
+      get_event: { Args: { p_id: string }; Returns: Json }
+      get_place_stats: { Args: { p_place_id: string }; Returns: Json }
       has_entitlement: { Args: { _key: string }; Returns: boolean }
+      list_cities: { Args: never; Returns: string[] }
+      list_events: { Args: { p_city?: string }; Returns: Json }
+      lost_found_delete: { Args: { p_id: string }; Returns: undefined }
+      lost_found_edit: { Args: { p_id: string; p_text: string }; Returns: Json }
+      lost_found_list: { Args: { p_place_id: string }; Returns: Json }
+      lost_found_post: {
+        Args: { p_place_id: string; p_text: string }
+        Returns: Json
+      }
+      lost_found_reply: {
+        Args: { p_post_id: string; p_text: string }
+        Returns: Json
+      }
+      my_attendance: { Args: never; Returns: Json }
+      my_vibe: { Args: { p_place_id: string }; Returns: string }
+      provider_reserve: {
+        Args: { p_capability: string; p_mode: string; p_n?: number }
+        Returns: boolean
+      }
       purge_test_data: { Args: never; Returns: number }
       record_verification_cleanup: {
         Args: { p_http_status: number; p_session: string }
         Returns: undefined
       }
+      report_event: {
+        Args: { p_id: string; p_reason: string }
+        Returns: undefined
+      }
       request_verification_review: { Args: { p_level: string }; Returns: Json }
+      reserve_map_load: { Args: never; Returns: Json }
       save_consents: {
         Args: { p_choices: Json; p_city?: string }
         Returns: undefined
+      }
+      search_places: {
+        Args: {
+          p_city?: string
+          p_lat?: number
+          p_limit?: number
+          p_lng?: number
+          p_max_age?: number
+          p_max_people?: number
+          p_min_age?: number
+          p_min_green?: number
+          p_min_people?: number
+          p_open_now?: boolean
+          p_query?: string
+          p_sort?: string
+          p_types?: string[]
+        }
+        Returns: Json
       }
       search_public_profiles: {
         Args: { p_limit?: number }
@@ -1728,17 +1870,35 @@ export type Database = {
           traffic_light: Database['public']['Enums']['traffic_light']
         }[]
       }
+      set_going: { Args: { p_place_id: string }; Returns: Json }
       sign_documents: { Args: { p_slugs: string[] }; Returns: undefined }
+      sim_advance_expiry: { Args: never; Returns: Json }
+      sim_fill_venue: {
+        Args: { p_count?: number; p_venue: string }
+        Returns: Json
+      }
+      sim_import_events: {
+        Args: { p_city?: string; p_count?: number }
+        Returns: Json
+      }
+      sim_seed_places: { Args: never; Returns: Json }
       simulate_verification_result: {
         Args: { p_level: string; p_outcome: string }
         Returns: Json
       }
       update_my_profile: { Args: { p: Json }; Returns: undefined }
+      update_venue_details: {
+        Args: { p: Json; p_venue: string }
+        Returns: undefined
+      }
       verification_snapshot: { Args: never; Returns: Json }
+      vote_vibe: { Args: { p_place_id: string; p_vibe: string }; Returns: Json }
+      who_is_there: { Args: { p_place_id: string }; Returns: Json }
     }
     Enums: {
       app_role: 'user' | 'tester' | 'venue_manager' | 'admin'
-      event_status: 'unconfirmed' | 'confirmed' | 'official' | 'removed'
+      event_status:
+        'unconfirmed' | 'confirmed' | 'official' | 'removed' | 'under_review' | 'archived'
       gender: 'woman' | 'man' | 'non_binary' | 'other'
       traffic_light: 'green' | 'yellow' | 'red'
       venue_type:
@@ -1865,7 +2025,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ['user', 'tester', 'venue_manager', 'admin'],
-      event_status: ['unconfirmed', 'confirmed', 'official', 'removed'],
+      event_status: ['unconfirmed', 'confirmed', 'official', 'removed', 'under_review', 'archived'],
       gender: ['woman', 'man', 'non_binary', 'other'],
       traffic_light: ['green', 'yellow', 'red'],
       venue_type: [

@@ -1,9 +1,10 @@
-import { List, Map as MapIcon, Search, SlidersHorizontal } from 'lucide-react'
+import { List, Map as MapIcon, MapPin, Search, SlidersHorizontal } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { VENUE_TYPES } from '@/shared/domain/venue-types'
 import { Button } from '@/shared/ui/button'
 import { Chip } from '@/shared/ui/chip'
 import { SegmentedControl } from '@/shared/ui/segmented-control'
+import { CITIES, isCity, type CityName } from '../model/cities'
 import { activeFilterCount, type PlaceFilters, type PlaceScope } from '../model/filters'
 
 /** Floating glass search, scope selector and accent chips (PRD 5.3). */
@@ -13,12 +14,17 @@ export function DiscoverTopBar({
   onOpenFilters,
   view,
   onToggleView,
+  city = null,
+  onCityChange,
 }: {
   filters: PlaceFilters
   onChange: (patch: Partial<PlaceFilters>) => void
   onOpenFilters: () => void
   view: 'map' | 'list'
   onToggleView: () => void
+  /** Chosen city of the real catalogue; `null` hides the selector (illustrated test world). */
+  city?: CityName | null
+  onCityChange?: (city: CityName) => void
 }) {
   const { t } = useTranslation()
   const count = activeFilterCount(filters)
@@ -60,7 +66,27 @@ export function DiscoverTopBar({
           {view === 'map' ? <List aria-hidden /> : <MapIcon aria-hidden />}
         </Button>
       </div>
-      <div className="pointer-events-auto">
+      <div className="pointer-events-auto flex items-center gap-2">
+        {city && (
+          <label className="glass flex h-10 shrink-0 items-center gap-1 rounded-full pr-2 pl-3">
+            <MapPin className="size-4 text-primary" aria-hidden />
+            <span className="sr-only">{t('places.city')}</span>
+            <select
+              value={city}
+              onChange={(event) => {
+                const next = event.target.value
+                if (isCity(next)) onCityChange?.(next)
+              }}
+              className="bg-transparent text-sm font-medium text-foreground outline-none"
+            >
+              {CITIES.map((c) => (
+                <option key={c.name} value={c.name} className="bg-surface">
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <SegmentedControl<PlaceScope>
           label={t('designKit.segmented.label')}
           value={filters.scope}

@@ -46,6 +46,8 @@ export default defineConfig({
         // PRD 3.1: the service worker caches ONLY the app shell. No runtime caching,
         // so API responses (personal or sensitive data) never reach the SW cache.
         globPatterns: ['**/*.{js,css,html,woff2,svg,png,ico}'],
+        // Mapbox is lazy and only fetched after a reserved map load (ADR 0010).
+        globIgnores: ['**/vendor-map-*', '**/MapboxMap-*'],
         navigateFallback: '/index.html',
         runtimeCaching: [],
         cleanupOutdatedCaches: true,
@@ -77,6 +79,7 @@ export default defineConfig({
               name: 'vendor-data',
               test: /node_modules[\\/](@tanstack|zod|i18next|react-i18next)[\\/]/,
             },
+            { name: 'vendor-map', test: /node_modules[\\/]mapbox-gl[\\/]/ },
             { name: 'vendor-ui', test: /node_modules[\\/]/ },
           ],
         },

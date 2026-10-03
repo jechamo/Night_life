@@ -22,6 +22,7 @@ export function PlacePin({
   inverseScale,
   selected,
   onSelect,
+  flat = false,
 }: {
   place: Place
   x: number
@@ -29,6 +30,8 @@ export function PlacePin({
   inverseScale: MotionValue<number>
   selected: boolean
   onSelect: (id: string) => void
+  /** Real map markers stand upright already; only the tilted mock plane needs counter-rotation. */
+  flat?: boolean
 }) {
   const { t } = useTranslation()
   const Icon = VENUE_ICONS[place.type]
@@ -54,7 +57,7 @@ export function PlacePin({
       style={{
         left: x,
         top: y,
-        rotateX: -MAP_TILT_DEG,
+        rotateX: flat ? 0 : -MAP_TILT_DEG,
         scale: inverseScale,
         transformOrigin: '50% 100%',
         translateX: '-50%',

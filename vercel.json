@@ -11,7 +11,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://ocrpfeqfqzchhrghqcfb.supabase.co; font-src 'self'; connect-src 'self' https://ocrpfeqfqzchhrghqcfb.supabase.co wss://ocrpfeqfqzchhrghqcfb.supabase.co; worker-src 'self'; manifest-src 'self'; media-src 'self' blob:; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://ocrpfeqfqzchhrghqcfb.supabase.co https://api.mapbox.com https://*.tiles.mapbox.com; font-src 'self'; connect-src 'self' https://ocrpfeqfqzchhrghqcfb.supabase.co wss://ocrpfeqfqzchhrghqcfb.supabase.co https://api.mapbox.com https://*.tiles.mapbox.com https://events.mapbox.com; worker-src 'self' blob:; manifest-src 'self'; media-src 'self' blob:; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
         },
         {
           "key": "Strict-Transport-Security",

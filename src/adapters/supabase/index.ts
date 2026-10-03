@@ -3,18 +3,20 @@ import { createFlagService } from '@/shared/flags/flag-service'
 import type { AppServices } from '@/shared/services/services'
 import { createAdminService } from './admin'
 import { withPersistedAgeGate } from './age-gated-services'
+import { createAttendanceService } from './attendance'
 import { createSupabaseClient } from './client'
 import { createEntitlementService, createFlagSource, createSessionService } from './core-services'
 import { createLegalService, startEmailOutbox } from './legal'
 import { createOnboardingService } from './onboarding'
+import { createPlacesService } from './places'
 import { createPrivacyService, withRealAccountStatus } from './privacy'
 import { createConsentService, createProfileService, createSafetyService } from './profile'
+import { createRealtimeService, mergeRealtime } from './realtime'
 import { createVerificationService } from './verification'
 
 /**
- * Block 5 composition (ADR 0009): Supabase for identity, legal evidence, consents,
- * profile, flags, entitlements, roles, SOS contacts, privacy and the admin core.
- * Everything else keeps the simulated services until its block.
+ * Block 7 composition: identity/legal from Block 5 plus real places, attendance
+ * and place-stats realtime. Matching/chat stay simulated until Block 8.
  */
 export function createSupabaseServices(
   config: { url: string; publishableKey: string },
@@ -24,9 +26,18 @@ export function createSupabaseServices(
   const db = createSupabaseClient(config, platform.secureStorage)
   const verification = createVerificationService(db)
   startEmailOutbox(db, platform)
+  const gated = withPersistedAgeGate(
+    {
+      ...simulated,
+      places: createPlacesService(db),
+      attendance: createAttendanceService(db),
+      realtime: mergeRealtime(createRealtimeService(db), simulated.realtime),
+    },
+    verification,
+  )
   return {
     ...simulated,
-    ...withPersistedAgeGate(simulated, verification),
+    ...gated,
     verification,
     flags: createFlagService(createFlagSource(db)),
     entitlements: createEntitlementService(db),

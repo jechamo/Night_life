@@ -1,6 +1,8 @@
 import type { FeatureFlags, FlagKey } from '@/shared/flags/flags'
 import type { EntitlementKey } from '@/shared/entitlements/entitlements'
 import type { Role } from '@/shared/session/roles'
+import type { ProviderQuota, ProviderQuotaChange } from '../model/provider-quota'
+import type { AdminVenue, VenueInput } from '../model/venue'
 
 export interface AdminDashboard {
   users: number
@@ -64,6 +66,7 @@ export type TestTool =
   | 'simulate_stripe_webhook'
   | 'simulate_yoti_webhook'
   | 'expire_everything'
+  | 'import_events'
   | 'reset_likes'
   | 'simulate_suspension'
   | 'purge_test_data'
@@ -81,7 +84,19 @@ export interface AdminService {
   setSetting(key: AdminSetting['key'], value: number): Promise<void>
   createPromoCode(input: { productCode: string; days: number; maxUses: number }): Promise<string>
   grantEntitlement(input: { user: string; key: EntitlementKey; days: number | null }): Promise<void>
+  providerQuotas(): Promise<ProviderQuota[]>
+  configureProvider(change: ProviderQuotaChange): Promise<void>
+  /** Stores the public Mapbox token (pk.*, URL-restricted) server-side; '' clears it. */
+  setMapToken(token: string): Promise<void>
   runTestTool(tool: TestTool): Promise<string>
+  /** Own catalogue (Block 7): venues are created and edited here, never copied from Google. */
+  venues(): Promise<AdminVenue[]>
+  createVenue(input: VenueInput): Promise<string>
+  updateVenue(id: string, input: VenueInput): Promise<void>
+  /** Test fixtures (is_test): demo venues per city, fake crowd and imported events. */
+  seedTestVenues(): Promise<number>
+  fillTestVenue(id: string, count: number): Promise<number>
+  importTestEvents(city: string, count: number): Promise<number>
   setSimulatedRoles(roles: readonly Role[]): Promise<void>
   /** `mock` = simulated back-office (roles can be simulated); `live` = Supabase. */
   readonly mode: 'mock' | 'live'

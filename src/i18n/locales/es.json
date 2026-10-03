@@ -658,6 +658,22 @@
         "average_age": "Edad media",
         "rating": "Mejor valorado"
       }
+    },
+    "details": {
+      "phone": "Teléfono",
+      "website": "Web",
+      "music": "Música",
+      "dressCode": "Código de vestimenta",
+      "minAgeLabel": "Edad mínima",
+      "minAge": "Desde {{age}} años"
+    },
+    "city": "Ciudad",
+    "map": {
+      "fallback": {
+        "no_token": "Mapa de prueba: el mapa real se activa cuando el equipo configure Mapbox.",
+        "quota": "Mapa de prueba: se ha alcanzado el límite gratuito de mapas por hoy.",
+        "unavailable": "Mapa de prueba: el mapa real no está disponible ahora mismo."
+      }
     }
   },
   "matching": {
@@ -1289,7 +1305,8 @@
       "legalDocs": "Documentos legales",
       "settings": "Configuración",
       "audit": "Auditoría",
-      "users": "Usuarios"
+      "users": "Usuarios",
+      "venues": "Locales"
     },
     "mfa": {
       "title": "Segundo factor",
@@ -1457,6 +1474,76 @@
       "grant": "Conceder",
       "granted": "Concedido y auditado."
     },
+    "venues": {
+      "body": "Catálogo propio de Nightlife: nombre, coordenadas y ficha los escribe el equipo o el local. No se copia contenido de Google.",
+      "google": {
+        "title": "Google Places",
+        "body": "Desactivado. Solo se activará con una prueba gratuita elegible y sin cargos; aun así, en el EEE solo se guardaría el place_id de forma permanente y las coordenadas un máximo de 30 días."
+      },
+      "fixtures": {
+        "title": "Catálogo de prueba",
+        "body": "Datos marcados como prueba (is_test), invisibles para usuarios normales. Para llenar un local primero genera personas de prueba en Simuladores.",
+        "seed": "Crear locales de prueba (2 por ciudad)",
+        "seeded": "{{count}} locales de prueba listos.",
+        "import": "Importar 3 eventos de prueba en {{city}}",
+        "imported": "{{count}} eventos de prueba importados en {{city}}.",
+        "fill": "Llenar con 25",
+        "filled": "{{count}} check-ins de prueba añadidos.",
+        "error": "No se pudo ejecutar. Revisa que los simuladores estén activos y que existan locales y personas de prueba."
+      },
+      "listTitle": "Locales",
+      "create": "Nuevo local",
+      "edit": "Editar",
+      "cancel": "Cancelar",
+      "newTitle": "Nuevo local",
+      "editTitle": "Editar local",
+      "test": "Prueba",
+      "noCoords": "Sin coordenadas",
+      "loading": "Cargando locales…",
+      "error": "No se pudo cargar o guardar. Reintenta con el segundo factor verificado.",
+      "emptyTitle": "Aún no hay locales",
+      "emptyBody": "Crea el primero o genera el catálogo de prueba.",
+      "fields": {
+        "name": "Nombre",
+        "type": "Tipo",
+        "city": "Ciudad",
+        "address": "Dirección",
+        "lat": "Latitud",
+        "lng": "Longitud",
+        "coordsHint": "Coordenadas propias de la entrada del local (no copiadas de Google). Se exige estar a 150 m para hacer check-in.",
+        "price": "Precio",
+        "hours": "Horario resumido",
+        "hoursHint": "Texto corto, por ejemplo «Jue-Sáb 23:00-06:00».",
+        "openingHours": "Horario por días",
+        "day": "Día",
+        "opens": "Abre",
+        "closes": "Cierra",
+        "addPeriod": "Añadir franja",
+        "removePeriod": "Quitar franja",
+        "description": "Descripción",
+        "phone": "Teléfono",
+        "website": "Web (https)",
+        "music": "Música",
+        "musicHint": "Separada por comas, hasta 8 estilos.",
+        "dressCode": "Código de vestimenta",
+        "minAge": "Edad mínima",
+        "minAgeHint": "Entre 18 y 25, o vacío.",
+        "notes": "Notas internas",
+        "notesHint": "Solo visibles para el equipo."
+      },
+      "errors": {
+        "name": "Entre 2 y 80 caracteres.",
+        "city": "Elige una ciudad.",
+        "address": "Escribe la dirección.",
+        "lat": "Latitud entre -90 y 90.",
+        "lng": "Longitud entre -180 y 180.",
+        "phone": "Teléfono no válido.",
+        "website": "Debe empezar por https://",
+        "minAge": "Entre 18 y 25.",
+        "description": "Máximo 500 caracteres.",
+        "openingHours": "Revisa las franjas: horas en formato HH:MM."
+      }
+    },
     "tools": {
       "title": "Simuladores",
       "body": "Solo con test_tools_enabled y rol tester/admin. Todo queda auditado.",
@@ -1475,7 +1562,7 @@
         },
         "fill_venue": {
           "name": "Llenar un local",
-          "body": "Añade 25 check-ins de prueba al Pub Candil."
+          "body": "Añade 25 check-ins de prueba al primer local de prueba del catálogo."
         },
         "test_like_me": {
           "name": "Que me den like",
@@ -1495,7 +1582,11 @@
         },
         "expire_everything": {
           "name": "Adelantar caducidades",
-          "body": "Eventos de 24 h, check-ins y objetos perdidos."
+          "body": "Envejece 25 h los eventos sin confirmar y caduca check-ins y objetos perdidos de prueba."
+        },
+        "import_events": {
+          "name": "Importar eventos de prueba",
+          "body": "Crea 3 eventos de prueba confirmados en Madrid (necesita locales de prueba)."
         },
         "reset_likes": {
           "name": "Reiniciar likes",
@@ -1551,6 +1642,45 @@
       "confirmed": "Confirmado",
       "official": "Oficial",
       "cancelled": "Cancelado"
+    },
+    "providers": {
+      "title": "Proveedores · límites de prueba",
+      "body": "Límites de Nightlife dentro del uso gratuito. El consumo de otras aplicaciones también cuenta en la cuenta del proveedor. No se amplían automáticamente ni cambian el plan.",
+      "names": {
+        "mapbox": "Mapbox · cargas del mapa web",
+        "google_places": "Google Places"
+      },
+      "usage": "{{used}} / {{budget}} reservas este mes · cuota gratuita del proveedor: {{free}}",
+      "ready": "Acceso de prueba habilitado",
+      "paused": "Llamadas detenidas o pendientes de confirmar",
+      "warnings": {
+        "near": "Has alcanzado el 80 % del límite de Nightlife.",
+        "critical": "Has alcanzado el 95 % del límite de Nightlife.",
+        "exhausted": "Límite de Nightlife agotado. Se ofrece el mapa de prueba."
+      },
+      "monthly": "Límite mensual de Nightlife",
+      "daily": "Límite diario de Nightlife",
+      "increase": "Añadir {{count}} al límite",
+      "margin": "Margen reservado: {{margin}}. Máximo actual de Nightlife: {{max}}.",
+      "enabled": "Permitir acceso de prueba",
+      "confirmUsage": "He revisado el consumo actual en Mapbox",
+      "observed": "Consumo total que muestra Mapbox este mes",
+      "observedHint": "Incluye todas las aplicaciones de esta cuenta. Se descuenta de forma conservadora, además de las reservas de Nightlife. Hay que confirmarlo de nuevo cada mes.",
+      "invalid": "Revisa los límites: el diario no puede superar el mensual ni el margen gratuito disponible.",
+      "error": "No se pudo consultar o guardar el límite. Reintenta con el segundo factor verificado.",
+      "saved": "Límite guardado. El consumo acumulado se conserva.",
+      "unconfirmed": "Falta verificar el SKU y su uso gratuito disponible. No se realizan llamadas.",
+      "empty": "Estos controles están disponibles con el backend real.",
+      "loading": "Cargando límites…",
+      "token": {
+        "label": "Token público de Mapbox (pk.)",
+        "hint": "Solo tokens públicos restringidos a las URL de la app. Nunca un token secreto (sk.). No se incluye en el código: se entrega tras reservar cada carga.",
+        "set": "Token configurado: el mapa real se sirve mientras haya cuota.",
+        "missing": "Sin token: se muestra el mapa de prueba.",
+        "invalid": "Debe empezar por pk. y no contener espacios.",
+        "save": "Guardar token",
+        "clear": "Quitar token"
+      }
     }
   }
 }

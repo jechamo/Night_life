@@ -11,12 +11,88 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                        |
 | 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                        |
 | 6 – Verificaciones reales                                | ✅ Pruebas cerradas; pendiente de OK del propietario |
-| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                                   |
+| 7 – Mapa, lugares, eventos y estadísticas reales         | ✅ Terminado; pendiente de OK                        |
 | 8 – Ligar, match en tiempo real y chat                   | ⏳                                                   |
 | 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                   |
 | 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
 | 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
 | 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
+
+---
+
+## Bloque 7 — Mapa, lugares, eventos y estadísticas reales (2026-10-03)
+
+Iniciado en Codex y terminado en Cursor. Se revisó lo aplicado en remoto, se corrigieron
+dos fallos de servidor y se completaron adaptadores, mapa, fichas, admin y pruebas.
+
+### Qué se hizo
+
+- **Servidor** (8 migraciones aplicadas por MCP): `places_block7_schema`, `_rpcs`,
+  `_events_vibe`, `_cron_sims`, `places_provider_quotas`, `places_block7_completion`,
+  `places_targeted_recalc`, `places_map_token_check`. RPC privadas con envoltorios
+  invoker, RLS, aislamiento `is_test`, cron `nl_places_stats` y `nl_places_expiry`
+  cada minuto, Broadcast privado `place-stats:live` / `place-stats:test` solo cuando
+  cambian las cifras.
+- **Adaptadores** `places`, `attendance` y `realtime` sobre esas RPC (zod en el borde).
+  Las estadísticas por debajo de 5 personas solo muestran el tramo 1-4 (PRD 4.3).
+- **Mapa:** Mapbox GL JS cargado en diferido (chunk `vendor-map`, fuera del precache del
+  SW). Antes de inicializarlo, `reserve_map_load()` consume 1 unidad de la cuota y solo
+  entonces devuelve el token público. Sin token, sin cuota o si falla → mapa de prueba y
+  aviso. Selector de ciudad (8 ciudades) y filtrado a 40 km cuando hay catálogo real.
+- **Ficha:** descripción, horario por días, precio, dirección, teléfono, web (solo https),
+  música, dress code y edad mínima. Sin fotos, valoraciones ni contenido de Google.
+- **Admin → Locales:** catálogo propio (crear/editar con validación), fixtures de prueba
+  (2 por ciudad), «Llenar con 25» y «Importar 3 eventos» de prueba. Admin → Proveedores:
+  cuotas de Mapbox y Google, y token público de Mapbox (`pk.*`, guardado en servidor).
+- **Simuladores persistidos** (tester/admin + `test_tools_enabled`, solo `is_test`):
+  llenar local, adelantar caducidad 25 h, importar eventos de prueba.
+
+### Correcciones durante el cierre
+
+- `check_in` / `set_going` recalculaban todos los locales activos en cada acción; ahora
+  solo el local nuevo y el anterior (`places_targeted_recalc`).
+- `admin_set_map_token` usaba `{20,290}` en una expresión regular que Postgres rechaza:
+  guardar un token habría fallado siempre. Regex sin límite + longitud 23-300, también
+  como restricción de tabla (`places_map_token_check`).
+- `realtime.messages` no tenía particiones: Realtime las crea al conectarse un cliente.
+  Mientras no hay nadie conectado los Broadcast se descartan (no hay oyentes).
+
+### Decisiones y desviaciones
+
+- **Google Places desactivado** (ADR 0010): cuenta de pago sin SKU gratuito verificado y
+  política del EEE. Solo existe la función de servidor para guardar `place_id` y
+  coordenadas 30 días, sin Edge Function que la llame.
+- **Eventos externos:** solo importación de prueba persistida; no hay fuente gratuita
+  autorizada.
+- **Mapbox:** hasta que el propietario configure un token `pk.` restringido por URL, la app
+  muestra el mapa de prueba con el aviso «sin token». No se añade token en variables de
+  entorno del cliente.
+- Dependencias nuevas dentro de PRD 3.5: `mapbox-gl` y `@types/geojson` (dev).
+
+### Hecho cuando
+
+- ✅ Un check-in se refleja en < 5 s: el check-in recalcula al momento y emite Broadcast
+  (SQL); un envío desde la base de datos llegó a un cliente Realtime de forma casi
+  inmediata (diferencia por debajo del desfase de reloj, 3/3 mensajes).
+  ⏸️ Prueba con dos sesiones reales: requiere el login OTP del propietario.
+- ✅ Un evento sin confirmar se borra a las 24 h: `run_places_expiry` lo pasa a `removed`
+  y lo oculta (SQL), y el simulador «adelantar caducidad» lo reproduce.
+- ✅ Umbral < 5, radio de 150 m, aislamiento `is_test`, reserva de cuota de Mapbox y
+  rechazo de tokens secretos probados en SQL.
+- ✅ Check **298/298**, build correcto, `npm audit` 0 vulnerabilidades.
+- ✅ SQL remoto con rollback: `places.sql` **19/19** y `provider-quotas.sql` **19/19**.
+
+### Cómo probarlo
+
+1. Admin → Configuración → Proveedores: pegar un token `pk.` restringido a la URL de
+   producción. Un token `sk.` no se acepta.
+2. Generar personas de prueba en Simuladores; después Admin → Locales → «Crear locales de
+   prueba» y «Llenar con 25» en uno de ellos.
+3. Descubrir con `?city=Madrid`: aparece el mapa real (o el de prueba con aviso si no hay
+   token o cuota) y el local lleno muestra edades y proporciones.
+4. Dos sesiones: hacer check-in en una y ver el cambio de personas en la otra en < 5 s.
+5. Herramientas de prueba → «Adelantar caducidades»: los eventos de prueba sin confirmar
+   desaparecen.
 
 ---
 

@@ -8,6 +8,7 @@ import {
   FlaskConical,
   Gauge,
   Megaphone,
+  MapPin,
   Scale,
   Settings2,
   ShieldAlert,
@@ -41,6 +42,7 @@ type NavKey =
   | 'payments'
   | 'flags'
   | 'testTools'
+  | 'venues'
   | 'dataRequests'
   | 'legalDocs'
   | 'settings'
@@ -54,6 +56,7 @@ const NAV: readonly { key: NavKey; to: string; icon: LucideIcon }[] = [
   { key: 'appeals', to: '/admin/s/appeals', icon: Scale },
   { key: 'bans', to: '/admin/s/bans', icon: Ban },
   { key: 'claims', to: '/admin/s/claims', icon: Store },
+  { key: 'venues', to: '/admin/venues', icon: MapPin },
   { key: 'events', to: '/admin/s/events', icon: CalendarDays },
   { key: 'sponsorships', to: '/admin/s/sponsorships', icon: Megaphone },
   { key: 'payments', to: '/admin/payments', icon: CreditCard },

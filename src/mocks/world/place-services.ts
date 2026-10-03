@@ -45,6 +45,7 @@ export function createMockPlacesService(
       refreshEvents()
       return state.places.filter((p) => !isEvent(p) || VISIBLE_EVENT.has(p.event.status))
     },
+    reserveMapLoad: () => Promise.resolve({ granted: false, reason: 'no_token' }),
     myVibe: (placeId) => Promise.resolve(state.myVibes.get(placeId) ?? null),
     async voteVibe(placeId, vibe) {
       await wait()

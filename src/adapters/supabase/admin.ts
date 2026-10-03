@@ -1,7 +1,88 @@
+import { z } from 'zod'
+import type { VenueInput } from '@/features/admin/model/venue'
 import type { AdminRow, AdminService } from '@/features/admin/services/admin-service'
+import { VENUE_TYPES } from '@/shared/domain/venue-types'
 import { ROLES, type Role } from '@/shared/session/roles'
 import { invokeFunction, type Db } from './client'
 import { must } from './errors'
+
+const count = z.number().int().nonnegative()
+const providerQuotasSchema = z.array(
+  z.object({
+    capability: z.enum(['mapbox', 'google_places']),
+    mode: z.literal('free_quota'),
+    sku: z.string(),
+    available: z.boolean(),
+    canCall: z.boolean(),
+    editable: z.boolean(),
+    hasToken: z.boolean().catch(false),
+    expiresAt: z.string().nullable(),
+    dailyBudget: count,
+    dailyUsed: count,
+    monthlyBudget: count,
+    monthlyUsed: count,
+    freeMonthlyAllowance: count,
+    safetyMargin: count,
+    observedProviderUsage: count,
+    usageObservedAt: z.string().nullable(),
+    maxBudget: count,
+    increaseStep: z.number().int().positive(),
+  }),
+)
+
+const venuesSchema = z.array(
+  z.object({
+    id: z.string(),
+    name: z.string(),
+    type: z.enum(VENUE_TYPES),
+    city: z.string().catch(''),
+    address: z.string().catch(''),
+    description: z.string().catch(''),
+    hours: z.string().catch(''),
+    price: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).catch(2),
+    phone: z.string().catch(''),
+    website: z.string().catch(''),
+    music: z.array(z.string()).catch([]),
+    dressCode: z.string().catch(''),
+    minAge: z.number().nullable().catch(null),
+    notes: z.string().catch(''),
+    openingHours: z
+      .array(z.object({ day: z.number(), opens: z.string(), closes: z.string() }))
+      .catch([]),
+    isTest: z.boolean(),
+    locationSource: z.string(),
+    lat: z.number().nullable(),
+    lng: z.number().nullable(),
+  }),
+)
+
+const countSchema = z.object({ count: z.number() })
+const simResultSchema = z.object({
+  eventsBackdated: z.number(),
+  attendanceExpired: z.number(),
+  lostExpired: z.number(),
+})
+
+function venuePayload(v: VenueInput) {
+  return {
+    name: v.name.trim(),
+    type: v.type,
+    city: v.city.trim(),
+    address: v.address.trim(),
+    description: v.description.trim(),
+    hours: v.hours.trim(),
+    price: v.price,
+    phone: v.phone.trim(),
+    website: v.website.trim(),
+    music: v.music,
+    dressCode: v.dressCode.trim(),
+    minAge: v.minAge,
+    notes: v.notes.trim(),
+    openingHours: v.openingHours.map((p) => ({ day: p.day, opens: p.opens, closes: p.closes })),
+    lat: v.lat,
+    lng: v.lng,
+  }
+}
 
 const ROLE_ACTION = /^(grant|revoke)_(tester|venue_manager|admin)$/
 
@@ -15,7 +96,7 @@ function asNumber(value: unknown): number {
  * every RPC). The queues of Blocks 7-9 (moderation, claims, payments…) remain simulated.
  */
 export function createAdminService(db: Db, base: AdminService): AdminService {
-  return {
+  const service: AdminService = {
     ...base,
     mode: 'live',
 
@@ -151,7 +232,72 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
         })
         return failed || !data ? 'disabled' : String(data.created)
       }
+      try {
+        if (tool === 'fill_venue') {
+          const venue = (await service.venues()).find((v) => v.isTest)
+          return venue ? String(await service.fillTestVenue(venue.id, 25)) : 'none'
+        }
+        if (tool === 'expire_everything') {
+          const result = simResultSchema.parse(must(await db.rpc('sim_advance_expiry')))
+          return `${result.eventsBackdated} / ${result.attendanceExpired} / ${result.lostExpired}`
+        }
+        if (tool === 'import_events') return String(await service.importTestEvents('Madrid', 3))
+      } catch {
+        return 'disabled'
+      }
       return base.runTestTool(tool)
+    },
+
+    async providerQuotas() {
+      return providerQuotasSchema.parse(must(await db.rpc('admin_provider_access')))
+    },
+
+    async configureProvider(change) {
+      const { error } = await db.rpc('admin_configure_provider', {
+        p_capability: change.capability,
+        p_daily: change.dailyBudget,
+        p_monthly: change.monthlyBudget,
+        p_enabled: change.enabled,
+        ...(change.observedProviderUsage !== undefined
+          ? { p_observed_usage: change.observedProviderUsage }
+          : {}),
+      })
+      if (error) throw error
+    },
+
+    async setMapToken(token) {
+      const { error } = await db.rpc('admin_set_map_token', { p_token: token })
+      if (error) throw error
+    },
+
+    async venues() {
+      return venuesSchema.parse(must(await db.rpc('admin_list_venues')))
+    },
+
+    async createVenue(input) {
+      return must(await db.rpc('admin_create_venue', { p: venuePayload(input) }))
+    },
+
+    async updateVenue(id, input) {
+      const { error } = await db.rpc('update_venue_details', {
+        p_venue: id,
+        p: venuePayload(input),
+      })
+      if (error) throw error
+    },
+
+    async seedTestVenues() {
+      return countSchema.parse(must(await db.rpc('sim_seed_places'))).count
+    },
+
+    async fillTestVenue(id, count) {
+      const result = must(await db.rpc('sim_fill_venue', { p_venue: id, p_count: count }))
+      return z.object({ added: z.number() }).parse(result).added
+    },
+
+    async importTestEvents(city, count) {
+      const result = must(await db.rpc('sim_import_events', { p_city: city, p_count: count }))
+      return countSchema.parse(result).count
     },
 
     async mfaStatus() {
@@ -187,4 +333,5 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
       return !error
     },
   }
+  return service
 }

@@ -1,9 +1,10 @@
-import { Clock, Euro, MapPin } from 'lucide-react'
-import { useState } from 'react'
+import { Clock, Euro, Globe, MapPin, Music, Phone, Shirt, UserCheck } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAttendance } from '@/features/attendance/hooks/use-attendance'
 import { Badge } from '@/shared/ui/badge'
 import { Chip } from '@/shared/ui/chip'
+import type { OpeningPeriod } from '../model/cities'
 import { distanceMeters, formatDistance } from '../model/geo'
 import { isEvent, type LatLng, type Place } from '../model/types'
 import { EventActions } from './EventActions'
@@ -13,12 +14,51 @@ import { PlaceCover } from './PlaceCover'
 import { VibeCheck } from './VibeCheck'
 import { WhoIsThere } from './WhoIsThere'
 
-/** Content of the place sheet / desktop side panel (PRD 5.3). */
+/** "Lun 18:00–06:00" lines, Monday first, in the user's language. */
+function openingLines(periods: readonly OpeningPeriod[], language: string): string[] {
+  const weekday = new Intl.DateTimeFormat(language, { weekday: 'short', timeZone: 'UTC' })
+  return [...periods]
+    .sort((a, b) => a.day - b.day || a.opens.localeCompare(b.opens))
+    .map((p) => `${weekday.format(new Date(Date.UTC(2024, 0, 1 + p.day)))} ${p.opens}–${p.closes}`)
+}
+
+function hostOf(url: string): string {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url
+  }
+}
+
+function Detail({
+  icon: Icon,
+  label,
+  children,
+}: {
+  icon: typeof Clock
+  label: string
+  children: ReactNode
+}) {
+  return (
+    <div className="flex items-start gap-2">
+      <Icon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+      <dt className="sr-only">{label}</dt>
+      <dd>{children}</dd>
+    </div>
+  )
+}
+
+/** Content of the place sheet / desktop side panel (PRD 5.3). Only our own catalogue data. */
 export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }) {
   const { t, i18n } = useTranslation()
   const { data: attendance } = useAttendance()
   const [showLostFound, setShowLostFound] = useState(false)
   const checkedInHere = attendance?.checkIn?.placeId === place.id
+  const hours = place.openingHours?.length
+    ? openingLines(place.openingHours, i18n.language)
+    : place.hours
+      ? [place.hours]
+      : []
 
   return (
     <div className="space-y-6 pb-4">
@@ -38,24 +78,59 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
         </span>
       </div>
       <WhoIsThere stats={place.stats} />
+      {place.description && <p className="text-sm">{place.description}</p>}
       <dl className="grid gap-2 text-sm">
-        <div className="flex items-center gap-2">
-          <Clock className="size-4 text-primary" aria-hidden />
-          <dt className="sr-only">{t('places.hours')}</dt>
-          <dd>{place.hours}</dd>
-        </div>
-        <div className="flex items-center gap-2">
-          <Euro className="size-4 text-primary" aria-hidden />
-          <dt className="sr-only">{t('places.price')}</dt>
-          <dd aria-label={t('places.priceLevel', { level: place.price })}>
+        {hours.length > 0 && (
+          <Detail icon={Clock} label={t('places.hours')}>
+            <ul className="space-y-0.5">
+              {hours.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </Detail>
+        )}
+        <Detail icon={Euro} label={t('places.price')}>
+          <span aria-label={t('places.priceLevel', { level: place.price })}>
             {'€'.repeat(place.price)}
-          </dd>
-        </div>
-        <div className="flex items-center gap-2">
-          <MapPin className="size-4 text-primary" aria-hidden />
-          <dt className="sr-only">{t('places.address')}</dt>
-          <dd>{place.address}</dd>
-        </div>
+          </span>
+        </Detail>
+        <Detail icon={MapPin} label={t('places.address')}>
+          {place.address}
+        </Detail>
+        {place.phone && (
+          <Detail icon={Phone} label={t('places.details.phone')}>
+            <a className="underline-offset-2 hover:underline" href={`tel:${place.phone}`}>
+              {place.phone}
+            </a>
+          </Detail>
+        )}
+        {place.website && (
+          <Detail icon={Globe} label={t('places.details.website')}>
+            <a
+              className="underline-offset-2 hover:underline"
+              href={place.website}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {hostOf(place.website)}
+            </a>
+          </Detail>
+        )}
+        {place.music && place.music.length > 0 && (
+          <Detail icon={Music} label={t('places.details.music')}>
+            {place.music.join(' · ')}
+          </Detail>
+        )}
+        {place.dressCode && (
+          <Detail icon={Shirt} label={t('places.details.dressCode')}>
+            {place.dressCode}
+          </Detail>
+        )}
+        {place.minAge !== undefined && (
+          <Detail icon={UserCheck} label={t('places.details.minAgeLabel')}>
+            {t('places.details.minAge', { age: place.minAge })}
+          </Detail>
+        )}
       </dl>
       {isEvent(place) && <EventActions place={place} event={place.event} />}
       <PlaceActions place={place} onToggleLostFound={() => setShowLostFound((v) => !v)} />

@@ -36,9 +36,18 @@ export interface CreateEventInput {
 export type CreateEventError = 'not_verified' | 'daily_limit' | 'duplicate' | 'not_public'
 export type LostFoundError = 'no_recent_check_in' | 'too_long' | 'empty'
 
+/**
+ * One Mapbox map load is reserved on the server before the public token is handed
+ * out (ADR 0010). Without a grant the illustrated test map is shown.
+ */
+export type MapAccess =
+  | { granted: true; token: string }
+  | { granted: false; reason: 'no_token' | 'quota' | 'unavailable' }
+
 /** Port for venues and events (Supabase + PostGIS from Block 7). */
 export interface PlacesService {
   list(): Promise<Place[]>
+  reserveMapLoad(): Promise<MapAccess>
   myVibe(placeId: string): Promise<Vibe | null>
   voteVibe(placeId: string, vibe: Vibe): Promise<Result<Place, 'no_check_in'>>
   confirmEvent(placeId: string): Promise<Result<Place, 'already_confirmed' | 'not_unconfirmed'>>

@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef, useState } from 'react'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { Place, Vibe } from '../model/types'
-import type { CreateEventInput, EventReportReason } from '../services/places-service'
+import type { CreateEventInput, EventReportReason, MapAccess } from '../services/places-service'
 
 export const placesKey = ['places'] as const
 export const lostFoundKey = (placeId: string) => ['places', placeId, 'lost-found'] as const
@@ -9,6 +10,24 @@ export const lostFoundKey = (placeId: string) => ['places', placeId, 'lost-found
 export function usePlaces() {
   const { places } = useServices()
   return useQuery({ queryKey: placesKey, queryFn: () => places.list() })
+}
+
+/**
+ * Reserves one Mapbox load per mounted map (ADR 0010). Deliberately outside the query
+ * cache: a broad invalidation must never reserve (and bill) another load.
+ */
+export function useMapAccess(): MapAccess | undefined {
+  const { places } = useServices()
+  const [access, setAccess] = useState<MapAccess>()
+  const requested = useRef(false)
+  useEffect(() => {
+    if (requested.current) return
+    requested.current = true
+    places
+      .reserveMapLoad()
+      .then(setAccess, () => setAccess({ granted: false, reason: 'unavailable' }))
+  }, [places])
+  return access
 }
 
 export function usePlace(id: string | null): Place | undefined {

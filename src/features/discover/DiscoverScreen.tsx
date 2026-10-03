@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { DiscoverTopBar } from '@/features/places/components/DiscoverTopBar'
@@ -7,8 +7,10 @@ import { FiltersSheet } from '@/features/places/components/FiltersSheet'
 import { MockMap, type MockMapHandle } from '@/features/places/components/MockMap'
 import { PlaceCard } from '@/features/places/components/PlaceCard'
 import { PlaceDetails } from '@/features/places/components/PlaceDetails'
-import { usePlaces } from '@/features/places/hooks/use-places'
+import { useMapAccess, usePlaces } from '@/features/places/hooks/use-places'
+import { cityCenter, DEFAULT_CITY, isCity } from '@/features/places/model/cities'
 import { applyFilters, DEFAULT_FILTERS, type PlaceFilters } from '@/features/places/model/filters'
+import { distanceMeters } from '@/features/places/model/geo'
 import { placeSponsored } from '@/features/places/model/sponsored'
 import { useAgeGate } from '@/features/verification/hooks/use-age-gate'
 import { MOCK_CENTER } from '@/mocks/world/places.mock'
@@ -17,6 +19,13 @@ import { Illustration } from '@/shared/images/Illustration'
 import { BottomSheet } from '@/shared/ui/bottom-sheet'
 import { Button } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
+
+const MapboxMap = lazy(() =>
+  import('@/features/places/components/MapboxMap').then((mod) => ({ default: mod.MapboxMap })),
+)
+
+/** Places further than this from the chosen city centre belong to another city. */
+const CITY_RADIUS_M = 40_000
 
 /** Descubre (PRD 5.3): full-screen night map, floating glass UI, live pins and heatmap. */
 export function DiscoverScreen() {
@@ -27,21 +36,35 @@ export function DiscoverScreen() {
   const { data: places, isPending } = usePlaces()
   const [params, setParams] = useSearchParams()
   const selectedId = params.get('place')
+  const cityParam = params.get('city')
+  const city = isCity(cityParam) ? cityParam : DEFAULT_CITY
   const [filters, setFilters] = useState<PlaceFilters>(DEFAULT_FILTERS)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [view, setView] = useState<'map' | 'list'>('map')
+  const [mapFailed, setMapFailed] = useState(false)
   const mapRef = useRef<MockMapHandle>(null)
 
-  // User location arrives with Mapbox/geolocation in Block 7; the mock uses the district centre.
-  const origin = MOCK_CENTER
-  const results = useMemo(
-    () => placeSponsored(applyFilters(places ?? [], filters, origin)),
-    [places, filters, origin],
-  )
+  // The real catalogue is per city; the illustrated test world lives around one district.
+  const catalogue = places?.some((p) => p.city !== undefined) ?? false
+  const origin = (catalogue && cityCenter(city)) || MOCK_CENTER
+  const results = useMemo(() => {
+    const inCity = catalogue
+      ? (places ?? []).filter((p) => distanceMeters(origin, p.location) <= CITY_RADIUS_M)
+      : (places ?? [])
+    return placeSponsored(applyFilters(inCity, filters, origin))
+  }, [places, filters, origin, catalogue])
   const selected = places?.find((p) => p.id === selectedId) ?? null
 
+  const updateParams = (patch: Record<string, string | null>) => {
+    const next = new URLSearchParams(params)
+    for (const [key, value] of Object.entries(patch)) {
+      if (value) next.set(key, value)
+      else next.delete(key)
+    }
+    setParams(next, { replace: true })
+  }
   const select = (id: string | null) => {
-    setParams(id ? { place: id } : {}, { replace: true })
+    updateParams({ place: id })
     if (id && view === 'list' && !desktop) setView('map')
   }
 
@@ -61,23 +84,50 @@ export function DiscoverScreen() {
     </ul>
   )
 
+  const access = useMapAccess()
+  const mapProps = {
+    ref: mapRef,
+    places: results,
+    center: origin,
+    selectedId,
+    onSelect: select,
+    focusOffsetY: desktop ? 0 : 360,
+  }
+  const map =
+    access === undefined ? (
+      <Skeleton className="absolute inset-0 rounded-none" />
+    ) : access.granted && !mapFailed ? (
+      <Suspense fallback={<Skeleton className="absolute inset-0 rounded-none" />}>
+        <MapboxMap {...mapProps} token={access.token} onUnavailable={() => setMapFailed(true)} />
+      </Suspense>
+    ) : (
+      <MockMap {...mapProps} />
+    )
+  const fallbackReason = !access
+    ? null
+    : !access.granted
+      ? access.reason
+      : mapFailed
+        ? 'unavailable'
+        : null
+  const fallbackNotice =
+    fallbackReason && catalogue ? t(`places.map.fallback.${fallbackReason}`) : null
+
   return (
     <div className="absolute inset-0 lg:grid lg:grid-cols-[1fr_26rem]">
       <div className="relative h-full overflow-hidden">
         {isPending && <Skeleton className="absolute inset-0 rounded-none" />}
-        {view === 'map' || desktop ? (
-          <MockMap
-            ref={mapRef}
-            places={results}
-            center={MOCK_CENTER}
-            selectedId={selectedId}
-            onSelect={select}
-            focusOffsetY={desktop ? 0 : 360}
-          />
-        ) : (
-          <div className="absolute inset-0 overflow-y-auto px-3 pt-[calc(11rem+env(safe-area-inset-top))] pb-[calc(8rem+env(safe-area-inset-bottom))]">
+        {/* The map stays mounted under the list: each new map instance is a billed load. */}
+        {map}
+        {view === 'list' && !desktop && (
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-background px-3 pt-[calc(11rem+env(safe-area-inset-top))] pb-[calc(8rem+env(safe-area-inset-bottom))]">
             {list}
           </div>
+        )}
+        {fallbackNotice && view === 'map' && (
+          <p className="glass pointer-events-none absolute bottom-[calc(11.5rem+env(safe-area-inset-bottom))] left-3 z-20 max-w-[15rem] rounded-theme px-3 py-2 text-xs text-muted-foreground lg:bottom-20">
+            {fallbackNotice}
+          </p>
         )}
         <DiscoverTopBar
           filters={filters}
@@ -85,6 +135,8 @@ export function DiscoverScreen() {
           onOpenFilters={() => setFiltersOpen(true)}
           view={view}
           onToggleView={() => setView((v) => (v === 'map' ? 'list' : 'map'))}
+          city={catalogue ? city : null}
+          onCityChange={(next) => updateParams({ city: next, place: null })}
         />
         <Button
           className="absolute bottom-[calc(7.5rem+env(safe-area-inset-bottom))] left-3 z-20 lg:bottom-6"

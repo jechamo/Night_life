@@ -7,6 +7,7 @@ import { AdminPaymentsScreen } from '@/features/admin/screens/AdminPaymentsScree
 import { AdminSectionScreen } from '@/features/admin/screens/AdminSectionScreen'
 import { AdminSettingsScreen } from '@/features/admin/screens/AdminSettingsScreen'
 import { AdminTestToolsScreen } from '@/features/admin/screens/AdminTestToolsScreen'
+import { AdminVenuesScreen } from '@/features/admin/screens/AdminVenuesScreen'
 import { SignedDocumentsScreen } from '@/features/legal/screens/SignedDocumentsScreen'
 import { ModerationScreen } from '@/features/moderation/screens/ModerationScreen'
 import { SuspendedScreen } from '@/features/moderation/screens/SuspendedScreen'
@@ -117,6 +118,7 @@ export const routes: RouteObject[] = [
       { path: 'flags', element: screen(AdminFlagsScreen) },
       { path: 'payments', element: screen(AdminPaymentsScreen) },
       { path: 'test-tools', element: screen(AdminTestToolsScreen) },
+      { path: 'venues', element: screen(AdminVenuesScreen) },
       { path: 'settings', element: screen(AdminSettingsScreen) },
     ],
   },

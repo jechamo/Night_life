@@ -1,13 +1,63 @@
+import type { AdminVenue, VenueInput } from '@/features/admin/model/venue'
 import type { AdminRow, AdminService, AdminSection } from '@/features/admin/services/admin-service'
 import { isMutuallyCompatible } from '@/features/matching/model/matching'
 import type { Match } from '@/features/matching/services/matching-service'
-import { isEvent } from '@/features/places/model/types'
+import { isEvent, type Place } from '@/features/places/model/types'
 import type { PremiumService } from '@/features/premium/services/premium-service'
 import type { MockStore } from '../mock-store'
 import { contextFor, emit, type WorldState } from '../world/world-state'
 import { audit, type MockConfig } from './config'
 
 type Wait = () => Promise<void>
+
+function toAdminVenue(p: Place): AdminVenue {
+  return {
+    id: p.id,
+    name: p.name,
+    type: p.type === 'event' ? 'club' : p.type,
+    city: p.city ?? 'Madrid',
+    address: p.address,
+    description: p.description ?? '',
+    hours: p.hours,
+    price: p.price,
+    phone: p.phone ?? '',
+    website: p.website ?? '',
+    music: [...(p.music ?? [])],
+    dressCode: p.dressCode ?? '',
+    minAge: p.minAge ?? null,
+    notes: '',
+    openingHours: [...(p.openingHours ?? [])],
+    isTest: true,
+    locationSource: 'owner',
+    lat: p.location.lat,
+    lng: p.location.lng,
+  }
+}
+
+function fromVenueInput(id: string, v: VenueInput): Place {
+  return {
+    id,
+    name: v.name,
+    type: v.type,
+    location: { lat: v.lat, lng: v.lng },
+    address: v.address,
+    price: v.price,
+    hours: v.hours,
+    openNow: true,
+    rating: null,
+    sponsored: false,
+    stats: { people: 0, averageAge: null, greenPercent: null, ratio: null, goingTonight: 0 },
+    vibes: { fire: 0, music: 0, chill: 0, packed: 0, friendly: 0 },
+    city: v.city,
+    description: v.description,
+    phone: v.phone,
+    website: v.website,
+    openingHours: v.openingHours,
+    music: v.music,
+    dressCode: v.dressCode,
+    ...(v.minAge !== null ? { minAge: v.minAge } : {}),
+  }
+}
 
 /** Statuses an admin action moves a row to (decisions are always explained & audited). */
 const RESULT: Record<string, string> = {
@@ -158,6 +208,40 @@ export function createMockAdminService(
       audit(config, 'setting.update', `${key}: ${setting.value} → ${clamped}`)
       setting.value = clamped
     },
+    // Provider billing controls exist only in the real backend; no mock success.
+    providerQuotas: () => Promise.resolve([]),
+    configureProvider: () => Promise.reject(new Error('provider_not_available')),
+    setMapToken: () => Promise.reject(new Error('provider_not_available')),
+    async venues() {
+      await wait()
+      return world.places.filter((p) => !isEvent(p)).map(toAdminVenue)
+    },
+    async createVenue(input) {
+      await wait()
+      const id = `v-${crypto.randomUUID()}`
+      world.places = [...world.places, fromVenueInput(id, input)]
+      audit(config, 'venue.create', id)
+      return id
+    },
+    async updateVenue(id, input) {
+      await wait()
+      world.places = world.places.map((p) =>
+        p.id === id ? { ...fromVenueInput(id, input), stats: p.stats, vibes: p.vibes } : p,
+      )
+      audit(config, 'venue.update', id)
+    },
+    // The illustrated world already is the test catalogue; seeding adds nothing new.
+    seedTestVenues: () => Promise.resolve(0),
+    async fillTestVenue(id, count) {
+      await wait()
+      const place = world.places.find((p) => p.id === id)
+      if (!place) return 0
+      const stats = { ...place.stats, people: place.stats.people + count }
+      world.places = world.places.map((p) => (p.id === id ? { ...p, stats } : p))
+      emit(world, { type: 'stats', placeId: id, stats })
+      return count
+    },
+    importTestEvents: () => Promise.reject(new Error('provider_not_available')),
     async createPromoCode({ productCode, days, maxUses }) {
       await wait()
       const block = () =>
@@ -274,6 +358,8 @@ export function createMockAdminService(
             createdAt: new Date(Date.now() - 49 * 3_600_000).toISOString(),
           }))
           return 'ok'
+        case 'import_events':
+          return 'disabled'
         case 'reset_likes':
           world.likesUsed = 0
           return 'ok'

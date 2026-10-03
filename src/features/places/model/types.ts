@@ -1,4 +1,5 @@
 import type { AccentKey } from '@/shared/domain/venue-types'
+import type { OpeningPeriod } from './cities'
 
 export interface LatLng {
   lat: number
@@ -52,6 +53,15 @@ export interface Place {
   stats: PlaceStats
   vibes: Record<Vibe, number>
   event?: PlaceEvent
+  /** Catalogue details (Block 7): editorial data owned by Nightlife, never copied from Google. */
+  city?: string
+  description?: string
+  phone?: string
+  website?: string
+  openingHours?: readonly OpeningPeriod[]
+  music?: readonly string[]
+  dressCode?: string
+  minAge?: number
 }
 
 export const isEvent = (place: Place): place is Place & { event: PlaceEvent } =>

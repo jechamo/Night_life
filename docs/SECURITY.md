@@ -2,6 +2,36 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 7 — puerta de seguridad, 2026-10-03 ✅ sin hallazgos críticos ni altos
+
+- **RPC:** toda la lógica en funciones `private` SECURITY DEFINER con `search_path=''` y
+  envoltorios `public` SECURITY INVOKER. Ninguna función definer queda en `public`
+  (probado). `anon` no ejecuta las RPC de lugares; las de admin exigen rol + MFA y las de
+  simulación, rol tester/admin + `test_tools_enabled` y solo actúan sobre `is_test`.
+- **Privacidad (PRD 4.3):** con menos de 5 personas no se devuelven edad, proporciones ni
+  porcentaje abierto a ligar, y el recuento se agrupa en 1-4. Check-in solo a ≤ 150 m.
+  Los locales de prueba no existen para usuarios normales (lectura y check-in denegados).
+- **Realtime:** canales Broadcast privados separados para datos reales y de prueba; el
+  cliente descarta cifras simuladas si no ve datos de prueba.
+- **Mapbox:** el token no viaja en el bundle ni en variables `VITE_*`. Vive en una tabla
+  privada y solo se entrega tras reservar una carga de la cuota. Solo se aceptan tokens
+  públicos `pk.` (validación en cliente, RPC y restricción de tabla; un `sk.` falla con
+  `check_violation`). Restringir el token por URL en la cuenta de Mapbox.
+- **Google Places:** desactivado; la clave no está en el cliente. El guardado de
+  `place_id` + coordenadas es solo `service_role`, caduca a 30 días y no hay función
+  desplegada que lo invoque.
+- **Ficha:** la web del local solo se muestra si es https y se abre con
+  `rel="noopener noreferrer"`.
+- **Red:** CSP con Supabase y Mapbox (`api`, `*.tiles`, `events`) como únicos orígenes
+  externos; `worker-src blob:` para el worker de Mapbox. `index.html` y `sw.js` no
+  referencian el chunk de Mapbox: solo se descarga tras una reserva concedida.
+- **Evidencias:** SQL remoto con rollback `places.sql` 19/19 y `provider-quotas.sql`
+  19/19; check 298/298; `npm audit` 0 vulnerabilidades. Advisors: INFO esperado de RLS
+  sin políticas en tablas privadas cerradas (`places_action_limits`, `provider_access` y
+  las dos del Bloque 6) y WARN conocido `auth_leaked_password_protection` (la app usa OTP).
+- **Riesgo aceptado:** el contador de Mapbox es una estimación de Nightlife, no un tope de
+  facturación de la cuenta (ADR 0010). La cuenta debe vigilarse manualmente cada mes.
+
 ## Evidencia final de pruebas del Bloque 6 — 2026-10-03
 
 - Check **285/285**, build correcto; SQL **54/54** y RLS **33/33** con rollback.

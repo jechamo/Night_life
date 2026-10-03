@@ -658,6 +658,22 @@
         "average_age": "Average age",
         "rating": "Top rated"
       }
+    },
+    "details": {
+      "phone": "Phone",
+      "website": "Website",
+      "music": "Music",
+      "dressCode": "Dress code",
+      "minAgeLabel": "Minimum age",
+      "minAge": "{{age}}+"
+    },
+    "city": "City",
+    "map": {
+      "fallback": {
+        "no_token": "Test map: the real map turns on once the team configures Mapbox.",
+        "quota": "Test map: today’s free map limit has been reached.",
+        "unavailable": "Test map: the real map is not available right now."
+      }
     }
   },
   "matching": {
@@ -1289,7 +1305,8 @@
       "legalDocs": "Legal documents",
       "settings": "Settings",
       "audit": "Audit",
-      "users": "Users"
+      "users": "Users",
+      "venues": "Venues"
     },
     "mfa": {
       "title": "Second factor",
@@ -1457,6 +1474,76 @@
       "grant": "Grant",
       "granted": "Granted and audited."
     },
+    "venues": {
+      "body": "Nightlife’s own catalogue: name, coordinates and details are written by the team or the venue. No Google content is copied.",
+      "google": {
+        "title": "Google Places",
+        "body": "Off. It will only be turned on with an eligible free trial and no charges; even then, in the EEA only the place_id would be stored permanently and coordinates for at most 30 days."
+      },
+      "fixtures": {
+        "title": "Test catalogue",
+        "body": "Data flagged as test (is_test), invisible to regular users. To fill a venue, first generate test people in Simulators.",
+        "seed": "Create test venues (2 per city)",
+        "seeded": "{{count}} test venues ready.",
+        "import": "Import 3 test events in {{city}}",
+        "imported": "{{count}} test events imported in {{city}}.",
+        "fill": "Fill with 25",
+        "filled": "{{count}} test check-ins added.",
+        "error": "Could not run. Check that simulators are on and that test venues and people exist."
+      },
+      "listTitle": "Venues",
+      "create": "New venue",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "newTitle": "New venue",
+      "editTitle": "Edit venue",
+      "test": "Test",
+      "noCoords": "No coordinates",
+      "loading": "Loading venues…",
+      "error": "Could not load or save. Retry with the second factor verified.",
+      "emptyTitle": "No venues yet",
+      "emptyBody": "Create the first one or generate the test catalogue.",
+      "fields": {
+        "name": "Name",
+        "type": "Type",
+        "city": "City",
+        "address": "Address",
+        "lat": "Latitude",
+        "lng": "Longitude",
+        "coordsHint": "Our own coordinates of the venue entrance (not copied from Google). Check-in requires being within 150 m.",
+        "price": "Price",
+        "hours": "Short opening hours",
+        "hoursHint": "Short text, e.g. “Thu-Sat 23:00-06:00”.",
+        "openingHours": "Opening hours by day",
+        "day": "Day",
+        "opens": "Opens",
+        "closes": "Closes",
+        "addPeriod": "Add time slot",
+        "removePeriod": "Remove time slot",
+        "description": "Description",
+        "phone": "Phone",
+        "website": "Website (https)",
+        "music": "Music",
+        "musicHint": "Comma-separated, up to 8 styles.",
+        "dressCode": "Dress code",
+        "minAge": "Minimum age",
+        "minAgeHint": "Between 18 and 25, or empty.",
+        "notes": "Internal notes",
+        "notesHint": "Only visible to the team."
+      },
+      "errors": {
+        "name": "Between 2 and 80 characters.",
+        "city": "Choose a city.",
+        "address": "Enter the address.",
+        "lat": "Latitude between -90 and 90.",
+        "lng": "Longitude between -180 and 180.",
+        "phone": "Invalid phone number.",
+        "website": "Must start with https://",
+        "minAge": "Between 18 and 25.",
+        "description": "At most 500 characters.",
+        "openingHours": "Check the time slots: times as HH:MM."
+      }
+    },
     "tools": {
       "title": "Simulators",
       "body": "Only with test_tools_enabled and the tester/admin role. Everything is audited.",
@@ -1475,7 +1562,7 @@
         },
         "fill_venue": {
           "name": "Fill a venue",
-          "body": "Adds 25 test check-ins to Pub Candil."
+          "body": "Adds 25 test check-ins to the first test venue in the catalogue."
         },
         "test_like_me": {
           "name": "Get a like",
@@ -1495,7 +1582,11 @@
         },
         "expire_everything": {
           "name": "Fast-forward expiries",
-          "body": "24 h events, check-ins and lost & found."
+          "body": "Ages unconfirmed events by 25 h and expires test check-ins and lost items."
+        },
+        "import_events": {
+          "name": "Import test events",
+          "body": "Creates 3 confirmed test events in Madrid (needs test venues)."
         },
         "reset_likes": {
           "name": "Reset likes",
@@ -1551,6 +1642,45 @@
       "confirmed": "Confirmed",
       "official": "Official",
       "cancelled": "Cancelled"
+    },
+    "providers": {
+      "title": "Providers · test limits",
+      "body": "Nightlife limits within free usage. Other applications also count towards the provider account's usage. Limits never increase automatically or change your plan.",
+      "names": {
+        "mapbox": "Mapbox · web map loads",
+        "google_places": "Google Places"
+      },
+      "usage": "{{used}} / {{budget}} reservations this month · provider free allowance: {{free}}",
+      "ready": "Test access enabled",
+      "paused": "Calls paused or awaiting confirmation",
+      "warnings": {
+        "near": "You have reached 80% of the Nightlife limit.",
+        "critical": "You have reached 95% of the Nightlife limit.",
+        "exhausted": "Nightlife limit reached. The test map is offered."
+      },
+      "monthly": "Nightlife monthly limit",
+      "daily": "Nightlife daily limit",
+      "increase": "Add {{count}} to the limit",
+      "margin": "Reserved margin: {{margin}}. Current Nightlife maximum: {{max}}.",
+      "enabled": "Allow test access",
+      "confirmUsage": "I have checked current Mapbox usage",
+      "observed": "Total usage shown by Mapbox this month",
+      "observedHint": "Include every application in this account. It is conservatively deducted in addition to Nightlife reservations. Confirm it again each month.",
+      "invalid": "Check the limits: daily cannot exceed monthly or the available free allowance.",
+      "error": "Could not load or save the limit. Retry with your second factor verified.",
+      "saved": "Limit saved. Accumulated usage is preserved.",
+      "unconfirmed": "The SKU and remaining free usage still need verification. No calls are made.",
+      "empty": "These controls are available with the real backend.",
+      "loading": "Loading limits…",
+      "token": {
+        "label": "Mapbox public token (pk.)",
+        "hint": "Only public tokens restricted to the app URLs. Never a secret token (sk.). It is not shipped in the code: it is handed out after each load is reserved.",
+        "set": "Token set: the real map is served while quota remains.",
+        "missing": "No token: the test map is shown.",
+        "invalid": "Must start with pk. and contain no spaces.",
+        "save": "Save token",
+        "clear": "Remove token"
+      }
     }
   }
 }
