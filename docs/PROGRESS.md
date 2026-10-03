@@ -1,7 +1,7 @@
 # Progreso — Nightlife Connect
 
-Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
-**No se pasa al siguiente bloque sin un OK explícito del propietario.**
+Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes. **No se pasa al
+siguiente bloque sin un OK explícito del propietario.**
 
 | Bloque                                              | Estado                                       |
 | --------------------------------------------------- | -------------------------------------------- |
@@ -24,23 +24,26 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 ### Qué se hizo
 
 - Proyecto React 19 + TypeScript 6 estricto + Vite 8 + Tailwind 4 + componentes estilo ShadCN/Radix.
-- Estructura por funcionalidades (`src/features`, `src/shared`, `src/platform`, `src/i18n`, `src/mocks`).
+- Estructura por funcionalidades (`src/features`, `src/shared`, `src/platform`, `src/i18n`,
+  `src/mocks`).
 - **Capa de plataforma** con 12 servicios (interfaz + implementación web) y estrategia de pagos
   (Stripe web / desactivado / tiendas futuras). ESLint prohíbe APIs del dispositivo fuera de ella.
 - **Feature flags** (valores iniciales de 6.13, validación Zod por flag, fallo cerrado) y
-  **entitlements** (`hasEntitlement`, `useEntitlement`), con mocks. Política del paywall pura y probada.
+  **entitlements** (`hasEntitlement`, `useEntitlement`), con mocks. Política del paywall pura y
+  probada.
 - **5 temas** (Neon Noir, Cyberpunk, Velvet, Sunset, Mono) como tokens generados desde TS, con
   contraste AA verificado por tests, acentos por tipo de lugar, estilo de mapa y heatmap por tema.
   Cambio instantáneo con View Transitions (fallback de opacidad) y _glitch_ breve en Cyberpunk.
-- **Librería de movimiento:** tokens 150-400 ms, _springs_ con `visualDuration`, presets
-  (fade, rise, scale, sello), "Reducir movimiento" (sistema, ajuste de la app o tema Mono).
+- **Librería de movimiento:** tokens 150-400 ms, _springs_ con `visualDuration`, presets (fade,
+  rise, scale, sello), "Reducir movimiento" (sistema, ajuste de la app o tema Mono).
 - **Fuentes autoalojadas** (OFL): Inter, Space Grotesk, Unbounded, JetBrains Mono, Playfair Display.
 - **Componentes base:** Button/ButtonLink, Chip con acento, Badge (verificado con sello, en directo,
   Aquí Ahora, Patrocinado, No confirmado), AnimatedCounter, LivePulse, BottomSheet con física de
-  muelle, SegmentedControl, Switch, Skeleton, EmptyState animado, ScreenHeader, ListRow, Card/GlassCard.
+  muelle, SegmentedControl, Switch, Skeleton, EmptyState animado, ScreenHeader, ListRow,
+  Card/GlassCard.
 - **Tab Bar** flotante de cristal (Descubre, Esta Noche, Chats, Perfil) con indicador animado.
-- Pantallas: placeholders animados de las 4 pestañas, Perfil → Temas, Perfil → Ajustes
-  (reducir movimiento, idioma ES/EN) y **Kit de componentes** (solo con `test_tools_enabled`).
+- Pantallas: placeholders animados de las 4 pestañas, Perfil → Temas, Perfil → Ajustes (reducir
+  movimiento, idioma ES/EN) y **Kit de componentes** (solo con `test_tools_enabled`).
 - **PWA:** manifest, iconos (incl. _maskable_), _service worker_ solo para el _shell_.
 - **i18n** ES/EN con claves tipadas; ningún texto fijo en componentes.
 - Error Boundary por pantalla, pantalla 404, Result tipado en servicios.
@@ -69,20 +72,23 @@ Ver ADR 0001-0005. Las más relevantes:
 - ✅ Los 5 temas funcionan con animación (View Transitions + fallback; test de componente).
 - ✅ Se respeta "reducir movimiento" (sistema, ajuste de la app y tema Mono; tests + Playwright).
 - ✅ No hay CDNs externos (auditoría de red: 0 orígenes externos; fuentes/iconos autoalojados).
-- ✅ Ningún componente accede directamente a las APIs del dispositivo (regla ESLint que rompe el build).
+- ✅ Ningún componente accede directamente a las APIs del dispositivo (regla ESLint que rompe el
+  build).
 
 ### Cómo probarlo
 
 1. `npm ci && npm run dev` → http://localhost:5173
 2. Perfil → Temas: cambia entre los 5 temas (Cyberpunk hace un _glitch_ breve).
-3. Perfil → Ajustes: activa "Reducir movimiento" o el modo del sistema → solo fundidos; cambia el idioma.
+3. Perfil → Ajustes: activa "Reducir movimiento" o el modo del sistema → solo fundidos; cambia el
+   idioma.
 4. Perfil → Kit de componentes: contadores, chips, badges (toca "Foto verificada" para el sello),
    selector, ficha con muelle (arrástrala hacia abajo) y estado de flags/entitlements.
 5. `npm run check` (tipos, lint, formato y 136 tests) y `npm run build` (sin advertencias).
 
 ### Despliegue
 
-- Vercel, proyecto `nightlife-connect` (equipo chaplications-projects): https://nightlife-connect-beige.vercel.app
+- Vercel, proyecto `nightlife-connect` (equipo chaplications-projects):
+  https://nightlife-connect-beige.vercel.app
 - Protegido con Vercel Authentication (requiere sesión de Vercel) hasta el lanzamiento.
 - Toolbar/feedback de Vercel desactivados (scripts de terceros, ADR 0002).
 - Pendiente (propietario): conectar el repo en Vercel → Settings → Git para desplegar en cada push
@@ -94,7 +100,8 @@ Ver `docs/SECURITY.md` → Bloque 1: sin hallazgos críticos ni altos.
 
 ### Pendiente / para el siguiente bloque
 
-- Imágenes: el propietario genera con GPT las de `docs/design/IMAGE_PROMPTS.md` (firmas por tema, neutras tintables y contenido; prioridad 1 para el Bloque 2).
+- Imágenes: el propietario genera con GPT las de `docs/design/IMAGE_PROMPTS.md` (firmas por tema,
+  neutras tintables y contenido; prioridad 1 para el Bloque 2).
 
 - Bloque 2: onboarding completo, firma legal, consentimientos y Centro de verificación (mock).
 - Dudas abiertas para el propietario (ver respuesta del Bloque 1): proveedor SMS, contrato de Yoti,
@@ -111,15 +118,15 @@ Ver `docs/SECURITY.md` → Bloque 1: sin hallazgos críticos ni altos.
 - **Onboarding completo** con máquina de estados pura y probada (PRD 5.2):
   1. Fecha de nacimiento en pantalla neutra (no muestra el límite de edad). Menor ⇒ no se crea
      cuenta ni se guarda nada.
-  2. Documentos legales (Términos, Normas, Privacidad, versionados y legibles en ficha) con
-     3 casillas **no premarcadas**, "Firmo y acepto" y "No acepto" igual de visible.
-  3. Teléfono + OTP (prefijo, E.164, reenvío con cuenta atrás, errores tipados genéricos:
-     número baneado, límite de SMS, código erróneo, demasiados intentos) y email opcional.
-  4. Consentimientos (orientación con **firma** explícita art. 9, ubicación precisa con permiso
-     del navegador, promociones LSSI, analítica), todos desactivados por defecto, con base legal
-     y consecuencia; sin ubicación se elige ciudad.
-  5. Perfil: 2-5 fotos **recodificadas en el dispositivo sin EXIF**, nombre, género, bio y
-     Anthem (próximamente).
+  2. Documentos legales (Términos, Normas, Privacidad, versionados y legibles en ficha) con 3
+     casillas **no premarcadas**, "Firmo y acepto" y "No acepto" igual de visible.
+  3. Teléfono + OTP (prefijo, E.164, reenvío con cuenta atrás, errores tipados genéricos: número
+     baneado, límite de SMS, código erróneo, demasiados intentos) y email opcional.
+  4. Consentimientos (orientación con **firma** explícita art. 9, ubicación precisa con permiso del
+     navegador, promociones LSSI, analítica), todos desactivados por defecto, con base legal y
+     consecuencia; sin ubicación se elige ciudad.
+  5. Perfil: 2-5 fotos **recodificadas en el dispositivo sin EXIF**, nombre, género, bio y Anthem
+     (próximamente).
   6. Preferencias (solo con consentimiento de orientación): a quién y rango de edad 18-60+.
   7. Elegir tema → entrada en la app.
 - **Información por capas** en cada formulario con enlace a la Política de Privacidad.
@@ -135,8 +142,8 @@ Ver `docs/SECURITY.md` → Bloque 1: sin hallazgos críticos ni altos.
 
 ### Decisiones
 
-Ver ADR 0006. Bio limitada a 300 caracteres (el PRD no fija límite). Prefijos de teléfono de
-España y países vecinos de la UE.
+Ver ADR 0006. Bio limitada a 300 caracteres (el PRD no fija límite). Prefijos de teléfono de España
+y países vecinos de la UE.
 
 ### Desviaciones
 
@@ -153,8 +160,8 @@ España y países vecinos de la UE.
 ### Cómo probarlo
 
 1. Abre la app: si no has hecho el onboarding verás la bienvenida.
-2. Fecha adulta → firma → teléfono cualquiera (+34 6xx xxx xxx) → código **123456** (se muestra
-   en modo pruebas). El número +34 600 000 000 simula un teléfono baneado.
+2. Fecha adulta → firma → teléfono cualquiera (+34 6xx xxx xxx) → código **123456** (se muestra en
+   modo pruebas). El número +34 600 000 000 simula un teléfono baneado.
 3. Consentimientos → perfil (2 fotos) → preferencias → tema.
 4. Esta Noche → "Ver perfiles" ⇒ "Verifica tu edad" → Continuar con Yoti → simulador → Aprobado.
 5. Perfil → Reiniciar onboarding para repetirlo. Prueba también una fecha de menor y "No acepto".
@@ -166,8 +173,8 @@ Ver `docs/SECURITY.md` → Bloque 2: sin hallazgos críticos ni altos.
 ### Pendiente
 
 - Imágenes: firmas de tema (prioridad 1) y las de los bloques 3 y 5.
-- Bloque 3: Descubre (mapa simulado, ficha, "Quién hay"), Esta Noche (swipe y match), Chats,
-  Perfil y Crear evento.
+- Bloque 3: Descubre (mapa simulado, ficha, "Quién hay"), Esta Noche (swipe y match), Chats, Perfil
+  y Crear evento.
 
 ---
 
@@ -175,42 +182,41 @@ Ver `docs/SECURITY.md` → Bloque 2: sin hallazgos críticos ni altos.
 
 ### Qué se hizo
 
-- **Descubre**: mapa 3D nocturno simulado a pantalla completa con pines (personas + edad media,
-  halo en directo, "Patrocinado", "No confirmado"), heatmap que respira, vuelo de cámara al pin,
+- **Descubre**: mapa 3D nocturno simulado a pantalla completa con pines (personas + edad media, halo
+  en directo, "Patrocinado", "No confirmado"), heatmap que respira, vuelo de cámara al pin,
   zoom/recentrar, buscador de cristal, selector Todo/Locales/Eventos, chips por tipo, filtros
   completos (gratis) con orden, vista de lista con patrocinados (máx. 2 arriba y 1 de cada 5) y
   botón "+ Crear evento". En escritorio: mapa a la izquierda y panel a la derecha.
-- **Ficha** (bottom sheet con muelle): "Quién hay" con contadores en directo y umbral de 5,
-  reparto por género, "van esta noche", horario, precio, dirección, acciones (Esta Noche Voy,
-  Estoy Aquí con animación de check-in, Ver perfiles, Votar, Objetos perdidos), Vibe Check y,
-  en eventos, estado, aviso de seguridad, "Confirmo que existe" (3/3) y "Reportar".
+- **Ficha** (bottom sheet con muelle): "Quién hay" con contadores en directo y umbral de 5, reparto
+  por género, "van esta noche", horario, precio, dirección, acciones (Esta Noche Voy, Estoy Aquí con
+  animación de check-in, Ver perfiles, Votar, Objetos perdidos), Vibe Check y, en eventos, estado,
+  aviso de seguridad, "Confirmo que existe" (3/3) y "Reportar".
 - **Esta Noche**: Aquí Ahora / Esta Noche Voy, lugares con gente (transición de elemento
   compartido), acceso a "Quién te ha dado like".
-- **Swipe** (pieza estrella): pila con profundidad (siguiente tarjeta escalada y desenfocada),
-  fotos por toques laterales con progreso, arrastre con inclinación, sellos ME GUSTA / PASO con
-  opacidad proporcional, salida por velocidad o vuelta elástica, vibración (nativo), botones y
-  teclado equivalentes, "Aquí Ahora", Anthem con ecualizador, "Lugar en común", "Solo amistad",
-  filtro gratuito "Solo verificados", límite de 5 likes/día (ilimitados con entitlement),
-  "Deshacer" (entitlement) con rebobinado, aviso "N personas nuevas en X", estado vacío con
-  lugares cercanos.
-- **Match**: fotos que vuelan y se juntan, partículas del tema, título contextual ("¡Match en
-  X!" / "¡Los dos vais a X esta noche!"), ambos Anthems, rompehielos por reglas editables,
-  "Escribir ahora" (lleva el mensaje al chat) y "Seguir mirando". También llega por realtime.
-- **Chats**: nuevos matches, conversaciones con no leídos, chat con indicador de escritura y
-  de leído, eliminar match, bloquear (mutuo e instantáneo) y reportar (incl. "posible menor" y
-  "Me siento seguido/a").
+- **Swipe** (pieza estrella): pila con profundidad (siguiente tarjeta escalada y desenfocada), fotos
+  por toques laterales con progreso, arrastre con inclinación, sellos ME GUSTA / PASO con opacidad
+  proporcional, salida por velocidad o vuelta elástica, vibración (nativo), botones y teclado
+  equivalentes, "Aquí Ahora", Anthem con ecualizador, "Lugar en común", "Solo amistad", filtro
+  gratuito "Solo verificados", límite de 5 likes/día (ilimitados con entitlement), "Deshacer"
+  (entitlement) con rebobinado, aviso "N personas nuevas en X", estado vacío con lugares cercanos.
+- **Match**: fotos que vuelan y se juntan, partículas del tema, título contextual ("¡Match en X!" /
+  "¡Los dos vais a X esta noche!"), ambos Anthems, rompehielos por reglas editables, "Escribir
+  ahora" (lleva el mensaje al chat) y "Seguir mirando". También llega por realtime.
+- **Chats**: nuevos matches, conversaciones con no leídos, chat con indicador de escritura y de
+  leído, eliminar match, bloquear (mutuo e instantáneo) y reportar (incl. "posible menor" y "Me
+  siento seguido/a").
 - **Perfil**: tarjeta con badges y Anthem, semáforo (abierto/amistad/invisible), modo discreto,
   preferencias, Premium según flags, privacidad, apariencia, legal/contacto (próximamente).
-- **Crear evento**: solo con edad verificada, lugar público confirmado, máx. 2/día,
-  antiduplicados, publicado como "No confirmado".
+- **Crear evento**: solo con edad verificada, lugar público confirmado, máx. 2/día, antiduplicados,
+  publicado como "No confirmado".
 - Perfil de otra persona, "Quién te ha dado like" (desenfocado sin `see_likes` si hay paywall).
 - Reglas puras y probadas, mundo simulado y realtime falso (ADR 0007).
 
 ### Hecho cuando
 
-- ✅ Los momentos firma y el match están implementados y fluidos en móvil (vuelo de cámara,
-  ficha con muelle, contadores, pulso en directo, heatmap, swipe con física, sellos, match con
-  partículas, check-in animado, sello en badges). Probado con arrastre real en Chromium móvil.
+- ✅ Los momentos firma y el match están implementados y fluidos en móvil (vuelo de cámara, ficha
+  con muelle, contadores, pulso en directo, heatmap, swipe con física, sellos, match con partículas,
+  check-in animado, sello en badges). Probado con arrastre real en Chromium móvil.
 - ✅ Funciona con los 5 temas (capturas de mapa, ficha y swipe en Neon Noir, Cyberpunk, Velvet,
   Sunset y Mono); con "reducir movimiento" todo pasa a fundidos.
 
@@ -243,56 +249,56 @@ Ver `docs/SECURITY.md` → Bloque 3: sin hallazgos críticos ni altos.
 
 ### Qué se hizo
 
-- **Catálogo propio** (docs/MONETIZATION.md, ADR 0008): Pase, Pase VIP, Pase de una noche,
-  Chispas, Foco y Mensaje directo, con precios con IVA, créditos y entitlements; se retira
-  `advanced_filters` (todos los filtros gratis) y se añaden `travel_mode`, `priority_likes` y
-  `no_sponsored_cards`. Flags nuevos (apagados): `store_payments_enabled`,
-  `sponsored_cards_enabled`, `travel_mode_enabled`.
-- **Paywall** según flags: oculto / "Próximamente" con "Avísame" (exige consentimiento
-  comercial) / checkout. Comparativa "Siempre gratis", "Ahora no", canjear código y Mi suscripción.
-- **Checkout** con precio sin IVA, IVA, total, renovación, cómo cancelar, desistimiento de 14
-  días, proveedor y "Suscribirme y pagar"; **pasarela de prueba** (tarjeta 4242) que simula el
-  webhook y concede los entitlements.
-- **Mi suscripción**: cancelar (2 toques), reactivar, desistir con reembolso (visible los 14
-  días), pase de una noche, créditos y facturas. **Canjear código** con límite de intentos.
-- **Mensaje directo de pago** en el perfil de otra persona (solo con `paid_dm_enabled`), respeta
-  el semáforo rojo. Enlaces a Premium desde Perfil, límite de likes y "Quién te ha dado like".
-- **Usuario**: Privacidad y datos (exportar JSON, solicitudes con plazo, cerrar todas las
-  sesiones, eliminar cuenta con OTP), Documentos firmados, Moderación y apelaciones (decisiones
-  explicadas, recurrir una vez, mis reportes), SOS Lite (112, avisar a un contacto, hasta 3
-  contactos) y **Cuenta suspendida** (la app redirige si la cuenta está suspendida).
+- **Catálogo propio** (docs/MONETIZATION.md, ADR 0008): Pase, Pase VIP, Pase de una noche, Chispas,
+  Foco y Mensaje directo, con precios con IVA, créditos y entitlements; se retira `advanced_filters`
+  (todos los filtros gratis) y se añaden `travel_mode`, `priority_likes` y `no_sponsored_cards`.
+  Flags nuevos (apagados): `store_payments_enabled`, `sponsored_cards_enabled`,
+  `travel_mode_enabled`.
+- **Paywall** según flags: oculto / "Próximamente" con "Avísame" (exige consentimiento comercial) /
+  checkout. Comparativa "Siempre gratis", "Ahora no", canjear código y Mi suscripción.
+- **Checkout** con precio sin IVA, IVA, total, renovación, cómo cancelar, desistimiento de 14 días,
+  proveedor y "Suscribirme y pagar"; **pasarela de prueba** (tarjeta 4242) que simula el webhook y
+  concede los entitlements.
+- **Mi suscripción**: cancelar (2 toques), reactivar, desistir con reembolso (visible los 14 días),
+  pase de una noche, créditos y facturas. **Canjear código** con límite de intentos.
+- **Mensaje directo de pago** en el perfil de otra persona (solo con `paid_dm_enabled`), respeta el
+  semáforo rojo. Enlaces a Premium desde Perfil, límite de likes y "Quién te ha dado like".
+- **Usuario**: Privacidad y datos (exportar JSON, solicitudes con plazo, cerrar todas las sesiones,
+  eliminar cuenta con OTP), Documentos firmados, Moderación y apelaciones (decisiones explicadas,
+  recurrir una vez, mis reportes), SOS Lite (112, avisar a un contacto, hasta 3 contactos) y
+  **Cuenta suspendida** (la app redirige si la cuenta está suspendida).
 - **Web pública sin login** (`/legal`): índice, documentos versionados (Aviso legal, Términos,
   Normas, Privacidad, Cookies, Clasificación y patrocinados, Locales, Patrocinio, Terceros —con
-  Vercel en lugar de Lovable— y Premium solo cuando hay compra), eliminar cuenta y derechos
-  (URL para Google Play), formulario DSA de contenido ilegal con referencia, y contacto (punto
-  DSA). Selector ES/EN. `robots.txt` permite solo `/legal`.
-- **Panel de locales** (`/venue`): reclamar ficha con prueba, mis locales, estadísticas
-  agregadas por hora con umbral, editar ficha, evento oficial, solicitar patrocinio (Destacado,
-  Destacado Plus, Top) y aviso de "Estadísticas Pro".
+  Vercel en lugar de Lovable— y Premium solo cuando hay compra), eliminar cuenta y derechos (URL
+  para Google Play), formulario DSA de contenido ilegal con referencia, y contacto (punto DSA).
+  Selector ES/EN. `robots.txt` permite solo `/legal`.
+- **Panel de locales** (`/venue`): reclamar ficha con prueba, mis locales, estadísticas agregadas
+  por hora con umbral, editar ficha, evento oficial, solicitar patrocinio (Destacado, Destacado
+  Plus, Top) y aviso de "Estadísticas Pro".
 - **Admin** (`/admin`, rol admin + segundo factor simulado): dashboard; colas genéricas de
   verificaciones, moderación, apelaciones, bans, claims, eventos, patrocinios, suscripciones,
-  entitlements, códigos, eventos de pago, derechos, documentos legales y auditoría, con acciones
-  y nota obligatoria en decisiones que afectan a una persona; **Feature flags** editables (el
-  paywall cambia en directo) y auditados; **Pagos** (catálogo, crear códigos, conceder
-  entitlements); **Herramientas de prueba** (10 simuladores y roles simulados) y
-  **Configuración** con límites acotados. Barra lateral en escritorio.
+  entitlements, códigos, eventos de pago, derechos, documentos legales y auditoría, con acciones y
+  nota obligatoria en decisiones que afectan a una persona; **Feature flags** editables (el paywall
+  cambia en directo) y auditados; **Pagos** (catálogo, crear códigos, conceder entitlements);
+  **Herramientas de prueba** (10 simuladores y roles simulados) y **Configuración** con límites
+  acotados. Barra lateral en escritorio.
 
 ### Hecho cuando
 
-- ✅ Todas las pantallas se pueden navegar (rutas conectadas; recorrido con Playwright en móvil
-  y escritorio; tests de integración de paywall, compra, cancelar/desistir, canjear, admin,
-  web legal, privacidad, moderación, SOS, panel de locales y DM de pago).
-- ✅ El paywall cambia según los flags simulados (tests: tester ⇒ checkout, usuario ⇒
-  Próximamente, `premium_enabled = off` ⇒ oculto, audiencia `none` + oculto ⇒ nada; y cambio
-  en directo desde Admin → Feature flags).
+- ✅ Todas las pantallas se pueden navegar (rutas conectadas; recorrido con Playwright en móvil y
+  escritorio; tests de integración de paywall, compra, cancelar/desistir, canjear, admin, web legal,
+  privacidad, moderación, SOS, panel de locales y DM de pago).
+- ✅ El paywall cambia según los flags simulados (tests: tester ⇒ checkout, usuario ⇒ Próximamente,
+  `premium_enabled = off` ⇒ oculto, audiencia `none` + oculto ⇒ nada; y cambio en directo desde
+  Admin → Feature flags).
 
 ### Cómo probarlo
 
-1. Perfil → Premium → Continuar → Suscribirme y pagar → "Pagar con tarjeta de prueba" →
-   Mi suscripción: cancela, reactiva o desiste. Canjea `NITE-TEST-0001`.
+1. Perfil → Premium → Continuar → Suscribirme y pagar → "Pagar con tarjeta de prueba" → Mi
+   suscripción: cancela, reactiva o desiste. Canjea `NITE-TEST-0001`.
 2. Perfil → Admin → código **123456** → Feature flags: pon `premium_enabled = off` o
-   `payments_audience = none` y vuelve a Premium. Herramientas de prueba: "Que me den like",
-   "Llenar un local", "Simular suspensión"… (el estado simulado se reinicia al recargar).
+   `payments_audience = none` y vuelve a Premium. Herramientas de prueba: "Que me den like", "Llenar
+   un local", "Simular suspensión"… (el estado simulado se reinicia al recargar).
 3. Perfil → Locales y equipo → Panel de locales → Bar Cobalto.
 4. Perfil → Privacidad y datos: descargar datos, eliminar cuenta (código 123456), SOS, moderación.
 5. Abre `/legal` sin sesión (o desde Perfil → Legal).
@@ -300,8 +306,8 @@ Ver `docs/SECURITY.md` → Bloque 3: sin hallazgos críticos ni altos.
 
 ### Desviaciones
 
-- Los pagos son una simulación local (pasarela de prueba propia); Stripe real llega en el
-  Bloque 9 y las tiendas en el Bloque 11.
+- Los pagos son una simulación local (pasarela de prueba propia); Stripe real llega en el Bloque 9 y
+  las tiendas en el Bloque 11.
 - El segundo factor del admin es simulado (código fijo); en el Bloque 5 se usará MFA TOTP de
   Supabase Auth (`aal2`) comprobado en el servidor.
 - PDF firmado y email: Bloque 5. Los textos legales siguen siendo borradores para el abogado.
@@ -322,44 +328,45 @@ Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
 ### Qué se hizo
 
 - **Supabase `Nightlife_Connect` (eu-west-1)**: esquema completo del PRD 4.1 en 10 migraciones
-  versionadas (`supabase/migrations`), RLS en todas las tablas y privilegios denegados por
-  defecto (el cliente solo lee lo suyo; toda escritura sensible va por funciones del servidor).
+  versionadas (`supabase/migrations`), RLS en todas las tablas y privilegios denegados por defecto
+  (el cliente solo lee lo suyo; toda escritura sensible va por funciones del servidor).
 - **Roles** (`user_roles`: user, tester, venue_manager, admin) comprobados con funciones seguras;
   **flags y límites** en `app_settings` con validación de valores y auditoría.
-- **Alta con teléfono + OTP** (Supabase Auth) con comprobación previa de bans por HMAC
-  (teléfono y dispositivo, clave en Vault) y límites por IP/teléfono; **«Ya tengo cuenta»**;
-  cerrar sesión; la caché se refresca sola al entrar/salir.
-- **`complete_onboarding`** en una transacción: revalida edad ≥ 18, firma de las versiones
-  vigentes, fotos en la carpeta del usuario, consentimientos explícitos y preferencias solo con
-  el consentimiento de orientación. Fotos sin EXIF en un bucket **privado** (URLs firmadas).
+- **Alta con teléfono + OTP** (Supabase Auth) con comprobación previa de bans por HMAC (teléfono y
+  dispositivo, clave en Vault) y límites por IP/teléfono; **«Ya tengo cuenta»**; cerrar sesión; la
+  caché se refresca sola al entrar/salir.
+- **`complete_onboarding`** en una transacción: revalida edad ≥ 18, firma de las versiones vigentes,
+  fotos en la carpeta del usuario, consentimientos explícitos y preferencias solo con el
+  consentimiento de orientación. Fotos sin EXIF en un bucket **privado** (URLs firmadas).
 - **Documentos legales** versionados ES/EN en la base de datos (Premium cargado inactivo);
-  **evidencia inmutable** en `consent_records`; **PDF firmado** generado en el servidor y
-  **envío por email** (Gmail del propietario por ahora) con _outbox_.
-- **Modo pruebas**: generador de personas `is_test` (Edge Function `test-tools`, doble puerta
-  rol + flag), aislamiento por RLS y **purga** (`purge_test_data`).
+  **evidencia inmutable** en `consent_records`; **PDF firmado** generado en el servidor y **envío
+  por email** (Gmail del propietario por ahora) con _outbox_.
+- **Modo pruebas**: generador de personas `is_test` (Edge Function `test-tools`, doble puerta rol +
+  flag), aislamiento por RLS y **purga** (`purge_test_data`).
 - **Admin real**: segundo factor TOTP (código QR) y `aal2` exigido en el servidor; flags,
   configuración, usuarios y roles, dashboard y auditoría reales.
 - **Derechos**: exportar datos reales, borrar cuenta con OTP (Edge Function `delete-account`),
   cerrar sesión en todos los dispositivos; contactos SOS reales.
-- Composición híbrida (ADR 0009): verificación, mapa, ligar, chat y pagos siguen simulados hasta
-  sus bloques. Sin variables de Supabase (tests) todo funciona con mocks.
+- Composición híbrida (ADR 0009): verificación, mapa, ligar, chat y pagos siguen simulados hasta sus
+  bloques. Sin variables de Supabase (tests) todo funciona con mocks.
 
 ### Hecho cuando
 
 - ✅ Un tester se da de alta con un teléfono de prueba y firma: alta real del propietario en la web
-  (perfil, 2 fotos en Storage privado, firmas y consentimientos en `consent_records`, roles
-  admin + tester asignados por SQL).
-- ✅ Las RLS están probadas: `supabase/tests/rls.sql`, **33/33** (anónimo, usuario verificado y
-  sin verificar, tester, admin sin/con MFA, IDOR, asignación masiva, validación del alta).
+  (perfil, 2 fotos en Storage privado, firmas y consentimientos en `consent_records`, roles admin +
+  tester asignados por SQL).
+- ✅ Las RLS están probadas: `supabase/tests/rls.sql`, **33/33** (anónimo, usuario verificado y sin
+  verificar, tester, admin sin/con MFA, IDOR, asignación masiva, validación del alta).
 - ✅ Los datos de prueba no son visibles para un usuario normal (test de RLS + función de perfiles).
 
 ### Cómo probarlo
 
-1. Web → «Empezar» → fecha adulta → firma → teléfono **600 111 001** (+34) → código **123456**.
+1. Web → «Empezar» → fecha adulta → firma → teléfono de prueba asignado (+34) → su código
+   (configurados en Supabase → Auth → Phone; los códigos no se publican en el repo).
 2. Completa consentimientos, perfil (2 fotos), preferencias y tema → entras en la app.
 3. Perfil → Privacidad y datos → Documentos firmados → «Descargar PDF firmado».
-4. Con roles admin + tester: Perfil → Admin → configura el segundo factor (QR) → Usuarios,
-   Feature flags, Herramientas de prueba → «Generar ciudad de prueba» y «Purgar».
+4. Con roles admin + tester: Perfil → Admin → configura el segundo factor (QR) → Usuarios, Feature
+   flags, Herramientas de prueba → «Generar ciudad de prueba» y «Purgar».
 
 ### Desviaciones
 
@@ -367,15 +374,15 @@ Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
   propietario en el SQL Editor (la herramienta exigía una aprobación que no podía mostrar): no
   figuran en el historial de migraciones de Supabase, pero están en el repositorio.
 - PDF y SMTP propios sin dependencias (ADR 0009); el email usa Gmail hasta el lanzamiento.
-- El _outbox_ se vacía desde la app: al terminar el alta y al abrir la app con sesión (si el
-  email está confirmado y hay un envío pendiente), además del botón «Enviármelo por email». El
-  envío por cron en servidor llega con los avisos del Bloque 9.
+- El _outbox_ se vacía desde la app: al terminar el alta y al abrir la app con sesión (si el email
+  está confirmado y hay un envío pendiente), además del botón «Enviármelo por email». El envío por
+  cron en servidor llega con los avisos del Bloque 9.
 - La ciudad de prueba crea personas; los locales reales importados llegan en el Bloque 7.
 
 ### Correcciones tras la prueba real
 
-- La web seguía mostrando la versión simulada cacheada: el service worker se registra ahora desde
-  el bundle (`src/platform/app-updates.ts`) y la página se recarga sola con cada versión nueva.
+- La web seguía mostrando la versión simulada cacheada: el service worker se registra ahora desde el
+  bundle (`src/platform/app-updates.ts`) y la página se recarga sola con cada versión nueva.
 - Las firmas legales se guardaban dos veces (paso legal con sesión + `complete_onboarding`): la
   firma por RPC solo se usa con la cuenta ya terminada, igual que los consentimientos.
 - El email con el PDF se quedaba en el _outbox_: nueva acción `outbox` en `signed-documents` (solo
