@@ -28,7 +28,7 @@ export function ChatScreen() {
   const initialDraft = (location.state as { draft?: string } | null)?.draft ?? ''
   const [text, setText] = useState(initialDraft)
   const [action, setAction] = useState<SafetyAction | null>(null)
-  const endRef = useRef<HTMLDivElement>(null)
+  const endRef = useRef<HTMLLIElement>(null)
   const { mutate: markAsRead } = markRead
 
   useEffect(() => {
@@ -53,8 +53,8 @@ export function ChatScreen() {
   }
 
   return (
-    <div className="flex min-h-[calc(100dvh-7rem)] flex-col">
-      <header className="pt-safe px-safe glass-strong sticky top-0 z-10 flex items-center gap-2 border-x-0 border-t-0 py-2">
+    <div className="flex h-[calc(100dvh-7rem-env(safe-area-inset-bottom))] min-h-0 flex-col">
+      <header className="pt-safe px-safe glass-strong z-10 flex shrink-0 items-center gap-2 border-x-0 border-t-0 py-2">
         <ButtonLink to="/chats" variant="ghost" size="icon" aria-label={t('common.back')}>
           <ChevronLeft aria-hidden />
         </ButtonLink>
@@ -92,7 +92,10 @@ export function ChatScreen() {
           <Flag aria-hidden />
         </Button>
       </header>
-      <ul className="px-safe flex flex-1 flex-col gap-2 py-4" aria-live="polite">
+      <ul
+        className="px-safe flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overscroll-contain py-4 [&>li]:shrink-0"
+        aria-live="polite"
+      >
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />
         ))}
@@ -101,10 +104,10 @@ export function ChatScreen() {
             <TypingIndicator name={match.person.name} />
           </li>
         )}
+        <li ref={endRef} aria-hidden="true" />
       </ul>
-      <div ref={endRef} />
       <form
-        className="px-safe glass-strong sticky bottom-[calc(5.5rem+env(safe-area-inset-bottom))] flex items-end gap-2 rounded-2xl py-2"
+        className="px-safe glass-strong flex shrink-0 items-end gap-2 rounded-2xl py-2"
         onSubmit={(event) => {
           event.preventDefault()
           submit()
