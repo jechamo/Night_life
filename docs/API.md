@@ -3,7 +3,7 @@
 Documento vivo (PRD 3.4, 6.15 API9). Cada entrada: propósito, autenticación, rol y límites.
 Se eliminan las funciones sin uso y **ninguna función de prueba es accesible en producción**.
 
-## Estado (Bloque 4)
+## Estado (Bloque 5)
 
 Aún no hay Edge Functions ni RPC desplegadas: los bloques 1-4 usan mocks
 (`src/mocks/`). El proyecto Supabase `Nightlife_Connect` existe y está sano, sin esquema
@@ -45,3 +45,28 @@ de aplicación todavía.
 | `stripe-webhook`          | Eventos de Stripe → entitlements                  | Firma Stripe | —                                       | idempotente (`payment_events`) | 9      |
 | `yoti-webhook`            | Resultado de verificación → `verification_status` | Firma Yoti   | —                                       | idempotente                    | 6      |
 | Simuladores de prueba     | Afluencia, likes, webhooks, caducidades           | JWT          | tester/admin **y** `test_tools_enabled` | por usuario                    | 5-9    |
+
+## Implementado (Bloque 5)
+
+RPC en `public` = envoltorios `SECURITY INVOKER` de implementaciones en `private`
+(no expuesto). Todas validan la sesión y lo que reciben.
+
+| Función                  | Propósito                                           | Auth               | Rol / condición                         | Límites                           |
+| ------------------------ | --------------------------------------------------- | ------------------ | --------------------------------------- | --------------------------------- |
+| `check_signup`           | Bans HMAC (teléfono/dispositivo) antes del SMS      | anon o JWT         | —                                       | 20/h por IP, 5/h por teléfono     |
+| `complete_onboarding`    | Crea perfil, firma, consentimientos y preferencias  | JWT                | propio                                  | una vez por cuenta                |
+| `sign_documents`         | Reaceptación de versiones nuevas                    | JWT                | propio                                  | solo versión vigente              |
+| `save_consents`          | Cambios de consentimiento (añade registros)         | JWT                | propio                                  | —                                 |
+| `update_my_profile`      | Bio, semáforo, discreto, tema, idioma, preferencias | JWT                | propio (+ consentimiento art. 9)        | lista blanca de campos            |
+| `search_public_profiles` | Perfiles visibles (columnas seguras)                | JWT                | edad verificada o tester                | máx. 50                           |
+| `feature_enabled`        | Lectura de un flag                                  | anon o JWT         | —                                       | —                                 |
+| `has_entitlement`        | ¿Tengo la ventaja X?                                | JWT                | propio                                  | —                                 |
+| `admin_set_flag`         | Cambiar un flag (valor permitido)                   | JWT                | admin + aal2, auditado                  | —                                 |
+| `admin_set_setting`      | Cambiar un límite (rango)                           | JWT                | admin + aal2, auditado                  | min/max                           |
+| `admin_list_users`       | Usuarios con teléfono enmascarado                   | JWT                | admin + aal2, auditado                  | máx. 200                          |
+| `admin_set_role`         | Dar/quitar roles                                    | JWT                | admin + aal2, auditado                  | no quitarse admin a sí mismo      |
+| `admin_dashboard`        | Recuentos                                           | JWT                | admin + aal2                            | —                                 |
+| `purge_test_data`        | Borra todo lo `is_test`                             | JWT                | tester/admin **y** `test_tools_enabled` | auditado                          |
+| Edge `signed-documents`  | PDF firmado / envío por email                       | JWT (`verify_jwt`) | propio                                  | email solo a dirección confirmada |
+| Edge `delete-account`    | Borrar cuenta y fotos                               | JWT                | propio, inicio de sesión < 10 min       | —                                 |
+| Edge `test-tools`        | Generar personas `is_test`                          | JWT                | tester/admin **y** flag                 | máx. 30 por llamada               |

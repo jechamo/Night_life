@@ -342,7 +342,8 @@
     "theme": {
       "title": "Elige tu estilo",
       "body": "Puedes cambiarlo cuando quieras en Perfil → Temas.",
-      "finish": "Entrar en la noche"
+      "finish": "Entrar en la noche",
+      "finishError": "No hemos podido crear tu cuenta. Revisa tu conexión e inténtalo de nuevo."
     },
     "layered": {
       "title": "Información básica sobre protección de datos",

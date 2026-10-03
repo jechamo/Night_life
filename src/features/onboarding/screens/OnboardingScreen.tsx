@@ -84,11 +84,13 @@ export function OnboardingScreen() {
         <ThemeStep
           {...props}
           finishing={complete.isPending}
+          failed={complete.data?.ok === false}
           onFinish={() =>
             complete.mutate(
               { ...state.data, themeId },
               {
-                onSuccess: () => {
+                onSuccess: (result) => {
+                  if (!result.ok) return
                   dispatch({ type: 'THEME_CHOSEN', themeId })
                   void navigate('/discover', { replace: true })
                 },

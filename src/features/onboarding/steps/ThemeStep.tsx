@@ -11,7 +11,8 @@ export function ThemeStep({
   dispatch,
   onFinish,
   finishing,
-}: StepProps & { onFinish: () => void; finishing: boolean }) {
+  failed = false,
+}: StepProps & { onFinish: () => void; finishing: boolean; failed?: boolean }) {
   const { t } = useTranslation()
   const { themeId } = useTheme()
   const switchTheme = useThemeSwitch()
@@ -22,9 +23,16 @@ export function ThemeStep({
       description={t('onboarding.theme.body')}
       onBack={() => dispatch({ type: 'BACK' })}
       footer={
-        <Button block size="lg" disabled={finishing} onClick={onFinish}>
-          {t('onboarding.theme.finish')}
-        </Button>
+        <>
+          {failed && (
+            <p role="alert" className="mb-3 text-sm text-danger">
+              {t('onboarding.theme.finishError')}
+            </p>
+          )}
+          <Button block size="lg" disabled={finishing} onClick={onFinish}>
+            {t('onboarding.theme.finish')}
+          </Button>
+        </>
       }
     >
       <ul className="grid gap-3">

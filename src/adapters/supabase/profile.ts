@@ -107,6 +107,13 @@ export function createConsentService(db: Db): ConsentService {
   return {
     getMine,
     async save(choices, city) {
+      // During onboarding the account is not finished yet: `complete_onboarding` records
+      // every consent in the same transaction, so nothing is written twice here.
+      const uid = await currentUserId(db)
+      const { data: profile } = uid
+        ? await db.from('profiles').select('onboarded_at').eq('id', uid).maybeSingle()
+        : { data: null }
+      if (!profile?.onboarded_at) return { choices: { ...choices }, city, updatedAt: {} }
       const { error } = await db.rpc('save_consents', {
         p_choices: { ...choices },
         p_city: city ?? '',

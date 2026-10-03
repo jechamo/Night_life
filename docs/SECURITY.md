@@ -70,18 +70,35 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 | Validación de entrada            | Límites de longitud en todos los campos; valores de flags validados por su esquema; configuración acotada a min/max                                            | formularios, `AdminFlagsScreen`              |
 | Indexación                       | `robots.txt` solo permite `/legal`                                                                                                                             | `public/robots.txt`                          |
 
+## Controles añadidos (Bloque 5)
+
+| Riesgo                 | Control                                                                                                                                                                             | Dónde                                |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| A01 / API1 IDOR        | RLS en las 40 tablas; el cliente solo lee sus filas; privilegios revocados por defecto (también para tablas futuras)                                                                | migraciones `core` … `grants`        |
+| API3 asignación masiva | Sin `UPDATE`/`INSERT` directos: perfil, consentimientos y firma solo por funciones con lista blanca de campos; perfiles ajenos solo por `search_public_profiles` (columnas seguras) | `rpc_block5`                         |
+| A08 integridad         | Roles, verificación, entitlements, bans y flags no se pueden escribir desde el cliente; evidencias y auditoría _append-only_ (trigger, también para el propietario)                 | `forbid_mutation`                    |
+| A04 criptografía       | HMAC-SHA256 de teléfono/dispositivo/IP con clave aleatoria en Vault                                                                                                                 | `private.hmac_hex`                   |
+| A07 / API5 admin       | Rol admin **y** `aal2` (TOTP) comprobados en cada función de admin; reautenticación por OTP (inicio de sesión < 10 min) para borrar la cuenta                                       | `private.is_admin`, `delete-account` |
+| API6 alta abusiva      | Límites por IP (20/h) y teléfono (5/h) antes de enviar el SMS, además de los de Supabase Auth; respuestas genéricas                                                                 | `check_signup`                       |
+| Menores (6.15 E)       | La edad se revalida en el servidor; menor ⇒ no se crea perfil                                                                                                                       | `complete_onboarding`                |
+| Datos de prueba        | `is_test` solo visible para tester/admin; generador y purga con doble puerta (rol + flag) en el servidor                                                                            | RLS, `test-tools`, `purge_test_data` |
+| Fotos (6.15 D)         | Bucket privado, 5 MB, solo imágenes, carpeta por usuario, URLs firmadas de 30 min                                                                                                   | `payments_and_storage`               |
+| A02 CORS / CSP         | Edge Functions con CORS solo para los dominios propios; CSP `img-src` añade solo el dominio de Supabase                                                                             | `_shared/http.ts`, `vercel.json`     |
+| A09 logs               | Edge Functions registran solo el tipo de error, nunca emails, tokens ni contenido                                                                                                   | Edge Functions                       |
+| Secretos               | `service_role` solo en Edge Functions; Gmail en Supabase Secrets; frontend solo con URL y clave publicable                                                                          | —                                    |
+
 ## Modelo de amenazas (STRIDE) — esqueleto, se completa por bloques
 
-| Área                                  | Bloque | Estado                                          |
-| ------------------------------------- | ------ | ----------------------------------------------- |
-| Alta y OTP                            | 5      | Pendiente                                       |
-| Verificación (Yoti, foto)             | 6      | Pendiente                                       |
-| Check-in y "Aquí Ahora" (seguimiento) | 7      | Pendiente                                       |
-| Likes y chat                          | 8      | Pendiente                                       |
-| Reportes / moderación                 | 9      | Pendiente                                       |
-| Eventos de usuarios                   | 7      | Pendiente                                       |
-| Pagos y entitlements                  | 9      | Pendiente (política de cliente lista y probada) |
-| Herramientas de prueba y admin        | 4-5    | UI con rol + MFA + flag (servidor en Bloque 5)  |
+| Área                                  | Bloque | Estado                                                   |
+| ------------------------------------- | ------ | -------------------------------------------------------- |
+| Alta y OTP                            | 5      | Hecho: bans HMAC, límites, OTP de Auth, edad en servidor |
+| Verificación (Yoti, foto)             | 6      | Pendiente                                                |
+| Check-in y "Aquí Ahora" (seguimiento) | 7      | Pendiente                                                |
+| Likes y chat                          | 8      | Pendiente                                                |
+| Reportes / moderación                 | 9      | Pendiente                                                |
+| Eventos de usuarios                   | 7      | Pendiente                                                |
+| Pagos y entitlements                  | 9      | Pendiente (política de cliente lista y probada)          |
+| Herramientas de prueba y admin        | 4-5    | Hecho: rol + aal2 + flag en el servidor, auditado        |
 
 ## Puertas de seguridad por bloque
 
@@ -125,3 +142,20 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
   `src/platform` (descarga JSON y compartir); el enlace al 112 es un `tel:` estándar.
 - Riesgo aceptado (temporal): MFA de admin y pasarela simulados en cliente; no hay backend, así
   que no protegen nada real. Se sustituyen por comprobaciones en servidor en los bloques 5 y 9.
+
+### Bloque 5 — 2026-10-03 ✅ sin hallazgos críticos ni altos
+
+- Security Advisors de Supabase: **0 avisos de seguridad** (se corrigieron 16 avisos
+  `SECURITY DEFINER` expuestos moviendo las implementaciones al esquema `private`, no expuesto,
+  con envoltorios `SECURITY INVOKER`; la exposición de esas RPC es intencionada y cada una
+  comprueba sesión, rol, MFA y flags). Rendimiento: solo avisos INFO de índices sin usar
+  (base de datos vacía).
+- RLS: `supabase/tests/rls.sql` **33/33** (anon, usuario, sin verificar, tester, admin aal1/aal2,
+  IDOR, asignación masiva, inmutabilidad, validación del alta); se ejecuta en una transacción
+  que siempre termina en _rollback_ (comprobado: 0 filas tras la prueba).
+- Migraciones revisadas: sin `DELETE` fuera de funciones con condiciones; datos solo semilla.
+- Edge Functions revisadas: JWT obligatorio (`verify_jwt`), CORS restringido, sin datos
+  personales en logs, destinatario del email tomado de Auth (confirmado), nunca del cuerpo.
+- Dependencias añadidas: `@supabase/supabase-js` (lista 3.5). `npm audit`: 0 vulnerabilidades.
+- Riesgo aceptado (temporal): envío de email con Gmail del propietario y SMTP propio; teléfonos
+  de prueba con OTP fijo (se quitan antes del lanzamiento, PRD 6.14).

@@ -42,10 +42,12 @@ src/
     lib/          utilidades puras (Result, cn)
   platform/       puertos + adaptadores web de funciones del dispositivo (ADR 0003)
   i18n/           i18next ES/EN con claves tipadas
-  mocks/          datos y servicios simulados (solo bloques 1-4)
+  adapters/       adaptadores Supabase (único sitio con @supabase/*, ADR 0009)
+  mocks/          datos y servicios simulados (tests y funciones aún sin backend)
   styles/         Tailwind, fuentes autoalojadas, tokens generados
   assets/fonts/   woff2 variables (OFL) + licencias
 scripts/          generador de tokens de tema
+supabase/         migraciones versionadas, Edge Functions (Deno) y tests de RLS
 docs/             PRD, progreso, arquitectura, API, seguridad, ADR
 ```
 
@@ -71,6 +73,12 @@ redirige a `/suspended` si la cuenta está suspendida. El back-office simulado
 (`src/mocks/backoffice`) es mutable para que el admin cambie flags y roles en directo.
 Pendientes por bloque: State machines (7, 9), Idempotency key y
 Transactional outbox (9).
+
+## Backend (Bloque 5)
+
+- Raíz de composición `src/app/services.ts`: Supabase si hay `VITE_SUPABASE_*`, mocks si no.
+- Escrituras sensibles por RPC (`private` + envoltorios en `public`) y Edge Functions.
+- `SessionBridge` (Observer) invalida la caché al entrar/salir o completar el MFA.
 
 ## Estado y datos
 

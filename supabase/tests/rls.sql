@@ -1,5 +1,5 @@
 -- RLS / privilege tests by role (PRD 3.4 "Tests de RLS por rol", 6.15 API1/API3/API5).
--- Runs inside ONE transaction that is always rolled back: no data is left behind.
+-- Runs inside ONE transaction that always ends in an error (= rollback): no data is left.
 -- Any failed expectation raises an exception with the test name.
 begin;
 
@@ -204,5 +204,12 @@ begin
 end $$;
 reset role;
 
-select test, ok from _results order by ok, test;
-rollback;
+-- Report by aborting: the error carries the results AND guarantees a rollback, so the
+-- script never commits fixtures even when run by a tool that auto-commits.
+do $$
+begin
+  raise exception 'RLS RESULTS % passed / % failed: %',
+    (select count(*) from _results where ok),
+    (select count(*) from _results where not ok),
+    coalesce((select string_agg(test, '; ') from _results where not ok), 'none failed');
+end $$;

@@ -342,7 +342,8 @@
     "theme": {
       "title": "Choose your style",
       "body": "You can change it any time in Profile → Themes.",
-      "finish": "Into the night"
+      "finish": "Into the night",
+      "finishError": "We couldn't create your account. Check your connection and try again."
     },
     "layered": {
       "title": "Basic data protection information",

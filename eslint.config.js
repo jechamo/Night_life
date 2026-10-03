@@ -34,8 +34,17 @@ const restrictedDeviceGlobals = [
 ].map((name) => ({ name, message: PLATFORM_ONLY }))
 
 export default defineConfig(
-  // Edge Functions run on Deno and are checked by the Supabase runtime, not this config.
-  { ignores: ['dist', 'dev-dist', 'coverage', 'node_modules', 'supabase/functions'] },
+  // Edge Functions run on Deno (checked by the Supabase runtime); database types are generated.
+  {
+    ignores: [
+      'dist',
+      'dev-dist',
+      'coverage',
+      'node_modules',
+      'supabase/functions',
+      'src/adapters/supabase/database.types.ts',
+    ],
+  },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],

@@ -9,7 +9,7 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                  |
 | 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                  |
 | 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                |
-| 5 – Backend base, legal y modo pruebas              | 🚧 En curso                                  |
+| 5 – Backend base, legal y modo pruebas              | ✅ Terminado, falta tu prueba de alta        |
 | 6 – Verificaciones reales                           | ⏳                                           |
 | 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                           |
 | 8 – Ligar, match en tiempo real y chat              | ⏳                                           |
@@ -317,20 +317,59 @@ Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
 
 ---
 
-## Bloque 5 — Backend base, legal y modo pruebas (en curso)
+## Bloque 5 — Backend base, legal y modo pruebas (2026-10-03)
 
-Plan (ADR 0009): esquema completo con RLS, roles y `app_settings`; alta con teléfono + OTP
-(teléfonos de prueba); perfiles y Storage privado; documentos versionados, firma inmutable,
-PDF y email; generador de datos `is_test` y purga; admin real (flags, configuración, roles,
-auditoría, MFA TOTP). Composición híbrida: lo de los bloques 6-9 sigue simulado.
+### Qué se hizo
 
-Estado:
+- **Supabase `Nightlife_Connect` (eu-west-1)**: esquema completo del PRD 4.1 en 10 migraciones
+  versionadas (`supabase/migrations`), RLS en todas las tablas y privilegios denegados por
+  defecto (el cliente solo lee lo suyo; toda escritura sensible va por funciones del servidor).
+- **Roles** (`user_roles`: user, tester, venue_manager, admin) comprobados con funciones seguras;
+  **flags y límites** en `app_settings` con validación de valores y auditoría.
+- **Alta con teléfono + OTP** (Supabase Auth) con comprobación previa de bans por HMAC
+  (teléfono y dispositivo, clave en Vault) y límites por IP/teléfono; **«Ya tengo cuenta»**;
+  cerrar sesión; la caché se refresca sola al entrar/salir.
+- **`complete_onboarding`** en una transacción: revalida edad ≥ 18, firma de las versiones
+  vigentes, fotos en la carpeta del usuario, consentimientos explícitos y preferencias solo con
+  el consentimiento de orientación. Fotos sin EXIF en un bucket **privado** (URLs firmadas).
+- **Documentos legales** versionados ES/EN en la base de datos (Premium cargado inactivo);
+  **evidencia inmutable** en `consent_records`; **PDF firmado** generado en el servidor y
+  **envío por email** (Gmail del propietario por ahora) con _outbox_.
+- **Modo pruebas**: generador de personas `is_test` (Edge Function `test-tools`, doble puerta
+  rol + flag), aislamiento por RLS y **purga** (`purge_test_data`).
+- **Admin real**: segundo factor TOTP (código QR) y `aal2` exigido en el servidor; flags,
+  configuración, usuarios y roles, dashboard y auditoría reales.
+- **Derechos**: exportar datos reales, borrar cuenta con OTP (Edge Function `delete-account`),
+  cerrar sesión en todos los dispositivos; contactos SOS reales.
+- Composición híbrida (ADR 0009): verificación, mapa, ligar, chat y pagos siguen simulados hasta
+  sus bloques. Sin variables de Supabase (tests) todo funciona con mocks.
 
-- ✅ Migraciones aplicadas: `core`, `users_and_legal`, `places_social_moderation`,
-  `payments_and_storage`.
-- ⏳ Pendientes de aprobación del propietario (contienen `DELETE` dentro de funciones):
-  `rpc_block5`, `purge_test_data`, `seed_legal_documents`, `grants`.
-- ✅ Edge Functions desplegadas: `signed-documents`, `delete-account`, `test-tools`.
-- ✅ Adaptadores Supabase en `src/adapters/supabase` y raíz de composición (`src/app/services.ts`).
-- ⏳ Configuración en el panel de Supabase: proveedor de teléfono y teléfonos de prueba.
-- ⏳ Tests de RLS (`supabase/tests/rls.sql`), variables en Vercel y prueba de alta real.
+### Hecho cuando
+
+- ⏳ Un tester se da de alta con un teléfono de prueba y firma — **pendiente de tu prueba en la
+  web** (el entorno de desarrollo no tiene acceso de red a Supabase).
+- ✅ Las RLS están probadas: `supabase/tests/rls.sql`, **33/33** (anónimo, usuario verificado y
+  sin verificar, tester, admin sin/con MFA, IDOR, asignación masiva, validación del alta).
+- ✅ Los datos de prueba no son visibles para un usuario normal (test de RLS + función de perfiles).
+
+### Cómo probarlo
+
+1. Web → «Empezar» → fecha adulta → firma → teléfono **600 111 001** (+34) → código **123456**.
+2. Completa consentimientos, perfil (2 fotos), preferencias y tema → entras en la app.
+3. Perfil → Privacidad y datos → Documentos firmados → «Descargar PDF firmado».
+4. Con roles admin + tester: Perfil → Admin → configura el segundo factor (QR) → Usuarios,
+   Feature flags, Herramientas de prueba → «Generar ciudad de prueba» y «Purgar».
+
+### Desviaciones
+
+- Migraciones `rpc_block5`, `purge_test_data`, `seed_legal_documents` y `grants` aplicadas por el
+  propietario en el SQL Editor (la herramienta exigía una aprobación que no podía mostrar): no
+  figuran en el historial de migraciones de Supabase, pero están en el repositorio.
+- PDF y SMTP propios sin dependencias (ADR 0009); el email usa Gmail hasta el lanzamiento.
+- El envío automático del _outbox_ (cron) llega con los avisos del Bloque 9; hoy se envía al
+  pulsar «Enviármelo por email».
+- La ciudad de prueba crea personas; los locales reales importados llegan en el Bloque 7.
+
+### Puerta de seguridad
+
+Ver `docs/SECURITY.md` → Bloque 5.
