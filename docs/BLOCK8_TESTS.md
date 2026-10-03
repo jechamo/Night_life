@@ -54,6 +54,19 @@ No se afirma una prueba manual de dos navegadores o de la app nativa.
    Guardar el resumen de `.tmp/block8-realtime-results.json`; retirar credenciales locales
    cuando ya se haya ejecutado la limpieza.
 
+## Despliegue verificado
+
+- URL: https://nightlife-connect-beige.vercel.app.
+- Destino: producción. Estado: **READY**. Framework: Vite. Build remoto: 34 s.
+- Commit: `e605cb51de82dfa9c1beef56951a489f0b8c06a2` (`codex/block8`).
+- Despliegue: `dpl_FQFX4d5Q1rpbZyLYxJcVJy5biGun`; el MCP confirma el SHA en sus metadatos.
+- HTTP 200 y CSP exacta; scripts iniciales servidos correctamente y RPC de matching/chat
+  presentes en el bundle. Audio local idéntico por SHA-256. Mapbox fuera del HTML/precache.
+- Logs de Vercel del despliegue, últimos 10 minutos: sin entradas error/fatal.
+  La app es estática; esta consulta no comprueba errores del navegador ni de Supabase.
+- CLI oficial 62.2.0 con autenticación existente como alternativa al comando MCP
+  no disponible. Se publicó un archivo del commit, sin `.env.local` ni fixtures personales.
+
 ## Límites documentados
 
 - Anthem usa metadatos de prueba persistidos y una muestra sintética propia; Spotify

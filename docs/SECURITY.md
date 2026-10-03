@@ -23,6 +23,9 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Fotos privadas con URLs de 5 minutos y RLS de visibilidad/participación; los
   avatares de prueba solo se asignan cuando el servidor identifica un fixture.
   Anthem solo reproduce una muestra propia local, sin URLs externas ni Spotify activo.
+- Red en producción: CSP idéntica a la configuración versionada; únicamente Supabase y
+  los orígenes de Mapbox ya permitidos. Audio servido desde el mismo origen, verificado
+  por hash; Mapbox fuera del HTML inicial y precache. No se añaden terceros.
 - `test-tools` conserva autenticación propia con `getUser`, perfil activo, rol + flag,
   auditoría y fixtures sandbox; borra una creación parcial si fallan sus registros.
   Los simuladores no conceden verificación live ni modifican identidades reales.

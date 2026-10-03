@@ -65,6 +65,19 @@ Plan en `docs/BLOCK8_PLAN.md`; evidencias y reproducción en `docs/BLOCK8_TESTS.
   WARN previo de protección de contraseñas y INFO de tablas privadas cerradas.
 - ✅ Retirados los dos testers temporales: **1 perfil real, 0 fixtures**, como antes.
 
+### Despliegue
+
+- Commit de implementación `e605cb51de82dfa9c1beef56951a489f0b8c06a2`, subido a
+  `codex/block8`. Archivo de ese SHA desplegado, sin archivos locales ignorados.
+- Vercel producción `dpl_FQFX4d5Q1rpbZyLYxJcVJy5biGun`, **READY**, Vite, build 34 s.
+  MCP confirma el SHA y el alias https://nightlife-connect-beige.vercel.app.
+- Publicación con la CLI oficial 62.2.0 en la cuenta/proyecto existentes: el comando
+  de despliegue de MCP devolvió `Unknown tool vercel.deploy_to_vercel`.
+- HTTP 200, CSP igual a `vercel.json`, JavaScript con las RPC reales del bloque 8 y
+  audio local idéntico por SHA-256. Mapbox ausente del HTML inicial y del precache.
+- Consulta de logs de Vercel: sin entradas error/fatal del despliegue en los últimos
+  10 minutos; esto no sustituye una sesión manual de navegador autenticado.
+
 ### Cómo probarlo
 
 1. `npm run test:blocks:7-8` y `npm run check`.
@@ -165,7 +178,9 @@ dos fallos de servidor y se completaron adaptadores, mapa, fichas, admin y prueb
 ### Pendiente del propietario
 
 - Configurar un token público `pk.` de Mapbox restringido a la URL de producción.
-- Prueba de check-in con dos sesiones reales (requiere su OTP).
+
+La prueba de dos sesiones quedó completada en el cierre del bloque 8 con dos testers
+temporales autenticados: 471 ms; SQL del bloque 7, 51/51. Ver la evidencia anterior.
 
 ---
 
