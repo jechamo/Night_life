@@ -1,6 +1,6 @@
 import { Heart, Rewind, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useState, type KeyboardEvent } from 'react'
+import { useRef, useState, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import { Button } from '@/shared/ui/button'
@@ -49,17 +49,24 @@ export function SwipeDeck({
   const [history, setHistory] = useState<SwipeDirection[]>([])
   const [exit, setExit] = useState<Exit>({ dir: 'none' })
   const [rewinding, setRewinding] = useState(false)
+  // One decision at a time: a second tap while the like is in flight would like twice.
+  const deciding = useRef(false)
   const index = history.length
   const top = candidates[index]
   const next = candidates[index + 1]
 
   const decide = async (dir: SwipeDirection) => {
-    if (!top) return
-    if (dir === 'like' && (await onLike(top)) === 'limit') return
-    if (dir === 'pass') onPass(top)
-    setRewinding(false)
-    setExit({ dir })
-    setHistory((h) => [...h, dir])
+    if (!top || deciding.current) return
+    deciding.current = true
+    try {
+      if (dir === 'like' && (await onLike(top)) === 'limit') return
+      if (dir === 'pass') onPass(top)
+      setRewinding(false)
+      setExit({ dir })
+      setHistory((h) => [...h, dir])
+    } finally {
+      deciding.current = false
+    }
   }
 
   const undo = async () => {

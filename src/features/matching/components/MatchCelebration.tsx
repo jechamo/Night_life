@@ -4,6 +4,7 @@ import { createContext, use, useCallback, useMemo, useState, type ReactNode } fr
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { useSendMessage } from '@/features/chats/hooks/use-chat'
 import { useMyProfile } from '@/features/profile/use-my-profile'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import { Button } from '@/shared/ui/button'
@@ -76,6 +77,8 @@ function MatchOverlay({ match, onClose }: { match: Match; onClose: () => void })
   const title = matchTitle(match.context)
   const icebreakers = suggestIcebreakers(match.context).map((ice) => icebreakerText(t, ice))
   const [draft, setDraft] = useState('')
+  const send = useSendMessage(match.id)
+  const message = draft.trim()
 
   return (
     <motion.div
@@ -161,13 +164,23 @@ function MatchOverlay({ match, onClose }: { match: Match; onClose: () => void })
       <div className="mt-6 grid w-full max-w-sm gap-3">
         <Button
           size="lg"
-          onClick={() => {
+          disabled={send.isPending}
+          onClick={async () => {
+            // A written message is SENT here, so the conversation exists straight away.
+            if (message) {
+              try {
+                await send.mutateAsync(message)
+              } catch {
+                onClose()
+                return void navigate(`/chats/${match.id}`, { state: { draft: message } })
+              }
+            }
             onClose()
-            void navigate(`/chats/${match.id}`, { state: { draft } })
+            void navigate(`/chats/${match.id}`)
           }}
         >
           <MessageCircle aria-hidden />
-          {t('matching.match.write')}
+          {message ? t('matching.match.send') : t('matching.match.write')}
         </Button>
         <Button variant="ghost" size="lg" onClick={onClose}>
           {t('matching.match.keepLooking')}

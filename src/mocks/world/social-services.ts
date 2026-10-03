@@ -35,7 +35,10 @@ export function createMockMatchingService(
         !state.matches.some((m) => m.person.id === p.id),
     )
 
+  // Idempotent: one match per person, however many times it is triggered.
   const createMatch = (personId: string): Match | null => {
+    const existing = state.matches.find((m) => m.person.id === personId)
+    if (existing) return existing
     const person = state.people.find((p) => p.id === personId)
     if (!person) return null
     const match: Match = {
@@ -57,6 +60,10 @@ export function createMockMatchingService(
     },
     async like(personId) {
       await wait()
+      if (state.liked.has(personId)) {
+        const match = state.matches.find((m) => m.person.id === personId) ?? null
+        return ok({ match, usedToday: state.likesUsed })
+      }
       if (!options.unlimitedLikes() && state.likesUsed >= FREE_DAILY_LIKES)
         return err('limit_reached')
       state.liked.add(personId)
@@ -67,7 +74,8 @@ export function createMockMatchingService(
       if (options.realtime && Math.random() < 0.35) {
         setTimeout(
           () => {
-            if (state.blocked.has(personId)) return
+            if (state.blocked.has(personId) || state.matches.some((m) => m.person.id === personId))
+              return
             const match = createMatch(personId)
             if (match) emit(state, { type: 'match', match })
           },

@@ -56,13 +56,30 @@ describe('Swipe, match and chat (Block 3 "done when")', () => {
     expect(await screen.findByRole('article', { name: 'Lucía, 26' })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Me gusta' }))
     const match = await screen.findByRole('dialog', { name: '¡Es un match!' })
-    await user.click(within(match).getAllByRole('button')[0]!)
-    await user.click(within(match).getByRole('button', { name: 'Escribir ahora' }))
+    const icebreaker = within(match).getAllByRole('button')[0]!
+    const text = icebreaker.textContent ?? ''
+    await user.click(icebreaker)
+    // The written message is sent from the match screen: the conversation exists already.
+    await user.click(within(match).getByRole('button', { name: 'Enviar mensaje' }))
     await waitFor(() => expect(router.state.location.pathname).toBe('/chats/m-p-1'))
+    expect(await screen.findByText(text)).toBeInTheDocument()
     const input = await screen.findByLabelText('Escribe un mensaje')
-    expect((input as HTMLTextAreaElement).value).not.toBe('')
-    await user.click(screen.getByRole('button', { name: 'Enviar' }))
-    await waitFor(() => expect((input as HTMLTextAreaElement).value).toBe(''))
+    expect((input as HTMLTextAreaElement).value).toBe('')
+    await router.navigate('/chats')
+    // Listed under "Conversaciones" with the message as its last line.
+    expect(await screen.findByText(`Tú: ${text}`)).toBeInTheDocument()
+  })
+
+  it('a double tap on "Me gusta" creates only one match', async () => {
+    const user = userEvent.setup()
+    const { router } = renderApp('/tonight/swipe/v-aurora', verified)
+    const like = await screen.findByRole('button', { name: 'Me gusta' })
+    await Promise.all([user.click(like), user.click(like)])
+    const match = await screen.findByRole('dialog', { name: '¡Es un match!' })
+    await user.click(within(match).getByRole('button', { name: 'Seguir mirando' }))
+    await router.navigate('/chats')
+    expect(await screen.findByText('Nuevos matches')).toBeInTheDocument()
+    expect(screen.getAllByText('Lucía')).toHaveLength(1)
   })
 
   it('stops at 5 free likes a day', async () => {
