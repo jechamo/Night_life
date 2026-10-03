@@ -3,20 +3,20 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                                   | Estado                                          |
-| -------------------------------------------------------- | ----------------------------------------------- |
-| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02)    |
-| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                     |
-| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                     |
-| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                   |
-| 5 – Backend base, legal y modo pruebas                   | 🛠️ Acceso corregido; prueba operativa pendiente |
-| 6 – Verificaciones en desarrollo y pruebas               | ⏳                                              |
-| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                              |
-| 8 – Ligar, match en tiempo real y chat                   | ⏳                                              |
-| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                              |
-| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                              |
-| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)       |
-| 12 – Contratación, costes, activación live y lanzamiento | ⏳                                              |
+| Bloque                                                   | Estado                                       |
+| -------------------------------------------------------- | -------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02) |
+| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                  |
+| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                  |
+| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                |
+| 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                |
+| 6 – Verificaciones en desarrollo y pruebas               | ⏳                                           |
+| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                           |
+| 8 – Ligar, match en tiempo real y chat                   | ⏳                                           |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                           |
+| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                           |
+| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)    |
+| 12 – Contratación, costes, activación live y lanzamiento | ⏳                                           |
 
 ---
 
@@ -420,3 +420,22 @@ Ver `docs/SECURITY.md` → Bloque 5.
 - A las 14:18–14:22 UTC los logs registran check_signup (2 respuestas 200) y OTP (1 respuesta 200) de la prueba local real. Aún no hay verificación OTP en esa ventana; no se publican códigos.
 - El trabajo previo del bloque 6 se restauró y mantiene un stash recuperable. Sigue pendiente del OK explícito tras el cierre operativo del bloque 5.
 - Pendientes: OTP real terminado, móvil/logout/redirecciones sobre la versión nueva y Generar/Purgar con MFA del propietario. El bloque 5 sigue abierto.
+
+### Cierre operativo del Bloque 5 — 2026-10-03, 16:55 (Madrid)
+
+- ✅ Acceso real en el commit publicado ee5feab: la cuenta terminada entra en Descubre después del OTP, sin fecha de nacimiento ni aviso de alta pendiente.
+- ✅ Sesión terminada: welcome, login y onboarding redirigen a discover, también tras navegación completa.
+- ✅ Perfil → Cuenta → Cerrar sesión, inmediatamente después de Privacidad; sin Reiniciar onboarding ni pista OTP mock con Supabase.
+- ✅ Cerrar sesión lleva a Bienvenida y permanece ahí al recargar. Los escenarios de cuenta pendiente, otro número, errores de conexión y caché están cubiertos por los tests.
+- ✅ MFA real verificado por el propietario. Generar ciudad creó 12 usuarios Auth y perfiles is_test, todos con rol, preferencias y verificación; seguían presentes después de recargar.
+- ✅ Purgar eliminó exclusivamente esos 12 usuarios/perfiles. No había locales, eventos, asistencia ni objetos perdidos de prueba ajenos que pudiera borrar.
+- ✅ Antes y después: 1 perfil real terminado, 10 consentimientos y 2 fotos del propietario; 0 usuarios/perfiles de prueba tras purgar. Auditoría: test_tool.generate_people y test_data.purge, ambos con detalle 12 test users.
+- ✅ Logs 16:38–16:52 Madrid: check_signup, OTP, verificación OTP y logout correctos. MFA tuvo un intento 422 y después uno 200; no se publica ningún código.
+- ✅ Recorrido sobre el bundle nuevo: 0 errores de consola; recursos observados solo del despliegue y Supabase. El alias público también carga index-DKkx7FH0.js después de cerrar y reabrir la pestaña antigua.
+- ✅ Validación del código publicado: 256/256 tests, TypeScript, ESLint y formato; build correcto; RLS 33/33 con rollback; npm audit 0 vulnerabilidades.
+- ✅ Vercel READY, SHA ee5feab84affaab118c4e03475b374a5dfc2f211, deployment dpl_HXrgnz8ibW3YwdcYpU2S3xbX18jq; [URL pública](https://nightlife-connect-beige.vercel.app).
+- ✅ Email con PDF enviado y factor admin verificado, comprobados previamente. No se repitió el envío.
+- Avisos conocidos: Advisor WARN de protección de contraseñas filtradas (la app usa OTP), INFO de índices sin uso y avisos del build remoto sobre engines/glob. Se conservan documentados; no se contrataron servicios para resolverlos.
+- Los pendientes operativos de los apartados anteriores quedan completados con estas evidencias. El Bloque 5 está terminado y espera OK para pasar al 6.
+- Matches: pestaña Chats, nuevos matches arriba y conversaciones debajo. Matching y chat siguen en demo en memoria hasta el Bloque 8; Marta y Clara son ejemplos, no relaciones reales de Supabase.
+- Bloque 6 preservado sin publicar; siguiente alcance tras el OK: Veriff test primero, Yoti como alternativa y simulación explícita persistida. No se inicia aún.

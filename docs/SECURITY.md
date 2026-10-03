@@ -182,3 +182,14 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - El servicio worker publicado responde application/javascript y Cache-Control public, must-revalidate, max-age=0. La pestaña antigua sigue en caché y no se presenta como prueba del nuevo código.
 - Build remoto: 0 vulnerabilidades; avisos de engines Node >=22 y glob obsoleto registrados, sin nuevas dependencias en esta corrección.
 - No se aplicaron migraciones ni se desplegaron Edge Functions del bloque 6; no se ampliaron planes ni activaron servicios de pago.
+
+### Puerta operativa final del Bloque 5 — 2026-10-03
+
+- Sesión y MFA reales del propietario en el commit publicado; sin manipular JWT ni consultar OTP o secretos del segundo factor.
+- Generación por Edge Function y purga por RPC, usando la UI autorizada. Antes de purgar se comprobó que las únicas entidades is_test eran las 12 recién generadas.
+- Persistencia confirmada tras recargar. Las filas asociadas de roles, preferencias y verificación estaban completas; auditoría de ambas operaciones conservada.
+- Tras purgar: 0 perfiles y usuarios Auth de prueba; cuenta real terminada, 10 consentimientos y 2 fotos conservados.
+- Los tres guards, Cuenta visible y signOut sin rebote se comprobaron en la versión nueva; alias público actualizado después de reabrir la pestaña antigua.
+- Recursos observados: solo origen del despliegue y proyecto Supabase; 0 errores de consola. Logs de check_signup/OTP/verify/logout correctos, sin publicar códigos ni tokens.
+- Advisors finales: persiste únicamente el WARN conocido auth_leaked_password_protection; sin nuevos avisos de esquema ni cambios de RLS. Los resultados 33/33 de RLS y 256/256 del check corresponden al código publicado, sin Bloque 6.
+- No se aplicaron migraciones ni nuevas funciones; sin ampliaciones de plan, credenciales live ni cobros. Bloque 6 pendiente de OK y activaciones de pago reservadas al Bloque 12.
