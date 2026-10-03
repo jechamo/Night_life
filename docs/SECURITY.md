@@ -2,6 +2,41 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 6 — revisión local, 2026-10-03 (Veriff test)
+
+- Webhook de Veriff: HMAC-SHA256 del cuerpo en bruto, `X-AUTH-CLIENT` igual a la API key,
+  cuerpo acotado, minimización (sin nombre, documento, selfie ni fecha de nacimiento persistida).
+  Idempotencia por `event_id`. El cliente no asigna resultados.
+- Decisiones de la integración de test en `mode = sandbox`; el gate exige rol tester/admin y
+  `verification_mode = sandbox`. Sin secretos: respuesta «No disponible», sin mock silencioso.
+- Lista blanca de hosts: `veriff.com` y `veriff.me` (subdominios), más Yoti.
+- Tests de la app 266/266. `npm audit --omit=dev`: 0. MCP de Supabase sin permiso para Advisors
+  ni para aplicar la migración; el esquema remoto no incluye aún estas tablas.
+- Pendiente: aplicar migración/funciones, webhook en Station, forzar una decisión de test,
+  foto/identidad live (Bloque 12).
+
+## Bloque 6 — revisión local anterior, 2026-10-03
+
+- SQL validado con rollback: 23/23 pruebas de verificación y 33/33 de regresión RLS.
+  Sin cambios persistentes en la base conectada. Migración y funciones pendientes de despliegue.
+- Sesiones propias de solo lectura en cliente. El cliente no asigna resultados ni accede a
+  las RPC reservadas al servicio. No hay bypass de edad por rol tester/admin.
+- Sandbox exige rol, flag y modo; sus resultados no conceden acceso en live.
+- Webhook con firma RSA-PSS y clave oficial fijada, cuerpo acotado antes del parseo,
+  validación de método/umbral/vida pasiva, referencia aleatoria e idempotencia.
+- Solo se conservan estados, método, umbral, fechas e identificadores. Sin documentos,
+  selfies, descriptores ni webhook bruto; sin datos sensibles o errores del proveedor en logs.
+- Cambio de foto revoca el badge. Posible menor suspende, revoca y fuerza documento;
+  el webhook no levanta la suspensión. Bans persisten mediante HMAC de teléfono/dispositivo.
+- Auditoría visual/red local: cero orígenes externos y errores de consola; 245 tests de la app y tres de Deno pasan; build y chequeo de las Edge Functions correctos.
+  `npm audit`: cero vulnerabilidades; ninguna dependencia nueva en la app.
+- Security Advisors del esquema actualmente desplegado: un aviso WARN por protección de
+  contraseñas filtradas desactivada. Sigue pendiente activar/comprobar esa protección en Auth
+  cuando corresponda; el inicio de sesión de usuarios de la app utiliza OTP.
+  [Remediación oficial](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+- Pendiente: revisión humana definitiva, revocación/eliminación biométrica en el proveedor,
+  foto/identidad live, secretos Yoti y prueba firmada real. El Bloque 6 sigue abierto.
+
 ## Controles implementados (Bloque 1)
 
 | Riesgo (OWASP)                    | Control                                                                                                                                                                                                                                  | Dónde                                              |
@@ -92,7 +127,7 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 | Área                                  | Bloque | Estado                                                   |
 | ------------------------------------- | ------ | -------------------------------------------------------- |
 | Alta y OTP                            | 5      | Hecho: bans HMAC, límites, OTP de Auth, edad en servidor |
-| Verificación (Yoti, foto)             | 6      | Pendiente                                                |
+| Verificación (Veriff test, Yoti, foto) | 6      | Código listo; migración/funciones pendientes de MCP |
 | Check-in y "Aquí Ahora" (seguimiento) | 7      | Pendiente                                                |
 | Likes y chat                          | 8      | Pendiente                                                |
 | Reportes / moderación                 | 9      | Pendiente                                                |

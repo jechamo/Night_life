@@ -116,13 +116,16 @@ describe('onboarding (Block 2 "done when")', () => {
 describe('"Verifica tu edad" gate', () => {
   it('blocks flirting until the age is verified in the sandbox', async () => {
     const user = userEvent.setup()
-    const { router } = renderApp('/tonight', { settings: { reduceMotion: true } })
+    const { router } = renderApp('/tonight', {
+      settings: { reduceMotion: true },
+      services: { flags: { verification_provider: 'simulator' } },
+    })
 
     await user.click(await screen.findByRole('button', { name: 'Ver perfiles' }))
     const gate = await screen.findByRole('dialog', { name: 'Verifica tu edad' })
     await user.click(within(gate).getByRole('button', { name: 'Verificar ahora' }))
 
-    await user.click(await screen.findByRole('button', { name: 'Continuar con Yoti' }))
+    await user.click(await screen.findByRole('button', { name: 'Continuar la verificación' }))
     await user.click(await screen.findByRole('button', { name: 'Aprobado' }))
     expect(await screen.findByText('¡Verificación completada!')).toBeInTheDocument()
 

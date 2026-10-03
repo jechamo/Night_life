@@ -3,22 +3,59 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                                   | Estado                                       |
-| -------------------------------------------------------- | -------------------------------------------- |
-| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02) |
-| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                  |
-| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                  |
-| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                |
-| 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                |
-| 6 – Verificaciones en desarrollo y pruebas               | ⏳                                           |
-| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                           |
-| 8 – Ligar, match en tiempo real y chat                   | ⏳                                           |
-| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                           |
-| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                           |
-| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)    |
-| 12 – Contratación, costes, activación live y lanzamiento | ⏳                                           |
+| Bloque                                              | Estado                                                |
+| --------------------------------------------------- | ----------------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02)          |
+| 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                           |
+| 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                           |
+| 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                         |
+| 5 – Backend base, legal y modo pruebas              | ✅ Terminado; pendiente de OK                         |
+| 6 – Verificaciones reales                           | 🛠️ Código listo; pendiente aplicar MCP de Supabase y prueba Veriff |
+| 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                                    |
+| 8 – Ligar, match en tiempo real y chat              | ⏳                                                    |
+| 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                                    |
+| 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                                    |
+| 11 – Apps nativas y pagos en tiendas                | ⏳ Añadido al plan (docs/MONETIZATION.md)             |
 
 ---
+
+## Imágenes y Bloque 6 — 2026-10-03
+
+El propietario autorizó continuar desde el Bloque 5. Se confirma su cierre documentado
+y se inicia el Bloque 6; no se avanza al Bloque 7.
+
+### Veriff test (continuación)
+
+- Proveedor principal: Veriff (integración de test, `https://api-saas.veriff.com`).
+  Yoti se conserva como alternativa de edad en live. Simulador interno solo con
+  `verification_provider = simulator`.
+- Flag `verification_provider` (`veriff` | `yoti` | `simulator`). Las decisiones de test
+  se guardan como `mode = sandbox` y no acreditan identidad real.
+- RPC `complete_provider_verification` (solo `service_role`), webhook HMAC-SHA256,
+  minimización de la decisión (edad en memoria a partir de la fecha de nacimiento) y
+  borrado best-effort de la sesión en Veriff.
+- Foto verificada sigue simulada (comparación selfie2selfie en el Bloque 12).
+- Tests de la app: **266/266**. `npm audit --omit=dev`: 0 vulnerabilidades.
+- MCP de Supabase autenticado pero sin permiso de `apply_migration` / `execute_sql` /
+  `deploy_edge_function` / Advisors (`MCP error -32600`). La migración
+  `20261003114550_verification_block6.sql` y las funciones `verification`,
+  `veriff-webhook` y `yoti-webhook` quedan pendientes de aplicar en el dashboard o con
+  un token MCP con escritura.
+- Webhook a configurar en Veriff Station:
+  `https://ocrpfeqfqzchhrghqcfb.supabase.co/functions/v1/veriff-webhook`
+- Secretos: `VERIFF_API_KEY`, `VERIFF_SHARED_SECRET` (si se guardó como
+  `VERIF_SHARED_SECRET`, renombrarlo), `VERIFF_BASE_URL` opcional, `APP_ORIGIN`.
+
+### Hecho cuando
+
+- ✅ Código local de edad, gates, simulador, cambios de foto y hashes de ban.
+- ✅ Pruebas de permisos, firma HMAC, separación de modos, idempotencia y reverificación.
+- ❌ Aplicar migración y Edge Functions (MCP sin permiso de escritura).
+- ❌ Sesión forzada de Veriff test extremo a extremo (webhook + decisión en Station).
+- ❌ Foto e identidad live: Bloque 12.
+- ❌ Revisión humana completa y eliminación en el proveedor: tras el webhook real.
+
+El Bloque 6 permanece **abierto** hasta aplicar backend y una decisión de test en Veriff.
 
 ## Bloque 1 — Cimientos, diseño y arquitectura preparada (2026-10-02)
 

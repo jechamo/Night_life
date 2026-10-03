@@ -26,11 +26,19 @@ export function OptionalVerificationScreen({ level }: { level: 'photo' | 'identi
           {t(`verification.${level}.consent`)}
         </CheckboxField>
         <p className="text-sm text-muted-foreground">{t('verification.center.neverStored')}</p>
+        {level === 'identity' && (
+          <p className="text-sm text-muted-foreground">{t('verification.center.testNote')}</p>
+        )}
+        {start.isError && (
+          <p role="alert" className="text-sm text-danger">
+            {t('verification.age.unavailable')}
+          </p>
+        )}
         <Button
           block
           size="lg"
           disabled={!consent || start.isPending}
-          onClick={() => start.mutate({ level })}
+          onClick={() => start.mutate({ level, consent })}
         >
           {t(`verification.${level}.start`)}
         </Button>

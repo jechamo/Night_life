@@ -383,7 +383,11 @@
     "center": {
       "title": "Centro de verificación",
       "description": "Comprobamos lo necesario sin conocer tu identidad: solo guardamos sí o no.",
-      "neverStored": "Nunca guardamos DNI, imágenes de documentos, selfies, vídeos ni datos faciales."
+      "neverStored": "Nunca guardamos DNI, imágenes de documentos, selfies, vídeos ni datos faciales.",
+      "testNote": "Las decisiones de la integración de prueba no acreditan identidad real.",
+      "refresh": "Actualizar estado",
+      "loadFailed": "No hemos podido comprobar tu verificación. Actualiza el estado para continuar.",
+      "reviewFailed": "No hemos podido enviar la solicitud de revisión. Inténtalo de nuevo."
     },
     "levels": {
       "phone": {
@@ -423,10 +427,10 @@
     },
     "age": {
       "title": "Verifica tu mayoría de edad",
-      "body": "Lo hace Yoti, un proveedor especializado. Nosotros solo recibimos si eres mayor de edad o no.",
-      "how1": "Estimación facial con detección de vida: normalmente no hace falta documento.",
-      "how2": "Si no es concluyente, puedes usar tu documento con un selfie o Digital ID en el mismo proceso.",
-      "start": "Continuar con Yoti",
+      "body": "Un proveedor especializado comprueba tu mayoría de edad. Nosotros solo recibimos sí o no. Las decisiones de prueba no acreditan identidad real.",
+      "how1": "Documento con selfie en el flujo alojado del proveedor.",
+      "how2": "Si no es concluyente, puedes repetir o pedir revisión humana.",
+      "start": "Continuar la verificación",
       "otherMethod": "Prefiero usar mi documento",
       "unavailable": "La verificación no está disponible ahora mismo. Inténtalo más tarde."
     },
@@ -438,14 +442,14 @@
     },
     "identity": {
       "title": "Identidad verificada",
-      "body": "Documento y selfie mediante Yoti. Solo guardamos que tu identidad está verificada: nunca tu nombre real, tu DNI ni tu fecha de nacimiento.",
-      "consent": "Doy mi consentimiento explícito para verificar mi identidad con Yoti.",
-      "start": "Continuar con Yoti"
+      "body": "Documento y selfie mediante el proveedor. Solo guardamos que tu identidad está verificada: nunca tu nombre real, tu DNI ni tu fecha de nacimiento. Las decisiones de prueba no acreditan identidad real.",
+      "consent": "Doy mi consentimiento explícito para verificar mi identidad con el proveedor.",
+      "start": "Continuar la verificación"
     },
     "sandbox": {
       "title": "Simulador del proveedor",
       "body": "Modo pruebas (verification_mode = sandbox): elige qué devolvería el proveedor. Así se simula su webhook firmado.",
-      "liveMode": "El proveedor real todavía no está conectado (llega en el Bloque 6).",
+      "liveMode": "El simulador interno solo está disponible con verification_provider = simulator.",
       "documentStep": "El proveedor pide ahora documento con selfie.",
       "outcomes": {
         "approved": "Aprobado",
@@ -484,6 +488,7 @@
     "lastChange": "Último cambio: {{date}}"
   },
   "profileMenu": {
+    "account": "Cuenta",
     "privacy": "Privacidad y seguridad",
     "verification": "Centro de verificación",
     "verificationHint": "Edad, foto e identidad",
@@ -517,8 +522,7 @@
     "legalHint": "Documentos públicos y tus derechos",
     "business": "Locales y equipo",
     "adminHint": "Moderación, pagos y pruebas",
-    "signOut": "Cerrar sesión",
-    "account": "Cuenta"
+    "signOut": "Cerrar sesión"
   },
   "tonightPreview": {
     "viewProfiles": "Ver perfiles",
@@ -1416,6 +1420,7 @@
         "sponsorship_self_service_enabled": "Autoservicio de patrocinio para locales.",
         "flash_alerts_push_enabled": "Flash Alerts por push (V2).",
         "verification_mode": "sandbox solo para testers; nunca bypass para usuarios normales.",
+        "verification_provider": "veriff = integración de test · yoti = alternativa · simulator = botones persistidos.",
         "test_tools_enabled": "Herramientas de prueba. Apagar antes del lanzamiento.",
         "store_payments_enabled": "Compras en App Store / Google Play (Bloque 11).",
         "sponsored_cards_enabled": "Tarjetas patrocinadas de locales en el swipe (Bloque 11).",

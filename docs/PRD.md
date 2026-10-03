@@ -736,7 +736,8 @@ Recuadro de información básica en cada formulario, con enlace a la política c
 |---|---|---|---|
 | Supabase (proyecto Nightlife_Connect) | Base de datos, auth, archivos, funciones | eu-west-1 (UE) | Activo |
 | Proveedor de SMS de Supabase Auth | OTP | Elegir uno con garantías UE | Activo |
-| Yoti | Edad e identidad (solo booleanos) | Reino Unido (adecuación hasta 2031) | Activo (sandbox en pruebas) |
+| Veriff | Edad e identidad (solo booleanos, integración de test) | UE | Activo (test; no acredita identidad real) |
+| Yoti | Edad e identidad (solo booleanos) | Reino Unido (adecuación hasta 2031) | Alternativa; live en el Bloque 12 |
 | Lovable (si aloja la web) | Hosting | Verificar | Activo |
 | Mapbox | Mapa | EE. UU. (DPF / cláusulas tipo) | Activo |
 | Google Places | Locales (desde servidor) | EE. UU. (DPF) | Activo |

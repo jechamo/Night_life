@@ -112,7 +112,7 @@ export function createMockVerificationService(store: MockStore, wait: Wait): Ver
     async start(level) {
       await wait()
       await set(level, { state: 'pending', providerSessionId: `sandbox_${level}_${Date.now()}` })
-      // A real adapter returns Yoti's URL (allowlisted); the sandbox is an internal screen.
+      // A real adapter returns the provider URL (allowlisted); the sandbox is an internal screen.
       return ok({ type: 'internal', path: `/verification/sandbox?level=${level}` })
     },
     async requestHumanReview(level) {

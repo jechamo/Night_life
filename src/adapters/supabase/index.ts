@@ -2,12 +2,14 @@ import type { Platform } from '@/platform'
 import { createFlagService } from '@/shared/flags/flag-service'
 import type { AppServices } from '@/shared/services/services'
 import { createAdminService } from './admin'
+import { withPersistedAgeGate } from './age-gated-services'
 import { createSupabaseClient } from './client'
 import { createEntitlementService, createFlagSource, createSessionService } from './core-services'
 import { createLegalService, startEmailOutbox } from './legal'
 import { createOnboardingService } from './onboarding'
 import { createPrivacyService, withRealAccountStatus } from './privacy'
 import { createConsentService, createProfileService, createSafetyService } from './profile'
+import { createVerificationService } from './verification'
 
 /**
  * Block 5 composition (ADR 0009): Supabase for identity, legal evidence, consents,
@@ -20,9 +22,12 @@ export function createSupabaseServices(
   simulated: AppServices,
 ): AppServices {
   const db = createSupabaseClient(config, platform.secureStorage)
+  const verification = createVerificationService(db)
   startEmailOutbox(db, platform)
   return {
     ...simulated,
+    ...withPersistedAgeGate(simulated, verification),
+    verification,
     flags: createFlagService(createFlagSource(db)),
     entitlements: createEntitlementService(db),
     session: createSessionService(db),

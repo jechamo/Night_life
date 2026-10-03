@@ -6,6 +6,8 @@ describe('external URL allowlist (PRD 6.15 A01/API7)', () => {
     'https://checkout.stripe.com/c/pay/cs_test_123',
     'https://billing.stripe.com/p/session/test_123',
     'https://age.yoti.com/age-estimation?sessionId=abc',
+    'https://magic.veriff.me/v/12df6045-3846-3e45-946a-14fa6136d78b',
+    'https://alchemy.veriff.com/v/session',
     'https://accounts.spotify.com/authorize?client_id=x',
   ])('allows %s', (url) => {
     expect(isAllowedExternalUrl(url)).toBe(true)

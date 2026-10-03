@@ -46,3 +46,5 @@ Toda disponibilidad/caducidad se comprueba en la cuenta real antes de configurar
   requiere Premium al propietario; usarlo solo si ya dispone de una cuenta elegible.
 
 Este documento fija el trabajo futuro; no declara configuradas las integraciones pendientes.
+El Bloque 6 implementa Veriff test en código (webhook HMAC, sesiones persistidas, simulador).
+La aplicación remota de la migración y las Edge Functions queda pendiente del permiso MCP.

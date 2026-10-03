@@ -383,7 +383,11 @@
     "center": {
       "title": "Verification centre",
       "description": "We check what's needed without knowing who you are: we only store yes or no.",
-      "neverStored": "We never store ID numbers, document images, selfies, videos or face data."
+      "neverStored": "We never store ID numbers, document images, selfies, videos or face data.",
+      "testNote": "Test-integration decisions do not prove a real identity.",
+      "refresh": "Refresh status",
+      "loadFailed": "We couldn't check your verification. Refresh its status to continue.",
+      "reviewFailed": "We couldn't submit your review request. Please try again."
     },
     "levels": {
       "phone": {
@@ -423,10 +427,10 @@
     },
     "age": {
       "title": "Verify you are an adult",
-      "body": "Yoti, a specialised provider, does it. We only receive whether you are an adult or not.",
-      "how1": "Facial age estimation with liveness detection: usually no document needed.",
-      "how2": "If it's inconclusive, you can use your ID with a selfie or a Digital ID in the same flow.",
-      "start": "Continue with Yoti",
+      "body": "A specialised provider checks that you are an adult. We only receive yes or no. Test-integration decisions do not prove a real identity.",
+      "how1": "ID document with a selfie in the provider's hosted flow.",
+      "how2": "If it's inconclusive, you can try again or request a human review.",
+      "start": "Continue verification",
       "otherMethod": "I'd rather use my ID",
       "unavailable": "Verification isn't available right now. Please try later."
     },
@@ -438,14 +442,14 @@
     },
     "identity": {
       "title": "Verified identity",
-      "body": "ID and selfie through Yoti. We only store that your identity is verified: never your real name, ID number or date of birth.",
-      "consent": "I give my explicit consent to verify my identity with Yoti.",
-      "start": "Continue with Yoti"
+      "body": "ID and selfie through the provider. We only store that your identity is verified: never your real name, ID number or date of birth. Test-integration decisions do not prove a real identity.",
+      "consent": "I give my explicit consent to verify my identity with the provider.",
+      "start": "Continue verification"
     },
     "sandbox": {
       "title": "Provider simulator",
       "body": "Test mode (verification_mode = sandbox): choose what the provider would return. This simulates its signed webhook.",
-      "liveMode": "The real provider is not connected yet (arrives in Block 6).",
+      "liveMode": "The internal simulator is only available with verification_provider = simulator.",
       "documentStep": "The provider now asks for an ID with a selfie.",
       "outcomes": {
         "approved": "Approved",
@@ -484,6 +488,7 @@
     "lastChange": "Last change: {{date}}"
   },
   "profileMenu": {
+    "account": "Account",
     "privacy": "Privacy and safety",
     "verification": "Verification centre",
     "verificationHint": "Age, photo and identity",
@@ -517,8 +522,7 @@
     "legalHint": "Public documents and your rights",
     "business": "Venues and team",
     "adminHint": "Moderation, payments and testing",
-    "signOut": "Sign out",
-    "account": "Account"
+    "signOut": "Sign out"
   },
   "tonightPreview": {
     "viewProfiles": "View profiles",
@@ -1416,6 +1420,7 @@
         "sponsorship_self_service_enabled": "Sponsorship self-service for venues.",
         "flash_alerts_push_enabled": "Flash Alerts via push (V2).",
         "verification_mode": "sandbox for testers only; never a bypass for normal users.",
+        "verification_provider": "veriff = test integration · yoti = alternative · simulator = persisted result buttons.",
         "test_tools_enabled": "Test tools. Turn off before launch.",
         "store_payments_enabled": "App Store / Google Play purchases (Block 11).",
         "sponsored_cards_enabled": "Sponsored venue cards in the swipe (Block 11).",

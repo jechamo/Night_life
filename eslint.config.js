@@ -41,6 +41,7 @@ export default defineConfig(
       'dev-dist',
       'coverage',
       'node_modules',
+      '.tmp',
       'supabase/functions',
       'src/adapters/supabase/database.types.ts',
     ],

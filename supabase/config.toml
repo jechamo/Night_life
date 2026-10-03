@@ -1,0 +1,13 @@
+project_id = "Night_life"
+
+[functions.verification]
+# Publishable-key clients: verify their bearer token inside requireUser/getUser.
+verify_jwt = false
+
+[functions.yoti-webhook]
+# Provider calls carry an RSA-PSS signature, never a Supabase user JWT.
+verify_jwt = false
+
+[functions.veriff-webhook]
+# Provider calls carry an HMAC-SHA256 of the raw body, never a Supabase user JWT.
+verify_jwt = false

@@ -145,8 +145,12 @@ const ES: Record<PublicSlug, Draft> = {
         body: 'Envío del código OTP. [Por definir, con garantías UE].',
       },
       {
+        heading: 'Veriff',
+        body: 'Verificación de edad e identidad en integración de test; solo recibimos el resultado. Unión Europea. Las decisiones de prueba no acreditan identidad real.',
+      },
+      {
         heading: 'Yoti',
-        body: 'Verificación de edad e identidad; solo recibimos el resultado. Reino Unido (decisión de adecuación).',
+        body: 'Alternativa de verificación de edad e identidad; solo recibimos el resultado. Reino Unido (decisión de adecuación).',
       },
       {
         heading: 'Mapbox y Google Places',
@@ -301,8 +305,12 @@ const EN: Record<PublicSlug, Draft> = {
       },
       { heading: 'SMS provider', body: 'Sends the OTP code. [TBD, with EU safeguards].' },
       {
+        heading: 'Veriff',
+        body: 'Age and identity verification in a test integration; we only receive the result. European Union. Test decisions do not prove a real identity.',
+      },
+      {
         heading: 'Yoti',
-        body: 'Age and identity verification; we only receive the result. United Kingdom (adequacy decision).',
+        body: 'Alternative age and identity verification; we only receive the result. United Kingdom (adequacy decision).',
       },
       {
         heading: 'Mapbox and Google Places',

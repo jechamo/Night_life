@@ -23,6 +23,7 @@ describe('parseFlags', () => {
     expect(flags.premium_enabled).toBe('on')
     expect(flags.test_tools_enabled).toBe('off')
     expect(flags.verification_mode).toBe('live')
+    expect(flags.verification_provider).toBe('simulator')
   })
 })
 

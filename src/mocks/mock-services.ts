@@ -62,7 +62,7 @@ export const MOCK_ENTITLEMENTS: readonly Entitlement[] = [
 
 export function createMockServices(options: MockServiceOptions = {}): AppServices {
   const config = createMockConfig(
-    { ...INITIAL_FLAG_VALUES, ...options.flags },
+    { ...INITIAL_FLAG_VALUES, verification_provider: 'simulator', ...options.flags },
     options.roles ?? MOCK_ROLES,
     options.entitlements ?? MOCK_ENTITLEMENTS,
   )

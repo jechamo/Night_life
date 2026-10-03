@@ -16,6 +16,9 @@ export function SuspendedScreen() {
         action={
           <div className="flex flex-col gap-3">
             <ButtonLink to="/suspended/moderation">{t('suspended.appeal')}</ButtonLink>
+            <ButtonLink to="/profile/verification" variant="secondary">
+              {t('verification.gate.verifyNow')}
+            </ButtonLink>
             <ButtonLink to="/legal/delete-account" variant="ghost">
               {t('suspended.delete')}
             </ButtonLink>

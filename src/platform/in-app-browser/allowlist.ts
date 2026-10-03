@@ -5,6 +5,9 @@
  * Every new integration must be added here AND to the third-party list (PRD 7).
  */
 export const EXTERNAL_HOST_ALLOWLIST = [
+  // Veriff hosted IDV (PRD 6.2, 11.3)
+  { host: 'veriff.com', allowSubdomains: true },
+  { host: 'veriff.me', allowSubdomains: true },
   // Yoti age / identity verification (PRD 6.2)
   { host: 'yoti.com', allowSubdomains: true },
   // Stripe Checkout and customer portal (PRD 6.13)

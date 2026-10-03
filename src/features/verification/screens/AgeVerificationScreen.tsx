@@ -1,15 +1,18 @@
 import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { Illustration } from '@/shared/images/Illustration'
 import { Button } from '@/shared/ui/button'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { AiNotice } from '../components/AiNotice'
-import { useStartVerification } from '../hooks/use-verification'
+import { useRequestHumanReview, useStartVerification } from '../hooks/use-verification'
 
-/** Informative screen before Yoti (PRD 6.2 level 1): method, AI notice, alternatives. */
+/** Informative screen before the provider flow (PRD 6.2 level 1): method, AI notice, alternatives. */
 export function AgeVerificationScreen() {
   const { t } = useTranslation()
   const start = useStartVerification()
+  const review = useRequestHumanReview()
+  const navigate = useNavigate()
   return (
     <>
       <ScreenHeader title={t('verification.age.title')} backTo="/profile/verification" />
@@ -26,25 +29,42 @@ export function AgeVerificationScreen() {
         </ul>
         <AiNotice />
         <p className="text-sm text-muted-foreground">{t('verification.center.neverStored')}</p>
+        <p className="text-sm text-muted-foreground">{t('verification.center.testNote')}</p>
         {start.isError && (
           <p role="alert" className="text-sm text-danger">
             {t('verification.age.unavailable')}
           </p>
         )}
+        {review.isError && (
+          <p role="alert" className="text-sm text-danger">
+            {t('verification.center.reviewFailed')}
+          </p>
+        )}
         <div className="grid gap-3 pb-4">
           <Button
             size="lg"
-            disabled={start.isPending}
+            disabled={start.isPending || review.isPending}
             onClick={() => start.mutate({ level: 'age', method: 'facial_estimation' })}
           >
             {t('verification.age.start')}
           </Button>
           <Button
             variant="outline"
-            disabled={start.isPending}
+            disabled={start.isPending || review.isPending}
             onClick={() => start.mutate({ level: 'age', method: 'document' })}
           >
             {t('verification.age.otherMethod')}
+          </Button>
+          <Button
+            variant="ghost"
+            disabled={start.isPending || review.isPending}
+            onClick={() =>
+              review.mutate('age', {
+                onSuccess: () => void navigate('/profile/verification'),
+              })
+            }
+          >
+            {t('verification.actions.requestReview')}
           </Button>
         </div>
       </div>

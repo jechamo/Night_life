@@ -17,6 +17,7 @@ export const FLAG_SCHEMAS = {
   sponsorship_self_service_enabled: onOff,
   flash_alerts_push_enabled: onOff,
   verification_mode: z.enum(['sandbox', 'live']),
+  verification_provider: z.enum(['veriff', 'yoti', 'simulator']),
   test_tools_enabled: onOff,
   // ADR 0008: store billing, sponsored swipe cards and travel mode (Block 11).
   store_payments_enabled: onOff,
@@ -37,6 +38,7 @@ export const SAFE_FLAG_DEFAULTS: Readonly<FeatureFlags> = {
   sponsorship_self_service_enabled: 'off',
   flash_alerts_push_enabled: 'off',
   verification_mode: 'live',
+  verification_provider: 'simulator',
   test_tools_enabled: 'off',
   store_payments_enabled: 'off',
   sponsored_cards_enabled: 'off',
@@ -53,6 +55,7 @@ export const INITIAL_FLAG_VALUES: Readonly<FeatureFlags> = {
   sponsorship_self_service_enabled: 'off',
   flash_alerts_push_enabled: 'off',
   verification_mode: 'sandbox',
+  verification_provider: 'veriff',
   test_tools_enabled: 'on',
   store_payments_enabled: 'off',
   sponsored_cards_enabled: 'off',

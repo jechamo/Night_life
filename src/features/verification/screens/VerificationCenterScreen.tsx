@@ -32,7 +32,7 @@ function LevelAction({ level, status }: { level: VerificationLevel; status: Veri
       )
     case 'pending':
       return (
-        <ButtonLink to={`/verification/sandbox?level=${level}`} size="sm" variant="outline">
+        <ButtonLink to={to} size="sm" variant="outline">
           {t('verification.actions.continuePending')}
         </ButtonLink>
       )
@@ -52,6 +52,11 @@ function LevelAction({ level, status }: { level: VerificationLevel; status: Veri
           <ButtonLink to={to} size="sm">
             {t('verification.actions.retry')}
           </ButtonLink>
+          {review.isError && (
+            <p role="alert" className="w-full text-sm text-danger">
+              {t('verification.center.reviewFailed')}
+            </p>
+          )}
         </div>
       )
     case 'reverification_required':
@@ -65,15 +70,20 @@ function LevelAction({ level, status }: { level: VerificationLevel; status: Veri
   }
 }
 
-/** Verification centre (PRD 5.1, 6.2): levels 0-3 with their simulated states. */
+/** Verification centre (PRD 5.1, 6.2): only persisted outcomes grant a badge. */
 export function VerificationCenterScreen() {
   const { t } = useTranslation()
-  const { data: snapshot } = useVerificationSnapshot()
+  const { data: snapshot, isError, isFetching, refetch } = useVerificationSnapshot()
   const [params] = useSearchParams()
   const result = params.get('result')
-  const banner = (RESULTS as readonly string[]).includes(result ?? '')
-    ? (result as ResultKey)
-    : null
+  const level = params.get('level')
+  const resultMatches =
+    (level === 'age' || level === 'photo' || level === 'identity') &&
+    snapshot?.[level].state === result
+  const banner =
+    resultMatches && (RESULTS as readonly string[]).includes(result ?? '')
+      ? (result as ResultKey)
+      : null
 
   return (
     <>
@@ -83,6 +93,14 @@ export function VerificationCenterScreen() {
         backTo="/profile"
       />
       <div className="px-safe mt-6 space-y-3">
+        <Button variant="outline" size="sm" disabled={isFetching} onClick={() => void refetch()}>
+          {t('verification.center.refresh')}
+        </Button>
+        {isError && (
+          <p role="alert" className="text-sm text-danger">
+            {t('verification.center.loadFailed')}
+          </p>
+        )}
         {banner && (
           <p role="status" className="glass rounded-2xl px-4 py-3 font-medium text-live">
             {t(`verification.result.${banner}`)}
@@ -98,7 +116,7 @@ export function VerificationCenterScreen() {
           </div>
           <Badge tone="verified">{t('verification.states.verified')}</Badge>
         </GlassCard>
-        {!snapshot && <Skeleton className="h-28" />}
+        {!snapshot && !isError && <Skeleton className="h-28" />}
         {snapshot &&
           LEVELS.map(({ level, icon: Icon, required }) => (
             <GlassCard key={level} className="space-y-3">
@@ -122,7 +140,10 @@ export function VerificationCenterScreen() {
           ))}
         <div className="flex items-center gap-3 pt-2">
           <Illustration name="verification" className="size-20 shrink-0" />
-          <p className="text-sm text-muted-foreground">{t('verification.center.neverStored')}</p>
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">{t('verification.center.neverStored')}</p>
+            <p className="text-sm text-muted-foreground">{t('verification.center.testNote')}</p>
+          </div>
         </div>
       </div>
     </>

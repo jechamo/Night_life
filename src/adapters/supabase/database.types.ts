@@ -1,5 +1,6 @@
-// Generated from the Supabase schema (MCP generate_typescript_types). Do not edit by hand:
-// regenerate after every migration.
+// Generated from the deployed Supabase schema (MCP generate_typescript_types).
+// Three verification RPC declarations anticipate the pending block 6 migration;
+// regenerate the full schema, including its tables, after applying that migration.
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
@@ -1518,13 +1519,67 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_sessions: {
+        Row: {
+          active: boolean
+          completed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          level: string
+          method: string
+          mode: string
+          provider: string
+          provider_session_id: string | null
+          reason: string | null
+          state: string
+          threshold: number
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          level: string
+          method: string
+          mode: string
+          provider: string
+          provider_session_id?: string | null
+          reason?: string | null
+          state?: string
+          threshold: number
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          completed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          level?: string
+          method?: string
+          mode?: string
+          provider?: string
+          provider_session_id?: string | null
+          reason?: string | null
+          state?: string
+          threshold?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       verification_status: {
         Row: {
+          age_mode: string | null
           age_threshold_used: number | null
           age_verification_method: string | null
           age_verified: boolean
+          identity_mode: string | null
           identity_verified: boolean
           phone_verified: boolean
+          photo_mode: string | null
           photo_verified: boolean
           provider_session_id: string | null
           reverification_required: boolean
@@ -1534,11 +1589,14 @@ export type Database = {
           verification_provider: string | null
         }
         Insert: {
+          age_mode?: string | null
           age_threshold_used?: number | null
           age_verification_method?: string | null
           age_verified?: boolean
+          identity_mode?: string | null
           identity_verified?: boolean
           phone_verified?: boolean
+          photo_mode?: string | null
           photo_verified?: boolean
           provider_session_id?: string | null
           reverification_required?: boolean
@@ -1548,11 +1606,14 @@ export type Database = {
           verification_provider?: string | null
         }
         Update: {
+          age_mode?: string | null
           age_threshold_used?: number | null
           age_verification_method?: string | null
           age_verified?: boolean
+          identity_mode?: string | null
           identity_verified?: boolean
           phone_verified?: boolean
+          photo_mode?: string | null
           photo_verified?: boolean
           provider_session_id?: string | null
           reverification_required?: boolean
@@ -1596,14 +1657,43 @@ export type Database = {
         Args: { p_key: string; p_value: number }
         Returns: undefined
       }
+      attach_verification_provider: {
+        Args: { p_provider: string; p_session: string }
+        Returns: undefined
+      }
+      begin_verification: {
+        Args: { p_consent?: boolean; p_level: string; p_method?: string }
+        Returns: Json
+      }
       check_signup: {
         Args: { p_device_id?: string; p_phone: string }
         Returns: string
       }
       complete_onboarding: { Args: { p: Json }; Returns: undefined }
+      complete_provider_verification: {
+        Args: {
+          p_event: string
+          p_identity_ok: boolean
+          p_method?: string
+          p_occurred: string
+          p_outcome: string
+          p_over_threshold: boolean
+          p_provider: string
+          p_provider_session: string
+          p_reference: string
+          p_threshold?: number
+        }
+        Returns: boolean
+      }
       feature_enabled: { Args: { _key: string }; Returns: boolean }
       has_entitlement: { Args: { _key: string }; Returns: boolean }
       purge_test_data: { Args: never; Returns: number }
+      verification_snapshot: { Args: never; Returns: Json }
+      request_verification_review: { Args: { p_level: string }; Returns: Json }
+      simulate_verification_result: {
+        Args: { p_level: string; p_outcome: string }
+        Returns: Json
+      }
       save_consents: {
         Args: { p_choices: Json; p_city?: string }
         Returns: undefined

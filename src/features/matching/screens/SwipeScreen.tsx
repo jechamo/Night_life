@@ -120,6 +120,7 @@ export function SwipeScreen() {
               <div>
                 <EmptyState
                   icon={SearchCheck}
+                  illustration="emptySeenAll"
                   title={t('matching.empty.title')}
                   description={t('matching.empty.body')}
                 />

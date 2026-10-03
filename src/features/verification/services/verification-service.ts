@@ -2,7 +2,7 @@ import type { Result } from '@/shared/lib/result'
 import type { AgeMethod, VerificationLevel, VerificationSnapshot } from '../model/verification'
 
 /**
- * Where to send the user to verify. Real providers are external (Yoti) and come
+ * Where to send the user to verify. Real providers are external (allowlisted) and come
  * back via a return URL; the sandbox mock is an internal route.
  */
 export type VerificationRedirect =
@@ -19,6 +19,7 @@ export interface VerificationService {
   start(
     level: VerificationLevel,
     method?: AgeMethod,
+    consent?: boolean,
   ): Promise<Result<VerificationRedirect, 'unavailable'>>
   requestHumanReview(level: VerificationLevel): Promise<VerificationSnapshot>
   /** Sandbox only (verification_mode = sandbox + test tools): simulates the provider webhook. */

@@ -32,12 +32,15 @@ export function ProviderSandboxScreen() {
   const [params] = useSearchParams()
   const level = params.get('level')
   const sandbox = useFeatureFlag('verification_mode') === 'sandbox'
-  const isTester = hasRole(useRoles(), 'tester')
+  const simulator = useFeatureFlag('verification_provider') === 'simulator'
+  const testTools = useFeatureFlag('test_tools_enabled')
+  const roles = useRoles()
+  const isTester = hasRole(roles, 'tester') || hasRole(roles, 'admin')
   const simulate = useSimulateVerification()
   const [documentStep, setDocumentStep] = useState(false)
 
   if (!isLevel(level)) return null
-  const allowed = sandbox && isTester
+  const allowed = sandbox && simulator && testTools && isTester
 
   const choose = (outcome: SandboxOutcome) => {
     simulate.mutate(
@@ -45,7 +48,9 @@ export function ProviderSandboxScreen() {
       {
         onSuccess: (snapshot) => {
           if (outcome === 'inconclusive') return setDocumentStep(true)
-          void navigate(`/profile/verification?result=${snapshot[level].state}`, { replace: true })
+          void navigate(`/profile/verification?level=${level}&result=${snapshot[level].state}`, {
+            replace: true,
+          })
         },
       },
     )
@@ -63,6 +68,11 @@ export function ProviderSandboxScreen() {
             {allowed ? t('verification.sandbox.body') : t('verification.sandbox.liveMode')}
           </p>
         </GlassCard>
+        {simulate.isError && (
+          <p role="alert" className="text-sm text-danger">
+            {t('verification.age.unavailable')}
+          </p>
+        )}
         {allowed && (
           <>
             <p className="font-medium">{t(`verification.levels.${level}.title`)}</p>

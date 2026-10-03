@@ -21,9 +21,10 @@ insert into public.profiles (id, name, birthdate, gender, onboarded_at, is_test)
   ('00000000-0000-4000-8000-00000000000c', 'Test', '1997-07-01', 'man', now(), true),
   ('00000000-0000-4000-8000-00000000000d', 'Tess', '1990-01-01', 'other', now(), false),
   ('00000000-0000-4000-8000-00000000000e', 'Adm', '1988-01-01', 'man', now(), false);
-insert into public.verification_status (user_id, phone_verified, age_verified) values
-  ('00000000-0000-4000-8000-00000000000a', true, true),
-  ('00000000-0000-4000-8000-00000000000b', true, false);
+insert into public.verification_status (user_id, phone_verified, age_verified, age_mode) values
+  ('00000000-0000-4000-8000-00000000000a', true, true, 'live'),
+  ('00000000-0000-4000-8000-00000000000b', true, false, null),
+  ('00000000-0000-4000-8000-00000000000d', true, true, 'live');
 insert into public.user_roles (user_id, role) values
   ('00000000-0000-4000-8000-00000000000a', 'user'),
   ('00000000-0000-4000-8000-00000000000b', 'user'),

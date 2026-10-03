@@ -40,6 +40,8 @@ import { AgeVerificationScreen } from '@/features/verification/screens/AgeVerifi
 import { OptionalVerificationScreen } from '@/features/verification/screens/OptionalVerificationScreen'
 import { ProviderSandboxScreen } from '@/features/verification/screens/ProviderSandboxScreen'
 import { VerificationCenterScreen } from '@/features/verification/screens/VerificationCenterScreen'
+import { AgeVerifiedRoute } from '@/features/verification/components/AgeVerifiedRoute'
+import type { AgeGatedAction } from '@/features/verification/model/verification'
 import { DesignKitScreen } from '@/features/design-kit/DesignKitScreen'
 import { DiscoverScreen } from '@/features/discover/DiscoverScreen'
 import { ProfileScreen } from '@/features/profile/ProfileScreen'
@@ -61,6 +63,9 @@ const screen = (Screen: ComponentType) => (
 )
 const PhotoVerification = () => <OptionalVerificationScreen level="photo" />
 const IdentityVerification = () => <OptionalVerificationScreen level="identity" />
+const verifiedScreen = (Screen: ComponentType, action: AgeGatedAction) => (
+  <AgeVerifiedRoute action={action}>{screen(Screen)}</AgeVerifiedRoute>
+)
 
 // Pure SPA routes (no SSR), WebView-compatible (PRD 3.3 point 2).
 export const routes: RouteObject[] = [
@@ -117,6 +122,21 @@ export const routes: RouteObject[] = [
   },
   {
     element: (
+      <RequireOnboarded allowSuspended>
+        <AppShell />
+      </RequireOnboarded>
+    ),
+    errorElement: <RouteErrorScreen />,
+    children: [
+      { path: 'profile/verification', element: screen(VerificationCenterScreen) },
+      { path: 'verification/age', element: screen(AgeVerificationScreen) },
+      { path: 'verification/photo', element: screen(PhotoVerification) },
+      { path: 'verification/identity', element: screen(IdentityVerification) },
+      { path: 'verification/sandbox', element: screen(ProviderSandboxScreen) },
+    ],
+  },
+  {
+    element: (
       <RequireOnboarded>
         <AppShell />
       </RequireOnboarded>
@@ -126,17 +146,16 @@ export const routes: RouteObject[] = [
       { index: true, element: <Navigate to="/discover" replace /> },
       { path: 'discover', element: screen(DiscoverScreen), handle: { fullBleed: true } },
       { path: 'tonight', element: screen(TonightScreen) },
-      { path: 'tonight/swipe', element: screen(SwipeScreen) },
-      { path: 'tonight/swipe/:placeId', element: screen(SwipeScreen) },
-      { path: 'tonight/likes', element: screen(LikesYouScreen) },
-      { path: 'people/:personId', element: screen(PersonScreen) },
-      { path: 'chats', element: screen(ChatsScreen) },
-      { path: 'chats/:matchId', element: screen(ChatScreen) },
-      { path: 'events/new', element: screen(CreateEventScreen) },
+      { path: 'tonight/swipe', element: verifiedScreen(SwipeScreen, 'view_profiles') },
+      { path: 'tonight/swipe/:placeId', element: verifiedScreen(SwipeScreen, 'view_profiles') },
+      { path: 'tonight/likes', element: verifiedScreen(LikesYouScreen, 'view_profiles') },
+      { path: 'people/:personId', element: verifiedScreen(PersonScreen, 'view_profiles') },
+      { path: 'chats', element: verifiedScreen(ChatsScreen, 'chat') },
+      { path: 'chats/:matchId', element: verifiedScreen(ChatScreen, 'chat') },
+      { path: 'events/new', element: verifiedScreen(CreateEventScreen, 'create_event') },
       { path: 'profile', element: screen(ProfileScreen) },
       { path: 'profile/themes', element: screen(ThemesScreen) },
       { path: 'profile/settings', element: screen(SettingsScreen) },
-      { path: 'profile/verification', element: screen(VerificationCenterScreen) },
       { path: 'profile/consents', element: screen(ConsentsSettingsScreen) },
       { path: 'profile/privacy', element: screen(PrivacyDataScreen) },
       { path: 'profile/documents', element: screen(SignedDocumentsScreen) },
@@ -150,10 +169,6 @@ export const routes: RouteObject[] = [
       { path: 'premium/redeem', element: screen(RedeemScreen) },
       { path: 'venue', element: screen(VenuePanelScreen) },
       { path: 'venue/:placeId', element: screen(VenueDetailScreen) },
-      { path: 'verification/age', element: screen(AgeVerificationScreen) },
-      { path: 'verification/photo', element: screen(PhotoVerification) },
-      { path: 'verification/identity', element: screen(IdentityVerification) },
-      { path: 'verification/sandbox', element: screen(ProviderSandboxScreen) },
       { path: 'dev/kit', element: screen(DesignKitScreen) },
     ],
   },
