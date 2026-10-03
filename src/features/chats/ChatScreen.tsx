@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { SafetySheet, type SafetyAction } from '@/features/matching/components/SafetySheet'
 import { useMatches } from '@/features/matching/hooks/use-matching'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { Button, ButtonLink } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { MessageBubble } from './components/MessageBubble'
@@ -58,7 +59,12 @@ export function ChatScreen() {
           <ChevronLeft aria-hidden />
         </ButtonLink>
         <Link to={`/people/${match.person.id}`} className="flex flex-1 items-center gap-3">
-          <img src={match.person.photos[0]} alt="" className="size-10 rounded-full object-cover" />
+          <PhotoImage
+            src={match.person.photos[0]}
+            sizes="40px"
+            alt=""
+            className="size-10 rounded-full object-cover"
+          />
           <span className="font-semibold">{match.person.name}</span>
         </Link>
         <Button

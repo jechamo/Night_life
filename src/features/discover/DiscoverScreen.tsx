@@ -13,6 +13,7 @@ import { placeSponsored } from '@/features/places/model/sponsored'
 import { useAgeGate } from '@/features/verification/hooks/use-age-gate'
 import { MOCK_CENTER } from '@/mocks/world/places.mock'
 import { useMediaQuery } from '@/shared/lib/use-media-query'
+import { Illustration } from '@/shared/images/Illustration'
 import { BottomSheet } from '@/shared/ui/bottom-sheet'
 import { Button } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -52,7 +53,10 @@ export function DiscoverScreen() {
         </li>
       ))}
       {results.length === 0 && (
-        <p className="py-8 text-center text-muted-foreground">{t('places.noResults')}</p>
+        <li className="py-8 text-center text-muted-foreground">
+          {filters.scope === 'events' && <Illustration name="emptyEvents" />}
+          <p>{t('places.noResults')}</p>
+        </li>
       )}
     </ul>
   )

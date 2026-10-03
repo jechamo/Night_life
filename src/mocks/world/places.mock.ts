@@ -164,6 +164,7 @@ export function createMockPlaces(): Place[] {
       vibes: noVibes,
       event: {
         status: 'unconfirmed',
+        coverStyle: 'techno',
         origin: 'user',
         startsAt: hoursAgo(1),
         endsAt: hoursFromNow(6),
@@ -188,6 +189,7 @@ export function createMockPlaces(): Place[] {
       vibes: { ...noVibes, music: 9, chill: 6 },
       event: {
         status: 'official',
+        coverStyle: 'concert',
         origin: 'venue',
         startsAt: hoursAgo(0.5),
         endsAt: hoursFromNow(2),
@@ -212,6 +214,7 @@ export function createMockPlaces(): Place[] {
       vibes: { fire: 10, music: 8, chill: 3, packed: 11, friendly: 15 },
       event: {
         status: 'confirmed',
+        coverStyle: 'open_air',
         origin: 'import',
         startsAt: hoursAgo(2),
         endsAt: hoursFromNow(3),

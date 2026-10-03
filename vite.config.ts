@@ -45,7 +45,7 @@ export default defineConfig({
       workbox: {
         // PRD 3.1: the service worker caches ONLY the app shell. No runtime caching,
         // so API responses (personal or sensitive data) never reach the SW cache.
-        globPatterns: ['**/*.{js,css,html,woff2,svg,png,webp,avif,ico}'],
+        globPatterns: ['**/*.{js,css,html,woff2,svg,png,ico}'],
         navigateFallback: '/index.html',
         runtimeCaching: [],
         cleanupOutdatedCaches: true,

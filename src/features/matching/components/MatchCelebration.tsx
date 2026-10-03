@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { useSendMessage } from '@/features/chats/hooks/use-chat'
 import { useMyProfile } from '@/features/profile/use-my-profile'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import { Button } from '@/shared/ui/button'
 import { TextAreaField } from '@/shared/ui/text-field'
@@ -32,6 +33,7 @@ function icebreakerText(t: TFunction, ice: Icebreaker): string {
 }
 
 const MatchContext = createContext<{ celebrate: (match: Match) => void } | null>(null)
+const MotionPhotoImage = motion.create(PhotoImage)
 const PARTICLE_COLORS = ['bg-primary', 'bg-secondary', 'bg-accent-event', 'bg-live'] as const
 const PARTICLES = Array.from({ length: 18 }, (_, i) => {
   const angle = (i / 18) * Math.PI * 2
@@ -111,9 +113,10 @@ function MatchOverlay({ match, onClose }: { match: Match; onClose: () => void })
           { src: me?.photos[0], from: -170, to: -42, rotate: -8 },
           { src: match.person.photos[0], from: 170, to: 42, rotate: 8 },
         ].map((photo, i) => (
-          <motion.img
+          <MotionPhotoImage
             key={i}
             src={photo.src}
+            sizes="144px"
             alt=""
             className="absolute size-36 rounded-[1.5rem] border-4 border-background object-cover shadow-[0_0_40px_var(--nl-glow)]"
             initial={{ x: photo.from, rotate: photo.rotate * 3, opacity: 0 }}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { useEntitlement } from '@/shared/entitlements/use-entitlement'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { cn } from '@/shared/lib/cn'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { useLikesYou } from '../hooks/use-matching'
@@ -45,8 +46,9 @@ export function LikesYouScreen() {
             key={person.id}
             className="relative aspect-[3/4] overflow-hidden rounded-theme bg-surface-raised"
           >
-            <img
+            <PhotoImage
               src={person.photos[0]}
+              sizes="(min-width: 640px) 30vw, 45vw"
               alt={locked ? '' : person.name}
               className={cn('size-full object-cover', locked && 'scale-110 blur-xl')}
             />
@@ -60,7 +62,7 @@ export function LikesYouScreen() {
             ) : (
               <Link
                 to={`/people/${person.id}`}
-                className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-3 font-semibold"
+                className="absolute inset-x-0 bottom-0 bg-background/95 p-3 font-semibold"
               >
                 {person.name}, {person.age}
               </Link>

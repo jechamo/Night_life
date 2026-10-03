@@ -6,6 +6,7 @@ import { PaidDmSheet } from '@/features/premium/components/PaidDmSheet'
 import { useVerificationSnapshot } from '@/features/verification/hooks/use-verification'
 import { canPerform } from '@/features/verification/model/verification'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { Button, ButtonLink } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { ScreenHeader } from '@/shared/ui/screen-header'
@@ -51,8 +52,9 @@ export function PersonScreen() {
               key={src}
               className="aspect-[3/4] w-[80%] shrink-0 snap-center overflow-hidden rounded-theme bg-surface-raised"
             >
-              <img
+              <PhotoImage
                 src={src}
+                sizes="(min-width: 640px) 480px, 80vw"
                 alt={t('onboarding.profile.photoAlt', { n: i + 1 })}
                 className="size-full object-cover"
               />

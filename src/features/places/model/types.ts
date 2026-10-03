@@ -24,6 +24,8 @@ export const VIBES = ['fire', 'music', 'chill', 'packed', 'friendly'] as const
 export type Vibe = (typeof VIBES)[number]
 
 export interface PlaceEvent {
+  /** Style of the generic illustrative cover while event photos are unavailable. */
+  coverStyle?: 'concert' | 'techno' | 'open_air'
   status: EventStatus
   origin: EventOrigin
   startsAt: string

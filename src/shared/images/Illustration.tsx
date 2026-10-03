@@ -19,6 +19,7 @@ export function Illustration({ name, className }: { name: IllustrationName; clas
         width={image.width}
         height={image.height}
         alt=""
+        loading="lazy"
         decoding="async"
         className="relative size-full object-contain mix-blend-screen"
       />

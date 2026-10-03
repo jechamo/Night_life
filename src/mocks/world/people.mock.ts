@@ -1,6 +1,6 @@
 import type { Gender, InterestedIn } from '@/features/onboarding/model/onboarding-machine'
 import type { Anthem, MatchingProfile, TrafficLight } from '@/features/matching/model/people'
-import { avatarDataUri } from './avatar-art'
+import { testAvatarFor } from './test-avatar'
 
 export interface MockPerson extends MatchingProfile {
   placeNow: string | null
@@ -340,7 +340,7 @@ export function createMockPeople(): MockPerson[] {
         age,
         gender,
         bio,
-        photos: [0, 1, 2].map((variant) => avatarDataUri(id, variant)),
+        photos: [testAvatarFor(gender, age, i)],
         photoVerified: verified,
         trafficLight: light,
         anthem: anthem === null ? null : (ANTHEMS[anthem] ?? null),
@@ -364,7 +364,7 @@ export function createMockMe(): MatchingProfile {
     age: 30,
     gender: 'man',
     bio: 'Siempre con ganas de descubrir sitios nuevos.',
-    photos: [avatarDataUri('me', 0), avatarDataUri('me', 1)],
+    photos: [testAvatarFor('man', 30, 0)],
     photoVerified: false,
     trafficLight: 'green',
     anthem: ANTHEMS[0] ?? null,

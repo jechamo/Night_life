@@ -2,6 +2,7 @@ import { MessageCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { useMatches } from '@/features/matching/hooks/use-matching'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
@@ -21,6 +22,7 @@ export function ChatsScreen() {
         <ScreenHeader title={t('tabs.chats')} />
         <EmptyState
           icon={MessageCircle}
+          illustration="emptyChats"
           title={t('chats.empty.title')}
           description={t('chats.empty.body')}
         />
@@ -46,8 +48,9 @@ export function ChatsScreen() {
             {fresh.map(({ match }) => (
               <li key={match.id} className="shrink-0">
                 <Link to={`/chats/${match.id}`} className="flex w-20 flex-col items-center gap-1">
-                  <img
+                  <PhotoImage
                     src={match.person.photos[0]}
+                    sizes="64px"
                     alt=""
                     className="size-16 rounded-full border-2 border-primary object-cover shadow-[0_0_16px_var(--nl-glow)]"
                   />
@@ -66,8 +69,9 @@ export function ChatsScreen() {
                 to={`/chats/${match.id}`}
                 className="flex min-h-16 items-center gap-3 px-4 py-3 transition-opacity active:opacity-70"
               >
-                <img
+                <PhotoImage
                   src={match.person.photos[0]}
+                  sizes="48px"
                   alt=""
                   className="size-12 shrink-0 rounded-full object-cover"
                 />

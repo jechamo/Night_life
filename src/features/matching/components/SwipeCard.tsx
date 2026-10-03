@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { usePlatform } from '@/platform'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { cn } from '@/shared/lib/cn'
 import type { Candidate } from '../model/people'
 import { ProfileHighlights } from './ProfileHighlights'
@@ -68,8 +69,9 @@ export function SwipeCard({
       onDrag={onDrag}
       onDragEnd={onDragEnd}
     >
-      <img
+      <PhotoImage
         src={profile.photos[photo]}
+        sizes="(min-width: 416px) 384px, calc(100vw - 32px)"
         alt=""
         draggable={false}
         className="pointer-events-none absolute inset-0 size-full object-cover"
@@ -109,7 +111,7 @@ export function SwipeCard({
       >
         {t('matching.stampPass')}
       </motion.span>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/85 to-transparent p-5 pt-24">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background from-20% via-background/95 via-65% to-transparent p-5 pt-24">
         <div className="flex items-end justify-between gap-3">
           <h2 className="text-3xl font-semibold">
             {profile.name}, <span className="font-normal">{profile.age}</span>

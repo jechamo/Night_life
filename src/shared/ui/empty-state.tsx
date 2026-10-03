@@ -1,6 +1,8 @@
 import type { LucideIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import type { ReactNode } from 'react'
+import { Illustration } from '@/shared/images/Illustration'
+import type { IllustrationName } from '@/shared/images/catalog'
 import { riseIn, staggerChildren } from '@/shared/motion/presets'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 
@@ -11,12 +13,14 @@ import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
  */
 export function EmptyState({
   icon: Icon,
+  illustration,
   title,
   description,
   footnote,
   action,
 }: {
   icon: LucideIcon
+  illustration?: IllustrationName
   title: string
   description: string
   footnote?: string
@@ -31,16 +35,26 @@ export function EmptyState({
       animate="visible"
     >
       <motion.div variants={riseIn} transition={tokens.spring.gentle} className="relative mb-6">
-        <span
-          className="absolute inset-0 rounded-full bg-primary opacity-30 blur-2xl"
-          aria-hidden
-        />
+        {!illustration && (
+          <span
+            className="absolute inset-0 rounded-full bg-primary opacity-30 blur-2xl"
+            aria-hidden
+          />
+        )}
         <motion.span
-          className="glass relative flex size-20 items-center justify-center rounded-full text-primary"
+          className={
+            illustration
+              ? 'relative block'
+              : 'glass relative flex size-20 items-center justify-center rounded-full text-primary'
+          }
           animate={tokens.reduced ? undefined : { y: [0, -6, 0] }}
           transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <Icon className="size-9" aria-hidden />
+          {illustration ? (
+            <Illustration name={illustration} />
+          ) : (
+            <Icon className="size-9" aria-hidden />
+          )}
         </motion.span>
       </motion.div>
       <motion.h2

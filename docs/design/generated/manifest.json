@@ -1,0 +1,934 @@
+[
+  {
+    "name": "theme-neon-noir",
+    "folder": "themes",
+    "width": 1024,
+    "height": 1536,
+    "widths": [640, 1080],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1024x1536 PNG image, portrait 2:3 composition. Aerial night view of a dense Mediterranean city from a high tilted drone angle, like a living 3D map; a few squares glow with clusters of small warm light points wrapped in soft halos, as if showing where people are tonight. Palette: deep black (#07060D), soft violet (#A78BFA) and cyan (#22D3EE) glow, subtle glassy reflections. Mood: sleek, calm, premium. The lower 40% fades into deep black, empty, for text.",
+    "source": "docs/design/generated/theme-neon-noir.png",
+    "outputs": [
+      "src/assets/images/themes/theme-neon-noir-640.webp",
+      "src/assets/images/themes/theme-neon-noir-1080.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1024,
+    "generatedHeight": 1536,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "theme-cyberpunk",
+    "folder": "themes",
+    "width": 1024,
+    "height": 1536,
+    "widths": [640, 1080],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1024x1536 PNG image, portrait 2:3 composition. Narrow city alley at night in the rain, reflections on wet asphalt, light steam, distant silhouettes from behind walking towards a club entrance, subtle digital glitch artifacts and scanlines only at the edges, no readable signs. Palette: near-black (#0A0A12), hot magenta (#FF2BD6), acid yellow (#E6FF00) and electric cyan (#00F0FF). Mood: energetic, young, techno. The lower 40% stays dark for text.",
+    "source": "docs/design/generated/theme-cyberpunk.png",
+    "outputs": [
+      "src/assets/images/themes/theme-cyberpunk-640.webp",
+      "src/assets/images/themes/theme-cyberpunk-1080.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1024,
+    "generatedHeight": 1536,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "theme-velvet",
+    "folder": "themes",
+    "width": 1024,
+    "height": 1536,
+    "widths": [640, 1080],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1024x1536 PNG image, portrait 2:3 composition. Intimate cocktail lounge detail at night: a deep burgundy velvet armchair, brass and gold details, a crystal coupe with a cocktail on a marble table, candlelight and soft bokeh. Palette: warm black (#0E0809), burgundy (#9F2B45), gold (#D4AF37), cream highlights. Mood: elegant, mature, unhurried, sophisticated. The lower 40% stays dark for text.",
+    "source": "docs/design/generated/theme-velvet.png",
+    "outputs": [
+      "src/assets/images/themes/theme-velvet-640.webp",
+      "src/assets/images/themes/theme-velvet-1080.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1024,
+    "generatedHeight": 1536,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "theme-sunset",
+    "folder": "themes",
+    "width": 1024,
+    "height": 1536,
+    "widths": [640, 1080],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1024x1536 PNG image, portrait 2:3 composition. Rooftop terrace over a Mediterranean seaside town at the very end of sunset, string lights, plants, two drinks on a ledge, the sky fading from orange and pink into deep night blue over the sea. Palette: night blue (#0B1026), orange (#FF8A5B), pink (#FF6FA5), warm highlights. Mood: summer, relaxed, warm. The lower 40% stays dark for text.",
+    "source": "docs/design/generated/theme-sunset.png",
+    "outputs": [
+      "src/assets/images/themes/theme-sunset-640.webp",
+      "src/assets/images/themes/theme-sunset-1080.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1024,
+    "generatedHeight": 1536,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "theme-mono",
+    "folder": "themes",
+    "width": 1024,
+    "height": 1536,
+    "widths": [640, 1080],
+    "neutral": true,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1024x1536 PNG image, portrait 2:3 composition. High-contrast black-and-white night street photography: a long empty street with a single pool of light under a street lamp, crisp shadows, strong graphic composition. Monochrome, no colour at all. Mood: minimal, clear, calm. The lower 40% stays dark for text.",
+    "source": "docs/design/generated/theme-mono.png",
+    "outputs": [
+      "src/assets/images/themes/theme-mono-640.webp",
+      "src/assets/images/themes/theme-mono-1080.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1024,
+    "generatedHeight": 1536,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "map-mock-portrait",
+    "folder": "maps",
+    "width": 1024,
+    "height": 1536,
+    "widths": [640, 1080],
+    "neutral": true,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1024x1536 PNG image, portrait 2:3 composition. Tilted top-down 3D night map of a fictional Mediterranean city district: dark building blocks with faint light-grey edges, thin light street lines, a plaza and a seafront promenade, very low contrast overall so UI pins placed on top stand out. Monochrome, neutral greys on black. No labels, no text, no pins, no people.",
+    "source": "docs/design/generated/map-mock-portrait.png",
+    "outputs": [
+      "src/assets/images/maps/map-mock-portrait-640.webp",
+      "src/assets/images/maps/map-mock-portrait-1080.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1024,
+    "generatedHeight": 1536,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "map-mock-landscape",
+    "folder": "maps",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080],
+    "neutral": true,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Tilted top-down 3D night map of a fictional Mediterranean city district: dark building blocks with faint light-grey edges, thin light street lines, a plaza and a seafront promenade, very low contrast overall so UI pins placed on top stand out. Monochrome, neutral greys on black. No labels, no text, no pins, no people.",
+    "source": "docs/design/generated/map-mock-landscape.png",
+    "outputs": [
+      "src/assets/images/maps/map-mock-landscape-640.webp",
+      "src/assets/images/maps/map-mock-landscape-1080.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "illu-empty-seen-all",
+    "folder": "illustrations",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": true,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Soft 3D clay illustration of a few floating profile cards fanned out and gently fading away, with a tiny map pin beside them. Pearl-white and light-grey matte materials only, monochrome, no colour, rounded friendly shapes, minimal composition, centred with generous empty space, on a pure black background (#000000). Clearly an illustration, not a photo. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/illu-empty-seen-all.png",
+    "outputs": [
+      "src/assets/images/illustrations/illu-empty-seen-all-320.webp",
+      "src/assets/images/illustrations/illu-empty-seen-all-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "illu-empty-chats",
+    "folder": "illustrations",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": true,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Soft 3D clay illustration of two speech bubbles floating apart with a small spark between them, waiting to connect. Pearl-white and light-grey matte materials only, monochrome, no colour, rounded friendly shapes, minimal composition, centred with generous empty space, on a pure black background (#000000). Clearly an illustration, not a photo. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/illu-empty-chats.png",
+    "outputs": [
+      "src/assets/images/illustrations/illu-empty-chats-320.webp",
+      "src/assets/images/illustrations/illu-empty-chats-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "illu-empty-events",
+    "folder": "illustrations",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": true,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Soft 3D clay illustration of a calendar page curling up into a little party popper with a few confetti pieces. Pearl-white and light-grey matte materials only, monochrome, no colour, rounded friendly shapes, minimal composition, centred with generous empty space, on a pure black background (#000000). Clearly an illustration, not a photo. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/illu-empty-events.png",
+    "outputs": [
+      "src/assets/images/illustrations/illu-empty-events-320.webp",
+      "src/assets/images/illustrations/illu-empty-events-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-nightclub",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a large nightclub at night, dance floor seen from the DJ booth, haze, colourful light beams. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-nightclub.png",
+    "outputs": [
+      "src/assets/images/venues/venue-nightclub-640.webp",
+      "src/assets/images/venues/venue-nightclub-1080.webp",
+      "src/assets/images/venues/venue-nightclub-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-club",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a intimate techno club at night, raw concrete walls, low ceiling, strobe accents, dense haze. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-club.png",
+    "outputs": [
+      "src/assets/images/venues/venue-club-640.webp",
+      "src/assets/images/venues/venue-club-1080.webp",
+      "src/assets/images/venues/venue-club-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-pub",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a cozy pub at night, dark wooden bar, beer taps, warm amber lights, leather stools. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-pub.png",
+    "outputs": [
+      "src/assets/images/venues/venue-pub-640.webp",
+      "src/assets/images/venues/venue-pub-1080.webp",
+      "src/assets/images/venues/venue-pub-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-bar",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a modern cocktail bar at night, backlit bottle shelves, amber glow, a crafted cocktail in the foreground. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-bar.png",
+    "outputs": [
+      "src/assets/images/venues/venue-bar-640.webp",
+      "src/assets/images/venues/venue-bar-1080.webp",
+      "src/assets/images/venues/venue-bar-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-dive-bar",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a small underground bar at night, brick walls, a red accent light, vinyl records, slightly gritty. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-dive-bar.png",
+    "outputs": [
+      "src/assets/images/venues/venue-dive-bar-640.webp",
+      "src/assets/images/venues/venue-dive-bar-1080.webp",
+      "src/assets/images/venues/venue-dive-bar-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-lounge",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a elegant lounge at night, velvet sofas, gold accents, low warm light, candles on small tables. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-lounge.png",
+    "outputs": [
+      "src/assets/images/venues/venue-lounge-640.webp",
+      "src/assets/images/venues/venue-lounge-1080.webp",
+      "src/assets/images/venues/venue-lounge-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-terrace",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a rooftop terrace at night, string lights, plants, city skyline bokeh. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-terrace.png",
+    "outputs": [
+      "src/assets/images/venues/venue-terrace-640.webp",
+      "src/assets/images/venues/venue-terrace-1080.webp",
+      "src/assets/images/venues/venue-terrace-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "venue-beach-club",
+    "folder": "venues",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Interior of a Mediterranean beach club at night, daybeds, lanterns, turquoise pool lights, dark sea and horizon. Natural, realistic venue lighting. Empty, or with only out-of-focus silhouettes seen from behind far in the background. Leave the bottom third darker for text overlay.",
+    "source": "docs/design/generated/venue-beach-club.png",
+    "outputs": [
+      "src/assets/images/venues/venue-beach-club-640.webp",
+      "src/assets/images/venues/venue-beach-club-1080.webp",
+      "src/assets/images/venues/venue-beach-club-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "event-concert",
+    "folder": "events",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Live concert seen from the crowd, stage lights cutting through haze, raised hands as dark silhouettes in the foreground. No faces.",
+    "source": "docs/design/generated/event-concert.png",
+    "outputs": [
+      "src/assets/images/events/event-concert-640.webp",
+      "src/assets/images/events/event-concert-1080.webp",
+      "src/assets/images/events/event-concert-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "event-techno",
+    "folder": "events",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Warehouse techno party, industrial space, haze, a single wide light beam, silhouettes from behind far away.",
+    "source": "docs/design/generated/event-techno.png",
+    "outputs": [
+      "src/assets/images/events/event-techno-640.webp",
+      "src/assets/images/events/event-techno-1080.webp",
+      "src/assets/images/events/event-techno-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "event-open-air",
+    "folder": "events",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Open-air summer night party in a plaza, festoon lights, paper lanterns, warm glow, blurry silhouettes from behind.",
+    "source": "docs/design/generated/event-open-air.png",
+    "outputs": [
+      "src/assets/images/events/event-open-air-640.webp",
+      "src/assets/images/events/event-open-air-1080.webp",
+      "src/assets/images/events/event-open-air-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-01",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman in her early 20s with curly dark hair, friendly relaxed expression, fully clothed in a denim jacket, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-01.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-01-320.webp",
+      "src/assets/images/avatars/avatar-01-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-02",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man in his early 20s with a buzz cut, friendly relaxed expression, fully clothed in an oversized hoodie, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-02.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-02-320.webp",
+      "src/assets/images/avatars/avatar-02-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-03",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a non-binary person in their 20s with dyed lilac hair, friendly relaxed expression, fully clothed in a mesh top under a black jacket, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-03.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-03-320.webp",
+      "src/assets/images/avatars/avatar-03-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-04",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman in her late 20s with a sleek black bob, friendly relaxed expression, fully clothed in a satin shirt, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-04.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-04-320.webp",
+      "src/assets/images/avatars/avatar-04-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-05",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man in his late 20s with a short beard, friendly relaxed expression, fully clothed in a linen shirt, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-05.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-05-320.webp",
+      "src/assets/images/avatars/avatar-05-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-06",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman around 30 with braided hair, friendly relaxed expression, fully clothed in a leather jacket, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-06.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-06-320.webp",
+      "src/assets/images/avatars/avatar-06-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-07",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man around 30 with glasses, friendly relaxed expression, fully clothed in a black t-shirt, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-07.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-07-320.webp",
+      "src/assets/images/avatars/avatar-07-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-08",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman in her early 30s with short red hair, friendly relaxed expression, fully clothed in a turtleneck, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-08.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-08-320.webp",
+      "src/assets/images/avatars/avatar-08-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-09",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man in his early 30s with long wavy hair tied back, friendly relaxed expression, fully clothed in a bomber jacket, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-09.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-09-320.webp",
+      "src/assets/images/avatars/avatar-09-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-10",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman in her mid 30s with a wavy blond lob, friendly relaxed expression, fully clothed in a blazer, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-10.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-10-320.webp",
+      "src/assets/images/avatars/avatar-10-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-11",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man in his mid 30s with a shaved head, friendly relaxed expression, fully clothed in a knit polo, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-11.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-11-320.webp",
+      "src/assets/images/avatars/avatar-11-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-12",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a non-binary person in their 30s with a mullet, friendly relaxed expression, fully clothed in a plain vintage t-shirt, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-12.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-12-320.webp",
+      "src/assets/images/avatars/avatar-12-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-13",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman around 40 with silver-streaked hair, friendly relaxed expression, fully clothed in a silk scarf and dark top, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-13.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-13-320.webp",
+      "src/assets/images/avatars/avatar-13-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-14",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man around 40 with salt-and-pepper stubble, friendly relaxed expression, fully clothed in an open-collar shirt, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-14.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-14-320.webp",
+      "src/assets/images/avatars/avatar-14-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-15",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman in her early 40s with an afro, friendly relaxed expression, fully clothed in gold hoop earrings and a black dress, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-15.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-15-320.webp",
+      "src/assets/images/avatars/avatar-15-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-16",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man in his early 40s with curly hair, friendly relaxed expression, fully clothed in a cardigan, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-16.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-16-320.webp",
+      "src/assets/images/avatars/avatar-16-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-17",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman in her mid 40s with a pixie cut, friendly relaxed expression, fully clothed in a structured jacket, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-17.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-17-320.webp",
+      "src/assets/images/avatars/avatar-17-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-18",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man in his mid 40s with a neat beard and glasses, friendly relaxed expression, fully clothed in a dark suit jacket, no tie, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-18.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-18-320.webp",
+      "src/assets/images/avatars/avatar-18-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-19",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman around 50 with long grey hair, friendly relaxed expression, fully clothed in a velvet top, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-19.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-19-320.webp",
+      "src/assets/images/avatars/avatar-19-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-20",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man around 50 with a grey beard, friendly relaxed expression, fully clothed in a navy overshirt, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-20.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-20-320.webp",
+      "src/assets/images/avatars/avatar-20-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-21",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman in her mid 50s with short silver hair, friendly relaxed expression, fully clothed in statement earrings and a black blouse, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-21.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-21-320.webp",
+      "src/assets/images/avatars/avatar-21-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-22",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man in his mid 50s, bald, with a warm smile, friendly relaxed expression, fully clothed in a knit sweater, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-22.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-22-320.webp",
+      "src/assets/images/avatars/avatar-22-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-23",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a woman around 60 with an elegant updo, friendly relaxed expression, fully clothed in a burgundy jacket, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-23.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-23-320.webp",
+      "src/assets/images/avatars/avatar-23-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "avatar-24",
+    "folder": "avatars",
+    "width": 1024,
+    "height": 1024,
+    "widths": [320, 640],
+    "neutral": false,
+    "prompt": "Create one 1024x1024 PNG image, square composition. Use case: stylized-concept. A visibly stylized 3D clay CARTOON character bust, shoulders-up illustrated avatar of a man around 60 with white hair, friendly relaxed expression, fully clothed in a linen blazer, facing slightly to the side, soft studio light, plain mid-grey background, natural colours. Rounded toy-like sculpted shapes, slightly oversized head and expressive cartoon eyes, simplified chunky sculpted hair, smooth matte clay skin with absolutely no pores, simplified fabric without photographic detail. It must unmistakably look like an animated illustration, never a realistic human or a photograph. One fictional adult character only. No text, letters, logos, brands or watermarks.",
+    "source": "docs/design/generated/avatar-24.png",
+    "outputs": [
+      "src/assets/images/avatars/avatar-24-320.webp",
+      "src/assets/images/avatars/avatar-24-640.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1254,
+    "generatedHeight": 1254,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  },
+  {
+    "name": "og-share",
+    "folder": "brand",
+    "width": 1536,
+    "height": 1024,
+    "widths": [640, 1080, 1600],
+    "neutral": false,
+    "prompt": "Cinematic premium nightlife photography quality, shot at night, deep shadows, subtle film grain, shallow depth of field, elegant and restrained, never cheesy. Generic Spanish / Mediterranean setting, no recognizable landmarks or real venues. No text, letters, readable signs, logos, watermarks or brand names anywhere. No recognizable people and no faces: people may only appear as out-of-focus silhouettes seen from behind. Create one 1536x1024 PNG image, landscape 3:2 composition. Wide cinematic aerial night view of a Mediterranean city with a few glowing \"live\" hotspots, a large calm dark area on the left third for the app name (added later in code). Palette: deep black, soft violet (#A78BFA) and cyan (#22D3EE) — the brand default.",
+    "source": "docs/design/generated/og-share.png",
+    "outputs": [
+      "src/assets/images/brand/og-share-640.webp",
+      "src/assets/images/brand/og-share-1080.webp",
+      "src/assets/images/brand/og-share-1600.webp"
+    ],
+    "available": true,
+    "generatedWidth": 1536,
+    "generatedHeight": 1024,
+    "mode": "built-in image_gen",
+    "quality": 80,
+    "metadata": "stripped"
+  }
+]

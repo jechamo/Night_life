@@ -17,7 +17,7 @@ type Slide = (typeof SLIDES)[number]
 const SWIPE_PX = 60
 
 function SlideArt({ slide }: { slide: Slide }) {
-  if (slide === 'live') return <ThemeSignature />
+  if (slide === 'live') return <ThemeSignature priority />
   return <TintedScene image={SCENES[slide]} priority />
 }
 

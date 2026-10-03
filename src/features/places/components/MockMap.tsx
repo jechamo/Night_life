@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button'
 import { project, WORLD_SIZE } from '../model/projection'
 import type { LatLng, Place } from '../model/types'
 import { HeatmapLayer } from './HeatmapLayer'
-import { MapStreets } from './MapStreets'
+import { MockMapArtwork } from './MockMapArtwork'
 import { MAP_TILT_DEG, PlacePin } from './PlacePin'
 
 const MIN_SCALE = 0.6
@@ -111,7 +111,7 @@ export const MockMap = forwardRef<
         dragMomentum
         dragConstraints={{ left: -PAN_LIMIT, right: PAN_LIMIT, top: -PAN_LIMIT, bottom: PAN_LIMIT }}
       >
-        <MapStreets />
+        <MockMapArtwork />
         <HeatmapLayer places={places} center={center} />
         {places.map((place) => {
           const p = project(place.location, center)

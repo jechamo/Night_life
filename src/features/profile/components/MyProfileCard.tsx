@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { AnthemChip } from '@/features/matching/components/AnthemChip'
 import type { TrafficLight } from '@/features/matching/model/people'
 import { useVerificationSnapshot } from '@/features/verification/hooks/use-verification'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { cn } from '@/shared/lib/cn'
 import { Badge } from '@/shared/ui/badge'
 import { GlassCard } from '@/shared/ui/card'
@@ -28,8 +29,9 @@ export function MyProfileCard() {
   return (
     <div className="px-safe mt-4 space-y-3">
       <GlassCard className="flex items-center gap-4">
-        <img
+        <PhotoImage
           src={me.photos[0]}
+          sizes="80px"
           alt=""
           className="size-20 rounded-full border-2 border-primary object-cover"
         />

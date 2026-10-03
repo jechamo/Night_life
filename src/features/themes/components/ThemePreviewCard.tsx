@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
+import { THEME_SIGNATURES } from '@/shared/images/catalog'
 import { cn } from '@/shared/lib/cn'
 import { PRESS_SCALE, stamp } from '@/shared/motion/presets'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
@@ -30,6 +31,7 @@ export function ThemePreviewCard({
 }) {
   const { t } = useTranslation()
   const tokens = useMotionTokens()
+  const image = THEME_SIGNATURES[themeId]
   return (
     <motion.button
       type="button"
@@ -42,10 +44,20 @@ export function ThemePreviewCard({
         selected ? 'border-primary shadow-[0_0_28px_var(--nl-glow)]' : 'border-border',
       )}
     >
-      <span
-        aria-hidden
-        className="absolute -top-10 -right-10 -z-10 size-32 rounded-full bg-primary opacity-25 blur-2xl"
-      />
+      <span aria-hidden className="relative -mx-4 -mt-4 mb-4 block h-24 overflow-hidden">
+        <img
+          src={image.src}
+          srcSet={image.srcSet}
+          sizes="(min-width: 640px) 240px, 50vw"
+          width={image.width}
+          height={image.height}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="size-full object-cover object-[center_30%]"
+        />
+        <span className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+      </span>
       <span className="flex items-start justify-between gap-2">
         <span className="font-display text-xl font-semibold">{t(`themes.${themeId}.name`)}</span>
         <AnimatePresence>
