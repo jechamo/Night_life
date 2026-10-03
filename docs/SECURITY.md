@@ -173,3 +173,12 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Generación/purga y acceso real con OTP/MFA: pendientes de sesión del propietario; no se simula su MFA.
 - Los resultados de proveedor en test permanecerán separados de live según PRD 11.3.
 - `npm audit`: 0 vulnerabilidades; check aislado de bloque 5: 256/256 tests, TypeScript, ESLint y formato correctos.
+
+### Evidencias del despliegue del bloque 5 — 2026-10-03
+
+- Vercel MCP confirma READY y el SHA ee5feab84affaab118c4e03475b374a5dfc2f211. Publicación mediante CLI autorizada sobre una copia exacta del commit, sin trabajo pendiente del bloque 6.
+- Revisión de red del código y cabeceras públicas: connect-src limitado al propio origen y al proyecto Supabase; recursos y fuentes propios, sin analítica externa añadida. Esto no sustituye el recorrido móvil pendiente sobre el bundle actualizado.
+- Supabase registra check_signup/OTP con estado 200 en la prueba local conectada al backend real; verificación final y generación/purga aún pendientes. No se han consultado ni publicado OTP ni secretos MFA.
+- El servicio worker publicado responde application/javascript y Cache-Control public, must-revalidate, max-age=0. La pestaña antigua sigue en caché y no se presenta como prueba del nuevo código.
+- Build remoto: 0 vulnerabilidades; avisos de engines Node >=22 y glob obsoleto registrados, sin nuevas dependencias en esta corrección.
+- No se aplicaron migraciones ni se desplegaron Edge Functions del bloque 6; no se ampliaron planes ni activaron servicios de pago.

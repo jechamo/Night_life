@@ -3,21 +3,20 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                              | Estado                                          |
-| --------------------------------------------------- | ----------------------------------------------- |
-| 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02)    |
-| 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                     |
-| 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                     |
-| 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                   |
-| 5 – Backend base, legal y modo pruebas              | 🛠️ Acceso corregido; prueba operativa pendiente |
-| 6 – Verificaciones en desarrollo y pruebas          | ⏳                                              |
-| 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                              |
-| 8 – Ligar, match en tiempo real y chat              | ⏳                                              |
-| 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                              |
-| 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                              |
-| 11 – Apps nativas y pagos en tiendas                | ⏳ Añadido al plan (docs/MONETIZATION.md)       |
-
-| 12 – Contratación, costes, activación live y lanzamiento | ⏳ |
+| Bloque                                                   | Estado                                          |
+| -------------------------------------------------------- | ----------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02)    |
+| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                     |
+| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                     |
+| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                   |
+| 5 – Backend base, legal y modo pruebas                   | 🛠️ Acceso corregido; prueba operativa pendiente |
+| 6 – Verificaciones en desarrollo y pruebas               | ⏳                                              |
+| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                              |
+| 8 – Ligar, match en tiempo real y chat                   | ⏳                                              |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                              |
+| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                              |
+| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)       |
+| 12 – Contratación, costes, activación live y lanzamiento | ⏳                                              |
 
 ---
 
@@ -408,3 +407,16 @@ Ver `docs/SECURITY.md` → Bloque 5.
 - Con sesión y MFA reales: Generar ciudad de prueba y Purgar; comprobar aislamiento y preservación de datos reales.
 - No se marca este cierre operativo como terminado hasta tener evidencia de estas pruebas.
 - El trabajo local previo del bloque 6 se conserva; no se continúa sin OK al cierre del bloque 5.
+
+### Despliegue validado — 2026-10-03
+
+- Publicado el commit ee5feab84affaab118c4e03475b374a5dfc2f211 en [Nightlife Connect](https://nightlife-connect-beige.vercel.app).
+- Vercel MCP confirma READY, destino production, deployment dpl_HXrgnz8ibW3YwdcYpU2S3xbX18jq y el SHA publicado.
+- Excepción autorizada por el propietario: CLI oficial 62.2.0, porque MCP devuelve «Tool deploy_to_vercel not found». Cuenta/proyecto verificados; plan Hobby y máquina básica existentes, sin contratación.
+- El proyecto no tiene repositorio Git enlazado: el push no activa un despliegue automático. Se publicó un archivo extraído de ese SHA, sin cambios locales del bloque 6 ni documentos sin seguimiento.
+- Build local sin avisos. Build remoto correcto, con avisos previos sobre engines Node >=22 y glob@11.1.0 obsoleto; npm audit remoto: 0 vulnerabilidades.
+- El alias sirve el bundle nuevo y el service worker actualizado. La pestaña de producción usada para probar conserva un bundle anterior: queda pendiente comprobar la actualización de esa caché antes de afirmar que el flujo móvil está validado.
+- El servidor local 127.0.0.1:5173 sirve ahora una copia aislada del mismo commit conectada a Supabase real; la prueba mock anterior no consultaba la cuenta del propietario. No usarla como evidencia de un alta real pendiente.
+- A las 14:18–14:22 UTC los logs registran check_signup (2 respuestas 200) y OTP (1 respuesta 200) de la prueba local real. Aún no hay verificación OTP en esa ventana; no se publican códigos.
+- El trabajo previo del bloque 6 se restauró y mantiene un stash recuperable. Sigue pendiente del OK explícito tras el cierre operativo del bloque 5.
+- Pendientes: OTP real terminado, móvil/logout/redirecciones sobre la versión nueva y Generar/Purgar con MFA del propietario. El bloque 5 sigue abierto.
