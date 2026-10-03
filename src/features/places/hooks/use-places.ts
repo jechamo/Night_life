@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
+import { useConsents } from '@/features/consents/hooks/use-consents'
+import { usePlatform } from '@/platform'
 import { useServices } from '@/shared/services/ServicesProvider'
-import type { Place, Vibe } from '../model/types'
+import type { LatLng, Place, Vibe } from '../model/types'
 import type { CreateEventInput, EventReportReason, MapAccess } from '../services/places-service'
 
 export const placesKey = ['places'] as const
@@ -28,6 +30,27 @@ export function useMapAccess(): MapAccess | undefined {
       .then(setAccess, () => setAccess({ granted: false, reason: 'unavailable' }))
   }, [places])
   return access
+}
+
+/**
+ * Foreground position for the "you are here" dot, only with the precise-location consent
+ * (PRD 6.1). The coordinates stay on the device; without consent the chosen city is used.
+ */
+export function useMyPosition() {
+  const { geolocation } = usePlatform()
+  const { data: consents } = useConsents()
+  const allowed = consents?.choices.precise_location === true
+  const { data: position = null } = useQuery({
+    queryKey: ['device', 'position'],
+    enabled: allowed,
+    staleTime: 60_000,
+    retry: false,
+    queryFn: async (): Promise<LatLng | null> => {
+      const result = await geolocation.getCurrentPosition({ timeoutMs: 8000 })
+      return result.ok ? { lat: result.value.latitude, lng: result.value.longitude } : null
+    },
+  })
+  return { position: allowed ? position : null, city: consents?.city ?? null }
 }
 
 export function usePlace(id: string | null): Place | undefined {

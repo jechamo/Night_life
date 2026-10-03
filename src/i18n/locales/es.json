@@ -542,6 +542,8 @@
     "createEvent": "Crear evento",
     "nearby": "Cerca de ti",
     "noResults": "No hay nada con estos filtros. Prueba a quitar alguno.",
+    "emptyCity": "Todavía no hay locales en {{city}}.",
+    "youAreHere": "Estás aquí",
     "peopleCount_one": "{{count}} persona",
     "peopleCount_other": "{{count}} personas",
     "fewPeople": "Menos de 5 personas",

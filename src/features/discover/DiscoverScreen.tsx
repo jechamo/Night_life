@@ -7,8 +7,8 @@ import { FiltersSheet } from '@/features/places/components/FiltersSheet'
 import { MockMap, type MockMapHandle } from '@/features/places/components/MockMap'
 import { PlaceCard } from '@/features/places/components/PlaceCard'
 import { PlaceDetails } from '@/features/places/components/PlaceDetails'
-import { useMapAccess, usePlaces } from '@/features/places/hooks/use-places'
-import { cityCenter, DEFAULT_CITY, isCity } from '@/features/places/model/cities'
+import { useMapAccess, useMyPosition, usePlaces } from '@/features/places/hooks/use-places'
+import { CITIES, cityCenter, DEFAULT_CITY, isCity } from '@/features/places/model/cities'
 import { applyFilters, DEFAULT_FILTERS, type PlaceFilters } from '@/features/places/model/filters'
 import { distanceMeters } from '@/features/places/model/geo'
 import { placeSponsored } from '@/features/places/model/sponsored'
@@ -37,22 +37,40 @@ export function DiscoverScreen() {
   const [params, setParams] = useSearchParams()
   const selectedId = params.get('place')
   const cityParam = params.get('city')
-  const city = isCity(cityParam) ? cityParam : DEFAULT_CITY
+  const { position: me, city: consentCity } = useMyPosition()
+  const nearCity = me
+    ? CITIES.find((c) => distanceMeters(me, c.center) <= CITY_RADIUS_M)
+    : undefined
+  const city = isCity(cityParam)
+    ? cityParam
+    : (nearCity?.name ?? (isCity(consentCity) ? consentCity : DEFAULT_CITY))
   const [filters, setFilters] = useState<PlaceFilters>(DEFAULT_FILTERS)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [view, setView] = useState<'map' | 'list'>('map')
   const [mapFailed, setMapFailed] = useState(false)
   const mapRef = useRef<MockMapHandle>(null)
+  const access = useMapAccess()
+  const realMap = access?.granted === true && !mapFailed
 
   // The real catalogue is per city; the illustrated test world lives around one district.
   const catalogue = places?.some((p) => p.city !== undefined) ?? false
-  const origin = (catalogue && cityCenter(city)) || MOCK_CENTER
-  const results = useMemo(() => {
-    const inCity = catalogue
-      ? (places ?? []).filter((p) => distanceMeters(origin, p.location) <= CITY_RADIUS_M)
-      : (places ?? [])
-    return placeSponsored(applyFilters(inCity, filters, origin))
-  }, [places, filters, origin, catalogue])
+  const real = catalogue || realMap
+  const origin = !real
+    ? MOCK_CENTER
+    : me && nearCity?.name === city
+      ? me
+      : (cityCenter(city) ?? MOCK_CENTER)
+  const inCity = useMemo(
+    () =>
+      real
+        ? (places ?? []).filter((p) => distanceMeters(origin, p.location) <= CITY_RADIUS_M)
+        : (places ?? []),
+    [places, origin, real],
+  )
+  const results = useMemo(
+    () => placeSponsored(applyFilters(inCity, filters, origin)),
+    [inCity, filters, origin],
+  )
   const selected = places?.find((p) => p.id === selectedId) ?? null
 
   const updateParams = (patch: Record<string, string | null>) => {
@@ -78,13 +96,16 @@ export function DiscoverScreen() {
       {results.length === 0 && (
         <li className="py-8 text-center text-muted-foreground">
           {filters.scope === 'events' && <Illustration name="emptyEvents" />}
-          <p>{t('places.noResults')}</p>
+          <p>
+            {real && !isPending && inCity.length === 0
+              ? t('places.emptyCity', { city })
+              : t('places.noResults')}
+          </p>
         </li>
       )}
     </ul>
   )
 
-  const access = useMapAccess()
   const mapProps = {
     ref: mapRef,
     places: results,
@@ -98,7 +119,12 @@ export function DiscoverScreen() {
       <Skeleton className="absolute inset-0 rounded-none" />
     ) : access.granted && !mapFailed ? (
       <Suspense fallback={<Skeleton className="absolute inset-0 rounded-none" />}>
-        <MapboxMap {...mapProps} token={access.token} onUnavailable={() => setMapFailed(true)} />
+        <MapboxMap
+          {...mapProps}
+          me={me}
+          token={access.token}
+          onUnavailable={() => setMapFailed(true)}
+        />
       </Suspense>
     ) : (
       <MockMap {...mapProps} />
@@ -135,7 +161,7 @@ export function DiscoverScreen() {
           onOpenFilters={() => setFiltersOpen(true)}
           view={view}
           onToggleView={() => setView((v) => (v === 'map' ? 'list' : 'map'))}
-          city={catalogue ? city : null}
+          city={real ? city : null}
           onCityChange={(next) => updateParams({ city: next, place: null })}
         />
         <Button

@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { LocateFixed, Minus, Plus } from 'lucide-react'
 import { useMotionValue } from 'motion/react'
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { useTranslation } from 'react-i18next'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
@@ -28,6 +28,19 @@ function heatData(places: readonly Place[]): FeatureCollection<Point> {
       geometry: { type: 'Point', coordinates: [p.location.lng, p.location.lat] },
     })),
   }
+}
+
+function MeDot({ label }: { label: string }) {
+  return (
+    <span
+      role="img"
+      aria-label={label}
+      className="relative flex size-6 items-center justify-center"
+    >
+      <span className="nl-live-ring absolute inset-0 rounded-full bg-primary/60" />
+      <span className="relative size-4 rounded-full border-2 border-foreground bg-primary shadow-[0_0_18px_var(--color-primary)]" />
+    </span>
+  )
 }
 
 function applyTheme(map: mapboxgl.Map, theme: ThemeDefinition) {
@@ -66,10 +79,12 @@ export const MapboxMap = forwardRef<
     selectedId: string | null
     onSelect: (id: string | null) => void
     focusOffsetY?: number
+    /** The user's own position (device only, with consent). */
+    me?: LatLng | null
     onUnavailable: () => void
   }
 >(function MapboxMap(
-  { token, places, center, selectedId, onSelect, focusOffsetY = 0, onUnavailable },
+  { token, places, center, selectedId, onSelect, focusOffsetY = 0, me = null, onUnavailable },
   ref,
 ) {
   const { t } = useTranslation()
@@ -79,9 +94,12 @@ export const MapboxMap = forwardRef<
   const mapRef = useRef<mapboxgl.Map | null>(null)
   const loadedRef = useRef(false)
   const markersRef = useRef(new Map<string, { marker: mapboxgl.Marker; root: Root }>())
+  const meRef = useRef<{ marker: mapboxgl.Marker; root: Root } | null>(null)
   const inverseScale = useMotionValue(1)
   const latest = useRef({ places, theme, onSelect, onUnavailable, reduced: tokens.reduced })
-  latest.current = { places, theme, onSelect, onUnavailable, reduced: tokens.reduced }
+  useLayoutEffect(() => {
+    latest.current = { places, theme, onSelect, onUnavailable, reduced: tokens.reduced }
+  })
 
   const fly = (target: LatLng, zoom: number, offsetY: number) => {
     const map = mapRef.current
@@ -156,6 +174,12 @@ export const MapboxMap = forwardRef<
         queueMicrotask(() => root.unmount())
       })
       markers.clear()
+      const meEntry = meRef.current
+      if (meEntry) {
+        meEntry.marker.remove()
+        queueMicrotask(() => meEntry.root.unmount())
+        meRef.current = null
+      }
       loadedRef.current = false
       mapRef.current = null
       map.remove()
@@ -214,6 +238,31 @@ export const MapboxMap = forwardRef<
       )
     }
   }, [places, selectedId, inverseScale])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    if (!me) {
+      const entry = meRef.current
+      if (entry) {
+        entry.marker.remove()
+        queueMicrotask(() => entry.root.unmount())
+        meRef.current = null
+      }
+      return
+    }
+    if (!meRef.current) {
+      const element = document.createElement('div')
+      const root = createRoot(element)
+      meRef.current = {
+        marker: new mapboxgl.Marker({ element }).setLngLat([me.lng, me.lat]).addTo(map),
+        root,
+      }
+    } else {
+      meRef.current.marker.setLngLat([me.lng, me.lat])
+    }
+    meRef.current.root.render(<MeDot label={t('places.youAreHere')} />)
+  }, [me, t, token])
 
   useEffect(() => {
     const place = latest.current.places.find((p) => p.id === selectedId)
