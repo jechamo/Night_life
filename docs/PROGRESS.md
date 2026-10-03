@@ -3,20 +3,20 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                                   | Estado                                                |
-| -------------------------------------------------------- | ----------------------------------------------------- |
-| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02)          |
-| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                           |
-| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                           |
-| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                         |
-| 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                         |
-| 6 – Verificaciones reales                                | 🛠️ Pruebas Test completadas; QA del último despliegue |
-| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                                    |
-| 8 – Ligar, match en tiempo real y chat                   | ⏳                                                    |
-| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                    |
-| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                    |
-| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)             |
-| 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita              |
+| Bloque                                                   | Estado                                               |
+| -------------------------------------------------------- | ---------------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02)         |
+| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                          |
+| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                          |
+| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                        |
+| 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                        |
+| 6 – Verificaciones reales                                | ✅ Pruebas cerradas; pendiente de OK del propietario |
+| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                                   |
+| 8 – Ligar, match en tiempo real y chat                   | ⏳                                                   |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                   |
+| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
+| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
+| 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
 
 ---
 
@@ -172,6 +172,33 @@ Migraciones nuevas: `20261003165824_verification_block6_fixes`,
   el recorrido final usa simulación propia explícita.
 - A petición del propietario, el Bloque 7 y la información de sitios se harán en Cursor.
   No se implementan aquí ni se activan llamadas Mapbox/Places sin comprobar acceso sin cargos.
+
+### Cierre operativo del Bloque 6 — 2026-10-03
+
+- Código publicado: `8af3117c04a8a008b1a220ccaba1aea180425c9c`, rama
+  `claude/festive-hawking-wdxr7b`, commit y push realizados. Vercel MCP confirma READY,
+  production, `dpl_BktVMoWpm4qRDpethQ1y4AkK2ojR`; alias
+  https://nightlife-connect-beige.vercel.app. CLI oficial autorizada ante MCP de despliegue ausente;
+  archivo extraído del commit, plan Hobby/máquina básica existentes, sin cargos.
+- Bundle final `index-2xl_sKF-.js` comprobado en el navegador. La pestaña anterior
+  conservaba una versión cacheada; se cerró y reabrió tras actualizar el service worker.
+  No se considera ese recorrido antiguo evidencia del código final.
+- Admin → Verificaciones: autoaprobación bloqueada y aviso visible; SQL conserva
+  manual_review/requested. No se aprobó una revisión propia ni se actuó sobre otras cuentas.
+- Edad → Usar simulación de prueba → Aprobado: sesión simulator/age/sandbox/verified
+  persistida. Después de recargar, edad, foto e identidad aparecen verificadas; SQL
+  confirma los tres modos sandbox. La nueva sesión sustituye la revisión de edad de prueba anterior.
+- Vista móvil 390×844 y consola: sin errores; aviso de resultados de prueba presente.
+  No se han acreditado verificaciones live ni probado otro dispositivo físico.
+- Preservación final: alta real terminada, 2 fotos originales, 12 consentimientos
+  (10 previos + 2 nuevos de identidad/foto consentidos por el propietario), 0 perfiles is_test.
+- Validación final: check 285/285, build, SQL 54/54, RLS 33/33, audit 0 vulnerabilidades.
+  Los Advisors conocidos y avisos remotos engines/glob permanecen documentados.
+- Pendiente externo aceptado para Bloque 12: API DELETE de Veriff 403; activar por soporte
+  y comprobar borrado real. No se presenta como completado.
+- Bloque 6 queda cerrado en pruebas y espera OK del propietario. Bloque 7 + información
+  de sitios se trabajará en Cursor según su instrucción; guía de continuidad en
+  `docs/BLOCK6_HANDOFF.md`. Aquí no se inicia ese bloque.
 
 ## Bloque 1 — Cimientos, diseño y arquitectura preparada (2026-10-02)
 
