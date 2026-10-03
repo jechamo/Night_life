@@ -81,10 +81,22 @@ export const MapboxMap = forwardRef<
     focusOffsetY?: number
     /** The user's own position (device only, with consent). */
     me?: LatLng | null
+    /** Camera settled somewhere new (pan, zoom or fly). */
+    onMoveEnd?: (center: LatLng) => void
     onUnavailable: () => void
   }
 >(function MapboxMap(
-  { token, places, center, selectedId, onSelect, focusOffsetY = 0, me = null, onUnavailable },
+  {
+    token,
+    places,
+    center,
+    selectedId,
+    onSelect,
+    focusOffsetY = 0,
+    me = null,
+    onMoveEnd,
+    onUnavailable,
+  },
   ref,
 ) {
   const { t } = useTranslation()
@@ -96,9 +108,16 @@ export const MapboxMap = forwardRef<
   const markersRef = useRef(new Map<string, { marker: mapboxgl.Marker; root: Root }>())
   const meRef = useRef<{ marker: mapboxgl.Marker; root: Root } | null>(null)
   const inverseScale = useMotionValue(1)
-  const latest = useRef({ places, theme, onSelect, onUnavailable, reduced: tokens.reduced })
+  const latest = useRef({
+    places,
+    theme,
+    onSelect,
+    onMoveEnd,
+    onUnavailable,
+    reduced: tokens.reduced,
+  })
   useLayoutEffect(() => {
-    latest.current = { places, theme, onSelect, onUnavailable, reduced: tokens.reduced }
+    latest.current = { places, theme, onSelect, onMoveEnd, onUnavailable, reduced: tokens.reduced }
   })
 
   const fly = (target: LatLng, zoom: number, offsetY: number) => {
@@ -155,12 +174,17 @@ export const MapboxMap = forwardRef<
         source: HEAT_SOURCE,
         paint: {
           // Every venue keeps a dim glow on the dark basemap; crowds make it brighter.
-          'heatmap-weight': ['interpolate', ['linear'], ['get', 'people'], 0, 0.35, 40, 1],
+          // The base stays low: a city centre packs hundreds of venues into a few blocks.
+          'heatmap-weight': ['interpolate', ['linear'], ['get', 'people'], 0, 0.12, 40, 1],
           'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 11, 22, 16, 60],
           'heatmap-opacity': 0.75,
         },
       })
       applyTheme(map, latest.current.theme)
+    })
+    map.on('moveend', () => {
+      const { lat, lng } = map.getCenter()
+      latest.current.onMoveEnd?.({ lat, lng })
     })
     map.on('error', (event) => {
       // Tile hiccups after a successful load are tolerated; a failed start falls back.

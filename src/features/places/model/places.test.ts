@@ -120,4 +120,12 @@ describe('filters', () => {
       applyFilters([a, b], { ...DEFAULT_FILTERS, sort: 'most_people' }, origin).map((p) => p.id),
     ).toEqual(['b', 'a'])
   })
+  it('an unknown price only passes when no budget is set', () => {
+    const unknown = place('unknown', { price: undefined })
+    const cheap = place('cheap', { price: 1 })
+    expect(applyFilters([unknown, cheap], DEFAULT_FILTERS, origin)).toHaveLength(2)
+    expect(
+      applyFilters([unknown, cheap], { ...DEFAULT_FILTERS, maxPrice: 2 }, origin).map((p) => p.id),
+    ).toEqual(['cheap'])
+  })
 })

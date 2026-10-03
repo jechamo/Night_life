@@ -4,6 +4,7 @@ import type { AdminRow, AdminService } from '@/features/admin/services/admin-ser
 import { VENUE_TYPES } from '@/shared/domain/venue-types'
 import { ROLES, type Role } from '@/shared/session/roles'
 import { invokeFunction, type Db } from './client'
+import type { Json } from './database.types'
 import { must } from './errors'
 
 const count = z.number().int().nonnegative()
@@ -39,7 +40,10 @@ const venuesSchema = z.array(
     address: z.string().catch(''),
     description: z.string().catch(''),
     hours: z.string().catch(''),
-    price: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).catch(2),
+    price: z
+      .union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)])
+      .nullable()
+      .catch(null),
     phone: z.string().catch(''),
     website: z.string().catch(''),
     music: z.array(z.string()).catch([]),
@@ -57,6 +61,23 @@ const venuesSchema = z.array(
 )
 
 const countSchema = z.object({ count: z.number() })
+const osmResultSchema = z.object({
+  found: count,
+  added: count,
+  updated: count,
+  kept: count,
+  skipped: count,
+})
+const catalogueResultSchema = z.object({
+  added: count,
+  updated: count,
+  skipped: count,
+})
+const OSM_ERRORS: Record<number, string> = {
+  403: 'forbidden',
+  429: 'rate_limited',
+  503: 'provider_busy',
+}
 const simResultSchema = z.object({
   eventsBackdated: z.number(),
   attendanceExpired: z.number(),
@@ -71,7 +92,7 @@ function venuePayload(v: VenueInput) {
     address: v.address.trim(),
     description: v.description.trim(),
     hours: v.hours.trim(),
-    price: v.price,
+    ...(v.price ? { price: v.price } : {}),
     phone: v.phone.trim(),
     website: v.website.trim(),
     music: v.music,
@@ -270,8 +291,32 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
       if (error) throw error
     },
 
-    async venues() {
-      return venuesSchema.parse(must(await db.rpc('admin_list_venues')))
+    async venues(query) {
+      const q = query?.trim()
+      return venuesSchema.parse(
+        must(await db.rpc('admin_list_venues', q ? { p_query: q.slice(0, 80) } : {})),
+      )
+    },
+
+    async importOsmVenues(city) {
+      const result = await db.functions.invoke<unknown>('osm-import', { body: { city } })
+      if (result.error) {
+        const status = (result.error as { context?: { status?: number } }).context?.status
+        throw new Error(OSM_ERRORS[status ?? 0] ?? 'failed')
+      }
+      return osmResultSchema.parse(result.data)
+    },
+
+    async importCatalogue(rows) {
+      const items = JSON.parse(JSON.stringify(rows)) as Json
+      return catalogueResultSchema.parse(
+        must(await db.rpc('admin_import_catalogue', { p_items: items })),
+      )
+    },
+
+    async deleteVenue(id) {
+      const { error } = await db.rpc('admin_delete_venue', { p_venue: id })
+      if (error) throw error
     },
 
     async createVenue(input) {

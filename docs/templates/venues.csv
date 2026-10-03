@@ -1,0 +1,2 @@
+name,type,city,address,lat,lng,price,hours,mon,tue,wed,thu,fri,sat,sun,phone,website,music,dress_code,min_age,description,source_url,source_checked_on
+Sala Ejemplo (ficticio),nightclub,Madrid,Calle Ejemplo 1,40.420000,-3.700000,3,Jue-Sáb 00:00-06:00,,,,00:00-06:00,00:00-06:00,00:00-06:00,,+34 910 000 000,https://example.com,techno;house,Sin chanclas,21,Club de electrónica con dos salas.,https://example.com,2026-10-03

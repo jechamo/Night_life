@@ -10,7 +10,8 @@ export interface AdminVenue {
   address: string
   description: string
   hours: string
-  price: 1 | 2 | 3 | 4
+  /** `null` = unknown (OpenStreetMap imports have no price). */
+  price: 1 | 2 | 3 | 4 | null
   phone: string
   website: string
   music: string[]
@@ -19,7 +20,7 @@ export interface AdminVenue {
   notes: string
   openingHours: OpeningPeriod[]
   isTest: boolean
-  /** `owner` = coordinates set by our team; `google` = cached place (expires). */
+  /** `owner` = set by our team; `osm` = OpenStreetMap import; `google` = cached place (expires). */
   locationSource: string
   /** `null` once cached Google coordinates have expired (30 days). */
   lat: number | null

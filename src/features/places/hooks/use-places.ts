@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useRef, useState } from 'react'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useConsents } from '@/features/consents/hooks/use-consents'
 import { usePlatform } from '@/platform'
 import { useServices } from '@/shared/services/ServicesProvider'
@@ -7,11 +7,52 @@ import type { LatLng, Place, Vibe } from '../model/types'
 import type { CreateEventInput, EventReportReason, MapAccess } from '../services/places-service'
 
 export const placesKey = ['places'] as const
+/** Every cached list of places, whatever area it was loaded for. */
+export const placesListKey = ['places', 'list'] as const
 export const lostFoundKey = (placeId: string) => ['places', placeId, 'lost-found'] as const
 
-export function usePlaces() {
+/** ~2 km grid: small pans reuse the cached list instead of searching again. */
+const AREA_STEP = 0.02
+/** Map viewport state shared with screens without a map (not server data). */
+let area: LatLng | null = null
+const areaListeners = new Set<() => void>()
+
+const snap = (value: number) => Number((Math.round(value / AREA_STEP) * AREA_STEP).toFixed(4))
+
+function setPlacesArea(lat: number, lng: number) {
+  if (area?.lat === lat && area.lng === lng) return
+  area = { lat, lng }
+  areaListeners.forEach((listener) => listener())
+}
+
+function usePlacesArea(): LatLng | null {
+  return useSyncExternalStore(
+    (listener) => {
+      areaListeners.add(listener)
+      return () => areaListeners.delete(listener)
+    },
+    () => area,
+  )
+}
+
+/**
+ * Venues around `focus` (the map's area: the catalogue holds thousands per city) plus
+ * live events. Without focus, the last area the map looked at is reused.
+ */
+export function usePlaces(focus?: LatLng | null) {
   const { places } = useServices()
-  return useQuery({ queryKey: placesKey, queryFn: () => places.list() })
+  const stored = usePlacesArea()
+  const lat = focus ? snap(focus.lat) : (stored?.lat ?? null)
+  const lng = focus ? snap(focus.lng) : (stored?.lng ?? null)
+  const focused = focus != null
+  useEffect(() => {
+    if (focused && lat !== null && lng !== null) setPlacesArea(lat, lng)
+  }, [focused, lat, lng])
+  return useQuery({
+    queryKey: [...placesListKey, lat, lng],
+    queryFn: () => places.list(lat !== null && lng !== null ? { lat, lng } : undefined),
+    placeholderData: keepPreviousData,
+  })
 }
 
 /**
@@ -66,16 +107,16 @@ export function useMyVibe(placeId: string) {
   })
 }
 
-/** Writes a fresh copy of one place into the list cache. */
+/** Writes a fresh copy of one place into every cached list. */
 export function useReplacePlace() {
   const queryClient = useQueryClient()
   return (place: Place) =>
-    queryClient.setQueryData<Place[]>(placesKey, (list) =>
+    queryClient.setQueriesData<Place[]>({ queryKey: placesListKey }, (list) =>
       list
         ? list.some((p) => p.id === place.id)
           ? list.map((p) => (p.id === place.id ? place : p))
           : [...list, place]
-        : [place],
+        : list,
     )
 }
 

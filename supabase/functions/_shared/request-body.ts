@@ -1,5 +1,5 @@
 /** Bound memory before parsing untrusted JSON, including chunked requests. */
-export async function boundedText(req: Request, limit: number): Promise<string> {
+export async function boundedText(req: Pick<Request, 'body'>, limit: number): Promise<string> {
   if (!req.body) throw new Error('empty_body')
   const reader = req.body.getReader()
   const chunks: Uint8Array[] = []

@@ -11,6 +11,7 @@ import { useMapAccess, useMyPosition, usePlaces } from '@/features/places/hooks/
 import { CITIES, cityCenter, DEFAULT_CITY, isCity } from '@/features/places/model/cities'
 import { applyFilters, DEFAULT_FILTERS, type PlaceFilters } from '@/features/places/model/filters'
 import { distanceMeters } from '@/features/places/model/geo'
+import type { LatLng } from '@/features/places/model/types'
 import { placeSponsored } from '@/features/places/model/sponsored'
 import { useAgeGate } from '@/features/verification/hooks/use-age-gate'
 import { MOCK_CENTER } from '@/mocks/world/places.mock'
@@ -33,7 +34,6 @@ export function DiscoverScreen() {
   const navigate = useNavigate()
   const { guard } = useAgeGate()
   const desktop = useMediaQuery('(min-width: 1024px)')
-  const { data: places, isPending } = usePlaces()
   const [params, setParams] = useSearchParams()
   const selectedId = params.get('place')
   const cityParam = params.get('city')
@@ -44,6 +44,10 @@ export function DiscoverScreen() {
   const city = isCity(cityParam)
     ? cityParam
     : (nearCity?.name ?? (isCity(consentCity) ? consentCity : DEFAULT_CITY))
+  const focus = me && nearCity?.name === city ? me : (cityCenter(city) ?? MOCK_CENTER)
+  // Where the map is looking (after a pan); venues load around it.
+  const [viewed, setViewed] = useState<{ city: string; center: LatLng } | null>(null)
+  const { data: places, isPending } = usePlaces(viewed?.city === city ? viewed.center : focus)
   const [filters, setFilters] = useState<PlaceFilters>(DEFAULT_FILTERS)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [view, setView] = useState<'map' | 'list'>('map')
@@ -55,11 +59,7 @@ export function DiscoverScreen() {
   // The real catalogue is per city; the illustrated test world lives around one district.
   const catalogue = places?.some((p) => p.city !== undefined) ?? false
   const real = catalogue || realMap
-  const origin = !real
-    ? MOCK_CENTER
-    : me && nearCity?.name === city
-      ? me
-      : (cityCenter(city) ?? MOCK_CENTER)
+  const origin = real ? focus : MOCK_CENTER
   const inCity = useMemo(
     () =>
       real
@@ -122,6 +122,7 @@ export function DiscoverScreen() {
         <MapboxMap
           {...mapProps}
           me={me}
+          onMoveEnd={(center) => setViewed({ city, center })}
           token={access.token}
           onUnavailable={() => setMapFailed(true)}
         />

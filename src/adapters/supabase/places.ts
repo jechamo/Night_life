@@ -64,8 +64,8 @@ const asAccent = (type: string): AccentKey =>
   (ACCENT_KEYS as readonly string[]).includes(type) ? (type as AccentKey) : 'bar'
 
 const asPrice = (value: unknown): Place['price'] => {
-  const n = Number(value)
-  return n === 1 || n === 2 || n === 3 || n === 4 ? n : 2
+  const n = value === null || value === undefined ? Number.NaN : Number(value)
+  return n === 1 || n === 2 || n === 3 || n === 4 ? n : undefined
 }
 
 const EVENT_STATUSES: readonly EventStatus[] = ['unconfirmed', 'confirmed', 'official']
@@ -82,13 +82,14 @@ export function venueToPlace(row: Row, description = ''): Place | null {
   // Expired Google coordinates come back as null: the venue cannot be placed (ADR 0010).
   if (!id || lat === null || lng === null) return null
   const minAge = numberOrNull(row.minAge)
+  const price = asPrice(row.price)
   return {
     id,
     name: asText(row.name),
     type: asAccent(asText(row.type)),
     location: { lat, lng },
     address: asText(row.address),
-    price: asPrice(row.price),
+    ...(price ? { price } : {}),
     hours: asText(row.hours),
     openNow: Boolean(row.openNow),
     rating: numberOrNull(row.rating),
@@ -103,6 +104,7 @@ export function venueToPlace(row: Row, description = ''): Place | null {
     music: Array.isArray(row.music) ? row.music.map((m) => asText(m)).filter(Boolean) : undefined,
     dressCode: asText(row.dressCode) || undefined,
     minAge: minAge ?? undefined,
+    ...(row.source === 'osm' ? { source: 'osm' as const } : {}),
   }
 }
 
@@ -180,44 +182,55 @@ function createEventError(error: unknown): CreateEventError {
  * RPC that re-checks registration, age, 150 m, limits and `is_test` isolation.
  */
 export function createPlacesService(db: Db): PlacesService {
-  const load = async (): Promise<Place[]> => {
-    const [venues, events] = await Promise.all([
-      db.rpc('search_places', { p_limit: 200 }),
-      db.rpc('list_events', {}),
-    ])
+  const loadVenues = async (args: {
+    p_lat?: number
+    p_lng?: number
+    p_query?: string
+    p_city?: string
+  }): Promise<Place[]> => {
+    const venues = await db.rpc('search_places', { ...args, p_limit: 200 })
     if (venues.error) fail(venues.error)
-    if (events.error) fail(events.error)
     const venueRows = rows(venues.data)
-    const eventRows = rows(events.data)
     const ids = venueRows.map((r) => asText(r.id)).filter(Boolean)
-    const [descriptions, eventStats] = await Promise.all([
-      ids.length
-        ? db.from('venues').select('id, description').in('id', ids)
-        : Promise.resolve({ data: [] as { id: string; description: string }[] }),
-      Promise.all(eventRows.map((r) => db.rpc('get_place_stats', { p_place_id: asText(r.id) }))),
-    ])
+    const descriptions = ids.length
+      ? await db.from('venues').select('id, description').in('id', ids)
+      : { data: [] as { id: string; description: string }[] }
     const byId = new Map((descriptions.data ?? []).map((d) => [d.id, d.description]))
-    const places: Place[] = []
-    for (const row of venueRows) {
-      const place = venueToPlace(row, byId.get(asText(row.id)) ?? '')
-      if (place) places.push(place)
-    }
-    eventRows.forEach((row, i) => {
-      const stats = eventStats[i]?.data
-      const place = eventToPlace(row, isRecord(stats) ? asStats(stats) : undefined)
-      if (place) places.push(place)
-    })
-    return places
+    return venueRows.flatMap((row) => venueToPlace(row, byId.get(asText(row.id)) ?? '') ?? [])
   }
 
+  const loadEvents = async (): Promise<Place[]> => {
+    const events = await db.rpc('list_events', {})
+    if (events.error) fail(events.error)
+    const eventRows = rows(events.data)
+    const eventStats = await Promise.all(
+      eventRows.map((r) => db.rpc('get_place_stats', { p_place_id: asText(r.id) })),
+    )
+    return eventRows.flatMap((row, i) => {
+      const stats = eventStats[i]?.data
+      return eventToPlace(row, isRecord(stats) ? asStats(stats) : undefined) ?? []
+    })
+  }
+
+  // One place by id, wherever it is: search_places has no id filter, so narrow by name/city.
   const findPlace = async (id: string): Promise<Place> => {
-    const place = (await load()).find((p) => p.id === id)
+    const { data: venue } = await db.from('venues').select('name, city').eq('id', id).maybeSingle()
+    const candidates = venue
+      ? await loadVenues({ p_query: venue.name, p_city: venue.city })
+      : await loadEvents()
+    const place = candidates.find((p) => p.id === id)
     if (!place) throw new Error('not_found')
     return place
   }
 
   return {
-    list: load,
+    async list(area) {
+      const [venues, events] = await Promise.all([
+        loadVenues(area ? { p_lat: area.lat, p_lng: area.lng } : {}),
+        loadEvents(),
+      ])
+      return [...venues, ...events]
+    },
 
     async reserveMapLoad() {
       const { data, error } = await db.rpc('reserve_map_load')

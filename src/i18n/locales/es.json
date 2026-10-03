@@ -543,6 +543,8 @@
     "nearby": "Cerca de ti",
     "noResults": "No hay nada con estos filtros. Prueba a quitar alguno.",
     "emptyCity": "Todavía no hay locales en {{city}}.",
+    "osmAttribution": "Datos del local:",
+    "osmCredit": "© OpenStreetMap contributors",
     "youAreHere": "Estás aquí",
     "peopleCount_one": "{{count}} persona",
     "peopleCount_other": "{{count}} personas",
@@ -1478,6 +1480,33 @@
     },
     "venues": {
       "body": "Catálogo propio de Nightlife: nombre, coordenadas y ficha los escribe el equipo o el local. No se copia contenido de Google.",
+      "osm": {
+        "title": "OpenStreetMap",
+        "body": "Importa bares, pubs, discotecas y terrazas de una ciudad desde OpenStreetMap (gratis, licencia ODbL). Se puede repetir para actualizar: lo que edites aquí a mano no se sobrescribe. La app muestra la atribución en la ficha.",
+        "import": "Importar locales de {{city}}",
+        "running": "Importando… puede tardar un minuto.",
+        "result": "{{found}} encontrados · {{added}} nuevos · {{updated}} actualizados · {{kept}} conservados (editados a mano) · {{skipped}} descartados.",
+        "errors": {
+          "forbidden": "Necesitas el rol admin con el segundo factor verificado en esta sesión.",
+          "rate_limited": "Demasiadas importaciones seguidas. Espera un rato.",
+          "provider_busy": "OpenStreetMap está saturado ahora mismo. Prueba en unos minutos.",
+          "failed": "No se pudo importar. Reintenta."
+        }
+      },
+      "search": "Buscar por nombre o dirección",
+      "searchSubmit": "Buscar",
+      "osmBadge": "OSM",
+      "csv": {
+        "title": "CSV",
+        "body": "Añade o actualiza. No borra los locales que falten en el archivo. Sin coordenadas, la fila completa el local del mismo nombre en esa ciudad; para crear una chincheta nueva hacen falta latitud y longitud. Los enlaces de Google no se guardan. El precio solo se copia si es un nivel del 1 al 4.",
+        "choose": "Elegir CSV",
+        "running": "Importando…",
+        "result": "{{added}} nuevos · {{updated}} actualizados · {{skipped}} sin colocar.",
+        "empty": "El archivo no tiene filas válidas.",
+        "error": "No se pudo importar. Reintenta con el segundo factor verificado."
+      },
+      "remove": "Quitar",
+      "confirmRemove": "Confirmar",
       "google": {
         "title": "Google Places",
         "body": "Desactivado. Solo se activará con una prueba gratuita elegible y sin cargos; aun así, en el EEE solo se guardaría el place_id de forma permanente y las coordenadas un máximo de 30 días."
@@ -1514,6 +1543,7 @@
         "lng": "Longitud",
         "coordsHint": "Coordenadas propias de la entrada del local (no copiadas de Google). Se exige estar a 150 m para hacer check-in.",
         "price": "Precio",
+        "priceUnknown": "Sin dato",
         "hours": "Horario resumido",
         "hoursHint": "Texto corto, por ejemplo «Jue-Sáb 23:00-06:00».",
         "openingHours": "Horario por días",

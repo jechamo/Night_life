@@ -29,7 +29,7 @@ export function createMockVenuePanelService(
           claimStatus,
           description: '',
           hours: place.hours,
-          price: place.price,
+          price: place.price ?? 2,
           sponsorship: null,
         }
       : null

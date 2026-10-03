@@ -543,6 +543,8 @@
     "nearby": "Near you",
     "noResults": "Nothing matches these filters. Try removing some.",
     "emptyCity": "No venues in {{city}} yet.",
+    "osmAttribution": "Venue data:",
+    "osmCredit": "© OpenStreetMap contributors",
     "youAreHere": "You're here",
     "peopleCount_one": "{{count}} person",
     "peopleCount_other": "{{count}} people",
@@ -1478,6 +1480,33 @@
     },
     "venues": {
       "body": "Nightlife’s own catalogue: name, coordinates and details are written by the team or the venue. No Google content is copied.",
+      "osm": {
+        "title": "OpenStreetMap",
+        "body": "Imports a city's bars, pubs, clubs and beer gardens from OpenStreetMap (free, ODbL licence). Run it again to update: anything you edit here by hand is never overwritten. The app shows the attribution on the venue sheet.",
+        "import": "Import venues in {{city}}",
+        "running": "Importing… this can take a minute.",
+        "result": "{{found}} found · {{added}} new · {{updated}} updated · {{kept}} kept (edited by hand) · {{skipped}} skipped.",
+        "errors": {
+          "forbidden": "You need the admin role with the second factor verified in this session.",
+          "rate_limited": "Too many imports in a row. Wait a while.",
+          "provider_busy": "OpenStreetMap is busy right now. Try again in a few minutes.",
+          "failed": "Could not import. Retry."
+        }
+      },
+      "search": "Search by name or address",
+      "searchSubmit": "Search",
+      "osmBadge": "OSM",
+      "csv": {
+        "title": "CSV",
+        "body": "Adds or updates. It does not remove venues missing from the file. Without coordinates, a row fills in the venue of the same name in that city; a new pin needs latitude and longitude. Google links are not stored. Price is copied only when it is a level from 1 to 4.",
+        "choose": "Choose CSV",
+        "running": "Importing…",
+        "result": "{{added}} new · {{updated}} updated · {{skipped}} not placed.",
+        "empty": "The file has no valid rows.",
+        "error": "Could not import. Retry with the second factor verified."
+      },
+      "remove": "Remove",
+      "confirmRemove": "Confirm",
       "google": {
         "title": "Google Places",
         "body": "Off. It will only be turned on with an eligible free trial and no charges; even then, in the EEA only the place_id would be stored permanently and coordinates for at most 30 days."
@@ -1514,6 +1543,7 @@
         "lng": "Longitude",
         "coordsHint": "Our own coordinates of the venue entrance (not copied from Google). Check-in requires being within 150 m.",
         "price": "Price",
+        "priceUnknown": "Unknown",
         "hours": "Short opening hours",
         "hoursHint": "Short text, e.g. “Thu-Sat 23:00-06:00”.",
         "openingHours": "Opening hours by day",

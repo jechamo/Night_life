@@ -4,7 +4,7 @@ import { messagesKey, summariesKey, typingKey } from '@/features/chats/hooks/use
 import type { ChatMessage } from '@/features/chats/services/chat-service'
 import { useMatchCelebration } from '@/features/matching/components/MatchCelebration'
 import { matchesKey } from '@/features/matching/hooks/use-matching'
-import { placesKey } from '@/features/places/hooks/use-places'
+import { placesListKey } from '@/features/places/hooks/use-places'
 import type { Place } from '@/features/places/model/types'
 import { useServices } from '@/shared/services/ServicesProvider'
 
@@ -31,7 +31,7 @@ export function RealtimeBridge() {
       realtime.subscribe((event) => {
         switch (event.type) {
           case 'stats':
-            queryClient.setQueryData<Place[]>(placesKey, (list) =>
+            queryClient.setQueriesData<Place[]>({ queryKey: placesListKey }, (list) =>
               list?.map((p) => (p.id === event.placeId ? { ...p, stats: event.stats } : p)),
             )
             break

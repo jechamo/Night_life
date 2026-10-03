@@ -1508,9 +1508,10 @@ export type Database = {
           name: string
           notes: string
           opening_hours: Json
+          osm_ref: string | null
           phone: string
           photos: Json
-          price: number
+          price: number | null
           rating: number | null
           rating_count: number
           type: Database['public']['Enums']['venue_type']
@@ -1541,9 +1542,10 @@ export type Database = {
           name: string
           notes?: string
           opening_hours?: Json
+          osm_ref?: string | null
           phone?: string
           photos?: Json
-          price?: number
+          price?: number | null
           rating?: number | null
           rating_count?: number
           type: Database['public']['Enums']['venue_type']
@@ -1574,9 +1576,10 @@ export type Database = {
           name?: string
           notes?: string
           opening_hours?: Json
+          osm_ref?: string | null
           phone?: string
           photos?: Json
-          price?: number
+          price?: number | null
           rating?: number | null
           rating_count?: number
           type?: Database['public']['Enums']['venue_type']
@@ -1718,7 +1721,10 @@ export type Database = {
           roles: string[]
         }[]
       }
-      admin_list_venues: { Args: never; Returns: Json }
+      admin_delete_venue: { Args: { p_venue: string }; Returns: undefined }
+      admin_import_catalogue: { Args: { p_items: Json }; Returns: Json }
+      admin_import_osm_venues: { Args: { p_city: string; p_items: Json }; Returns: Json }
+      admin_list_venues: { Args: { p_city?: string; p_query?: string }; Returns: Json }
       admin_provider_access: { Args: never; Returns: Json }
       admin_resolve_verification: {
         Args: { p_approve: boolean; p_note?: string; p_session: string }

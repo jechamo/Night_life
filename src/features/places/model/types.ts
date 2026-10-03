@@ -44,8 +44,8 @@ export interface Place {
   type: AccentKey
   location: LatLng
   address: string
-  /** 1-4 (€ to €€€€). */
-  price: 1 | 2 | 3 | 4
+  /** 1-4 (€ to €€€€); unknown for imported venues until someone sets it. */
+  price?: 1 | 2 | 3 | 4
   hours: string
   openNow: boolean
   rating: number | null
@@ -62,6 +62,8 @@ export interface Place {
   music?: readonly string[]
   dressCode?: string
   minAge?: number
+  /** Imported from OpenStreetMap: the details show the ODbL attribution. */
+  source?: 'osm'
 }
 
 export const isEvent = (place: Place): place is Place & { event: PlaceEvent } =>

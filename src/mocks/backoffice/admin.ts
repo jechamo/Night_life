@@ -19,7 +19,7 @@ function toAdminVenue(p: Place): AdminVenue {
     address: p.address,
     description: p.description ?? '',
     hours: p.hours,
-    price: p.price,
+    price: p.price ?? null,
     phone: p.phone ?? '',
     website: p.website ?? '',
     music: [...(p.music ?? [])],
@@ -41,7 +41,7 @@ function fromVenueInput(id: string, v: VenueInput): Place {
     type: v.type,
     location: { lat: v.lat, lng: v.lng },
     address: v.address,
-    price: v.price,
+    ...(v.price ? { price: v.price } : {}),
     hours: v.hours,
     openNow: true,
     rating: null,
@@ -212,10 +212,17 @@ export function createMockAdminService(
     providerQuotas: () => Promise.resolve([]),
     configureProvider: () => Promise.reject(new Error('provider_not_available')),
     setMapToken: () => Promise.reject(new Error('provider_not_available')),
-    async venues() {
+    async venues(query) {
       await wait()
-      return world.places.filter((p) => !isEvent(p)).map(toAdminVenue)
+      const q = (query ?? '').trim().toLowerCase()
+      return world.places
+        .filter((p) => !isEvent(p) && (!q || p.name.toLowerCase().includes(q)))
+        .map(toAdminVenue)
     },
+    // OpenStreetMap is only reachable from the real backend.
+    importOsmVenues: () => Promise.reject(new Error('provider_not_available')),
+    importCatalogue: () => Promise.reject(new Error('provider_not_available')),
+    deleteVenue: () => Promise.reject(new Error('provider_not_available')),
     async createVenue(input) {
       await wait()
       const id = `v-${crypto.randomUUID()}`

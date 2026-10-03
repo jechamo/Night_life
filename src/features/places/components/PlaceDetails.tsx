@@ -89,14 +89,18 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
             </ul>
           </Detail>
         )}
-        <Detail icon={Euro} label={t('places.price')}>
-          <span aria-label={t('places.priceLevel', { level: place.price })}>
-            {'€'.repeat(place.price)}
-          </span>
-        </Detail>
-        <Detail icon={MapPin} label={t('places.address')}>
-          {place.address}
-        </Detail>
+        {place.price && (
+          <Detail icon={Euro} label={t('places.price')}>
+            <span aria-label={t('places.priceLevel', { level: place.price })}>
+              {'€'.repeat(place.price)}
+            </span>
+          </Detail>
+        )}
+        {place.address && (
+          <Detail icon={MapPin} label={t('places.address')}>
+            {place.address}
+          </Detail>
+        )}
         {place.phone && (
           <Detail icon={Phone} label={t('places.details.phone')}>
             <a className="underline-offset-2 hover:underline" href={`tel:${place.phone}`}>
@@ -136,6 +140,19 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
       <PlaceActions place={place} onToggleLostFound={() => setShowLostFound((v) => !v)} />
       <VibeCheck place={place} checkedInHere={checkedInHere} />
       {showLostFound && <LostFoundPanel placeId={place.id} />}
+      {place.source === 'osm' && (
+        <p className="text-xs text-muted-foreground">
+          {t('places.osmAttribution')}{' '}
+          <a
+            className="underline underline-offset-2"
+            href="https://www.openstreetmap.org/copyright"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {t('places.osmCredit')}
+          </a>
+        </p>
+      )}
     </div>
   )
 }

@@ -1,5 +1,5 @@
-import { MapPin, Plus, Trash2 } from 'lucide-react'
-import { useState, type ChangeEvent, type ReactNode } from 'react'
+import { Download, MapPin, Plus, Search, Trash2 } from 'lucide-react'
+import { useRef, useState, type ChangeEvent, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CITIES } from '@/features/places/model/cities'
 import { VENUE_TYPES, type VenueType } from '@/shared/domain/venue-types'
@@ -14,14 +14,20 @@ import { Section } from '@/shared/ui/section'
 import { TextAreaField, TextField } from '@/shared/ui/text-field'
 import {
   useAdminVenues,
+  useDeleteVenue,
   useFillTestVenue,
+  useImportCatalogue,
+  useImportOsmVenues,
   useImportTestEvents,
   useSaveVenue,
   useSeedTestVenues,
 } from '../hooks/use-admin'
+import { parseVenueCsv } from '../model/venue-csv'
 import { venueInputErrors, type AdminVenue, type VenueField, type VenueInput } from '../model/venue'
 
-const PRICES = ['1', '2', '3', '4'] as const
+/** '0' = unknown price (OpenStreetMap imports). */
+const PRICES = ['0', '1', '2', '3', '4'] as const
+const OSM_ERRORS = ['forbidden', 'rate_limited', 'provider_busy'] as const
 const DAYS = [0, 1, 2, 3, 4, 5, 6] as const
 
 interface Draft extends Omit<VenueInput, 'lat' | 'lng' | 'minAge' | 'music'> {
@@ -162,9 +168,12 @@ function VenueForm({
       <ChoiceField label={t('admin.venues.fields.price')}>
         <SingleChoice
           label={t('admin.venues.fields.price')}
-          value={String(draft.price) as (typeof PRICES)[number]}
-          options={PRICES.map((p) => ({ value: p, label: '€'.repeat(Number(p)) }))}
-          onChange={(p) => set('price', Number(p) as Draft['price'])}
+          value={String(draft.price ?? 0) as (typeof PRICES)[number]}
+          options={PRICES.map((p) => ({
+            value: p,
+            label: p === '0' ? t('admin.venues.fields.priceUnknown') : '€'.repeat(Number(p)),
+          }))}
+          onChange={(p) => set('price', p === '0' ? null : (Number(p) as Draft['price']))}
         />
       </ChoiceField>
       <TextField {...field('hours')} maxLength={60} hint={t('admin.venues.fields.hoursHint')} />
@@ -365,17 +374,119 @@ function TestCatalogue({ venues }: { venues: readonly AdminVenue[] }) {
   )
 }
 
+function OsmImport() {
+  const { t } = useTranslation()
+  const importOsm = useImportOsmVenues()
+  const [city, setCity] = useState<string>(CITIES[0].name)
+  const error = OSM_ERRORS.find((code) => code === importOsm.error?.message) ?? ('failed' as const)
+  return (
+    <GlassCard className="space-y-3">
+      <p className="text-sm text-muted-foreground">{t('admin.venues.osm.body')}</p>
+      <ChoiceField label={t('admin.venues.fields.city')}>
+        <SingleChoice
+          label={t('admin.venues.fields.city')}
+          value={city}
+          options={CITIES.map((c) => ({ value: c.name, label: c.name }))}
+          onChange={setCity}
+        />
+      </ChoiceField>
+      <Button size="sm" disabled={importOsm.isPending} onClick={() => importOsm.mutate(city)}>
+        <Download aria-hidden />
+        {t('admin.venues.osm.import', { city })}
+      </Button>
+      {importOsm.isPending && <p role="status">{t('admin.venues.osm.running')}</p>}
+      {importOsm.data && (
+        <p role="status" className="text-sm">
+          {t('admin.venues.osm.result', { ...importOsm.data })}
+        </p>
+      )}
+      {importOsm.isError && (
+        <p role="alert" className="text-sm text-danger">
+          {t(`admin.venues.osm.errors.${error}`)}
+        </p>
+      )}
+    </GlassCard>
+  )
+}
+
+function CsvImport() {
+  const { t } = useTranslation()
+  const importCsv = useImportCatalogue()
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [localSkipped, setLocalSkipped] = useState(0)
+  const [empty, setEmpty] = useState(false)
+  return (
+    <GlassCard className="space-y-3">
+      <p className="text-sm text-muted-foreground">{t('admin.venues.csv.body')}</p>
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".csv,text/csv"
+        className="sr-only"
+        onChange={(event) => {
+          const file = event.target.files?.[0]
+          event.target.value = ''
+          if (!file) return
+          void file.text().then((text) => {
+            const parsed = parseVenueCsv(text)
+            setLocalSkipped(parsed.skipped)
+            if (parsed.rows.length === 0) {
+              setEmpty(true)
+              return
+            }
+            setEmpty(false)
+            importCsv.mutate(parsed.rows)
+          })
+        }}
+      />
+      <Button size="sm" disabled={importCsv.isPending} onClick={() => fileRef.current?.click()}>
+        <Download aria-hidden />
+        {t('admin.venues.csv.choose')}
+      </Button>
+      {importCsv.isPending && <p role="status">{t('admin.venues.csv.running')}</p>}
+      {importCsv.data && (
+        <p role="status" className="text-sm">
+          {t('admin.venues.csv.result', {
+            ...importCsv.data,
+            skipped: importCsv.data.skipped + localSkipped,
+          })}
+        </p>
+      )}
+      {empty && (
+        <p role="alert" className="text-sm text-danger">
+          {t('admin.venues.csv.empty')}
+        </p>
+      )}
+      {importCsv.isError && (
+        <p role="alert" className="text-sm text-danger">
+          {t('admin.venues.csv.error')}
+        </p>
+      )}
+    </GlassCard>
+  )
+}
+
 /** Own venue catalogue (Block 7, ADR 0010). Google Places stays off: no data is copied. */
 export function AdminVenuesScreen() {
   const { t } = useTranslation()
-  const venues = useAdminVenues()
+  const [search, setSearch] = useState('')
+  const [query, setQuery] = useState('')
+  const venues = useAdminVenues(query)
   const fill = useFillTestVenue()
+  const remove = useDeleteVenue()
   const [editing, setEditing] = useState<{ id: string | null; draft: Draft } | null>(null)
   const [filled, setFilled] = useState<{ id: string; count: number } | null>(null)
+  const [confirmRemove, setConfirmRemove] = useState<string | null>(null)
 
   return (
     <>
       <ScreenHeader title={t('admin.nav.venues')} description={t('admin.venues.body')} />
+      <Section title={t('admin.venues.osm.title')}>
+        <OsmImport />
+      </Section>
+      <Section title={t('admin.venues.csv.title')}>
+        <CsvImport />
+      </Section>
       <Section title={t('admin.venues.google.title')}>
         <GlassCard className="text-sm text-muted-foreground">
           {t('admin.venues.google.body')}
@@ -400,6 +511,27 @@ export function AdminVenuesScreen() {
             {t('admin.venues.create')}
           </Button>
         )}
+        <form
+          role="search"
+          className="flex items-end gap-2"
+          onSubmit={(e) => {
+            e.preventDefault()
+            setQuery(search.trim())
+          }}
+        >
+          <TextField
+            className="flex-1"
+            type="search"
+            label={t('admin.venues.search')}
+            value={search}
+            maxLength={80}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button type="submit" variant="secondary">
+            <Search aria-hidden />
+            {t('admin.venues.searchSubmit')}
+          </Button>
+        </form>
         {venues.isPending && <p role="status">{t('admin.venues.loading')}</p>}
         {venues.isError && (
           <p role="alert" className="text-sm text-danger">
@@ -425,6 +557,7 @@ export function AdminVenuesScreen() {
                   <div className="mt-1 flex flex-wrap gap-1">
                     <Badge>{t(`venueTypes.${venue.type}`)}</Badge>
                     {venue.isTest && <Badge>{t('admin.venues.test')}</Badge>}
+                    {venue.locationSource === 'osm' && <Badge>{t('admin.venues.osmBadge')}</Badge>}
                     {venue.lat === null && <Badge>{t('admin.venues.noCoords')}</Badge>}
                   </div>
                   {filled?.id === venue.id && (
@@ -458,6 +591,22 @@ export function AdminVenuesScreen() {
                   >
                     {t('admin.venues.edit')}
                   </Button>
+                  {confirmRemove === venue.id ? (
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      disabled={remove.isPending}
+                      onClick={() =>
+                        remove.mutate(venue.id, { onSuccess: () => setConfirmRemove(null) })
+                      }
+                    >
+                      {t('admin.venues.confirmRemove')}
+                    </Button>
+                  ) : (
+                    <Button size="sm" variant="ghost" onClick={() => setConfirmRemove(venue.id)}>
+                      {t('admin.venues.remove')}
+                    </Button>
+                  )}
                 </div>
               </GlassCard>
             </li>

@@ -46,7 +46,8 @@ export type MapAccess =
 
 /** Port for venues and events (Supabase + PostGIS from Block 7). */
 export interface PlacesService {
-  list(): Promise<Place[]>
+  /** Venues nearest to `area` (up to 200) plus live events; without area, the first 200. */
+  list(area?: LatLng): Promise<Place[]>
   reserveMapLoad(): Promise<MapAccess>
   myVibe(placeId: string): Promise<Vibe | null>
   voteVibe(placeId: string, vibe: Vibe): Promise<Result<Place, 'no_check_in'>>

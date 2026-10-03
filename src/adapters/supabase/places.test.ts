@@ -50,6 +50,23 @@ describe('Supabase places adapter', () => {
     expect(place?.website).toBeUndefined()
   })
 
+  it('keeps an unknown price unknown and flags OpenStreetMap venues for attribution', () => {
+    const place = venueToPlace({
+      id: 'v3',
+      name: 'Bar OSM',
+      type: 'bar',
+      lat: 40.41,
+      lng: -3.7,
+      price: null,
+      source: 'osm',
+    })
+    expect(place?.price).toBeUndefined()
+    expect(place?.source).toBe('osm')
+    expect(
+      venueToPlace({ id: 'v4', name: 'Propio', lat: 1, lng: 1, source: 'owner' })?.source,
+    ).toBeUndefined()
+  })
+
   it('drops venues whose cached Google coordinates expired (ADR 0010)', () => {
     expect(venueToPlace({ id: 'v2', name: 'Sin coords', lat: null, lng: null })).toBeNull()
   })

@@ -60,7 +60,8 @@ export function applyFilters(places: readonly Place[], f: PlaceFilters, origin: 
     }
     if (f.minGreenPercent > 0 && (stats.greenPercent ?? -1) < f.minGreenPercent) return false
     if (f.maxDistanceKm !== null && distance > f.maxDistanceKm * 1000) return false
-    if (place.price > f.maxPrice) return false
+    // An unknown price can't be promised to fit a budget.
+    if (f.maxPrice < 4 && (place.price ?? 5) > f.maxPrice) return false
     if (f.openNow && !place.openNow) return false
     return true
   })

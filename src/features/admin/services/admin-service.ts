@@ -2,6 +2,7 @@ import type { FeatureFlags, FlagKey } from '@/shared/flags/flags'
 import type { EntitlementKey } from '@/shared/entitlements/entitlements'
 import type { Role } from '@/shared/session/roles'
 import type { ProviderQuota, ProviderQuotaChange } from '../model/provider-quota'
+import type { CatalogueRow } from '../model/venue-csv'
 import type { AdminVenue, VenueInput } from '../model/venue'
 
 export interface AdminDashboard {
@@ -58,6 +59,21 @@ export interface AdminSetting {
   max: number
 }
 
+export interface OsmImportResult {
+  found: number
+  added: number
+  updated: number
+  /** Edited in Admin, so left untouched. */
+  kept: number
+  skipped: number
+}
+
+export interface CatalogueImportResult {
+  added: number
+  updated: number
+  skipped: number
+}
+
 export type TestTool =
   | 'generate_test_city'
   | 'fill_venue'
@@ -90,7 +106,12 @@ export interface AdminService {
   setMapToken(token: string): Promise<void>
   runTestTool(tool: TestTool): Promise<string>
   /** Own catalogue (Block 7): venues are created and edited here, never copied from Google. */
-  venues(): Promise<AdminVenue[]>
+  venues(query?: string): Promise<AdminVenue[]>
+  /** Imports a city's bars, pubs and clubs from OpenStreetMap (ODbL); manual edits are kept. */
+  importOsmVenues(city: string): Promise<OsmImportResult>
+  /** Adds or updates rows from an editorial CSV. Never deletes. Google links are not accepted. */
+  importCatalogue(rows: readonly CatalogueRow[]): Promise<CatalogueImportResult>
+  deleteVenue(id: string): Promise<void>
   createVenue(input: VenueInput): Promise<string>
   updateVenue(id: string, input: VenueInput): Promise<void>
   /** Test fixtures (is_test): demo venues per city, fake crowd and imported events. */

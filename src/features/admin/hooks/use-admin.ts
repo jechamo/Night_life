@@ -1,8 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { FeatureFlags, FlagKey } from '@/shared/flags/flags'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { Role } from '@/shared/session/roles'
 import type { ProviderQuotaChange } from '../model/provider-quota'
+import type { CatalogueRow } from '../model/venue-csv'
 import type { VenueInput } from '../model/venue'
 import type { AdminSection, AdminService, AdminSetting, TestTool } from '../services/admin-service'
 
@@ -109,10 +110,22 @@ export const useConfigureProvider = () =>
 export const useSetMapToken = () =>
   useAdminMutation((admin, token: string) => admin.setMapToken(token))
 
-export function useAdminVenues() {
+export function useAdminVenues(query = '') {
   const { admin } = useServices()
-  return useQuery({ queryKey: [...adminKey, 'venues'], queryFn: () => admin.venues() })
+  return useQuery({
+    queryKey: [...adminKey, 'venues', query],
+    queryFn: () => admin.venues(query),
+    placeholderData: keepPreviousData,
+  })
 }
+
+export const useImportOsmVenues = () =>
+  useAdminMutation((admin, city: string) => admin.importOsmVenues(city))
+
+export const useImportCatalogue = () =>
+  useAdminMutation((admin, rows: readonly CatalogueRow[]) => admin.importCatalogue(rows))
+
+export const useDeleteVenue = () => useAdminMutation((admin, id: string) => admin.deleteVenue(id))
 
 export const useSaveVenue = () =>
   useAdminMutation(async (admin, a: { id: string | null; input: VenueInput }) => {
