@@ -4,7 +4,7 @@ import type { AppServices } from '@/shared/services/services'
 import { createAdminService } from './admin'
 import { createSupabaseClient } from './client'
 import { createEntitlementService, createFlagSource, createSessionService } from './core-services'
-import { createLegalService } from './legal'
+import { createLegalService, startEmailOutbox } from './legal'
 import { createOnboardingService } from './onboarding'
 import { createPrivacyService, withRealAccountStatus } from './privacy'
 import { createConsentService, createProfileService, createSafetyService } from './profile'
@@ -20,6 +20,7 @@ export function createSupabaseServices(
   simulated: AppServices,
 ): AppServices {
   const db = createSupabaseClient(config, platform.secureStorage)
+  startEmailOutbox(db, platform)
   return {
     ...simulated,
     flags: createFlagService(createFlagSource(db)),

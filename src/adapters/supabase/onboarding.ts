@@ -2,8 +2,9 @@ import type { OnboardingService } from '@/features/onboarding/services/onboardin
 import type { Platform } from '@/platform'
 import { PREFERENCE_KEYS } from '@/shared/config/preferences'
 import { err, ok } from '@/shared/lib/result'
-import { currentUserId, type Db } from './client'
+import { currentUserId, isOnboarded, type Db } from './client'
 import { errorCode, errorStatus } from './errors'
+import { flushEmailOutbox } from './legal'
 
 const RESEND_AFTER_SECONDS = 60
 const PHOTO_BUCKET = 'profile-photos'
@@ -20,10 +21,7 @@ const extensionFor = (type: string) =>
 export function createOnboardingService(db: Db, platform: Platform): OnboardingService {
   return {
     async getStatus() {
-      const uid = await currentUserId(db)
-      if (!uid) return 'pending'
-      const { data } = await db.from('profiles').select('onboarded_at').eq('id', uid).maybeSingle()
-      return data?.onboarded_at ? 'completed' : 'pending'
+      return (await isOnboarded(db)) ? 'completed' : 'pending'
     },
 
     async requestOtp(phone) {
@@ -89,7 +87,12 @@ export function createOnboardingService(db: Db, platform: Platform): OnboardingS
         return err('network')
       }
       // Optional email: Supabase Auth sends the confirmation link (PRD 5.2.4 "verificado").
-      if (data.email) await db.auth.updateUser({ email: data.email })
+      if (data.email) {
+        await db.auth.updateUser({ email: data.email })
+        // Sends the signed PDF now if the address is already confirmed; otherwise it
+        // stays in the outbox until it is (see `startEmailOutbox`).
+        void flushEmailOutbox(db, platform)
+      }
       return ok(undefined)
     },
 

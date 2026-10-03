@@ -346,8 +346,9 @@ Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
 
 ### Hecho cuando
 
-- ⏳ Un tester se da de alta con un teléfono de prueba y firma — **pendiente de tu prueba en la
-  web** (el entorno de desarrollo no tiene acceso de red a Supabase).
+- ✅ Un tester se da de alta con un teléfono de prueba y firma: alta real del propietario en la web
+  (perfil, 2 fotos en Storage privado, firmas y consentimientos en `consent_records`, roles
+  admin + tester asignados por SQL).
 - ✅ Las RLS están probadas: `supabase/tests/rls.sql`, **33/33** (anónimo, usuario verificado y
   sin verificar, tester, admin sin/con MFA, IDOR, asignación masiva, validación del alta).
 - ✅ Los datos de prueba no son visibles para un usuario normal (test de RLS + función de perfiles).
@@ -366,9 +367,19 @@ Ver `docs/SECURITY.md` → Bloque 4: sin hallazgos críticos ni altos.
   propietario en el SQL Editor (la herramienta exigía una aprobación que no podía mostrar): no
   figuran en el historial de migraciones de Supabase, pero están en el repositorio.
 - PDF y SMTP propios sin dependencias (ADR 0009); el email usa Gmail hasta el lanzamiento.
-- El envío automático del _outbox_ (cron) llega con los avisos del Bloque 9; hoy se envía al
-  pulsar «Enviármelo por email».
+- El _outbox_ se vacía desde la app: al terminar el alta y al abrir la app con sesión (si el
+  email está confirmado y hay un envío pendiente), además del botón «Enviármelo por email». El
+  envío por cron en servidor llega con los avisos del Bloque 9.
 - La ciudad de prueba crea personas; los locales reales importados llegan en el Bloque 7.
+
+### Correcciones tras la prueba real
+
+- La web seguía mostrando la versión simulada cacheada: el service worker se registra ahora desde
+  el bundle (`src/platform/app-updates.ts`) y la página se recarga sola con cada versión nueva.
+- Las firmas legales se guardaban dos veces (paso legal con sesión + `complete_onboarding`): la
+  firma por RPC solo se usa con la cuenta ya terminada, igual que los consentimientos.
+- El email con el PDF se quedaba en el _outbox_: nueva acción `outbox` en `signed-documents` (solo
+  envía si hay algo pendiente) llamada tras el alta y al abrir la app.
 
 ### Puerta de seguridad
 

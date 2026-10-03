@@ -32,6 +32,14 @@ export async function currentUserId(db: Db): Promise<string | null> {
   return data.session?.user.id ?? null
 }
 
+/** True once `complete_onboarding` has run for the signed-in user. */
+export async function isOnboarded(db: Db): Promise<boolean> {
+  const uid = await currentUserId(db)
+  if (!uid) return false
+  const { data } = await db.from('profiles').select('onboarded_at').eq('id', uid).maybeSingle()
+  return Boolean(data?.onboarded_at)
+}
+
 /** Calls an Edge Function; supabase-js types its error loosely, so normalise it here. */
 export async function invokeFunction<T>(
   db: Db,

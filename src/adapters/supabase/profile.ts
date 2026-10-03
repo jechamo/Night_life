@@ -7,7 +7,7 @@ import type { ConsentService } from '@/features/consents/services/consent-servic
 import type { InterestedIn } from '@/features/onboarding/model/onboarding-machine'
 import type { ProfileService } from '@/features/profile/services/profile-service'
 import type { SafetyService } from '@/features/safety/services/safety-service'
-import { currentUserId, type Db } from './client'
+import { currentUserId, isOnboarded, type Db } from './client'
 import { must } from './errors'
 
 const SIGNED_URL_SECONDS = 60 * 30
@@ -109,11 +109,7 @@ export function createConsentService(db: Db): ConsentService {
     async save(choices, city) {
       // During onboarding the account is not finished yet: `complete_onboarding` records
       // every consent in the same transaction, so nothing is written twice here.
-      const uid = await currentUserId(db)
-      const { data: profile } = uid
-        ? await db.from('profiles').select('onboarded_at').eq('id', uid).maybeSingle()
-        : { data: null }
-      if (!profile?.onboarded_at) return { choices: { ...choices }, city, updatedAt: {} }
+      if (!(await isOnboarded(db))) return { choices: { ...choices }, city, updatedAt: {} }
       const { error } = await db.rpc('save_consents', {
         p_choices: { ...choices },
         p_city: city ?? '',

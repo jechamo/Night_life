@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
   let language: Language = 'es'
   try {
     const body = (await req.json()) as { action?: unknown; language?: unknown }
-    action = body.action === 'email' ? 'email' : 'pdf'
+    action = body.action === 'email' || body.action === 'outbox' ? body.action : 'pdf'
     language = body.language === 'en' ? 'en' : 'es'
   } catch {
     return json(req, { error: 'bad_request' }, 400)
@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
     })
   }
 
-  // email
+  // email (on request) · outbox (automatic: only if an email is pending)
   const { user } = auth
   if (!user.email || !user.email_confirmed_at) return json(req, { result: 'no_email' })
   const gmailUser = Deno.env.get('GMAIL_USER')
@@ -115,6 +115,14 @@ Deno.serve(async (req) => {
   if (!gmailUser || !gmailPassword) return json(req, { result: 'not_configured' })
 
   const service = serviceClient()
+  if (action === 'outbox') {
+    const { count } = await service
+      .from('email_outbox')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('status', 'pending')
+    if (!count) return json(req, { result: 'nothing_pending' })
+  }
   try {
     const pdf = await renderPdf(auth, language)
     await sendMail(
