@@ -87,6 +87,6 @@ export interface AdminService {
   readonly mode: 'mock' | 'live'
   /** Second factor (TOTP, PRD 6.12 E): enrolment and the level of this session. */
   mfaStatus(): Promise<{ enrolled: boolean; verified: boolean }>
-  enrollMfa(): Promise<{ qrCode: string; secret: string }>
+  enrollMfa(): Promise<{ qrCode: string; secret: string; uri: string }>
   verifyMfa(code: string): Promise<boolean>
 }

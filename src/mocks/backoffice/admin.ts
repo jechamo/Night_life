@@ -297,7 +297,7 @@ export function createMockAdminService(
     },
     mode: 'mock',
     mfaStatus: () => Promise.resolve({ enrolled: true, verified: config.mfaOk }),
-    enrollMfa: () => Promise.resolve({ qrCode: '', secret: 'MOCK-TOTP-SECRET' }),
+    enrollMfa: () => Promise.resolve({ qrCode: '', secret: 'MOCK-TOTP-SECRET', uri: '' }),
     async verifyMfa(code) {
       await wait()
       config.mfaOk = code === '123456'

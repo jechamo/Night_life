@@ -1289,7 +1289,9 @@
       "verify": "Verificar",
       "enroll": "Configurar el segundo factor",
       "scan": "Escanea el código con tu app de autenticación (Google Authenticator, Authy…) e introduce el código de 6 dígitos.",
-      "qrAlt": "Código QR para la app de autenticación"
+      "qrAlt": "Código QR para la app de autenticación",
+      "openApp": "Abrir en la app de autenticación",
+      "manual": "¿Estás en el mismo móvil? Pulsa el botón o, en tu app, elige «Introducir una clave de configuración», pega esta clave y marca «Basada en tiempo»."
     },
     "dashboard": {
       "body": "Datos simulados del entorno de pruebas.",

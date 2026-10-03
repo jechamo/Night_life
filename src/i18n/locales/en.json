@@ -1289,7 +1289,9 @@
       "verify": "Verify",
       "enroll": "Set up the second factor",
       "scan": "Scan the code with your authenticator app (Google Authenticator, Authy…) and enter the 6-digit code.",
-      "qrAlt": "QR code for the authenticator app"
+      "qrAlt": "QR code for the authenticator app",
+      "openApp": "Open in the authenticator app",
+      "manual": "On the same phone? Tap the button or, in your app, choose \"Enter a setup key\", paste this key and select \"Time based\"."
     },
     "dashboard": {
       "body": "Simulated data from the test environment.",

@@ -145,7 +145,7 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
         friendlyName: 'Nightlife admin',
       })
       if (error) throw error
-      return { qrCode: data.totp.qr_code, secret: data.totp.secret }
+      return { qrCode: data.totp.qr_code, secret: data.totp.secret, uri: data.totp.uri }
     },
 
     async verifyMfa(code) {

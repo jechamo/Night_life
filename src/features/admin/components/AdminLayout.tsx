@@ -23,7 +23,7 @@ import { Navigate, NavLink, Outlet } from 'react-router'
 import { hasRole } from '@/shared/session/roles'
 import { useRolesState } from '@/shared/session/use-roles'
 import { cn } from '@/shared/lib/cn'
-import { Button, ButtonLink } from '@/shared/ui/button'
+import { Button, ButtonLink, buttonVariants } from '@/shared/ui/button'
 import { GlassCard } from '@/shared/ui/card'
 import { TextField } from '@/shared/ui/text-field'
 import { useMfaSession } from '../hooks/use-admin'
@@ -95,7 +95,19 @@ function MfaGate() {
                 className="mx-auto size-48 rounded-xl bg-white p-2"
               />
             )}
-            <p className="font-mono text-xs break-all text-muted-foreground">{enrolment.secret}</p>
+            {/* Same phone: the QR cannot be scanned, so open the app or type the key. */}
+            {enrolment.uri && (
+              <a
+                href={enrolment.uri}
+                className={buttonVariants({ variant: 'secondary', block: true })}
+              >
+                {t('admin.mfa.openApp')}
+              </a>
+            )}
+            <p className="text-sm text-muted-foreground">{t('admin.mfa.manual')}</p>
+            <p className="font-mono text-base tracking-wider break-all select-all">
+              {enrolment.secret.match(/.{1,4}/g)?.join(' ')}
+            </p>
           </div>
         )}
         <form
