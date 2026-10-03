@@ -12,11 +12,72 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                        |
 | 6 – Verificaciones reales                                | ✅ Pruebas cerradas; pendiente de OK del propietario |
 | 7 – Mapa, lugares, eventos y estadísticas reales         | ✅ Terminado; pendiente de OK                        |
-| 8 – Ligar, match en tiempo real y chat                   | ⏳                                                   |
+| 8 – Ligar, match en tiempo real y chat                   | ✅ Terminado; pendiente de OK                        |
 | 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                   |
 | 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
 | 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
 | 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
+
+---
+
+## Bloque 8 — Ligar, match en tiempo real y chat (2026-10-04)
+
+Implementación autorizada por el propietario, seguida de las pruebas de los bloques 7 y 8.
+Plan en `docs/BLOCK8_PLAN.md`; evidencias y reproducción en `docs/BLOCK8_TESTS.md`.
+
+### Qué se hizo
+
+- Compatibilidad recíproca, preferencias con consentimiento, prioridades por lugar,
+  edad y foto verificadas, semáforo, discreto y bloqueos en servidor.
+- Likes y pases persistidos. Cuota diaria configurable (día de Madrid), contador privado
+  que no se devuelve al borrar un match, y ventajas `unlimited_likes`, `see_likes` y
+  `undo` comprobadas en servidor. Sin ventaja, «Quién te ha dado like» solo recibe un
+  recuento y ninguna identidad ni foto.
+- Match único transaccional, incluso con likes simultáneos. Broadcast privado en
+  `social:<user_id>` a ambos participantes. Adaptadores reales, reconexión tras cambios
+  de sesión, caché sin duplicados y una sola celebración por match.
+- Chat persistido, texto plano, lectura y escritura en tiempo real. Historial por páginas
+  de 100 con cursor compuesto; enviar o leer exige un match vigente y ambas edades
+  verificadas. Eliminar match y bloquear retiran el chat para ambos.
+- Anthem de prueba persistido y explícitamente simulado, editor en Perfil y muestra
+  sintética local reproducible mediante `platform.audio`. Spotify sigue pendiente de
+  una cuenta de desarrollo elegible, según PRD 11.3; no se activa ningún proveedor.
+- Simuladores reales de like entrante y mensaje, con rol, flag y auditoría. Generador
+  de personas corregido: ciudad, preferencias, consentimiento de fixture, rol tester
+  y edad en sandbox. Los avatares locales solo se asignan a fixtures `is_test`.
+- Tres migraciones aplicadas por MCP, tipos regenerados y `test-tools` desplegada
+  (v8). El endpoint anterior de perfiles recibe las mismas restricciones y cuota.
+
+### Hecho cuando y validación
+
+- ✅ Match real en dos clientes autenticados: ambos reciben el mismo ID en 123 ms,
+  diferencia de llegada 0 ms; likes simultáneos crean un solo registro.
+- ✅ Celebración en ambas sesiones de interfaz, sin repetirla al recibir el mismo evento.
+- ✅ Chat real: mensaje en 73 ms, lectura, escritura y retirada de match para ambos.
+- ✅ Bloque 7: check-in visible en la segunda sesión en 471 ms; caducidad de 24 h,
+  umbral de privacidad, radio y cuotas verificados por SQL.
+- ✅ SQL con rollback: bloque 8 **62/62**; bloque 7 **51/51** (19 lugares, 19 cuotas
+  y 13 OSM); RLS **33/33**. Integración Realtime **16/16**.
+- ✅ Selección de cliente de los bloques 7 y 8: **69/69**.
+- ✅ `npm run check`: **317/317**, TypeScript, ESLint y formato. Build correcto;
+  aviso conocido del chunk de Mapbox de 1,86 MB, diferido y fuera del precache.
+- ✅ `npm audit`: **0 vulnerabilidades**. Advisors sin hallazgos nuevos críticos/altos;
+  WARN previo de protección de contraseñas y INFO de tablas privadas cerradas.
+- ✅ Retirados los dos testers temporales: **1 perfil real, 0 fixtures**, como antes.
+
+### Cómo probarlo
+
+1. `npm run test:blocks:7-8` y `npm run check`.
+2. Con dos testers verificados en sandbox y el mismo lugar, hacer like mutuo: ambos
+   ven la celebración. Abrir el chat, enviar, comprobar lectura/escritura y eliminar
+   o bloquear desde cualquiera de las sesiones.
+3. Herramientas de prueba: generar personas, recibir un like, hacer like al perfil y
+   recibir un mensaje de prueba. Se conservan tras recargar.
+4. Perfil → Anthem: guardar título/artista de prueba, reproducir la muestra o quitarlo.
+5. Para repetir la integración automática, seguir `docs/BLOCK8_TESTS.md`; usa dos
+   cuentas temporales propias y no necesita el OTP del propietario.
+
+No se avanza al Bloque 9 sin un OK explícito del propietario.
 
 ---
 

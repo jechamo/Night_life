@@ -681,6 +681,7 @@
     }
   },
   "matching": {
+    "failed": "Could not complete the action. Try again.",
     "modes": {
       "here": "Here Now",
       "tonight": "Going Tonight"
@@ -774,7 +775,9 @@
     "send": "Send",
     "sent": "Sent",
     "read": "Read",
-    "typing": "{{name}} is typing"
+    "typing": "{{name}} is typing",
+    "sendFailed": "Could not send the message. Try again.",
+    "loadOlder": "Load earlier messages"
   },
   "safety": {
     "unavailable": "This profile is no longer available",
@@ -1714,5 +1717,14 @@
         "clear": "Remove token"
       }
     }
+  },
+  "anthem": {
+    "testHint": "Test Anthem saved to your profile. The button plays a local synthesized sample.",
+    "unavailable": "Spotify is not connected yet. You can choose your Anthem when it becomes available.",
+    "title": "Test song",
+    "artist": "Test artist",
+    "testSample": "Test sample",
+    "remove": "Remove Anthem",
+    "failed": "Could not save. Try again."
   }
 }

@@ -24,14 +24,24 @@ insert into public.profiles (id, name, birthdate, gender, onboarded_at, is_test)
 insert into public.verification_status (user_id, phone_verified, age_verified, age_mode) values
   ('00000000-0000-4000-8000-00000000000a', true, true, 'live'),
   ('00000000-0000-4000-8000-00000000000b', true, false, null),
+  ('00000000-0000-4000-8000-00000000000c', true, true, 'sandbox'),
   ('00000000-0000-4000-8000-00000000000d', true, true, 'live');
 insert into public.user_roles (user_id, role) values
   ('00000000-0000-4000-8000-00000000000a', 'user'),
   ('00000000-0000-4000-8000-00000000000b', 'user'),
+  ('00000000-0000-4000-8000-00000000000c', 'tester'),
   ('00000000-0000-4000-8000-00000000000d', 'tester'),
   ('00000000-0000-4000-8000-00000000000e', 'admin');
 insert into public.consent_records (user_id, kind, consent_key, granted, method) values
   ('00000000-0000-4000-8000-00000000000b', 'consent', 'marketing', true, 'toggle');
+-- Block 8 public discovery requires reciprocal consent, preferences and age for BOTH.
+update public.app_settings set value='sandbox' where key='verification_mode';
+insert into public.user_preferences(user_id,interested_in,age_min,age_max)
+select id,array['women','men','non_binary'],18,60 from public.profiles where id in
+ ('00000000-0000-4000-8000-00000000000a','00000000-0000-4000-8000-00000000000c','00000000-0000-4000-8000-00000000000d');
+insert into public.consent_records(user_id,kind,consent_key,granted,method)
+select id,'consent','orientation',true,'signature' from public.profiles where id in
+ ('00000000-0000-4000-8000-00000000000a','00000000-0000-4000-8000-00000000000c','00000000-0000-4000-8000-00000000000d');
 insert into public.emergency_contacts (user_id, name, phone) values
   ('00000000-0000-4000-8000-00000000000b', 'Mamá', '+34600000001');
 
@@ -79,7 +89,7 @@ insert into _results select 'user sees only own profile', count(*) = 1 and bool_
 insert into _results select 'IDOR: cannot read other consents', count(*) = 0 from public.consent_records where user_id = '00000000-0000-4000-8000-00000000000b';
 insert into _results select 'IDOR: cannot read other SOS contacts', count(*) = 0 from public.emergency_contacts where user_id = '00000000-0000-4000-8000-00000000000b';
 insert into _results select 'user sees only own roles', count(*) = 1 from public.user_roles;
-insert into _results select 'public profiles exclude test data', count(*) filter (where is_test) = 0 and count(*) filter (where name = 'Bea') = 1 from public.search_public_profiles(50);
+insert into _results select 'public profiles exclude test and unverified data', count(*) filter (where is_test) = 0 and count(*) filter (where name = 'Bea') = 0 and count(*) filter (where name = 'Tess') = 1 from public.search_public_profiles(50);
 insert into _results select 'audit hidden from users', count(*) = 0 from public.admin_audit_log;
 do $$
 begin

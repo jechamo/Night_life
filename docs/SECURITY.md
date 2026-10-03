@@ -2,6 +2,41 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 8 — puerta de seguridad, 2026-10-04
+
+- Revisión de las tres migraciones, RPC, RLS, Storage, adaptadores y generador de
+  fixtures. Ninguna función `SECURITY DEFINER` en `public`; helpers revocados,
+  `search_path=''` y envoltorios invoker. Likes/matches/mensajes solo los escribe el servidor.
+- Edad vigente de ambos, consentimiento y compatibilidad recíproca para descubrir y
+  dar like. Red/discreto ocultan swipes; el bloqueo oculta ambos sentidos. Un tester
+  sin verificar no puede ligar, y un usuario normal no lee ni recibe fixtures.
+- Cuota de likes serializada por usuario y match por pareja; contador diario privado
+  independiente de borrar likes. Entitlements comprobados en servidor; ninguna
+  identidad del panel de likes viaja al cliente sin `see_likes`.
+- Broadcast privado solo en el buzón propio, sin política INSERT para clientes.
+  Match y mensajes emiten IDs; cada lectura vuelve a autorizarse mediante RPC.
+  Un cliente autenticado no pudo suscribirse al buzón de su pareja (prueba real).
+- Chat de texto plano (React lo escapa), 1.000 caracteres, paginación de 100 con
+  cursor compuesto, cuotas por usuario y HMAC de IP. Eliminar/bloquear borra el match
+  y sus mensajes, emite retirada a ambos y limpia su caché. Revocar la edad del otro
+  participante también deniega acceso.
+- Fotos privadas con URLs de 5 minutos y RLS de visibilidad/participación; los
+  avatares de prueba solo se asignan cuando el servidor identifica un fixture.
+  Anthem solo reproduce una muestra propia local, sin URLs externas ni Spotify activo.
+- `test-tools` conserva autenticación propia con `getUser`, perfil activo, rol + flag,
+  auditoría y fixtures sandbox; borra una creación parcial si fallan sus registros.
+  Los simuladores no conceden verificación live ni modifican identidades reales.
+- Evidencia: 62/62 SQL de matching, 33/33 RLS, 51/51 SQL del bloque 7, 16/16
+  integración de dos clientes y 317/317 tests. `npm audit`: 0 vulnerabilidades.
+- Advisors: INFO esperado de RLS sin políticas en las dos tablas nuevas privadas,
+  ambas revocadas; [explicación del Advisor](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy).
+  Persiste el WARN previo de [protección de contraseñas filtradas](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)
+  (acceso de la app por OTP). Sin nuevos avisos críticos/altos.
+
+La prueba real usa cuentas desechables y credenciales aleatorias en `.tmp` ignorado;
+se retiraron sus usuarios Auth y local de prueba al terminar. No se tocaron el perfil,
+consentimientos ni fotos del propietario.
+
 ## Bloque 7 — puerta de seguridad, 2026-10-03 ✅ sin hallazgos críticos ni altos
 
 - **RPC:** toda la lógica en funciones `private` SECURITY DEFINER con `search_path=''` y

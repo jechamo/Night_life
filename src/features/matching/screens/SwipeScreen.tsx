@@ -10,7 +10,7 @@ import { canPerform } from '@/features/verification/model/verification'
 import { MOCK_CENTER } from '@/mocks/world/places.mock'
 import { useEntitlement } from '@/shared/entitlements/use-entitlement'
 import { newPeopleKey, type NewPeopleNotice } from '@/shared/realtime/RealtimeBridge'
-import { ButtonLink } from '@/shared/ui/button'
+import { Button, ButtonLink } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -98,8 +98,28 @@ export function SwipeScreen() {
         <Switch id={switchId} checked={onlyVerified} onCheckedChange={setOnlyVerified} />
       </div>
       <div className="px-safe mt-3 flex flex-1 flex-col pb-4">
+        {(like.isError || pass.isError || undo.isError) && (
+          <p role="alert" className="mb-3 text-sm text-danger">
+            {t('matching.failed')}
+          </p>
+        )}
         {candidates.isPending ? (
           <Skeleton className="mx-auto aspect-[3/4] w-full max-w-sm" />
+        ) : candidates.isError ? (
+          <EmptyState
+            icon={SearchCheck}
+            title={t('matching.failed')}
+            description=""
+            action={
+              <Button
+                onClick={() => {
+                  void candidates.refetch()
+                }}
+              >
+                {t('common.retry')}
+              </Button>
+            }
+          />
         ) : (
           <SwipeDeck
             key={`${placeId}-${onlyVerified}`}
@@ -114,7 +134,7 @@ export function SwipeScreen() {
               if (result.value.match) celebrate(result.value.match)
               return 'ok'
             }}
-            onPass={(candidate) => pass.mutate(candidate.profile.id)}
+            onPass={(candidate) => pass.mutateAsync(candidate.profile.id)}
             onUndo={async () => (await undo.mutateAsync()).ok}
             empty={
               <div>

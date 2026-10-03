@@ -1,4 +1,5 @@
 import { createWebBiometrics } from './biometrics/biometrics.web'
+import { createWebAudio } from './audio/audio.web'
 import { createWebCamera } from './camera/camera.web'
 import { createWebDeepLinks } from './deep-links/deep-links.web'
 import { createWebDeviceId } from './device-id/device-id.web'
@@ -23,6 +24,7 @@ export function createWebPlatform({ appUrl }: WebPlatformOptions = {}): Platform
   const preferences = createWebPreferences()
   return {
     runtime: 'web',
+    audio: createWebAudio(),
     geolocation: createWebGeolocation(),
     camera: createWebCamera(),
     haptics: createWebHaptics(),

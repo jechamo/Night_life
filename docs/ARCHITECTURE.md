@@ -84,7 +84,16 @@ Transactional outbox (9).
 
 - TanStack Query es la única caché de cliente. Desde el Bloque 7, `RealtimeBridge` (en el
   `AppShell`) escucha el Broadcast privado `place-stats:live|test` y escribe las cifras en
-  la caché de lugares; el chat se añadirá en el Bloque 8.
+  la caché de lugares. Desde el Bloque 8 escucha además el buzón privado
+  `social:<user_id>`: match para ambos, mensajes, lectura, escritura y retirada.
+- Matching y chat usan adaptadores reales con Zod. El servidor comprueba compatibilidad
+  y ventajas, serializa likes por usuario/pareja y persiste los mensajes. Los Broadcast
+  sociales contienen IDs; las RPC vuelven a autorizar los datos al cargar.
+- El historial del chat usa páginas de 100 y un cursor `(created_at, id)`; la caché
+  reconcilia páginas, envíos y notificaciones por ID. La pila usa IDs de perfiles para
+  no saltarse tarjetas cuando cambia la lista del servidor.
+- Anthem de prueba se persiste en el perfil y reproduce una muestra propia mediante
+  `platform.audio`. La integración externa de Spotify espera acceso autorizado.
 - El mapa real (Mapbox GL JS) se carga con `lazy()` solo tras una reserva concedida por
   `reserve_map_load()`; si no, se usa el mapa de prueba (ADR 0010).
 - Reintentos con _backoff_ exponencial (máx. 8 s) en consultas; sin reintentos en mutaciones.

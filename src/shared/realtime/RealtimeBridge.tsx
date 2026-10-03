@@ -4,6 +4,7 @@ import { messagesKey, summariesKey, typingKey } from '@/features/chats/hooks/use
 import type { ChatMessage } from '@/features/chats/services/chat-service'
 import { useMatchCelebration } from '@/features/matching/components/MatchCelebration'
 import { matchesKey } from '@/features/matching/hooks/use-matching'
+import type { Match } from '@/features/matching/services/matching-service'
 import { placesListKey } from '@/features/places/hooks/use-places'
 import type { Place } from '@/features/places/model/types'
 import { useServices } from '@/shared/services/ServicesProvider'
@@ -58,15 +59,34 @@ export function RealtimeBridge() {
             break
           case 'message':
             queryClient.setQueryData<ChatMessage[]>(messagesKey(event.message.matchId), (list) =>
-              list ? [...list, event.message] : list,
+              list && !list.some((m) => m.id === event.message.id)
+                ? [...list, event.message]
+                : list,
             )
             void queryClient.invalidateQueries({ queryKey: summariesKey })
             break
           case 'typing':
             queryClient.setQueryData(typingKey(event.matchId), event.typing)
+            if (event.typing)
+              setTimeout(() => queryClient.setQueryData(typingKey(event.matchId), false), 6000)
             break
           case 'read':
+          case 'messages_changed':
             void queryClient.invalidateQueries({ queryKey: messagesKey(event.matchId) })
+            void queryClient.invalidateQueries({ queryKey: summariesKey })
+            break
+          case 'removed':
+            queryClient.setQueryData<Match[]>(matchesKey, (list) =>
+              list?.filter((m) => m.id !== event.matchId),
+            )
+            queryClient.removeQueries({ queryKey: messagesKey(event.matchId) })
+            queryClient.removeQueries({ queryKey: typingKey(event.matchId) })
+            void queryClient.invalidateQueries({ queryKey: ['matching'] })
+            void queryClient.invalidateQueries({ queryKey: summariesKey })
+            break
+          case 'refresh':
+            void queryClient.invalidateQueries({ queryKey: ['matching'] })
+            void queryClient.invalidateQueries({ queryKey: ['chat'] })
             break
         }
       }),

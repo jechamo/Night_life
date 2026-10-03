@@ -3,7 +3,7 @@ import type { VerificationService } from '@/features/verification/services/verif
 import type { AppServices } from '@/shared/services/services'
 
 /**
- * Blocks 7–8 still use preview services. Every sensitive operation must recheck
+ * Every sensitive operation must recheck
  * persisted verification, even when called directly without a screen guard.
  * Supabase RLS independently enforces access to actual social rows.
  */
@@ -57,7 +57,7 @@ export function withPersistedAgeGate(
       subscribe(handler) {
         let active = true
         const unsubscribe = base.realtime.subscribe((event) => {
-          if (event.type === 'stats') {
+          if (event.type === 'stats' || event.type === 'removed' || event.type === 'refresh') {
             handler(event)
             return
           }

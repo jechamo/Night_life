@@ -258,6 +258,17 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
           const venue = (await service.venues()).find((v) => v.isTest)
           return venue ? String(await service.fillTestVenue(venue.id, 25)) : 'none'
         }
+        if (tool === 'test_like_me' || tool === 'send_test_messages') {
+          const result = must(
+            await db.rpc('sim_social', { p_action: tool === 'test_like_me' ? 'like' : 'message' }),
+          )
+          return (
+            z
+              .object({ result: z.string().optional(), usedToday: z.number().optional() })
+              .parse(result).result ?? 'like'
+          )
+        }
+        if (tool === 'reset_likes') return 'disabled'
         if (tool === 'expire_everything') {
           const result = simResultSchema.parse(must(await db.rpc('sim_advance_expiry')))
           return `${result.eventsBackdated} / ${result.attendanceExpired} / ${result.lostExpired}`

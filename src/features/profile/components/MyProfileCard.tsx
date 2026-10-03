@@ -10,6 +10,7 @@ import { Badge } from '@/shared/ui/badge'
 import { GlassCard } from '@/shared/ui/card'
 import { Switch } from '@/shared/ui/switch'
 import { useMyProfile, useUpdateProfile } from '../use-my-profile'
+import { AnthemEditor } from './AnthemEditor'
 
 const LIGHTS: readonly { value: TrafficLight; dot: string }[] = [
   { value: 'green', dot: 'bg-success' },
@@ -50,6 +51,7 @@ export function MyProfileCard() {
           {me.anthem && <AnthemChip anthem={me.anthem} />}
         </div>
       </GlassCard>
+      <AnthemEditor />
       <GlassCard className="space-y-3">
         <p className="font-medium">{t('profileMenu.trafficLight.title')}</p>
         <div

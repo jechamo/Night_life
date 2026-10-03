@@ -6,7 +6,7 @@ import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { PhotoImage } from '@/shared/images/PhotoImage'
 import { cn } from '@/shared/lib/cn'
 import { ScreenHeader } from '@/shared/ui/screen-header'
-import { useLikesYou } from '../hooks/use-matching'
+import { useLikesYou, useLikesYouCount } from '../hooks/use-matching'
 
 /**
  * "Quién te ha dado like" (PRD 6.6.1, premium `see_likes`). Without the entitlement
@@ -15,6 +15,7 @@ import { useLikesYou } from '../hooks/use-matching'
 export function LikesYouScreen() {
   const { t } = useTranslation()
   const { data: people = [] } = useLikesYou()
+  const { data: count = people.length } = useLikesYouCount()
   const { granted } = useEntitlement('see_likes')
   const paywall = usePaywallState()
   const locked = !granted
@@ -23,7 +24,7 @@ export function LikesYouScreen() {
     <>
       <ScreenHeader
         title={t('matching.likesYou.title')}
-        description={t('matching.likesYou.count', { count: people.length })}
+        description={t('matching.likesYou.count', { count })}
         backTo="/tonight"
       />
       {locked && paywall !== 'hidden' && (
@@ -41,7 +42,15 @@ export function LikesYouScreen() {
         </Link>
       )}
       <ul className="px-safe mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {people.map((person) => (
+        {(locked
+          ? Array.from({ length: Math.min(count, 50) }, (_, i) => ({
+              id: `locked-${i}`,
+              name: '',
+              age: 0,
+              photos: [] as string[],
+            }))
+          : people
+        ).map((person) => (
           <li
             key={person.id}
             className="relative aspect-[3/4] overflow-hidden rounded-theme bg-surface-raised"

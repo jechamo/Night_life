@@ -11,12 +11,12 @@ import { createOnboardingService } from './onboarding'
 import { createPlacesService } from './places'
 import { createPrivacyService, withRealAccountStatus } from './privacy'
 import { createConsentService, createProfileService, createSafetyService } from './profile'
-import { createRealtimeService, mergeRealtime } from './realtime'
+import { createRealtimeService } from './realtime'
+import { createChatService, createMatchingService } from './social'
 import { createVerificationService } from './verification'
 
 /**
- * Block 7 composition: identity/legal from Block 5 plus real places, attendance
- * and place-stats realtime. Matching/chat stay simulated until Block 8.
+ * Block 8 composition: persisted social services and private realtime alongside places.
  */
 export function createSupabaseServices(
   config: { url: string; publishableKey: string },
@@ -31,7 +31,9 @@ export function createSupabaseServices(
       ...simulated,
       places: createPlacesService(db),
       attendance: createAttendanceService(db),
-      realtime: mergeRealtime(createRealtimeService(db), simulated.realtime),
+      matching: createMatchingService(db),
+      chat: createChatService(db),
+      realtime: createRealtimeService(db),
     },
     verification,
   )

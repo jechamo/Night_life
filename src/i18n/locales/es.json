@@ -681,6 +681,7 @@
     }
   },
   "matching": {
+    "failed": "No se ha podido completar la acción. Inténtalo de nuevo.",
     "modes": {
       "here": "Aquí Ahora",
       "tonight": "Esta Noche Voy"
@@ -774,7 +775,9 @@
     "send": "Enviar",
     "sent": "Enviado",
     "read": "Leído",
-    "typing": "{{name}} está escribiendo"
+    "typing": "{{name}} está escribiendo",
+    "sendFailed": "No se ha podido enviar el mensaje. Inténtalo de nuevo.",
+    "loadOlder": "Cargar mensajes anteriores"
   },
   "safety": {
     "unavailable": "Este perfil ya no está disponible",
@@ -1714,5 +1717,14 @@
         "clear": "Quitar token"
       }
     }
+  },
+  "anthem": {
+    "testHint": "Anthem de prueba guardado en tu perfil. El botón reproduce una muestra sintética local.",
+    "unavailable": "Spotify aún no está conectado. Podrás elegir tu Anthem cuando esté disponible.",
+    "title": "Canción de prueba",
+    "artist": "Artista de prueba",
+    "testSample": "Muestra de prueba",
+    "remove": "Quitar Anthem",
+    "failed": "No se ha podido guardar. Inténtalo de nuevo."
   }
 }

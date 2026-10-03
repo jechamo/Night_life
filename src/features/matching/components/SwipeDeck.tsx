@@ -39,41 +39,51 @@ export function SwipeDeck({
 }: {
   candidates: readonly Candidate[]
   onLike: (candidate: Candidate) => Promise<LikeOutcome>
-  onPass: (candidate: Candidate) => void
+  onPass: (candidate: Candidate) => Promise<void>
   onUndo: () => Promise<boolean>
   canUndo: boolean
   empty: React.ReactNode
 }) {
   const { t } = useTranslation()
   const tokens = useMotionTokens()
-  const [history, setHistory] = useState<SwipeDirection[]>([])
+  const [history, setHistory] = useState<{ dir: SwipeDirection; id: string }[]>([])
   const [exit, setExit] = useState<Exit>({ dir: 'none' })
   const [rewinding, setRewinding] = useState(false)
   // One decision at a time: a second tap while the like is in flight would like twice.
   const deciding = useRef(false)
-  const index = history.length
-  const top = candidates[index]
-  const next = candidates[index + 1]
+  const available = candidates.filter((c) => !history.some((h) => h.id === c.profile.id))
+  const [top, next] = available
 
   const decide = async (dir: SwipeDirection) => {
     if (!top || deciding.current) return
     deciding.current = true
     try {
       if (dir === 'like' && (await onLike(top)) === 'limit') return
-      if (dir === 'pass') onPass(top)
+      if (dir === 'pass') await onPass(top)
       setRewinding(false)
       setExit({ dir })
-      setHistory((h) => [...h, dir])
+      setHistory((h) => [...h, { dir, id: top.profile.id }])
+    } catch {
+      // The mutation exposes a translated error in the screen; keep the current card.
+      return
     } finally {
       deciding.current = false
     }
   }
 
   const undo = async () => {
-    if (history.at(-1) !== 'pass' || !(await onUndo())) return
-    setRewinding(true)
-    setExit({ dir: 'none' })
-    setHistory((h) => h.slice(0, -1))
+    if (deciding.current || history.at(-1)?.dir !== 'pass') return
+    deciding.current = true
+    try {
+      if (!(await onUndo())) return
+      setRewinding(true)
+      setExit({ dir: 'none' })
+      setHistory((h) => h.slice(0, -1))
+    } catch {
+      return
+    } finally {
+      deciding.current = false
+    }
   }
 
   const onKeyDown = (event: KeyboardEvent) => {
@@ -135,7 +145,7 @@ export function SwipeDeck({
             variant="glass"
             size="icon"
             aria-label={t('matching.undo')}
-            disabled={history.at(-1) !== 'pass'}
+            disabled={history.at(-1)?.dir !== 'pass'}
             onClick={() => void undo()}
           >
             <Rewind className="text-warning" aria-hidden />

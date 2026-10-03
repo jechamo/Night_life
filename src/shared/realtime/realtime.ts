@@ -13,6 +13,9 @@ export type RealtimeEvent =
   | { type: 'message'; message: ChatMessage }
   | { type: 'typing'; matchId: string; typing: boolean }
   | { type: 'read'; matchId: string }
+  | { type: 'messages_changed'; matchId: string }
+  | { type: 'removed'; matchId: string }
+  | { type: 'refresh' }
 
 export interface RealtimeService {
   subscribe(handler: (event: RealtimeEvent) => void): () => void

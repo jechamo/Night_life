@@ -1353,6 +1353,24 @@ export type Database = {
           },
         ]
       }
+      swipe_passes: {
+        Row: {
+          created_at: string
+          person_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          person_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          person_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_devices: {
         Row: {
           device_hmac: string
@@ -1710,6 +1728,12 @@ export type Database = {
       }
       admin_create_venue: { Args: { p: Json }; Returns: string }
       admin_dashboard: { Args: never; Returns: Json }
+      admin_delete_venue: { Args: { p_venue: string }; Returns: undefined }
+      admin_import_catalogue: { Args: { p_items: Json }; Returns: Json }
+      admin_import_osm_venues: {
+        Args: { p_city: string; p_items: Json }
+        Returns: Json
+      }
       admin_list_users: {
         Args: { p_limit?: number; p_query?: string }
         Returns: {
@@ -1721,10 +1745,10 @@ export type Database = {
           roles: string[]
         }[]
       }
-      admin_delete_venue: { Args: { p_venue: string }; Returns: undefined }
-      admin_import_catalogue: { Args: { p_items: Json }; Returns: Json }
-      admin_import_osm_venues: { Args: { p_city: string; p_items: Json }; Returns: Json }
-      admin_list_venues: { Args: { p_city?: string; p_query?: string }; Returns: Json }
+      admin_list_venues: {
+        Args: { p_city?: string; p_query?: string }
+        Returns: Json
+      }
       admin_provider_access: { Args: never; Returns: Json }
       admin_resolve_verification: {
         Args: { p_approve: boolean; p_note?: string; p_session: string }
@@ -1775,6 +1799,17 @@ export type Database = {
         Returns: Json
       }
       cancel_going: { Args: never; Returns: Json }
+      chat_messages: {
+        Args: { p_before?: string; p_before_id?: string; p_match: string }
+        Returns: Json
+      }
+      chat_read: { Args: { p_match: string }; Returns: undefined }
+      chat_send: { Args: { p_match: string; p_text: string }; Returns: Json }
+      chat_summaries: { Args: never; Returns: Json }
+      chat_typing: {
+        Args: { p_match: string; p_typing: boolean }
+        Returns: undefined
+      }
       check_in: {
         Args: {
           p_lat: number
@@ -1825,6 +1860,20 @@ export type Database = {
         Args: { p_post_id: string; p_text: string }
         Returns: Json
       }
+      matching_block: { Args: { p_person: string }; Returns: undefined }
+      matching_candidates: { Args: { p_place?: string }; Returns: Json }
+      matching_like: { Args: { p_person: string }; Returns: Json }
+      matching_likes_you: { Args: never; Returns: Json }
+      matching_matches: { Args: never; Returns: Json }
+      matching_pass: { Args: { p_person: string }; Returns: undefined }
+      matching_person: { Args: { p_person: string }; Returns: Json }
+      matching_report: {
+        Args: { p_comment: string; p_person: string; p_reason: string }
+        Returns: undefined
+      }
+      matching_status: { Args: never; Returns: Json }
+      matching_undo: { Args: never; Returns: Json }
+      matching_unmatch: { Args: { p_match: string }; Returns: undefined }
       my_attendance: { Args: never; Returns: Json }
       my_vibe: { Args: { p_place_id: string }; Returns: string }
       provider_reserve: {
@@ -1876,6 +1925,7 @@ export type Database = {
           traffic_light: Database['public']['Enums']['traffic_light']
         }[]
       }
+      set_anthem: { Args: { p_anthem: Json }; Returns: undefined }
       set_going: { Args: { p_place_id: string }; Returns: Json }
       sign_documents: { Args: { p_slugs: string[] }; Returns: undefined }
       sim_advance_expiry: { Args: never; Returns: Json }
@@ -1888,6 +1938,7 @@ export type Database = {
         Returns: Json
       }
       sim_seed_places: { Args: never; Returns: Json }
+      sim_social: { Args: { p_action: string }; Returns: Json }
       simulate_verification_result: {
         Args: { p_level: string; p_outcome: string }
         Returns: Json

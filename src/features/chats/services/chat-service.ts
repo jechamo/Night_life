@@ -16,7 +16,7 @@ export interface ChatSummary {
 /** Port for chat (Supabase Realtime in Block 8). Messages are plain text, never HTML. */
 export interface ChatService {
   summaries(): Promise<ChatSummary[]>
-  messages(matchId: string): Promise<ChatMessage[]>
+  messages(matchId: string, before?: { sentAt: string; id: string }): Promise<ChatMessage[]>
   send(matchId: string, text: string): Promise<ChatMessage>
   markRead(matchId: string): Promise<void>
   setTyping(matchId: string, typing: boolean): void

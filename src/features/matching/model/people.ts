@@ -6,6 +6,7 @@ export type TrafficLight = 'green' | 'yellow' | 'red'
 export interface Anthem {
   title: string
   artist: string
+  simulated?: boolean
 }
 
 /** Public profile: only what the public view exposes (PRD 6.15 API3). */

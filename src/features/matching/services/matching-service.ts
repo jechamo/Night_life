@@ -30,6 +30,8 @@ export interface MatchingService {
   /** Premium `undo`: returns the last passed candidate. */
   undo(): Promise<Result<Candidate, 'nothing_to_undo'>>
   likesUsedToday(): Promise<number>
+  likeStatus?(): Promise<{ usedToday: number; limit: number; unlimited: boolean }>
+  likesYouCount?(): Promise<number>
   likesYou(): Promise<PublicProfile[]>
   matches(): Promise<Match[]>
   person(personId: string): Promise<PublicProfile | null>

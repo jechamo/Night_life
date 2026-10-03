@@ -1,6 +1,15 @@
 import { MessageCircle } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { createContext, use, useCallback, useMemo, useState, type ReactNode } from 'react'
+import {
+  createContext,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -10,6 +19,7 @@ import { PhotoImage } from '@/shared/images/PhotoImage'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import { Button } from '@/shared/ui/button'
 import { TextAreaField } from '@/shared/ui/text-field'
+import { useServices } from '@/shared/services/ServicesProvider'
 import { matchTitle, suggestIcebreakers, type Icebreaker } from '../model/matching'
 import type { Match } from '../services/matching-service'
 import { AnthemChip } from './AnthemChip'
@@ -53,7 +63,21 @@ const PARTICLES = Array.from({ length: 18 }, (_, i) => {
  */
 export function MatchCelebrationProvider({ children }: { children: ReactNode }) {
   const [match, setMatch] = useState<Match | null>(null)
-  const celebrate = useCallback((m: Match) => setMatch(m), [])
+  const seen = useRef(new Set<string>())
+  const { session } = useServices()
+  useEffect(
+    () =>
+      session.onChange(() => {
+        seen.current.clear()
+        setMatch(null)
+      }),
+    [session],
+  )
+  const celebrate = useCallback((m: Match) => {
+    if (seen.current.has(m.id)) return
+    seen.current.add(m.id)
+    setMatch(m)
+  }, [])
   const value = useMemo(() => ({ celebrate }), [celebrate])
   return (
     <MatchContext value={value}>

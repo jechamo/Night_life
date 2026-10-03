@@ -8,6 +8,7 @@ export function createFakePlatform(overrides: Partial<Platform> = {}): Platform 
   const preferences = createMemoryPreferences()
   return {
     runtime: 'web',
+    audio: { playTestSample: () => Promise.resolve(ok(undefined)), stop: () => {} },
     geolocation: {
       checkPermission: () => Promise.resolve('prompt'),
       getCurrentPosition: () => Promise.resolve(err('unsupported')),

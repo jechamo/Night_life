@@ -9,6 +9,7 @@ import type { ProfileService } from '@/features/profile/services/profile-service
 import type { SafetyService } from '@/features/safety/services/safety-service'
 import { currentUserId, isOnboarded, type Db } from './client'
 import { must } from './errors'
+import { anthemSchema } from './social'
 
 const SIGNED_URL_SECONDS = 60 * 30
 const INTERESTS: readonly InterestedIn[] = ['women', 'men', 'non_binary']
@@ -53,7 +54,7 @@ export function createProfileService(db: Db): ProfileService {
       photos: signed.flatMap((s) => (s.signedUrl ? [s.signedUrl] : [])),
       photoVerified: snapshot?.photo?.state === 'verified',
       trafficLight: p.traffic_light,
-      anthem: null,
+      anthem: p.anthem ? anthemSchema.parse(p.anthem) : null,
       discreet: p.discreet,
       interestedIn: (prefs.data?.interested_in ?? []).filter((i): i is InterestedIn =>
         (INTERESTS as readonly string[]).includes(i),
@@ -65,6 +66,12 @@ export function createProfileService(db: Db): ProfileService {
   return {
     getMine,
     async update(patch) {
+      if (patch.anthem !== undefined) {
+        const { error } = await db.rpc('set_anthem', {
+          p_anthem: patch.anthem ? { ...patch.anthem } : null,
+        })
+        if (error) throw error
+      }
       const { error } = await db.rpc('update_my_profile', {
         p: {
           ...(patch.bio !== undefined ? { bio: patch.bio } : {}),

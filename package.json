@@ -16,6 +16,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
+    "test:blocks:7-8": "vitest run src/features/matching src/features/chats src/features/places src/features/attendance src/features/events src/adapters/supabase/places.test.ts src/adapters/supabase/social.test.ts src/features/admin/model/venue.test.ts src/features/admin/model/venue-csv.test.ts src/features/admin/components/ProviderQuotas.test.tsx",
+    "test:realtime:8": "node --use-system-ca scripts/block8-realtime.mjs",
     "test:watch": "vitest",
     "tokens": "node scripts/generate-theme-css.ts",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test"

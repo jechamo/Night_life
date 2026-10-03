@@ -7,9 +7,16 @@ import { useMatches } from '@/features/matching/hooks/use-matching'
 import { PhotoImage } from '@/shared/images/PhotoImage'
 import { Button, ButtonLink } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { useServices } from '@/shared/services/ServicesProvider'
 import { MessageBubble } from './components/MessageBubble'
 import { TypingIndicator } from './components/TypingIndicator'
-import { useMarkRead, useMessages, useSendMessage, useTyping } from './hooks/use-chat'
+import {
+  useEarlierMessages,
+  useMarkRead,
+  useMessages,
+  useSendMessage,
+  useTyping,
+} from './hooks/use-chat'
 
 const MAX_MESSAGE = 1000
 
@@ -22,11 +29,15 @@ export function ChatScreen() {
   const { data: matches } = useMatches()
   const match = matches?.find((m) => m.id === matchId)
   const { data: messages = [] } = useMessages(matchId)
+  const earlier = useEarlierMessages(matchId)
   const typing = useTyping(matchId)
   const send = useSendMessage(matchId)
   const markRead = useMarkRead(matchId)
   const initialDraft = (location.state as { draft?: string } | null)?.draft ?? ''
   const [text, setText] = useState(initialDraft)
+  const { chat } = useServices()
+  const typingSent = useRef(0)
+  useEffect(() => () => chat.setTyping(matchId, false), [chat, matchId])
   const [action, setAction] = useState<SafetyAction | null>(null)
   const endRef = useRef<HTMLLIElement>(null)
   const { mutate: markAsRead } = markRead
@@ -49,6 +60,8 @@ export function ChatScreen() {
   const submit = () => {
     const value = text.trim()
     if (!value) return
+    if (send.isPending) return
+    chat.setTyping(matchId, false)
     send.mutate(value, { onSuccess: () => setText('') })
   }
 
@@ -96,6 +109,13 @@ export function ChatScreen() {
         className="px-safe flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overscroll-contain py-4 [&>li]:shrink-0"
         aria-live="polite"
       >
+        {messages.length >= 100 && earlier.data?.length !== 0 && (
+          <li>
+            <Button variant="ghost" disabled={earlier.isPending} onClick={() => earlier.mutate()}>
+              {t('chats.loadOlder')}
+            </Button>
+          </li>
+        )}
         {messages.map((message) => (
           <MessageBubble key={message.id} message={message} />
         ))}
@@ -122,7 +142,13 @@ export function ChatScreen() {
           value={text}
           maxLength={MAX_MESSAGE}
           placeholder={t('chats.placeholder')}
-          onChange={(event) => setText(event.target.value)}
+          onChange={(event) => {
+            setText(event.target.value)
+            if (!event.target.value || Date.now() - typingSent.current >= 3000) {
+              typingSent.current = Date.now()
+              chat.setTyping(matchId, !!event.target.value)
+            }
+          }}
           onKeyDown={(event) => {
             if (event.key === 'Enter' && !event.shiftKey) {
               event.preventDefault()
@@ -140,6 +166,11 @@ export function ChatScreen() {
           <Send aria-hidden />
         </Button>
       </form>
+      {send.isError && (
+        <p role="alert" className="px-safe py-2 text-sm text-danger">
+          {t('chats.sendFailed')}
+        </p>
+      )}
       <SafetySheet
         action={action}
         personId={match.person.id}

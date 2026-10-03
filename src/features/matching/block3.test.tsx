@@ -56,7 +56,7 @@ describe('Swipe, match and chat (Block 3 "done when")', () => {
     expect(await screen.findByRole('article', { name: 'Lucía, 26' })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Me gusta' }))
     const match = await screen.findByRole('dialog', { name: '¡Es un match!' })
-    const icebreaker = within(match).getAllByRole('button')[0]!
+    const icebreaker = within(match).getByRole('button', { name: /¿Rosalía también/ })
     const text = icebreaker.textContent ?? ''
     await user.click(icebreaker)
     // The written message is sent from the match screen: the conversation exists already.

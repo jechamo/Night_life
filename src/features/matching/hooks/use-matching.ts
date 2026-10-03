@@ -12,7 +12,7 @@ export function useCandidates(placeId: string | null, onlyVerified: boolean) {
     queryKey: ['matching', 'candidates', placeId],
     queryFn: () => matching.candidates(placeId),
     select: (list) => rankCandidates(list, onlyVerified),
-    staleTime: Infinity,
+    staleTime: 30_000,
   })
 }
 
@@ -23,7 +23,19 @@ export function useLikesLeft() {
     queryKey: ['matching', 'likes-used'],
     queryFn: () => matching.likesUsedToday(),
   })
-  return { remaining: likesRemaining(used, unlimited), unlimited }
+  const { data: status } = useQuery({
+    queryKey: ['matching', 'like-status'],
+    queryFn: () => matching.likeStatus!(),
+    enabled: !!matching.likeStatus,
+  })
+  return {
+    remaining: likesRemaining(
+      status?.usedToday ?? used,
+      status?.unlimited ?? unlimited,
+      status?.limit,
+    ),
+    unlimited: status?.unlimited ?? unlimited,
+  }
 }
 
 export function useSwipeActions() {
@@ -33,18 +45,31 @@ export function useSwipeActions() {
     mutationFn: (personId: string) => matching.like(personId),
     onSuccess: async (result) => {
       if (result.ok) queryClient.setQueryData(['matching', 'likes-used'], result.value.usedToday)
+      void queryClient.invalidateQueries({ queryKey: ['matching', 'like-status'] })
       if (result.ok && result.value.match)
         await queryClient.invalidateQueries({ queryKey: matchesKey })
     },
   })
   const pass = useMutation({ mutationFn: (personId: string) => matching.pass(personId) })
-  const undo = useMutation({ mutationFn: () => matching.undo() })
+  const undo = useMutation({
+    mutationFn: () => matching.undo(),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['matching', 'candidates'] }),
+  })
   return { like, pass, undo }
 }
 
 export function useLikesYou() {
   const { matching } = useServices()
   return useQuery({ queryKey: ['matching', 'likes-you'], queryFn: () => matching.likesYou() })
+}
+
+export function useLikesYouCount() {
+  const { matching } = useServices()
+  return useQuery({
+    queryKey: ['matching', 'likes-you-count'],
+    queryFn: () =>
+      matching.likesYouCount ? matching.likesYouCount() : matching.likesYou().then((p) => p.length),
+  })
 }
 
 export function useMatches() {

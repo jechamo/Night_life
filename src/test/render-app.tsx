@@ -6,6 +6,7 @@ import { createQueryClient } from '@/app/query-client'
 import { routes } from '@/app/router'
 import { createMockServices, type MockServiceOptions } from '@/mocks/mock-services'
 import { createFakePlatform } from '@/platform/testing'
+import type { AppServices } from '@/shared/services/services'
 
 /** Renders the real route tree with a fake platform and mocked services. */
 export function renderApp(
@@ -14,6 +15,7 @@ export function renderApp(
     services?: MockServiceOptions
     settings?: Partial<InitialSettings>
     platform?: Parameters<typeof createFakePlatform>[0]
+    serviceOverrides?: Partial<AppServices>
   } = {},
 ) {
   const platform = createFakePlatform(options.platform)
@@ -26,13 +28,16 @@ export function renderApp(
     language: 'es',
     ...options.settings,
   }
-  const services = createMockServices({
-    latencyMs: 0,
-    realtime: false,
-    preferences: platform.preferences,
-    ...options.services,
-    state: { onboarded: true, ...options.services?.state },
-  })
+  const services = {
+    ...createMockServices({
+      latencyMs: 0,
+      realtime: false,
+      preferences: platform.preferences,
+      ...options.services,
+      state: { onboarded: true, ...options.services?.state },
+    }),
+    ...options.serviceOverrides,
+  }
   const utils = render(
     <AppProviders
       platform={platform}

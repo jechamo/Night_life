@@ -1,4 +1,5 @@
 import type { BiometricsService } from './biometrics/biometrics'
+import type { AudioService } from './audio/audio'
 import type { CameraService } from './camera/camera'
 import type { DeepLinksService } from './deep-links/deep-links'
 import type { DeviceIdService } from './device-id/device-id'
@@ -20,6 +21,7 @@ import type { PlatformRuntime } from './types'
  */
 export interface Platform {
   runtime: PlatformRuntime
+  audio: AudioService
   geolocation: GeolocationService
   camera: CameraService
   haptics: HapticsService

@@ -64,6 +64,11 @@ Deno.serve(async (req) => {
   }
 
   const service = serviceClient()
+  const { data: owner } = await service
+    .from('profiles')
+    .select('city')
+    .eq('id', auth.user.id)
+    .single()
   let created = 0
   for (let i = 0; i < count; i++) {
     const { data, error } = await service.auth.admin.createUser({
@@ -82,24 +87,39 @@ Deno.serve(async (req) => {
       bio: pick(BIOS),
       traffic_light: pick(LIGHTS),
       is_test: true,
+      city: owner?.city ?? 'Madrid',
       onboarded_at: new Date().toISOString(),
     })
     if (profile.error) {
       await service.auth.admin.deleteUser(id)
       continue
     }
-    await Promise.all([
-      service
-        .from('verification_status')
-        .insert({ user_id: id, age_verified: true, age_verification_method: 'manual' }),
-      service.from('user_roles').insert({ user_id: id, role: 'user' }),
+    const parts = await Promise.all([
+      service.from('verification_status').insert({
+        user_id: id,
+        age_verified: true,
+        age_mode: 'sandbox',
+        age_verification_method: 'manual',
+      }),
+      service.from('user_roles').insert({ user_id: id, role: 'tester' }),
+      service.from('consent_records').insert({
+        user_id: id,
+        kind: 'consent',
+        consent_key: 'orientation',
+        granted: true,
+        method: 'signature',
+      }),
       service.from('user_preferences').insert({
         user_id: id,
-        interested_in: [pick(['women', 'men', 'non_binary'] as const)],
+        interested_in: ['women', 'men', 'non_binary'],
         age_min: 18,
         age_max: 45,
       }),
     ])
+    if (parts.some((part) => part.error)) {
+      await service.auth.admin.deleteUser(id)
+      continue
+    }
     created++
   }
   await service.from('admin_audit_log').insert({
