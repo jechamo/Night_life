@@ -51,8 +51,9 @@ y se inicia el Bloque 6; no se avanza al Bloque 7.
   `auth_leaked_password_protection` (la app usa OTP, no contraseña).
 - Webhook a configurar en Veriff Station:
   `https://ocrpfeqfqzchhrghqcfb.supabase.co/functions/v1/veriff-webhook`
-- Secretos: `VERIFF_API_KEY`, `VERIFF_SHARED_SECRET` (si se guardó como
-  `VERIF_SHARED_SECRET`, renombrarlo), `VERIFF_BASE_URL` opcional, `APP_ORIGIN`.
+- Secretos: `VERIFF_API_KEY`, `VERIF_SHARED_SECRET` (nombre fijo en Secrets;
+  el webhook también acepta `VERIFF_SHARED_SECRET`), `VERIFF_BASE_URL` opcional,
+  `APP_ORIGIN`.
 
 ### Hecho cuando
 

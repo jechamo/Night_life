@@ -22,7 +22,7 @@ Veriff Station y una decisión de test de extremo a extremo.
 Configurar exclusivamente en Supabase Secrets, nunca en `VITE_*` ni en el repositorio:
 
 - `VERIFF_API_KEY`
-- `VERIFF_SHARED_SECRET` (si el secreto se guardó como `VERIF_SHARED_SECRET`, renombrarlo)
+- `VERIF_SHARED_SECRET` (nombre real en Supabase Secrets; también se acepta `VERIFF_SHARED_SECRET`)
 - `VERIFF_BASE_URL` opcional; por defecto `https://api-saas.veriff.com`
 - `APP_ORIGIN` (origen HTTPS de la app)
 - Yoti, si se usa: `YOTI_AGE_SDK_ID`, `YOTI_AGE_API_TOKEN`

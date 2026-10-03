@@ -14,7 +14,9 @@ Deno.serve(async (req) => {
   try {
     const raw = await boundedText(req, 16_384)
     const apiKey = Deno.env.get('VERIFF_API_KEY') ?? ''
-    const secret = Deno.env.get('VERIFF_SHARED_SECRET') ?? ''
+    // Dashboard secret name is VERIF_SHARED_SECRET (one F); accept VERIFF_ as alias.
+    const secret =
+      Deno.env.get('VERIF_SHARED_SECRET') ?? Deno.env.get('VERIFF_SHARED_SECRET') ?? ''
     const client = req.headers.get('x-auth-client')
     if (!apiKey || client !== apiKey) return json(req, { error: 'invalid_signature' }, 401)
     if (!(await verifyVeriffSignature(raw, req.headers.get('x-hmac-signature'), secret)))
