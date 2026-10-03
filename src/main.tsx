@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router/dom'
 import { createWebPlatform, detectRuntime } from '@/platform'
+// Bootstrap-only: imported here (not from the platform index) because it needs the PWA plugin.
+import { registerAppUpdates } from '@/platform/app-updates'
 import { env } from '@/shared/config/env'
 import { initI18n } from '@/i18n'
 import { AppProviders } from './app/AppProviders'
@@ -14,6 +16,8 @@ import './styles/index.css'
 // Annex B adds `createNativePlatform()` for runtime === 'native'.
 if (detectRuntime() === 'native')
   console.warn('Native runtime detected: using web adapters until Annex B.')
+
+if (detectRuntime() === 'web' && import.meta.env.PROD) registerAppUpdates()
 
 const platform = createWebPlatform({ appUrl: env.appUrl })
 const settings = await loadInitialSettings(platform)

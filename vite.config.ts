@@ -13,8 +13,9 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      // Registration lives in an external file so the CSP can stay `script-src 'self'`.
-      injectRegister: 'script',
+      // Registered from the bundle (src/platform/app-updates) so the CSP stays
+      // `script-src 'self'` and the page reloads itself when a new version is live.
+      injectRegister: false,
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'robots.txt'],
       manifest: {
         id: '/',
