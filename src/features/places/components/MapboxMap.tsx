@@ -230,7 +230,8 @@ export const MapboxMap = forwardRef<
       role="application"
       aria-label={t('places.mapLabel')}
     >
-      <div ref={hostRef} className="absolute inset-0" />
+      {/* mapbox-gl.css forces `position: relative` on its container and beats layered utilities. */}
+      <div ref={hostRef} className="h-full w-full" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent" />
       <div className="absolute right-3 bottom-[calc(7.5rem+env(safe-area-inset-bottom))] flex flex-col gap-2 lg:bottom-10">
         <Button
