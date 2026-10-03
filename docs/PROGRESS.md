@@ -94,6 +94,18 @@ dos fallos de servidor y se completaron adaptadores, mapa, fichas, admin y prueb
 5. Herramientas de prueba → «Adelantar caducidades»: los eventos de prueba sin confirmar
    desaparecen.
 
+### Despliegue
+
+- Commit `ef04a2c` en `claude/festive-hawking-wdxr7b`. Vercel producción
+  `dpl_5cknFJ4vZnsJnkk2xSwfRydWtqhW`, READY, creado por MCP desde GitHub;
+  https://nightlife-connect-beige.vercel.app responde 200 con la CSP de Mapbox y sin
+  cargar el chunk del mapa en el HTML.
+
+### Pendiente del propietario
+
+- Configurar un token público `pk.` de Mapbox restringido a la URL de producción.
+- Prueba de check-in con dos sesiones reales (requiere su OTP).
+
 ---
 
 ## Imágenes y Bloque 6 — 2026-10-03
