@@ -5,6 +5,7 @@ import { Illustration } from '@/shared/images/Illustration'
 import { Button } from '@/shared/ui/button'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { AiNotice } from '../components/AiNotice'
+import { SimulationFallback } from '../components/SimulationFallback'
 import { useRequestHumanReview, useStartVerification } from '../hooks/use-verification'
 
 /** Informative screen before the provider flow (PRD 6.2 level 1): method, AI notice, alternatives. */
@@ -31,9 +32,15 @@ export function AgeVerificationScreen() {
         <p className="text-sm text-muted-foreground">{t('verification.center.neverStored')}</p>
         <p className="text-sm text-muted-foreground">{t('verification.center.testNote')}</p>
         {start.isError && (
-          <p role="alert" className="text-sm text-danger">
-            {t('verification.age.unavailable')}
-          </p>
+          <>
+            <p role="alert" className="text-sm text-danger">
+              {t('verification.age.unavailable')}
+            </p>
+            <SimulationFallback
+              disabled={start.isPending || review.isPending}
+              onChoose={() => start.mutate({ level: 'age', method: 'document', simulate: true })}
+            />
+          </>
         )}
         {review.isError && (
           <p role="alert" className="text-sm text-danger">

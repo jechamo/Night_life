@@ -5,6 +5,7 @@ const ALLOWED_ORIGINS = [
   /^https:\/\/nightlife-connect-beige\.vercel\.app$/,
   /^https:\/\/nightlife-connect(-[a-z0-9-]+)?-chaplications-projects\.vercel\.app$/,
   /^http:\/\/localhost:(5173|4173)$/,
+  /^http:\/\/127\.0\.0\.1:(5173|4173)$/,
 ]
 
 export function corsHeaders(req: Request): Record<string, string> {

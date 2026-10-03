@@ -47,5 +47,17 @@ Toda disponibilidad/caducidad se comprueba en la cuenta real antes de configurar
 
 Este documento fija el trabajo futuro; no declara configuradas las integraciones pendientes.
 El Bloque 6 tiene Veriff test en código y ya aplicado en Nightlife_Connect (migración,
-`verification`, `veriff-webhook`, `yoti-webhook`). Falta el webhook en Station y una
-decisión de test de extremo a extremo.
+`verification`, `veriff-webhook`, `yoti-webhook`), auditado el 2026-10-03.
+
+**Puerta del Bloque 6:** comprobar una decisión Test aprobada, otra rechazada y otra en
+revisión de extremo a extremo, su persistencia, la cola de admin y el borrado final en Veriff.
+La creación de sesión real y el webhook en la integración Nightlife TEST ya están comprobados.
+Las decisiones siguen pendientes de completar el flujo Test. No se posponen al Bloque 12.
+
+Registro actual: `private.verification_provider_access`. Veriff edad/identidad en Test;
+foto simulada; Yoti live no disponible. El 2026-10-03 Station mostró 14 días de trial:
+corte conservador registrado `2026-10-16T00:00:00Z`. Al caducar, no se llama al proveedor;
+el tester puede escoger simulación persistida explícita. No hay cambio automático a pago.
+
+**Puerta del Bloque 12:** contratos, costes aprobados, credenciales live, verificación
+real de personas y comparación real de foto antes de publicar esas capacidades.

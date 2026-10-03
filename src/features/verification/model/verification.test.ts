@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { AGE_GATED_ACTIONS, canPerform, classifyPhotoMatch, UNVERIFIED } from './verification'
+import {
+  AGE_GATED_ACTIONS,
+  canPerform,
+  classifyPhotoMatch,
+  UNVERIFIED,
+  usesSimulator,
+} from './verification'
 
 describe('age gate (PRD 5.2.10)', () => {
   it('blocks every flirting action until the age is verified', () => {
@@ -25,6 +31,16 @@ describe('age gate (PRD 5.2.10)', () => {
       age: { state: 'verified', verifiedAt: '2026-10-02T21:00:00Z' },
     } as const
     expect(canPerform('chat', snapshot)).toBe(true)
+  })
+})
+
+describe('simulated levels per provider', () => {
+  it('keeps photo simulated while Veriff handles age and identity', () => {
+    expect(usesSimulator('veriff', 'photo')).toBe(true)
+    expect(usesSimulator('veriff', 'age')).toBe(false)
+    expect(usesSimulator('veriff', 'identity')).toBe(false)
+    expect(usesSimulator('yoti', 'photo')).toBe(false)
+    expect(usesSimulator('simulator', 'age')).toBe(true)
   })
 })
 

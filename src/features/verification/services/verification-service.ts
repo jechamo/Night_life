@@ -20,6 +20,7 @@ export interface VerificationService {
     level: VerificationLevel,
     method?: AgeMethod,
     consent?: boolean,
+    simulate?: boolean,
   ): Promise<Result<VerificationRedirect, 'unavailable'>>
   requestHumanReview(level: VerificationLevel): Promise<VerificationSnapshot>
   /** Sandbox only (verification_mode = sandbox + test tools): simulates the provider webhook. */

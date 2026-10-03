@@ -11,8 +11,8 @@ function asNumber(value: unknown): number {
 
 /**
  * Admin over Supabase (ADR 0009): flags, settings, users/roles, audit, dashboard,
- * test data and TOTP MFA are real (role admin + aal2 checked by every RPC). The
- * queues of Blocks 6-9 (moderation, claims, payments…) remain simulated.
+ * verification reviews, test data and TOTP MFA are real (role admin + aal2 checked by
+ * every RPC). The queues of Blocks 7-9 (moderation, claims, payments…) remain simulated.
  */
 export function createAdminService(db: Db, base: AdminService): AdminService {
   return {
@@ -20,7 +20,11 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
     mode: 'live',
 
     async dashboard() {
-      const [simulated, real] = await Promise.all([base.dashboard(), db.rpc('admin_dashboard')])
+      const [simulated, real, reviews] = await Promise.all([
+        base.dashboard(),
+        db.rpc('admin_dashboard'),
+        db.rpc('admin_verification_reviews'),
+      ])
       const d = (real.data ?? {}) as Record<string, unknown>
       if (real.error) return simulated
       return {
@@ -28,10 +32,28 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
         users: asNumber(d.users),
         ageVerifiedPercent: asNumber(d.ageVerifiedPercent),
         matchesToday: asNumber(d.matchesToday),
+        pendingVerifications: reviews.error ? 0 : (reviews.data ?? []).length,
       }
     },
 
     async list(section) {
+      if (section === 'verifications') {
+        const rows = must(await db.rpc('admin_verification_reviews'))
+        return rows.map((r): AdminRow => ({
+          id: r.id,
+          title: r.user_name,
+          subtitle: r.level,
+          status: 'pending',
+          createdAt: r.created_at,
+          facts: [
+            r.provider,
+            r.mode,
+            r.method,
+            ...(r.reason ? [r.reason] : []),
+            ...(r.is_test ? ['is_test'] : []),
+          ],
+        }))
+      }
       if (section === 'audit') {
         const rows = must(
           await db
@@ -64,6 +86,15 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
     },
 
     async act(section, id, action, note) {
+      if (section === 'verifications' && (action === 'approve' || action === 'reject')) {
+        const { error } = await db.rpc('admin_resolve_verification', {
+          p_session: id,
+          p_approve: action === 'approve',
+          p_note: note ?? '',
+        })
+        if (error) throw error
+        return
+      }
       const match = section === 'users' ? ROLE_ACTION.exec(action) : null
       if (!match) return base.act(section, id, action, note)
       const role = match[2] as Role

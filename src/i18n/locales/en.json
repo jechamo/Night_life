@@ -449,14 +449,16 @@
     "sandbox": {
       "title": "Provider simulator",
       "body": "Test mode (verification_mode = sandbox): choose what the provider would return. This simulates its signed webhook.",
-      "liveMode": "The internal simulator is only available with verification_provider = simulator.",
+      "liveMode": "The internal simulator is only available to testers in sandbox with verification_provider = simulator, or for the photo while Veriff is active.",
       "documentStep": "The provider now asks for an ID with a selfie.",
       "outcomes": {
         "approved": "Approved",
         "inconclusive": "Inconclusive",
         "denied": "Rejected",
         "borderline": "Borderline match (60-85%)"
-      }
+      },
+      "fallbackBody": "You can test this level with simulated results saved to your account. They do not prove real verification.",
+      "fallbackAction": "Use test simulation"
     },
     "result": {
       "verified": "Verification complete!",

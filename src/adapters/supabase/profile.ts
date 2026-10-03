@@ -36,8 +36,10 @@ export function createProfileService(db: Db): ProfileService {
     const [profile, prefs, verification] = await Promise.all([
       db.from('profiles').select('*').eq('id', uid).single(),
       db.from('user_preferences').select('*').eq('user_id', uid).maybeSingle(),
-      db.from('verification_status').select('photo_verified').eq('user_id', uid).maybeSingle(),
+      // The snapshot applies the sandbox/live gate; the raw column would leak test badges.
+      db.rpc('verification_snapshot'),
     ])
+    const snapshot = verification.data as { photo?: { state?: unknown } } | null
     const p = must(profile)
     const signed = p.photos.length
       ? must(await db.storage.from('profile-photos').createSignedUrls(p.photos, SIGNED_URL_SECONDS))
@@ -49,7 +51,7 @@ export function createProfileService(db: Db): ProfileService {
       gender: p.gender,
       bio: p.bio,
       photos: signed.flatMap((s) => (s.signedUrl ? [s.signedUrl] : [])),
-      photoVerified: verification.data?.photo_verified ?? false,
+      photoVerified: snapshot?.photo?.state === 'verified',
       trafficLight: p.traffic_light,
       anthem: null,
       discreet: p.discreet,

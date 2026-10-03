@@ -12,7 +12,7 @@ eu-west-1) a partir del Bloque 5.
 UI (componentes)  →  hooks (estado/orquestación)  →  servicios (datos, Edge Functions)  →  adaptadores
                                                                                          ├─ Supabase (Bloque 5+)
                                                                                          ├─ plataforma (src/platform)
-                                                                                         └─ proveedores (Stripe, Yoti, Mapbox…)
+                                                                                         └─ proveedores (Stripe, Veriff/Yoti, Mapbox…)
 ```
 
 Las dependencias van en un solo sentido. La UI nunca importa `@supabase/*` ni

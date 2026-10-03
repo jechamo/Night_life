@@ -32,7 +32,6 @@ export function ProviderSandboxScreen() {
   const [params] = useSearchParams()
   const level = params.get('level')
   const sandbox = useFeatureFlag('verification_mode') === 'sandbox'
-  const simulator = useFeatureFlag('verification_provider') === 'simulator'
   const testTools = useFeatureFlag('test_tools_enabled')
   const roles = useRoles()
   const isTester = hasRole(roles, 'tester') || hasRole(roles, 'admin')
@@ -40,7 +39,7 @@ export function ProviderSandboxScreen() {
   const [documentStep, setDocumentStep] = useState(false)
 
   if (!isLevel(level)) return null
-  const allowed = sandbox && simulator && testTools && isTester
+  const allowed = sandbox && testTools && isTester
 
   const choose = (outcome: SandboxOutcome) => {
     simulate.mutate(

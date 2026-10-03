@@ -3,19 +3,20 @@
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 
-| Bloque                                              | Estado                                                |
-| --------------------------------------------------- | ----------------------------------------------------- |
-| 1 – Cimientos, diseño y arquitectura                | ✅ Aprobado (OK del propietario, 2026-10-02)          |
-| 2 – Onboarding, legal y verificación (mock)         | ✅ Aprobado                                           |
-| 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                           |
-| 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                         |
-| 5 – Backend base, legal y modo pruebas              | ✅ Terminado; pendiente de OK                         |
-| 6 – Verificaciones reales                           | 🛠️ Backend aplicado; pendiente E2E Veriff Station |
-| 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                                    |
-| 8 – Ligar, match en tiempo real y chat              | ⏳                                                    |
-| 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                                    |
-| 10 – Auditoría OWASP, pulido, PWA y QA              | ⏳                                                    |
-| 11 – Apps nativas y pagos en tiendas                | ⏳ Añadido al plan (docs/MONETIZATION.md)             |
+| Bloque                                                   | Estado                                               |
+| -------------------------------------------------------- | ---------------------------------------------------- |
+| 1 – Cimientos, diseño y arquitectura                     | ✅ Aprobado (OK del propietario, 2026-10-02)         |
+| 2 – Onboarding, legal y verificación (mock)              | ✅ Aprobado                                          |
+| 3 – App principal y experiencia de match (mock)          | ✅ Aprobado                                          |
+| 4 – Paneles, web pública y pantallas de pago (mock)      | ✅ Terminado, pendiente de OK                        |
+| 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                        |
+| 6 – Verificaciones reales                                | 🛠️ Revisión aplicada; decisiones Test E2E pendientes |
+| 7 – Mapa, lugares, eventos y estadísticas reales         | ⏳                                                   |
+| 8 – Ligar, match en tiempo real y chat                   | ⏳                                                   |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                   |
+| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
+| 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
+| 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
 
 ---
 
@@ -55,16 +56,101 @@ y se inicia el Bloque 6; no se avanza al Bloque 7.
   el webhook también acepta `VERIFF_SHARED_SECRET`), `VERIFF_BASE_URL` opcional,
   `APP_ORIGIN`.
 
+### Auditoría completa del Bloque 6 — 2026-10-03
+
+Revisión de todo lo hecho en el bloque (código, base remota, funciones y documentación) a
+petición del propietario. Correcciones aplicadas en remoto por MCP y en el repositorio:
+
+- **Idempotencia Veriff:** el id de evento era el `attemptId`, así que una decisión
+  `approved` llegada tras `review` en el mismo intento se habría descartado como duplicada.
+  Ahora es SHA-256 de sesión + intento + estado + hora de la decisión.
+- **Ventana de decisión:** la sesión caducaba a los 15 min y rechazaba decisiones tardías
+  (revisiones de Veriff). Se aceptan hasta 7 días desde la creación; el «pendiente» dura
+  24 h en Veriff y 15 min en Yoti/simulador (su `ttl`).
+- **Aprobación sin prueba:** un `approved` sin fecha de nacimiento dejaba la sesión en
+  `verified` sin acreditar la edad. Ahora va a revisión humana (`borderline`). Un documento
+  válido de menor de 18 años es `failed`.
+- **Identidad solo con su consentimiento:** la sesión de edad de Veriff concedía también
+  «identidad verificada» sin el consentimiento explícito (PRD 6.1). Ahora solo la sesión
+  `identity` la concede.
+- **Foto con Veriff activo:** pedir la foto daba «No disponible». Ahora usa el simulador
+  persistido (solo tester/admin en sandbox), también en la pantalla del simulador.
+- **Reverificación por posible menor:** un documento verificado no limpiaba
+  `reverification_required` (la cuenta quedaba bloqueada para siempre). Ahora sí; la
+  suspensión cautelar la levanta moderación.
+- **Revisión humana real (PRD 6.2):** RPC `admin_verification_reviews` y
+  `admin_resolve_verification` (admin + MFA, sin autoaprobación ni aprobación de cuentas
+  baneadas, auditadas con nota opcional). Admin → Verificaciones ya no es simulado. Un rechazo humano es definitivo
+  para esa sesión.
+- **Borrado en Veriff:** se lanzaba sin esperar (`void`) y podía cortarse; ahora usa
+  `EdgeRuntime.waitUntil` y solo borra en resultados finales (aprobado con edad o
+  caducado). Rechazos y revisiones se conservan para la revisión humana.
+- **URL de redirección:** el servidor valida que la URL de Veriff sea HTTPS en
+  `veriff.com`/`veriff.me` antes de devolverla.
+- **Badge de foto del perfil:** se leía de la columna sin aplicar el gate sandbox/live;
+  ahora sale de `verification_snapshot`.
+- **Índice** en `private.verification_notifications(session_id)` (aviso de rendimiento).
+- **Historial de migraciones:** los archivos locales de los bloques 5 y 6 tenían versiones
+  distintas de las remotas. Renombrados a las versiones remotas (contenido verificado por
+  md5); el archivo único del Bloque 6 se divide en las 4 migraciones aplicadas. Las cuatro
+  del Bloque 5 aplicadas en el SQL Editor (`rpc_block5`, `purge_test_data`,
+  `seed_legal_documents`, `grants`) quedan en orden entre `payments_and_storage` y
+  `security_invoker_api`.
+- **Test RLS desfasado:** contaba 12 flags; con `verification_provider` son 13.
+
+Migraciones nuevas: `20261003165824_verification_block6_fixes`,
+`20261003170722_verification_block6_expiry`,
+`20261003171224_verification_block6_notifications_idx`. Funciones redesplegadas:
+`veriff-webhook` v4 y `verification` v3 (ambas responden 401 sin firma/sesión).
+
 ### Hecho cuando
 
-- ✅ Código local de edad, gates, simulador, cambios de foto y hashes de ban.
-- ✅ Pruebas de permisos, firma HMAC, separación de modos, idempotencia y reverificación.
-- ✅ Aplicar migración y Edge Functions (MCP User, proyecto Nightlife_Connect).
-- ❌ Sesión forzada de Veriff test extremo a extremo (webhook + decisión en Station).
-- ❌ Foto e identidad live: Bloque 12.
-- ❌ Revisión humana completa y eliminación en el proveedor: tras el webhook real.
+- ✅ Una cuenta no verificada no puede ligar: RLS de likes/matches/messages, perfiles
+  públicos y servicios exigen edad verificada; el rol tester no es prueba de edad.
+- ✅ No se guarda ninguna imagen ni documento: solo estados, método, umbral, fechas e
+  identificadores; la fecha de nacimiento solo existe en memoria.
+- ✅ Veriff test como principal y Yoti como alternativa, webhooks firmados y
+  `verification_status`.
+- ✅ Foto e identidad verificadas (simuladas/persistidas en sandbox), badges, bans por hash.
+- ✅ Revisión humana de decisiones negativas con cola real de admin.
+- ✅ SQL remoto con rollback: **44/44** de verificación y 33/33 de RLS.
+- ⏸️ Decisiones forzadas en Veriff Station extremo a extremo: **puerta del Bloque 6**.
+  No consta autorización del propietario para posponer estas pruebas al bloque live.
+- ⏸️ Foto e identidad live: Bloque 12.
 
-El Bloque 6 permanece **abierto** hasta una decisión de test en Veriff Station.
+### Validación adicional del Bloque 6 — 2026-10-03
+
+- Reproducción y corrección: un webhook aprobado posterior podía sobrescribir un rechazo
+  humano. Migración `20261003172650_verification_human_decision_final` conserva la decisión
+  humana definitiva; regresión SQL probada antes y después de aplicar por MCP.
+- Fechas de nacimiento imposibles no generan una prueba de edad; CORS admite el desarrollo
+  en 127.0.0.1:5173/4173 y rechaza orígenes parecidos no autorizados.
+- Registro persistido por capacidad con disponibilidad y caducidad; migración
+  `20261003173504_verification_provider_access`. RPC de simulación explícita con rol,
+  sandbox, herramientas, consentimiento y auditoría. Caducidad bloquea llamadas externas.
+- Veriff Station: la integración conectada es **Nightlife TEST**, distinta de Test Company
+  Jorge Chamorro. Webhook de decisiones guardado en la integración correcta, certificados
+  activados. Trial de 14 días observado; corte conservador 2026-10-16T00:00:00Z registrado.
+- Creación desde la app a las 17:48 UTC: sesión de edad guardada en Supabase, identificador
+  de Veriff asociado y flujo alojado de Veriff visible. Esto acredita la conexión de API;
+  no acredita aún la firma ni la entrega del webhook de decisión.
+- `npm run check`: **279/279** tests, TypeScript, ESLint y formato correctos. Build correcto.
+  SQL remoto: **51/51** verificación y **33/33** RLS, con rollback de fixtures.
+  `npm audit` completo: **0 vulnerabilidades** (CA del sistema para el registro npm).
+- Funciones ACTIVE desplegadas por MCP: verification v5, veriff-webhook v6, yoti-webhook v3.
+  Sin JWT/sin firma: 401; método no autorizado: 405. No se publican secretos ni OTP.
+- Advisors: WARN conocido de protección de contraseñas filtradas; 2 INFO de RLS sin
+  políticas en tablas private cerradas a clientes; rendimiento 23 INFO de índices sin uso.
+- Chat publicado previamente: lista larga móvil y altura reducida comprobadas; el último
+  mensaje permanece por encima de la barra de escritura. Imágenes ya en commits anteriores.
+- Rechazo Test entregado por webhook firmado: Station 200 OK, sesión Supabase failed y
+  app «No superada». Solicitud de revisión humana persistida y visible tras recarga.
+  Reenvío del webhook: una sola notificación y revisión conservada (idempotencia).
+- Borrado final usa el estado persistido del nivel: identidad aprobada sin fecha de nacimiento
+  puede borrar la sesión; edad sin prueba permanece en revisión y conserva la evidencia.
+- Pendientes reales: aprobación de identidad Test, cola de admin y borrado final;
+  publicar las correcciones auditadas
+  de frontend y comprobar simulación persistida desde la UI. Bloque 7 no iniciado.
 
 ## Bloque 1 — Cimientos, diseño y arquitectura preparada (2026-10-02)
 

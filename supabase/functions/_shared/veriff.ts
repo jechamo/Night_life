@@ -68,7 +68,15 @@ export function yearsSince(isoDate: string, now = Date.now()): number | null {
   const month = Number(match[0].slice(5, 7))
   const day = Number(match[0].slice(8, 10))
   const birth = Date.UTC(year, month - 1, day)
-  if (!Number.isFinite(birth) || birth > now) return null
+  const parsed = new Date(birth)
+  if (
+    !Number.isFinite(birth) ||
+    birth > now ||
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() + 1 !== month ||
+    parsed.getUTCDate() !== day
+  )
+    return null
   const current = new Date(now)
   let age = current.getUTCFullYear() - year
   if (
@@ -88,36 +96,37 @@ function outcomeFor(status: string): VeriffDecision['outcome'] | null {
   return null
 }
 
-function eventUuid(
+/** One attempt can receive several decisions (review → approved): all of them are part of the key. */
+export async function eventUuid(
   sessionId: string,
   attemptId: string,
   status: string,
   occurredAt: string,
-): string {
-  if (UUID.test(attemptId)) return attemptId
-  const seed = `${sessionId}:${status}:${occurredAt}`
-  const hex = [...new TextEncoder().encode(seed)]
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('')
-    .padEnd(32, '0')
-    .slice(0, 32)
+): Promise<string> {
+  const digest = new Uint8Array(
+    await crypto.subtle.digest(
+      'SHA-256',
+      new TextEncoder().encode(`${sessionId}:${attemptId}:${status}:${occurredAt}`),
+    ),
+  )
+  const hex = [...digest.slice(0, 16)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-8${hex.slice(17, 20)}-${hex.slice(20, 32)}`
 }
 
 /** Call only after HMAC verification. Date of birth is used in memory and discarded. */
-export function minimizeVeriffDecision(
+export async function minimizeVeriffDecision(
   data: unknown,
   threshold = 18,
   now = Date.now(),
-): VeriffDecision | null {
+): Promise<VeriffDecision | null> {
   if (!record(data) || !record(data.verification)) return null
   const verification = data.verification
   const sessionId = verification.id
   const vendorData = verification.vendorData
   if (typeof sessionId !== 'string' || !UUID.test(sessionId)) return null
   if (typeof vendorData !== 'string' || !UUID.test(vendorData)) return null
-  const outcome = outcomeFor(String(verification.status ?? ''))
-  if (!outcome) return null
+  const decided = outcomeFor(String(verification.status ?? ''))
+  if (!decided) return null
   const occurredAt =
     typeof verification.decisionTime === 'string' &&
     !Number.isNaN(Date.parse(verification.decisionTime))
@@ -127,10 +136,12 @@ export function minimizeVeriffDecision(
   const person = record(verification.person) ? verification.person : null
   const dob = person && typeof person.dateOfBirth === 'string' ? person.dateOfBirth : null
   const age = dob ? yearsSince(dob, now) : null
+  // A valid document of someone under the threshold is a negative decision, not a review.
+  const outcome = decided === 'verified' && age !== null && age < threshold ? 'failed' : decided
   const overThreshold = outcome === 'verified' && age !== null && age >= threshold
   const identityOk = outcome === 'verified'
   return {
-    eventId: eventUuid(
+    eventId: await eventUuid(
       sessionId,
       String(verification.attemptId ?? ''),
       String(verification.status),
@@ -157,11 +168,35 @@ export function veriffSessionRequest(input: {
   }
 }
 
+function isVeriffHost(hostname: string): boolean {
+  return ['veriff.com', 'veriff.me'].some(
+    (host) => hostname === host || hostname.endsWith(`.${host}`),
+  )
+}
+
+/** The redirect URL comes from the provider: only HTTPS Veriff hosts reach the browser. */
 export function parseVeriffSession(data: unknown): { id: string; url: string } | null {
   if (!record(data) || !record(data.verification)) return null
   const { id, url } = data.verification
   if (typeof id !== 'string' || !UUID.test(id) || typeof url !== 'string') return null
-  return { id, url }
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'https:' || parsed.username || parsed.password) return null
+    if (!isVeriffHost(parsed.hostname)) return null
+    return { id, url: parsed.href }
+  } catch {
+    return null
+  }
+}
+
+/** Only final, self-sufficient outcomes: reviews and resubmissions still need the session. */
+export function shouldDeleteVeriffSession(event: VeriffDecision, persistedState?: string): boolean {
+  if (persistedState !== undefined)
+    return (
+      (event.outcome === 'verified' && persistedState === 'verified') ||
+      (event.outcome === 'expired' && persistedState === 'expired')
+    )
+  return (event.outcome === 'verified' && event.overThreshold) || event.outcome === 'expired'
 }
 
 export async function deleteVeriffSession(input: {

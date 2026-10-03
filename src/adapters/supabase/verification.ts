@@ -41,13 +41,14 @@ export function createVerificationService(db: Db): VerificationService {
       if (!(await currentUserId(db))) throw new Error('not_authenticated')
       return parseVerificationSnapshot(must(await db.rpc('verification_snapshot')))
     },
-    async start(level, method, consent) {
+    async start(level, method, consent, simulate) {
       if (level !== 'age' && consent !== true) return err('unavailable')
       const result = await invokeFunction<unknown>(db, 'verification', {
         action: 'start',
         level,
         ...(method ? { method } : {}),
         ...(consent === true ? { consent: true } : {}),
+        ...(simulate === true ? { source: 'simulator' } : {}),
       })
       const redirect = redirectSchema.safeParse(result.data)
       if (result.failed || !redirect.success) return err('unavailable')

@@ -52,7 +52,7 @@ end $$;
 -- ── anon ─────────────────────────────────────────────────────────────────────
 set local role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
-insert into _results select 'anon reads flags', count(*) = 12 from public.app_settings where kind = 'flag';
+insert into _results select 'anon reads flags', count(*) = 13 from public.app_settings where kind = 'flag';
 insert into _results select 'anon reads published legal docs', count(*) > 0 from public.legal_documents;
 insert into _results select 'anon cannot see inactive premium terms', count(*) = 0 from public.legal_documents where slug = 'premium';
 do $$

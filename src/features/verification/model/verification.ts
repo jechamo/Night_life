@@ -54,6 +54,12 @@ export function canPerform(
   return snapshot !== undefined && isAgeVerified(snapshot)
 }
 
+export type VerificationProvider = 'veriff' | 'yoti' | 'simulator'
+
+/** Veriff test has no selfie-vs-profile match, so photo stays on the persisted simulator. */
+export const usesSimulator = (provider: VerificationProvider, level: VerificationLevel): boolean =>
+  provider === 'simulator' || (provider === 'veriff' && level === 'photo')
+
 /** "Foto verificada" decision from the face similarity score (PRD 6.2 level 2). */
 export type PhotoMatchOutcome = 'verified' | 'manual_review' | 'not_matched'
 export const PHOTO_MATCH_THRESHOLDS = { verified: 0.85, review: 0.6 } as const

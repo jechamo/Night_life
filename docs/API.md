@@ -1,13 +1,13 @@
 # Inventario de API — Edge Functions y RPC
 
 Documento vivo (PRD 3.4, 6.15 API9). Cada entrada: propósito, autenticación, rol y límites.
-Se eliminan las funciones sin uso y **ninguna función de prueba es accesible en producción**.
+Se eliminan las funciones sin uso. Las simulaciones exigen rol y herramientas de prueba;
+las verificaciones simuladas no están disponibles en modo live.
 
-## Estado (Bloque 5)
+## Estado (Bloques 5–6)
 
-Aún no hay Edge Functions ni RPC desplegadas: los bloques 1-4 usan mocks
-(`src/mocks/`). El proyecto Supabase `Nightlife_Connect` existe y está sano, sin esquema
-de aplicación todavía.
+Backend base, Auth, legal, herramientas y verificación están desplegados en Nightlife_Connect.
+Veriff usa una integración Test. Mapa, matching, chat y pagos mantienen sus mocks hasta sus bloques.
 
 ## Puertos de cliente ya definidos (contratos a implementar)
 
@@ -19,7 +19,7 @@ de aplicación todavía.
 | `OnboardingService` (OTP, alta, estado)                                            | Supabase Auth (teléfono + OTP) + Edge Function de alta (límites, HMAC de baneos) | 5      |
 | `LegalService` (documentos y firmas)                                               | Tablas `legal_documents` y `consent_records`                                     | 5      |
 | `ConsentService`                                                                   | `consent_records` (append-only)                                                  | 5      |
-| `VerificationService` (estado, inicio, revisión)                                   | Edge Functions de Yoti + `verification_status`                                   | 6      |
+| `VerificationService` (estado, inicio, revisión)                                   | Veriff Test, Yoti alternativo y simulación persistida + `verification_status`    | 6      |
 | `PlacesService` (lugares, eventos, Vibe Check, objetos perdidos)                   | PostGIS + RPC/Edge Functions (límites, ciclo de vida con pg_cron)                | 7      |
 | `AttendanceService` (check-in 150 m, Esta Noche Voy)                               | Edge Function de check-in (distancia en servidor, solo lugar+hora)               | 7      |
 | `MatchingService` (candidatos, likes, matches, bloqueos, reportes)                 | RPC/Edge Functions con compatibilidad y límites en servidor                      | 8-9    |
@@ -70,3 +70,19 @@ RPC en `public` = envoltorios `SECURITY INVOKER` de implementaciones en `private
 | Edge `signed-documents`  | PDF firmado / envío por email                       | JWT (`verify_jwt`) | propio                                  | email solo a dirección confirmada |
 | Edge `delete-account`    | Borrar cuenta y fotos                               | JWT                | propio, inicio de sesión < 10 min       | —                                 |
 | Edge `test-tools`        | Generar personas `is_test`                          | JWT                | tester/admin **y** flag                 | máx. 30 por llamada               |
+
+## Implementado (Bloque 6)
+
+| Función                          | Propósito                                         | Autenticación / condición                                                   | Límites                                                          |
+| -------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Edge `verification`              | Crear sesión y URL alojada o simulación explícita | JWT propio, alta terminada, no ban; Test exige tester/admin y flag          | 5 sesiones/h por usuario, disponibilidad/caducidad por capacidad |
+| Edge `veriff-webhook`            | Minimizar y persistir decisiones                  | HMAC del cuerpo original + cliente Veriff                                   | 16 KiB, evento idempotente, asociación de sesión comprobada      |
+| Edge `yoti-webhook`              | Alternativa de edad                               | Firma RSA-PSS                                                               | No activado para llamadas live                                   |
+| `verification_snapshot`          | Estados y gates del propietario                   | JWT, sandbox/live según rol/flags                                           | Solo propios                                                     |
+| `begin_verification`             | Reservar sesión de nivel                          | JWT, rol/flags/consentimiento y registro de acceso                          | 5/h                                                              |
+| `begin_simulated_verification`   | Elegir simulación persistida                      | JWT, tester/admin, herramientas, sandbox, consentimiento opcional por nivel | 5/h; sin proveedor externo                                       |
+| `simulate_verification_result`   | Resultado de sesión simulada propia               | JWT, tester/admin, herramientas, sandbox y proveedor simulator              | Sesión activa propia                                             |
+| `complete_provider_verification` | Aplicar evento firmado mínimo                     | Solo service_role                                                           | Idempotencia, orden, caducidad; revisión humana definitiva       |
+| `request_verification_review`    | Pedir revisión                                    | JWT, sesión propia y estado admitido                                        | Auditado                                                         |
+| `admin_verification_reviews`     | Cola real de revisión                             | Admin + aal2                                                                | Sin imágenes/documentos                                          |
+| `admin_resolve_verification`     | Aprobar/rechazar revisión                         | Admin + aal2, sin autoaprobación ni cuentas baneadas                        | Auditado                                                         |

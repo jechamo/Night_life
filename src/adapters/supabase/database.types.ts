@@ -1639,6 +1639,10 @@ export type Database = {
           roles: string[]
         }[]
       }
+      admin_resolve_verification: {
+        Args: { p_approve: boolean; p_note?: string; p_session: string }
+        Returns: undefined
+      }
       admin_set_flag: {
         Args: { p_key: string; p_value: string }
         Returns: undefined
@@ -1655,9 +1659,27 @@ export type Database = {
         Args: { p_key: string; p_value: number }
         Returns: undefined
       }
+      admin_verification_reviews: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          is_test: boolean
+          level: string
+          method: string
+          mode: string
+          provider: string
+          reason: string
+          user_name: string
+        }[]
+      }
       attach_verification_provider: {
         Args: { p_provider: string; p_session: string }
         Returns: undefined
+      }
+      begin_simulated_verification: {
+        Args: { p_consent?: boolean; p_level: string; p_method?: string }
+        Returns: Json
       }
       begin_verification: {
         Args: { p_consent?: boolean; p_level: string; p_method?: string }

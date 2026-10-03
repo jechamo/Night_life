@@ -2,6 +2,28 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 6 — auditoría de cierre, 2026-10-03
+
+- Idempotencia por evento (sesión + intento + estado + hora), no por intento: una
+  aprobación tras «review» ya no se descarta.
+- Decisiones aceptadas solo entre la creación de la sesión (−5 min) y 7 días después, y
+  nunca con fecha futura (+5 min). Proveedor, resultado y evento obligatorios.
+- `approved` sin fecha de nacimiento → revisión humana; documento de menor → `failed`.
+  La sesión de edad nunca concede identidad (consentimiento separado, PRD 6.1).
+- Revisión humana: RPC solo admin con MFA (`require_admin`), sin autoaprobación ni
+  aprobación de baneados, auditada (`verification.review.*`). El usuario no puede listar
+  ni resolver revisiones (probado).
+- Borrado de la sesión en Veriff (datos biométricos) solo en resultados finales y con
+  `EdgeRuntime.waitUntil` para que no se corte al responder.
+- La URL devuelta por el servidor se valida (HTTPS, host Veriff, sin credenciales).
+- El badge de foto del perfil aplica el gate sandbox/live.
+- Índice en `private.verification_notifications(session_id)`.
+- SQL remoto con rollback: 44/44 verificación, 33/33 RLS. Deno 11/11. POST sin firma a
+  `veriff-webhook` y sin sesión a `verification`: 401.
+- Advisors tras los cambios: INFO esperado en `private.verification_notifications` y WARN
+  `auth_leaked_password_protection`; sin avisos nuevos.
+- **Puerta live:** prueba E2E en Veriff Station antes de activar el modo live.
+
 ## Bloque 6 — revisión local, 2026-10-03 (Veriff test)
 
 - Webhook de Veriff: HMAC-SHA256 del cuerpo en bruto, `X-AUTH-CLIENT` igual a la API key,
@@ -126,16 +148,16 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 
 ## Modelo de amenazas (STRIDE) — esqueleto, se completa por bloques
 
-| Área                                  | Bloque | Estado                                                   |
-| ------------------------------------- | ------ | -------------------------------------------------------- |
-| Alta y OTP                            | 5      | Hecho: bans HMAC, límites, OTP de Auth, edad en servidor |
-| Verificación (Veriff test, Yoti, foto) | 6      | Backend aplicado; E2E Veriff Station pendiente |
-| Check-in y "Aquí Ahora" (seguimiento) | 7      | Pendiente                                                |
-| Likes y chat                          | 8      | Pendiente                                                |
-| Reportes / moderación                 | 9      | Pendiente                                                |
-| Eventos de usuarios                   | 7      | Pendiente                                                |
-| Pagos y entitlements                  | 9      | Pendiente (política de cliente lista y probada)          |
-| Herramientas de prueba y admin        | 4-5    | Hecho: rol + aal2 + flag en el servidor, auditado        |
+| Área                                   | Bloque | Estado                                                   |
+| -------------------------------------- | ------ | -------------------------------------------------------- |
+| Alta y OTP                             | 5      | Hecho: bans HMAC, límites, OTP de Auth, edad en servidor |
+| Verificación (Veriff test, Yoti, foto) | 6      | Auditado; E2E Veriff Station en la puerta live           |
+| Check-in y "Aquí Ahora" (seguimiento)  | 7      | Pendiente                                                |
+| Likes y chat                           | 8      | Pendiente                                                |
+| Reportes / moderación                  | 9      | Pendiente                                                |
+| Eventos de usuarios                    | 7      | Pendiente                                                |
+| Pagos y entitlements                   | 9      | Pendiente (política de cliente lista y probada)          |
+| Herramientas de prueba y admin         | 4-5    | Hecho: rol + aal2 + flag en el servidor, auditado        |
 
 ## Puertas de seguridad por bloque
 
@@ -230,3 +252,30 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Recursos observados: solo origen del despliegue y proyecto Supabase; 0 errores de consola. Logs de check_signup/OTP/verify/logout correctos, sin publicar códigos ni tokens.
 - Advisors finales: persiste únicamente el WARN conocido auth_leaked_password_protection; sin nuevos avisos de esquema ni cambios de RLS. Los resultados 33/33 de RLS y 256/256 del check corresponden al código publicado, sin Bloque 6.
 - No se aplicaron migraciones ni nuevas funciones; sin ampliaciones de plan, credenciales live ni cobros. Bloque 6 pendiente de OK y activaciones de pago reservadas al Bloque 12.
+
+### Bloque 6 — Revisión de integración Test, 2026-10-03 (cierre pendiente)
+
+- SQL remoto con fixtures y rollback: 51/51 verificación, 33/33 RLS. Incluye anon/usuario,
+  tester, admin con/sin MFA, IDOR, consentimiento, separación sandbox/live, caducidad,
+  idempotencia, revisión humana y rechazo humano que un webhook no puede sobrescribir.
+- Veriff: autenticación HMAC sobre cuerpo original y comparación del cliente; datos mínimos
+  persistidos, fechas imposibles rechazadas, URL de redirección restringida a HTTPS Veriff.
+  JWT propio en verification; firma propia en webhooks; no se confía en el retorno del navegador.
+- `private.verification_provider_access` tiene RLS y revoke total a clientes. Su actualización
+  queda auditada; no se crean sesiones externas con capacidad expirada o deshabilitada.
+  Simulación explícita solo con tester/admin, herramientas activadas, sandbox y consentimiento.
+- Migraciones y funciones desplegadas por MCP; tipos regenerados. Check 278/278, build
+  correcto y npm audit completo 0 vulnerabilidades. Check actualizado: 279/279.
+- Security Advisors: WARN previo de contraseñas filtradas (Auth usa OTP); 2 INFO de RLS sin
+  políticas en tablas privadas que intencionalmente deniegan todo acceso directo.
+  [RLS sin políticas](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy),
+  [protección de contraseñas](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+  Performance Advisors: 23 INFO de índices sin uso; sin WARN/ERROR de esquema en esta revisión.
+- Prueba de red: verification sin sesión y webhook sin HMAC responden 401; GET de webhook
+  responde 405. CORS 127.0.0.1 comprobado. Creación real de sesión Test confirmada en BBDD y
+  Station; rechazo firmado entregado (200), guardado y mostrado en la app. Reenvío sin
+  duplicar notificaciones ni revertir la solicitud de revisión humana.
+- Integración usada: Nightlife TEST, webhook de decisiones configurado con certificados
+  activados. Trial de 14 días observado; corte conservador 2026-10-16T00:00:00Z registrado.
+  Sin contratación, ampliación de planes ni claves live. No se consultan documentos, selfies,
+  secretos MFA ni OTP para realizar estas pruebas.

@@ -32,12 +32,14 @@ export function useStartVerification() {
       level,
       method,
       consent,
+      simulate,
     }: {
       level: VerificationLevel
       method?: AgeMethod
       consent?: boolean
+      simulate?: boolean
     }) => {
-      const result = await verification.start(level, method, consent)
+      const result = await verification.start(level, method, consent, simulate)
       if (!result.ok) throw new Error(result.error)
       if (result.value.type === 'external') {
         const opened = await browser.openExternalFlow(result.value.url)

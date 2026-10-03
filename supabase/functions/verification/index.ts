@@ -27,11 +27,16 @@ Deno.serve(async (req) => {
     const method = body.method ?? 'facial_estimation'
     if (!['facial_estimation', 'document', 'digital_id'].includes(String(method)))
       return json(req, { error: 'bad_request' }, 400)
-    const { data: session, error } = await auth.db.rpc('begin_verification', {
-      p_level: level,
-      p_method: method,
-      p_consent: body.consent === true,
-    })
+    if (body.source !== undefined && body.source !== 'simulator')
+      return json(req, { error: 'bad_request' }, 400)
+    const { data: session, error } = await auth.db.rpc(
+      body.source === 'simulator' ? 'begin_simulated_verification' : 'begin_verification',
+      {
+        p_level: level,
+        p_method: method,
+        p_consent: body.consent === true,
+      },
+    )
     if (error || !isRecord(session) || typeof session.id !== 'string')
       return json(req, { error: 'unavailable' }, error?.code === '54000' ? 429 : 403)
     const provider = String(session.provider ?? '')

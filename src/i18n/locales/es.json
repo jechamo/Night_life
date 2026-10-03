@@ -449,14 +449,16 @@
     "sandbox": {
       "title": "Simulador del proveedor",
       "body": "Modo pruebas (verification_mode = sandbox): elige qué devolvería el proveedor. Así se simula su webhook firmado.",
-      "liveMode": "El simulador interno solo está disponible con verification_provider = simulator.",
+      "liveMode": "El simulador interno solo está disponible para testers en sandbox con verification_provider = simulator, o para la foto mientras Veriff está activo.",
       "documentStep": "El proveedor pide ahora documento con selfie.",
       "outcomes": {
         "approved": "Aprobado",
         "inconclusive": "No concluyente",
         "denied": "Rechazado",
         "borderline": "Coincidencia dudosa (60-85 %)"
-      }
+      },
+      "fallbackBody": "Puedes probar este nivel con resultados simulados guardados en tu cuenta. No acreditan una verificación real.",
+      "fallbackAction": "Usar simulación de prueba"
     },
     "result": {
       "verified": "¡Verificación completada!",
