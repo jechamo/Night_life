@@ -10,7 +10,7 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 3 – App principal y experiencia de match (mock)     | ✅ Aprobado                                           |
 | 4 – Paneles, web pública y pantallas de pago (mock) | ✅ Terminado, pendiente de OK                         |
 | 5 – Backend base, legal y modo pruebas              | ✅ Terminado; pendiente de OK                         |
-| 6 – Verificaciones reales                           | 🛠️ Frontend en producción; pendiente aplicar Supabase y Veriff E2E |
+| 6 – Verificaciones reales                           | 🛠️ Backend aplicado; pendiente E2E Veriff Station |
 | 7 – Mapa, lugares, eventos y estadísticas reales    | ⏳                                                    |
 | 8 – Ligar, match en tiempo real y chat              | ⏳                                                    |
 | 9 – Seguridad, derechos, negocio y pagos en test    | ⏳                                                    |
@@ -39,11 +39,16 @@ y se inicia el Bloque 6; no se avanza al Bloque 7.
 - Frontend desplegado en Vercel producción: SHA `6e74d8d`,
   `dpl_Ds4c21t16NkrDVr3KqACVobve6RQ`, READY,
   https://nightlife-connect-beige.vercel.app
-- MCP de Supabase autenticado pero sin permiso de `apply_migration` / `execute_sql` /
-  `deploy_edge_function` / Advisors (`MCP error -32600`). La migración
-  `20261003114550_verification_block6.sql` y las funciones `verification`,
-  `veriff-webhook` y `yoti-webhook` quedan pendientes de aplicar en el dashboard o con
-  un token MCP con escritura.
+- MCP User (org Chaplications trade): migración aplicada en remoto como
+  `verification_block6` + RPCs/gates (`20261003160530` … `20261003160640`).
+  Funciones ACTIVE: `verification`, `veriff-webhook`, `yoti-webhook` (`verify_jwt = false`).
+  Tipos regenerados en `src/adapters/supabase/database.types.ts`.
+- Flags remotos: `verification_provider=veriff`, `verification_mode=sandbox`,
+  `test_tools_enabled=on`. Una cuenta de prueba sigue con `age_verified=false`.
+- POST a `veriff-webhook` sin HMAC responde `401 invalid_signature`.
+- Security Advisors: INFO esperado en `private.verification_notifications` (RLS sin
+  políticas; revoke a public/anon/authenticated). WARN conocido
+  `auth_leaked_password_protection` (la app usa OTP, no contraseña).
 - Webhook a configurar en Veriff Station:
   `https://ocrpfeqfqzchhrghqcfb.supabase.co/functions/v1/veriff-webhook`
 - Secretos: `VERIFF_API_KEY`, `VERIFF_SHARED_SECRET` (si se guardó como
@@ -53,12 +58,12 @@ y se inicia el Bloque 6; no se avanza al Bloque 7.
 
 - ✅ Código local de edad, gates, simulador, cambios de foto y hashes de ban.
 - ✅ Pruebas de permisos, firma HMAC, separación de modos, idempotencia y reverificación.
-- ❌ Aplicar migración y Edge Functions (MCP sin permiso de escritura).
+- ✅ Aplicar migración y Edge Functions (MCP User, proyecto Nightlife_Connect).
 - ❌ Sesión forzada de Veriff test extremo a extremo (webhook + decisión en Station).
 - ❌ Foto e identidad live: Bloque 12.
 - ❌ Revisión humana completa y eliminación en el proveedor: tras el webhook real.
 
-El Bloque 6 permanece **abierto** hasta aplicar backend y una decisión de test en Veriff.
+El Bloque 6 permanece **abierto** hasta una decisión de test en Veriff Station.
 
 ## Bloque 1 — Cimientos, diseño y arquitectura preparada (2026-10-02)
 

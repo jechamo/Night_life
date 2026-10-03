@@ -1,6 +1,4 @@
 // Generated from the deployed Supabase schema (MCP generate_typescript_types).
-// Three verification RPC declarations anticipate the pending block 6 migration;
-// regenerate the full schema, including its tables, after applying that migration.
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
@@ -1688,12 +1686,7 @@ export type Database = {
       feature_enabled: { Args: { _key: string }; Returns: boolean }
       has_entitlement: { Args: { _key: string }; Returns: boolean }
       purge_test_data: { Args: never; Returns: number }
-      verification_snapshot: { Args: never; Returns: Json }
       request_verification_review: { Args: { p_level: string }; Returns: Json }
-      simulate_verification_result: {
-        Args: { p_level: string; p_outcome: string }
-        Returns: Json
-      }
       save_consents: {
         Args: { p_choices: Json; p_city?: string }
         Returns: undefined
@@ -1711,7 +1704,12 @@ export type Database = {
         }[]
       }
       sign_documents: { Args: { p_slugs: string[] }; Returns: undefined }
+      simulate_verification_result: {
+        Args: { p_level: string; p_outcome: string }
+        Returns: Json
+      }
       update_my_profile: { Args: { p: Json }; Returns: undefined }
+      verification_snapshot: { Args: never; Returns: Json }
     }
     Enums: {
       app_role: 'user' | 'tester' | 'venue_manager' | 'admin'

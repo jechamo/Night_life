@@ -1,6 +1,7 @@
 # Bloque 6 — Plan y puesta en marcha
 
-Estado: implementación Veriff test. El propietario autorizó continuar desde el Bloque 5 el 2026-10-03.
+Estado: migración y Edge Functions aplicadas en Nightlife_Connect. Falta el webhook en
+Veriff Station y una decisión de test de extremo a extremo.
 
 ## Plan
 

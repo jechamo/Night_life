@@ -10,10 +10,12 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Decisiones de la integración de test en `mode = sandbox`; el gate exige rol tester/admin y
   `verification_mode = sandbox`. Sin secretos: respuesta «No disponible», sin mock silencioso.
 - Lista blanca de hosts: `veriff.com` y `veriff.me` (subdominios), más Yoti.
-- Tests de la app 266/266. `npm audit --omit=dev`: 0. MCP de Supabase sin permiso para Advisors
-  ni para aplicar la migración; el esquema remoto no incluye aún estas tablas.
-- Pendiente: aplicar migración/funciones, webhook en Station, forzar una decisión de test,
-  foto/identidad live (Bloque 12).
+- Tests de la app 266/266. `npm audit --omit=dev`: 0.
+- Migración y funciones aplicadas en Nightlife_Connect. POST sin HMAC a `veriff-webhook`
+  responde 401. Advisors: INFO en `private.verification_notifications` (RLS sin políticas,
+  revoke a roles públicos) y WARN `auth_leaked_password_protection`
+  ([remediación](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)).
+- Pendiente: webhook en Station, forzar una decisión de test, foto/identidad live (Bloque 12).
 
 ## Bloque 6 — revisión local anterior, 2026-10-03
 
@@ -127,7 +129,7 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 | Área                                  | Bloque | Estado                                                   |
 | ------------------------------------- | ------ | -------------------------------------------------------- |
 | Alta y OTP                            | 5      | Hecho: bans HMAC, límites, OTP de Auth, edad en servidor |
-| Verificación (Veriff test, Yoti, foto) | 6      | Código listo; migración/funciones pendientes de MCP |
+| Verificación (Veriff test, Yoti, foto) | 6      | Backend aplicado; E2E Veriff Station pendiente |
 | Check-in y "Aquí Ahora" (seguimiento) | 7      | Pendiente                                                |
 | Likes y chat                          | 8      | Pendiente                                                |
 | Reportes / moderación                 | 9      | Pendiente                                                |

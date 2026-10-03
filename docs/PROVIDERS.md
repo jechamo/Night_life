@@ -46,5 +46,6 @@ Toda disponibilidad/caducidad se comprueba en la cuenta real antes de configurar
   requiere Premium al propietario; usarlo solo si ya dispone de una cuenta elegible.
 
 Este documento fija el trabajo futuro; no declara configuradas las integraciones pendientes.
-El Bloque 6 implementa Veriff test en código (webhook HMAC, sesiones persistidas, simulador).
-La aplicación remota de la migración y las Edge Functions queda pendiente del permiso MCP.
+El Bloque 6 tiene Veriff test en código y ya aplicado en Nightlife_Connect (migración,
+`verification`, `veriff-webhook`, `yoti-webhook`). Falta el webhook en Station y una
+decisión de test de extremo a extremo.
