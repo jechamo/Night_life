@@ -7,6 +7,7 @@ import { createMockServices } from '@/mocks/mock-services'
 import { createFakePlatform } from '@/platform/testing'
 import { myProfileKey, useUpdateProfile } from '@/features/profile/use-my-profile'
 import { useSaveEmergencyContacts } from '@/features/safety/hooks/use-safety'
+import { useCheckIn } from '@/features/attendance/hooks/use-attendance'
 import type { SessionService } from './session-service'
 
 function fixture() {
@@ -24,9 +25,10 @@ function fixture() {
   }
   services.session = session
   const queryClient = createQueryClient()
+  const platform = createFakePlatform()
   const wrapper = ({ children }: { children: ReactNode }) => (
     <AppProviders
-      platform={createFakePlatform()}
+      platform={platform}
       services={services}
       queryClient={queryClient}
       settings={{ themeId: 'mono', reduceMotion: true, language: 'es' }}
@@ -36,6 +38,7 @@ function fixture() {
   )
   return {
     services,
+    platform,
     queryClient,
     wrapper,
     changeIdentity() {
@@ -69,6 +72,28 @@ test('a delayed profile response from A cannot replace B after cache clear and i
   await waitFor(() => expect(hook.result.current.isError).toBe(true))
   expect(view.queryClient.getQueryData(myProfileKey)).toEqual(next)
   expect(success).not.toHaveBeenCalled()
+})
+
+test('GPS requested by A cannot start a check-in after the session changes to B', async () => {
+  const view = fixture()
+  type Position = Awaited<ReturnType<typeof view.platform.geolocation.getCurrentPosition>>
+  let finish: ((result: Position) => void) | undefined
+  vi.spyOn(view.platform.geolocation, 'getCurrentPosition').mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve
+      }),
+  )
+  const write = vi.spyOn(view.services.attendance, 'checkIn')
+  const hook = renderHook(() => useCheckIn(), { wrapper: view.wrapper })
+  act(() => hook.result.current.mutate({ placeId: 'place-a', visible: true }))
+  await waitFor(() => expect(finish).toBeDefined())
+  act(() => {
+    view.changeIdentity()
+    finish?.({ ok: true, value: { latitude: 40.4, longitude: -3.7, accuracy: 1 } })
+  })
+  await waitFor(() => expect(hook.result.current.isError).toBe(true))
+  expect(write).not.toHaveBeenCalled()
 })
 
 test('late emergency-contact phone numbers are discarded even with the mutation still mounted', async () => {

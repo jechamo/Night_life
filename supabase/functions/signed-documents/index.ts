@@ -5,6 +5,7 @@ import { corsHeaders, json, preflight } from '../_shared/http.ts'
 import { sendMail } from '../_shared/smtp.ts'
 import { requireUser, serviceClient } from '../_shared/supabase.ts'
 import { rpc } from '../_shared/stripe.ts'
+import { boundedJson } from '../_shared/request-body.ts'
 
 import { DOCUMENT_COPY as COPY, renderSignedPdf as renderPdf } from '../_shared/signed-pdf.ts'
 type Language = 'es' | 'en'
@@ -13,18 +14,18 @@ Deno.serve(async (req) => {
   if (early) return early
   if (req.method !== 'POST') return json(req, { error: 'method_not_allowed' }, 405)
 
+  const auth = await requireUser(req)
+  if (!auth) return json(req, { error: 'unauthorized' }, 401)
+
   let action = 'pdf'
   let language: Language = 'es'
   try {
-    const body = (await req.json()) as { action?: unknown; language?: unknown }
+    const body = (await boundedJson(req, 2048)) as { action?: unknown; language?: unknown }
     action = body.action === 'email' || body.action === 'outbox' ? body.action : 'pdf'
     language = body.language === 'en' ? 'en' : 'es'
   } catch {
     return json(req, { error: 'bad_request' }, 400)
   }
-
-  const auth = await requireUser(req)
-  if (!auth) return json(req, { error: 'unauthorized' }, 401)
 
   if (action === 'pdf') {
     const pdf = await renderPdf(auth, language)

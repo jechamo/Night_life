@@ -3,6 +3,7 @@
 // undeliverable @nightlife.test emails, illustrated avatars, never real photos).
 import { json, preflight } from '../_shared/http.ts'
 import { requireUser, serviceClient } from '../_shared/supabase.ts'
+import { boundedJson } from '../_shared/request-body.ts'
 
 const NAMES = [
   'Lucía',
@@ -63,7 +64,7 @@ Deno.serve(async (req) => {
 
   let count = 10
   try {
-    const body = (await req.json()) as { action?: unknown; count?: unknown }
+    const body = (await boundedJson(req, 2048)) as { action?: unknown; count?: unknown }
     if (body.action !== 'generate_people') return json(req, { error: 'bad_request' }, 400)
     count = Math.min(Math.max(Number(body.count) || 10, 1), 30)
   } catch {

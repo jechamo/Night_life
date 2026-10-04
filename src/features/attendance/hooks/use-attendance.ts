@@ -1,4 +1,4 @@
-import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { beginSessionWork, useSessionMutation } from '@/shared/session/use-session-mutation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePlatform } from '@/platform'
 import type { LatLng } from '@/features/places/model/types'
@@ -18,7 +18,7 @@ export function useAttendance() {
  * `simulateAt` lets testers stand "inside" a venue.
  */
 export function useCheckIn() {
-  const { attendance } = useServices()
+  const { attendance, session } = useServices()
   const { geolocation } = usePlatform()
   const queryClient = useQueryClient()
   return useSessionMutation({
@@ -31,11 +31,13 @@ export function useCheckIn() {
       visible: boolean
       simulateAt?: LatLng
     }) => {
+      const checkSession = beginSessionWork(session)
       let position: LatLng | null = simulateAt ?? null
       if (!position) {
         const result = await geolocation.getCurrentPosition({ highAccuracy: true })
         position = result.ok ? { lat: result.value.latitude, lng: result.value.longitude } : null
       }
+      checkSession()
       return attendance.checkIn(placeId, position, { visible })
     },
     onSuccess: async (result) => {

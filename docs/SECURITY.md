@@ -6,10 +6,14 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 
 Scan Codex Security `56b027a0-7e56-4eb3-97dc-5f5714b5a153`: revisión independiente
 de fuentes, límites de confianza y controles, complementada por pruebas de servidor.
-No se confirmó ningún crítico/alto en las superficies revisadas. No equivale a una
-auditoría exhaustiva certificada: no se conserva la lista original completa de
-archivos de backend del primer auditor; el informe identifica la cobertura conservada
-y la configuración externa no verificada.
+No se confirmó ningún crítico/alto en las superficies revisadas. Reconciliación
+final de lecturas completas: 469/469 archivos de código seleccionados (TS, TSX,
+MJS y SQL), sin sumar solapamientos. La lista original de backend del primer auditor
+no se conservó íntegra; se cerró esa cobertura mediante una lectura nueva completa
+de las 52 migraciones y fuentes pendientes. Se excluye `database.types.ts`, contrato
+generado sin implementación. Documentos, recursos estáticos y dependencias se
+delimitan como material de apoyo; audit/SBOM no equivalen a revisar su código fuente.
+La configuración externa de Auth/proveedores y QA real no están acreditadas.
 
 ### Correcciones comprobadas
 
@@ -19,12 +23,17 @@ y la configuración externa no verificada.
 - Aislamiento: las mutaciones privadas comprueban generación de sesión antes de
   publicar callbacks/datos; export/PDF/retornos externos comparten el guard.
   Una respuesta de A no repuebla la caché de B tras cambiar sesión.
+  Check-in comprueba también la generación después de esperar GPS y antes de escribir.
+- Privacidad: `search_places` no serializa `sort_key` y ordena los asistentes por
+  la banda pública 0/1–4/≥5; evita revelar cifras ocultas mediante campo u orden.
 - Admin: perfil activo, onboarding, rol y aal2 en el helper común y en `test-tools`.
 - Storage: admisión de archivos planos UUID propios, bucket privado 5 MiB y MIME
   acotado; diez objetos por usuario, sin UPDATE/overwrite. El borrado soporta
   carpetas anteriores, límites de recorrido y falta de progreso antes de retirar Auth.
 - Recursos: PDF directo y outbox comparten 3 reservas/h usuario y 50/día globales,
   incluyendo intentos fallidos; firma legal acotada e idempotente por versión.
+  `signed-documents` autentica antes de parsear; sus cuerpos y los de `test-tools`
+  se limitan a 2.048 bytes después de autorizar.
 - Configuración: producción sin Supabase falla cerrada; imports Edge Supabase
   fijados a 2.117.2 y Stripe a 23.0.0. No se añadieron proveedores ni secretos cliente.
 - PWA: solo shell en precache, sin API/datos personales/Mapbox; recarga explícita
@@ -50,7 +59,7 @@ y la configuración externa no verificada.
 
 Privilegios comprobados tras migración: cero tablas public/private sin RLS,
 cero definers públicos y cero SELECT privados para roles cliente. RLS 33/33,
-bloque 10 19/19, regresiones SQL, Deno 33/33 y frontend 343/343. Un perfil real,
+bloque 10 19/19, privacidad 4/4, regresiones SQL, Deno 33/33 y frontend 344/344. Un perfil real,
 cero fixtures tras rollback. Evidencias y reproducción: [BLOCK10_TESTS.md](./BLOCK10_TESTS.md).
 
 ## Bloque 9 — puerta de seguridad, 2026-10-04

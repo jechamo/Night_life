@@ -38,12 +38,19 @@ QA, SBOM y las guías de nativa y activación de pagos.
 - Bans por teléfono confirmado, admin activo, cuota Storage, email y firma legal
   idempotente; borrado recursivo acotado. Resultados privados tardíos descartados
   cuando cambia la generación de sesión.
+- Check-in comprueba sesión después del GPS y antes de escribir. La búsqueda
+  elimina el campo interno de orden y usa la banda pública para ordenar asistentes.
 - Migración `20261004123630_block10_security` aplicada por MCP. Trece funciones
   Edge redesplegadas ACTIVE, manteniendo su autenticación; imports fijados.
-- ✅ Frontend **343/343**, TypeScript, ESLint, formato y build correctos.
+- Migración `20261004173749_block10_privacy_hardening` aplicada por MCP;
+  parsers Edge acotados a 2.048 bytes tras autorización.
+- ✅ Frontend **344/344**, TypeScript, ESLint, formato y build correctos.
 - ✅ Deno **33/33**, tipos de **13** entrypoints; SQL: bloque 10 **19/19**,
   bloque 9 **72/72**, RLS **33/33**, matching **62/62**, lugares **19/19**,
   cuotas **19/19**, OSM **13/13** y verificación **54/54**, con rollback.
+- ✅ Privacidad SQL **4/4** tras reproducir dos fallos en la definición anterior.
+- ✅ Auditoría independiente y reconciliada de **469/469** archivos de código
+  seleccionados; conserva hallazgos originales, mitigaciones y exclusiones explícitas.
 - ✅ Auditorías npm sin vulnerabilidades y SBOM frontend/Edge; ver `docs/SBOM.md`.
 - ✅ Permisos remotos: cero tablas sin RLS, definers públicos o SELECT privados
   para cliente. Tras fixtures: un perfil real y cero perfiles de prueba.
@@ -60,8 +67,6 @@ QA, SBOM y las guías de nativa y activación de pagos.
   14 INFO de índices sin uso. No se ocultaron ni se contrataron ampliaciones.
 - ❌ Enforcement externo de emisión directa de OTP: el ban ya se impide en el
   onboarding, pero la cuota del precheck cliente no protege el endpoint Auth.
-- ❌ Auditoría exhaustiva acreditada: límite de conservación de la lista original
-  de cobertura y configuración externa; ningún crítico/alto confirmado en lo revisado.
 - ❌ Borradores jurídicos con datos por completar y puertas live del Bloque 12.
 
 No se marca el bloque terminado mientras estas puertas carezcan de evidencia.

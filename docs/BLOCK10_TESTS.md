@@ -5,20 +5,20 @@ de despliegue y pruebas que aún requieren dispositivos o configuración externa
 
 ## Resultados reproducibles
 
-| Comprobación                      | Resultado                                                                                                              |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `npm run check`                   | 343/343 en 47 archivos; TypeScript, ESLint y formato correctos                                                         |
-| PWA (`app-updates` y `AppStatus`) | 10 casos: registro, actualización explícita, no recarga inicial, conexión y error de chunk                             |
-| Aislamiento de mutaciones         | 2 casos: respuesta privada de A descartada tras entrar B; callback de contacto no ejecutado                            |
-| Accesibilidad compartida          | 6 casos: teclado de checkbox/switch/range, error descrito y navegación sin foco duplicado                              |
-| Contraste                         | Tokens de cinco temas: texto/estados 4,5:1 y foco 3:1; no acredita todas las pantallas con lector real                 |
-| Deno `_shared/*.test.ts`          | 33/33: Veriff, Yoti, OSM, facturación y borrado de fotos                                                               |
-| `deno check`                      | 13 entrypoints Edge correctos, Supabase fijado a 2.117.2                                                               |
-| SQL remoto con rollback           | bloque 10 19/19; RLS 33/33; bloque 9 72/72; matching 62/62; lugares 19/19; cuotas 19/19; OSM 13/13; verificación 54/54 |
-| `npm audit`                       | Cero vulnerabilidades en el grafo npm de frontend/desarrollo                                                           |
-| SBOM Edge / audit                 | Diez componentes npm, once paquetes con raíz; cero vulnerabilidades                                                    |
-| `npm run test:network:10`         | 29/29: guards HTTP de 13 funciones, CORS y esquemas internos                                                           |
-| Build                             | Correcto; Mapbox diferido conserva aviso de tamaño                                                                     |
+| Comprobación                      | Resultado                                                                                                                               |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run check`                   | 344/344 en 47 archivos; TypeScript, ESLint y formato correctos                                                                          |
+| PWA (`app-updates` y `AppStatus`) | 10 casos: registro, actualización explícita, no recarga inicial, conexión y error de chunk                                              |
+| Aislamiento de mutaciones         | 3 casos: respuesta privada de A descartada tras entrar B; callback de contacto no ejecutado; GPS tardío no escribe bajo B               |
+| Accesibilidad compartida          | 6 casos: teclado de checkbox/switch/range, error descrito y navegación sin foco duplicado                                               |
+| Contraste                         | Tokens de cinco temas: texto/estados 4,5:1 y foco 3:1; no acredita todas las pantallas con lector real                                  |
+| Deno `_shared/*.test.ts`          | 33/33: Veriff, Yoti, OSM, facturación y borrado de fotos                                                                                |
+| `deno check`                      | 13 entrypoints Edge correctos, Supabase fijado a 2.117.2                                                                                |
+| SQL remoto con rollback           | bloque 10 19/19 y privacidad 4/4; RLS 33/33; bloque 9 72/72; matching 62/62; lugares 19/19; cuotas 19/19; OSM 13/13; verificación 54/54 |
+| `npm audit`                       | Cero vulnerabilidades en el grafo npm de frontend/desarrollo                                                                            |
+| SBOM Edge / audit                 | Diez componentes npm, once paquetes con raíz; cero vulnerabilidades                                                                     |
+| `npm run test:network:10`         | 29/29: guards HTTP de 13 funciones, CORS y esquemas internos                                                                            |
+| Build                             | Correcto; Mapbox diferido conserva aviso de tamaño                                                                                      |
 
 Las suites SQL terminan con `RAISE EXCEPTION` que incluye el recuento y revierte
 la transacción. El error P0001 con `failed: []` es el resultado esperado, no una
@@ -44,6 +44,13 @@ de ambos participantes. Conserva los casos de denegación; no relaja los guards.
 - Mutaciones privadas comprueban la generación de sesión antes de publicar datos,
   abrir enlaces o descargar export/PDF. Las transiciones legítimas de Auth conservan
   su manejo específico.
+- Check-in captura la generación antes de pedir GPS y la comprueba antes de escribir.
+  Cambiar de A a B mientras espera la ubicación no registra asistencia bajo B.
+- Búsqueda elimina `sort_key` del JSON y ordena por la banda pública de asistentes.
+  La prueba de privacidad fallaba 2/4 antes de corregirla y pasa 4/4 después;
+  ni el campo interno ni el orden revelan recuentos exactos de uno a cuatro.
+- `signed-documents` autentica antes de parsear; junto con `test-tools` utiliza
+  JSON acotado a 2.048 bytes después de autorizar al actor.
 
 ## PWA, tamaño y navegador
 
@@ -54,7 +61,7 @@ de ambos participantes. Conserva los casos de denegación; no relaja los guards.
   JS/CSS/HTML, fuentes e iconos. El banner offline no presenta datos remotos como actuales.
 - Entry JS antes: 489,65 kB (157,85 gzip); después: 130,52 kB (43,37 gzip).
   Esa reducción afecta al entry, no al total del arranque. HTML + preloads + CSS:
-  1.409.330 bytes, 445.101 gzip; 148 entradas precache, 2.279,26 KiB.
+  1.409.330 bytes, 445.101 gzip; 148 entradas precache, 2.279,29 KiB.
 - Navegador integrado, build local real: `/legal` y documento de privacidad cargan
   desde Supabase, sin desbordamiento a 390 px; main enfocable y enlaces del listado
   entre 64 y 89 px de alto. No se aceptaron términos ni se enviaron formularios.
@@ -84,8 +91,10 @@ de rendimiento del dispositivo; no atribuir 60 fps a una impresión visual.
 Revisión de código independiente con Codex Security, arquitectura e investigación
 de controles. ID `56b027a0-7e56-4eb3-97dc-5f5714b5a153`. Ningún crítico/alto confirmado
 en lo revisado. Los informes y las correcciones conservan los hallazgos originales;
-la cobertura no se denomina exhaustiva mientras haya límites de configuración y
-de conservación de inventario detallados en `SECURITY.md`.
+la reconciliación acredita 469/469 archivos de código seleccionados, con el contrato
+generado de tipos excluido por no contener implementación. Configuración externa,
+dependencias, documentos y recursos quedan delimitados en `SECURITY.md`; no es una
+certificación de toda la instalación ni de los proveedores.
 
 Advisors de seguridad: 13 INFO de tablas privadas con RLS sin políticas y grants
 cerrados; 1 WARN de protección de contraseñas filtradas. Rendimiento: 14 INFO de
