@@ -1,6 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
+import { createMockServices } from '@/mocks/mock-services'
 import { ok } from '@/shared/lib/result'
 import { renderApp } from '@/test/render-app'
 
@@ -177,7 +178,7 @@ describe('Public legal website (no login)', () => {
     renderApp('/legal/illegal-content', anonymous)
     await user.type(
       await screen.findByLabelText('Dónde está el contenido'),
-      'Evento «Fiesta techno»',
+      'https://evil.example/events/fixture',
     )
     await user.click(screen.getByRole('radio', { name: 'Estafa o fraude' }))
     await user.type(
@@ -188,8 +189,43 @@ describe('Public legal website (no login)', () => {
     const submit = screen.getByRole('button', { name: 'Enviar aviso' })
     expect(submit).toBeDisabled()
     await user.click(screen.getByRole('checkbox'))
+    expect(submit).toBeDisabled()
+    expect(screen.getByText('Introduce un enlace HTTPS de Nightlife Connect.')).toBeInTheDocument()
+    await user.clear(screen.getByLabelText('Dónde está el contenido'))
+    await user.type(
+      screen.getByLabelText('Dónde está el contenido'),
+      'https://nightlife-connect-beige.vercel.app/events/fixture',
+    )
     await user.click(submit)
     expect(await screen.findByText(/Tu referencia es DSA-/)).toBeInTheDocument()
+  })
+
+  it('shows a failed DSA submission and keeps the entered details for retry', async () => {
+    const user = userEvent.setup()
+    const moderation = createMockServices({ latencyMs: 0, realtime: false }).moderation
+    renderApp('/legal/illegal-content', {
+      ...anonymous,
+      serviceOverrides: {
+        moderation: {
+          ...moderation,
+          submitIllegalContentNotice: vi.fn().mockRejectedValue(new Error('network failed')),
+        },
+      },
+    })
+    const url = 'https://nightlife-connect-beige.vercel.app/events/fixture'
+    await user.type(await screen.findByLabelText('Dónde está el contenido'), url)
+    await user.click(screen.getByRole('radio', { name: 'Estafa o fraude' }))
+    await user.type(
+      screen.getByLabelText('Explica por qué es ilegal'),
+      'Venden entradas falsas para un evento que no existe.',
+    )
+    await user.type(screen.getByLabelText('Tu email'), 'persona@example.com')
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('button', { name: 'Enviar aviso' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('No se ha podido registrar el aviso')
+    expect(screen.getByLabelText('Dónde está el contenido')).toHaveValue(url)
+    expect(screen.getByRole('button', { name: 'Enviar aviso' })).toBeEnabled()
+    expect(screen.queryByText('Aviso recibido')).not.toBeInTheDocument()
   })
 })
 

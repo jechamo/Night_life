@@ -58,7 +58,7 @@ Autorizado por el propietario tras aprobar el Bloque 8. Plan en
 - ✅ Borrado de punta a punta: dos cuentas Auth independientes, mensajes y foto,
   export propio, rechazo del login posterior, cliente Stripe eliminado y dos
   suscripciones canceladas, incluida una aún sin fulfillment local.
-- ✅ `npm run check`: **324/324**, TypeScript, ESLint y formato. Bloques 7/8
+- ✅ `npm run check`: **325/325**, TypeScript, ESLint y formato. Bloques 7/8
   frontend **69/69**. Build correcto, aviso conocido del chunk diferido Mapbox.
 - ✅ SQL con rollback: bloque 9 **72/72**, matching **62/62**, lugares **19/19**,
   cuotas **19/19**, OSM **13/13** y RLS **33/33**. Deno **12/12**.

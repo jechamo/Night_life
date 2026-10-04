@@ -2,7 +2,7 @@
 
 | Comprobación                                | Resultado                                                     |
 | ------------------------------------------- | ------------------------------------------------------------- |
-| TypeScript, ESLint, Prettier y Vitest       | 324/324; 43 archivos                                          |
+| TypeScript, ESLint, Prettier y Vitest       | 325/325; 43 archivos                                          |
 | Regresión frontend de bloques 7 y 8         | 69/69                                                         |
 | SQL del bloque 9                            | 72/72; rollback completo                                      |
 | SQL matching / locales / cuotas / OSM / RLS | 62/19/19/13/33; cero fallos                                   |

@@ -37,7 +37,7 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
   técnicos 90 días, moderación dos años preservando bans activos, facturación seis
   años preservando pedidos de suscripciones activas, evidencia al vencer su plazo.
   Previsualización inicial: cero registros vencidos. Último cron y worker correctos.
-- Evidencia: 324/324 Vitest, 72/72 SQL del bloque, 12/12 Deno, compra real test 11/11,
+- Evidencia: 325/325 Vitest, 72/72 SQL del bloque, 12/12 Deno, compra real test 11/11,
   borrado 10/10, regresión SQL de bloques 7/8 y RLS sin fallos. `npm audit`: cero
   vulnerabilidades. Evidencias y límites en [BLOCK9_TESTS.md](./BLOCK9_TESTS.md).
 - Advisors: doce INFO de tablas privadas con RLS sin políticas y grants revocados,

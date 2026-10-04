@@ -1073,7 +1073,9 @@
       "hint": "Digital Services Act form",
       "intro": "If you think something on Nightlife Connect is illegal, tell us where it is and why. A person always reviews it.",
       "url": "Where the content is",
-      "urlHint": "Link, profile or event name, as exact as possible.",
+      "urlHint": "Copy the Nightlife Connect HTTPS link containing the content.",
+      "urlInvalid": "Enter a Nightlife Connect HTTPS link.",
+      "failed": "Your notice could not be recorded. Check the details and try again.",
       "reason": "Reason",
       "reasons": {
         "minor": "Possible minor",

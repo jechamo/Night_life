@@ -11,6 +11,8 @@ import { TextAreaField, TextField } from '@/shared/ui/text-field'
 const REASONS = ['minor', 'sexual', 'violence', 'hate', 'fraud', 'privacy', 'ip', 'other'] as const
 type Reason = (typeof REASONS)[number]
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const CONTENT_URL_RE =
+  /^https:\/\/(nightlife-connect-beige\.vercel\.app|nightlife-connect(-[a-z0-9-]+)?-chaplications-projects\.vercel\.app)\//
 
 /**
  * Public notice of illegal content (DSA art. 16): exact location, reasons, contact and
@@ -25,8 +27,8 @@ export function IllegalContentScreen() {
   const [email, setEmail] = useState('')
   const [goodFaith, setGoodFaith] = useState(false)
   const emailOk = EMAIL_RE.test(email.trim())
-  const valid =
-    url.trim().length >= 3 && reason && explanation.trim().length >= 20 && emailOk && goodFaith
+  const urlOk = CONTENT_URL_RE.test(url.trim())
+  const valid = urlOk && reason && explanation.trim().length >= 20 && emailOk && goodFaith
 
   if (notice.data) {
     return (
@@ -58,8 +60,10 @@ export function IllegalContentScreen() {
       <h1 className="text-3xl font-semibold">{t('publicWeb.illegal.title')}</h1>
       <p className="text-muted-foreground">{t('publicWeb.illegal.intro')}</p>
       <TextField
+        type="url"
         label={t('publicWeb.illegal.url')}
         hint={t('publicWeb.illegal.urlHint')}
+        error={url && !urlOk ? t('publicWeb.illegal.urlInvalid') : undefined}
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         maxLength={500}
@@ -98,6 +102,11 @@ export function IllegalContentScreen() {
         {t('publicWeb.illegal.goodFaith')}
       </CheckboxField>
       <p className="text-xs text-muted-foreground">{t('publicWeb.illegal.privacy')}</p>
+      {notice.isError && (
+        <p role="alert" className="text-sm text-danger">
+          {t('publicWeb.illegal.failed')}
+        </p>
+      )}
       <Button type="submit" block size="lg" disabled={!valid || notice.isPending}>
         {t('publicWeb.illegal.submit')}
       </Button>

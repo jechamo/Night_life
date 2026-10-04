@@ -1073,7 +1073,9 @@
       "hint": "Formulario del Reglamento de Servicios Digitales",
       "intro": "Si crees que algo publicado en Nightlife Connect es ilegal, cuéntanos dónde está y por qué. Lo revisa siempre una persona.",
       "url": "Dónde está el contenido",
-      "urlHint": "Enlace, nombre del perfil o del evento, lo más exacto posible.",
+      "urlHint": "Copia el enlace HTTPS de Nightlife Connect que contiene el contenido.",
+      "urlInvalid": "Introduce un enlace HTTPS de Nightlife Connect.",
+      "failed": "No se ha podido registrar el aviso. Revisa los datos y vuelve a intentarlo.",
       "reason": "Motivo",
       "reasons": {
         "minor": "Posible menor de edad",
