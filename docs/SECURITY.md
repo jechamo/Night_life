@@ -58,8 +58,11 @@ La configuración externa de Auth/proveedores y QA real no están acreditadas.
   por PostgREST. Es un cierre deliberado, no se añade una policy permisiva para ocultar INFO.
 - Rendimiento: 14 INFO de [índices sin uso](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index).
   No hay evidencia de que quitarlos mejore las cargas reales. ❌ Cero Advisors literal.
-- ✅ El propietario confirmó instalación/apertura PWA en Samsung «fold7z» e iPhone 11.
-- ❌ Actualización/offline real en Android/iOS, lectores de pantalla y 60 fps.
+- ✅ El propietario confirmó instalación/apertura PWA en Samsung «fold7z»
+  (One UI 8.5) e iPhone 11 (iOS 17.4.1).
+- ✅ Aviso offline y recuperación de datos/sesión al reconectar confirmados en ambos,
+  partiendo de la app cargada; no acredita arranque frío offline.
+- ❌ Actualización desde versión anterior, lectores de pantalla y 60 fps.
   Tokens, unit tests y tamaños del build no acreditan esos resultados.
 - ❌ Revisión jurídica final, datos de empresa y proveedores/costes live: Bloque 12.
 

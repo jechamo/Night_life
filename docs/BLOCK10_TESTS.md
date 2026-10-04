@@ -68,9 +68,13 @@ de ambos participantes. Conserva los casos de denegación; no relaja los guards.
 - ✅ Instalación/apertura como app confirmadas por el propietario el 2026-10-04:
   Samsung «fold7z» (nombre indicado) e iPhone 11. Respondió «Listo, funciona» al
   protocolo de instalación, apertura standalone y conservación de sesión.
-  No indicó las versiones de Android/iOS; esta evidencia es una prueba manual
-  del propietario, distinta de una medición instrumentada.
-- ❌ Apertura offline real, actualización, cámara/geolocalización y VoiceOver/TalkBack
+  Versiones indicadas: One UI 8.5 e iOS 17.4.1; versión base de Android no indicada.
+  Esta evidencia es una prueba manual del propietario, distinta de una medición
+  instrumentada.
+- ✅ Con la app cargada: aviso offline al activar modo avión, recuperación de datos
+  y conservación de sesión al reconectar. El propietario confirmó «Funciona en ambos»
+  en los mismos dispositivos. No acredita arranque frío offline ni fps.
+- ❌ Actualización desde una versión anterior, cámara/geolocalización y VoiceOver/TalkBack
   en Chrome Android/Safari iOS.
 - ❌ 60 fps en dispositivos reales: tamaño del build y tokens no prueban fluidez.
 
