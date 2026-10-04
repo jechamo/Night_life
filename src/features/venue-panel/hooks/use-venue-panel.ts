@@ -8,6 +8,23 @@ import type {
 
 const venuesKey = ['venue-panel', 'venues'] as const
 
+export function useCreateFlashAlert(placeId: string) {
+  const { venuePanel } = useServices()
+  return useMutation({
+    mutationFn: (input: Parameters<VenuePanelService['createFlashAlert']>[1]) =>
+      venuePanel.createFlashAlert(placeId, input),
+  })
+}
+export function useFlashAlerts(placeId: string, enabled: boolean) {
+  const { venuePanel } = useServices()
+  return useQuery({
+    queryKey: ['flash-alerts', placeId],
+    enabled,
+    queryFn: () => venuePanel.flashAlerts(placeId),
+    refetchInterval: 60000,
+  })
+}
+
 export function useMyVenues() {
   const { venuePanel } = useServices()
   return useQuery({ queryKey: venuesKey, queryFn: () => venuePanel.myVenues() })

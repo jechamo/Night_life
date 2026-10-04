@@ -41,6 +41,8 @@ export function createMockVenuePanelService(
   }
   return {
     myVenues: () => Promise.resolve(venues),
+    createFlashAlert: () => Promise.resolve(),
+    flashAlerts: () => Promise.resolve([]),
     async claim(placeId, evidence) {
       await wait()
       if (venues.some((v) => v.placeId === placeId)) return err('already_claimed')
@@ -162,6 +164,16 @@ export function createMockPrivacyService(
           .map(({ text, sentAt }) => ({ text, sentAt })),
         premium: { subscription: config.premium.subscription, invoices: config.premium.invoices },
       }
+    },
+    requestRight: async (kind) => {
+      await wait()
+      requests.unshift({
+        id: crypto.randomUUID(),
+        kind,
+        createdAt: new Date().toISOString(),
+        dueAt: new Date(Date.now() + 30 * 86400000).toISOString(),
+        status: 'open',
+      })
     },
     requests: () => Promise.resolve([...requests]),
     requestDeletionCode: () => wait(),

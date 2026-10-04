@@ -31,6 +31,7 @@ export const ADMIN_SECTIONS = [
   'users',
   'verifications',
   'reports',
+  'escalations',
   'appeals',
   'bans',
   'claims',
@@ -54,6 +55,7 @@ export interface AdminSetting {
     | 'stats_min_people'
     | 'event_confirmations'
     | 'reports_strike_window_h'
+    | 'sponsorship_slots'
   value: number
   min: number
   max: number

@@ -777,7 +777,8 @@
     "read": "Read",
     "typing": "{{name}} is typing",
     "sendFailed": "Could not send the message. Try again.",
-    "loadOlder": "Load earlier messages"
+    "loadOlder": "Load earlier messages",
+    "paidContact": "Direct message"
   },
   "safety": {
     "unavailable": "This profile is no longer available",
@@ -896,7 +897,9 @@
       "credits": "Your credits",
       "invoices": "Invoices",
       "refunded": "refunded",
-      "noInvoices": "No invoices yet."
+      "noInvoices": "No invoices yet.",
+      "portal": "Invoices and payment methods in Stripe",
+      "actionFailed": "The operation could not be completed. Please try again."
     },
     "products": {
       "pass_monthly": {
@@ -975,22 +978,27 @@
       "gateway_error": "The payment gateway isn't responding. Try again."
     },
     "testCheckout": {
-      "title": "Test gateway",
-      "body": "Test mode: nothing is charged. Test card 4242 4242 4242 4242.",
-      "pay": "Pay with test card",
+      "title": "Purchase simulator",
+      "body": "Persisted simulation for testers. It does not send payments or use Stripe cards.",
+      "pay": "Simulate purchase",
       "cancel": "Cancel payment"
     },
     "return": {
       "success": "Payment complete!",
       "successBody": "Your perks are now active.",
       "cancelled": "Payment cancelled",
-      "cancelledBody": "Nothing was charged."
+      "cancelledBody": "Nothing was charged.",
+      "processing": "Confirming your payment",
+      "processingBody": "Waiting for Stripe confirmation. Your benefits appear once payment is confirmed.",
+      "simulated": "Simulated purchase",
+      "simulatedBody": "Result from the test simulator. Check the granted benefits in My subscription."
     },
     "status": {
       "active": "Active",
       "cancel_at_period_end": "Cancelled",
       "withdrawn": "Withdrawn",
-      "expired": "Expired"
+      "expired": "Expired",
+      "past_due": "Payment overdue"
     },
     "paidDm": {
       "title": "Direct message to {{name}}",
@@ -1144,7 +1152,8 @@
       "export": "Export",
       "delete": "Erasure",
       "rectify": "Rectification",
-      "object": "Objection"
+      "object": "Objection",
+      "restrict": "Restriction"
     },
     "done": "Completed",
     "dueOn": "Answer by {{date}}",
@@ -1158,7 +1167,18 @@
     "otpLabel": "Confirmation code",
     "otpHint": "We texted it to you. In testing: 123456.",
     "wrongCode": "Wrong code.",
-    "deleteConfirm": "Delete permanently"
+    "deleteConfirm": "Delete permanently",
+    "rights": {
+      "title": "Request a data right",
+      "rectify": "Rectification",
+      "object": "Objection",
+      "restrict": "Restriction",
+      "sent": "Request recorded. We will respond within one month.",
+      "failed": "Could not record your request."
+    },
+    "exportFailed": "Export failed. An incomplete file has not been downloaded.",
+    "requestSent": "Request registered. View its deadline in the history.",
+    "failed": "The operation failed. Please try again."
   },
   "moderationCenter": {
     "title": "Moderation & appeals",
@@ -1169,7 +1189,8 @@
     "actions": {
       "warning": "Warning",
       "content_removed": "Content removed",
-      "suspension": "Suspension"
+      "suspension": "Suspension",
+      "ban": "Account ban"
     },
     "appeal": "Appeal",
     "appealLabel": "Why you disagree",
@@ -1290,6 +1311,16 @@
         "active": "Active"
       },
       "invoice": "We'll send you the invoice. The team activates it once paid."
+    },
+    "flash": {
+      "title": "Flash Alerts",
+      "heading": "Title",
+      "body": "Message",
+      "alcohol": "Includes an alcohol promotion",
+      "submit": "Publish for one hour",
+      "hint": "Only for active sponsors and users with verified age and marketing consent.",
+      "saved": "Alert published",
+      "failed": "Could not publish. Check the sponsorship and alcohol policy."
     }
   },
   "admin": {
@@ -1313,7 +1344,8 @@
       "settings": "Settings",
       "audit": "Audit",
       "users": "Users",
-      "venues": "Venues"
+      "venues": "Venues",
+      "escalations": "Severe risk"
     },
     "mfa": {
       "title": "Second factor",
@@ -1368,7 +1400,9 @@
       "revoke_tester": "Revoke tester",
       "grant_venue_manager": "Grant venue manager",
       "revoke_venue_manager": "Revoke manager",
-      "grant_admin": "Grant admin"
+      "grant_admin": "Grant admin",
+      "ban": "Ban account",
+      "escalate": "Escalate serious risk"
     },
     "sections": {
       "verifications": {
@@ -1430,6 +1464,10 @@
       "users": {
         "title": "Users and roles",
         "body": "Grant or revoke roles (tester, venue manager, admin). Phones are masked and every lookup is audited."
+      },
+      "escalations": {
+        "title": "Serious risk and authorities",
+        "body": "Human review. Record the action and the reference of the notice to authorities."
       }
     },
     "flags": {
@@ -1453,7 +1491,8 @@
         "test_tools_enabled": "Test tools. Turn off before launch.",
         "store_payments_enabled": "App Store / Google Play purchases (Block 11).",
         "sponsored_cards_enabled": "Sponsored venue cards in the swipe (Block 11).",
-        "travel_mode_enabled": "Travel mode (Block 11)."
+        "travel_mode_enabled": "Travel mode (Block 11).",
+        "flash_alcohol_allowed": "Enable only after reviewing the applicable regional regulations."
       }
     },
     "payments": {
@@ -1647,7 +1686,8 @@
         "check_in_radius_m": "Check-in radius (m)",
         "stats_min_people": "Minimum people for stats",
         "event_confirmations": "Confirmations for an event",
-        "reports_strike_window_h": "3-strike window (h)"
+        "reports_strike_window_h": "3-strike window (h)",
+        "sponsorship_slots": "Concurrent sponsorships per city"
       }
     },
     "status": {

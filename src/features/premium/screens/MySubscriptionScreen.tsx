@@ -6,7 +6,7 @@ import { Button, ButtonLink } from '@/shared/ui/button'
 import { GlassCard } from '@/shared/ui/card'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
-import { usePremiumState, useSubscriptionActions } from '../hooks/use-premium'
+import { useBillingPortal, usePremiumState, useSubscriptionActions } from '../hooks/use-premium'
 import { formatPrice, withdrawalOpen } from '../model/catalog'
 
 /**
@@ -17,6 +17,7 @@ export function MySubscriptionScreen() {
   const { t, i18n } = useTranslation()
   const { data: state } = usePremiumState()
   const { cancel, resume, withdraw } = useSubscriptionActions()
+  const portal = useBillingPortal()
   const unlimited = useEntitlement('unlimited_likes').granted
   const sub = state?.subscription
   // Captured once per visit: the one-night pass is re-checked by the server anyway.
@@ -28,6 +29,21 @@ export function MySubscriptionScreen() {
     <>
       <ScreenHeader title={t('premium.mine.title')} backTo="/profile" />
       <div className="px-safe mt-4 space-y-3">
+        {(cancel.isError || resume.isError || withdraw.isError || portal.isError) && (
+          <p role="alert" className="text-danger">
+            {t('premium.mine.actionFailed')}
+          </p>
+        )}
+        {sub && !sub.simulated && (
+          <Button
+            block
+            variant="outline"
+            disabled={portal.isPending}
+            onClick={() => portal.mutate()}
+          >
+            {t('premium.mine.portal')}
+          </Button>
+        )}
         {sub ? (
           <GlassCard className="space-y-3">
             <div className="flex items-center justify-between gap-2">
@@ -126,6 +142,18 @@ export function MySubscriptionScreen() {
                   {formatPrice(invoice.amountCents, i18n.language)}{' '}
                   {invoice.status === 'refunded' && `(${t('premium.mine.refunded')})`}
                 </span>
+                {invoice.status === 'paid' &&
+                  invoice.orderId &&
+                  withdrawalOpen(invoice.issuedAt, new Date()) && (
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      disabled={withdraw.isPending}
+                      onClick={() => withdraw.mutate(invoice.orderId!)}
+                    >
+                      {t('premium.mine.withdraw')}
+                    </Button>
+                  )}
               </li>
             ))}
           </ul>

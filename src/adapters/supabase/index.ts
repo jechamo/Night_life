@@ -2,6 +2,8 @@ import type { Platform } from '@/platform'
 import { createFlagService } from '@/shared/flags/flag-service'
 import type { AppServices } from '@/shared/services/services'
 import { createAdminService } from './admin'
+import { createPremiumService } from './billing'
+import { createModerationService, createVenuePanelService } from './business'
 import { withPersistedAgeGate } from './age-gated-services'
 import { createAttendanceService } from './attendance'
 import { createSupabaseClient } from './client'
@@ -9,7 +11,7 @@ import { createEntitlementService, createFlagSource, createSessionService } from
 import { createLegalService, startEmailOutbox } from './legal'
 import { createOnboardingService } from './onboarding'
 import { createPlacesService } from './places'
-import { createPrivacyService, withRealAccountStatus } from './privacy'
+import { createPrivacyService } from './privacy'
 import { createConsentService, createProfileService, createSafetyService } from './profile'
 import { createRealtimeService } from './realtime'
 import { createChatService, createMatchingService } from './social'
@@ -50,7 +52,9 @@ export function createSupabaseServices(
     profile: createProfileService(db),
     safety: createSafetyService(db),
     privacy: createPrivacyService(db),
-    moderation: withRealAccountStatus(db, simulated.moderation),
+    moderation: createModerationService(db, simulated.moderation),
+    premium: createPremiumService(db),
+    venuePanel: createVenuePanelService(db),
     admin: createAdminService(db, simulated.admin),
   }
 }

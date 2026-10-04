@@ -14,49 +14,17 @@ export function createPrivacyService(db: Db): PrivacyService {
   return {
     async exportMyData() {
       const uid = await currentUserId(db)
-      if (!uid) return {}
-      // Explicit queries per table keep the export typed and reviewable.
-      const [
-        profile,
-        verification,
-        preferences,
-        roles,
-        consents,
-        entitlements,
-        subscriptions,
-        invoices,
-        contacts,
-        requests,
-      ] = await Promise.all([
-        db.from('profiles').select('*').eq('id', uid),
-        db.from('verification_status').select('*').eq('user_id', uid),
-        db.from('user_preferences').select('*').eq('user_id', uid),
-        db.from('user_roles').select('*').eq('user_id', uid),
-        db.from('consent_records').select('*').eq('user_id', uid),
-        db.from('entitlements').select('*').eq('user_id', uid),
-        db.from('subscriptions').select('*').eq('user_id', uid),
-        db.from('invoices').select('*').eq('user_id', uid),
-        db.from('emergency_contacts').select('*').eq('user_id', uid),
-        db.from('data_requests').select('*').eq('user_id', uid),
-      ])
-      const entries = Object.entries({
-        profiles: profile.data,
-        verification_status: verification.data,
-        user_preferences: preferences.data,
-        user_roles: roles.data,
-        consent_records: consents.data,
-        entitlements: entitlements.data,
-        subscriptions: subscriptions.data,
-        invoices: invoices.data,
-        emergency_contacts: contacts.data,
-        data_requests: requests.data,
-      }).map(([table, rows]) => [table, rows ?? []] as const)
-      const { data: user } = await db.auth.getUser()
+      if (!uid) throw new Error('unauthorized')
+      const data = must(await db.rpc('export_my_data'))
+      const { data: auth, error } = await db.auth.getUser()
+      if (error || !auth.user) throw new Error('export_failed')
       return {
-        exportedAt: new Date().toISOString(),
-        account: { id: uid, phone: user.user?.phone ?? null, email: user.user?.email ?? null },
-        ...Object.fromEntries(entries),
+        ...(data as Record<string, unknown>),
+        account: { id: uid, phone: auth.user.phone ?? null, email: auth.user.email ?? null },
       }
+    },
+    async requestRight(kind) {
+      must(await db.rpc('request_data_right', { p_kind: kind }))
     },
     async requests() {
       const uid = await currentUserId(db)
@@ -71,7 +39,12 @@ export function createPrivacyService(db: Db): PrivacyService {
       return rows.map((r) => ({
         id: r.id,
         kind:
-          r.kind === 'delete' || r.kind === 'rectify' || r.kind === 'object' ? r.kind : 'export',
+          r.kind === 'delete' ||
+          r.kind === 'rectify' ||
+          r.kind === 'object' ||
+          r.kind === 'restrict'
+            ? r.kind
+            : 'export',
         createdAt: r.created_at,
         dueAt: r.due_at,
         status: r.status === 'open' ? 'open' : 'done',
@@ -79,8 +52,12 @@ export function createPrivacyService(db: Db): PrivacyService {
     },
     async requestDeletionCode() {
       const target = await phone()
-      if (target)
-        await db.auth.signInWithOtp({ phone: target, options: { shouldCreateUser: false } })
+      if (!target) throw new Error('unauthorized')
+      const { error } = await db.auth.signInWithOtp({
+        phone: target,
+        options: { shouldCreateUser: false },
+      })
+      if (error) throw new Error('otp_failed')
     },
     async deleteAccount(otp) {
       const target = await phone()
@@ -98,7 +75,7 @@ export function createPrivacyService(db: Db): PrivacyService {
   }
 }
 
-/** Account status is real; reports, decisions and appeals stay simulated until Block 9. */
+/** Legacy account-status wrapper; Block 9 uses the complete real moderation adapter. */
 export function withRealAccountStatus(db: Db, base: ModerationService): ModerationService {
   return {
     ...base,

@@ -107,35 +107,50 @@ function venuePayload(v: VenueInput) {
 
 const ROLE_ACTION = /^(grant|revoke)_(tester|venue_manager|admin)$/
 
-function asNumber(value: unknown): number {
-  return typeof value === 'number' ? value : Number(value ?? 0)
-}
-
 /**
  * Admin over Supabase (ADR 0009): flags, settings, users/roles, audit, dashboard,
  * verification reviews, test data and TOTP MFA are real (role admin + aal2 checked by
- * every RPC). The queues of Blocks 7-9 (moderation, claims, payments…) remain simulated.
+ * every RPC). Moderation, claims and billing queues use persisted server data.
  */
 export function createAdminService(db: Db, base: AdminService): AdminService {
   const service: AdminService = {
     ...base,
     mode: 'live',
+    setSimulatedRoles() {
+      return Promise.reject(new Error('forbidden'))
+    },
+    async createPromoCode(input) {
+      return must(
+        await db.rpc('admin_promo', {
+          p_code: input.productCode,
+          p_days: input.days,
+          p_max: input.maxUses,
+        }),
+      )
+    },
+    async grantEntitlement(input) {
+      must(
+        await db.rpc('admin_entitlement', {
+          p_user: input.user,
+          p_key: input.key,
+          p_days: input.days ?? undefined,
+        }),
+      )
+    },
 
     async dashboard() {
-      const [simulated, real, reviews] = await Promise.all([
-        base.dashboard(),
-        db.rpc('admin_dashboard'),
-        db.rpc('admin_verification_reviews'),
-      ])
-      const d = (real.data ?? {}) as Record<string, unknown>
-      if (real.error) return simulated
-      return {
-        ...simulated,
-        users: asNumber(d.users),
-        ageVerifiedPercent: asNumber(d.ageVerifiedPercent),
-        matchesToday: asNumber(d.matchesToday),
-        pendingVerifications: reviews.error ? 0 : (reviews.data ?? []).length,
-      }
+      return z
+        .object({
+          users: count,
+          ageVerifiedPercent: z.number(),
+          matchesToday: count,
+          pendingReports: count,
+          pendingVerifications: count,
+          pendingClaims: count,
+          openDataRequests: count,
+          testRevenueCents: count,
+        })
+        .parse(must(await db.rpc('admin_dashboard')))
     },
 
     async list(section) {
@@ -184,7 +199,18 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
           facts: u.is_test ? ['is_test', ...u.roles] : u.roles,
         }))
       }
-      return base.list(section)
+      return z
+        .array(
+          z.object({
+            id: z.string(),
+            title: z.string(),
+            subtitle: z.string(),
+            status: z.string(),
+            createdAt: z.string(),
+            facts: z.array(z.string()),
+          }),
+        )
+        .parse(must(await db.rpc('admin_case_list', { p_section: section })))
     },
 
     async act(section, id, action, note) {
@@ -198,7 +224,17 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
         return
       }
       const match = section === 'users' ? ROLE_ACTION.exec(action) : null
-      if (!match) return base.act(section, id, action, note)
+      if (!match) {
+        must(
+          await db.rpc('admin_case_action', {
+            p_section: section,
+            p_id: id,
+            p_action: action,
+            p_note: note ?? '',
+          }),
+        )
+        return
+      }
       const role = match[2] as Role
       if (!(ROLES as readonly string[]).includes(role)) return
       const { error } = await db.rpc('admin_set_role', {
@@ -277,7 +313,11 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
       } catch {
         return 'disabled'
       }
-      return base.runTestTool(tool)
+      if (tool === 'simulate_stripe_webhook') {
+        must(await db.rpc('simulate_billing', { p_code: 'one_night' }))
+        return 'simulated'
+      }
+      throw new Error('unsupported_test_tool')
     },
 
     async providerQuotas() {

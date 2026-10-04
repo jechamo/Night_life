@@ -12,13 +12,97 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 5 – Backend base, legal y modo pruebas                   | ✅ Terminado; pendiente de OK                        |
 | 6 – Verificaciones reales                                | ✅ Pruebas cerradas; pendiente de OK del propietario |
 | 7 – Mapa, lugares, eventos y estadísticas reales         | ✅ Terminado; pendiente de OK                        |
-| 8 – Ligar, match en tiempo real y chat                   | ✅ Terminado; pendiente de OK                        |
-| 9 – Seguridad, derechos, negocio y pagos en test         | ⏳                                                   |
+| 8 – Ligar, match en tiempo real y chat                   | ✅ Aprobado (OK del propietario, 2026-10-04)         |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ✅ Validado; preparando publicación                  |
 | 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
 | 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
 | 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
 
 ---
+
+## Bloque 9 — Seguridad, derechos, negocio y Stripe test (2026-10-04)
+
+Autorizado por el propietario tras aprobar el Bloque 8. Plan en
+`docs/BLOCK9_PLAN.md`; pruebas y reproducción en `docs/BLOCK9_TESTS.md`.
+
+### Qué se hizo
+
+- Moderación persistida, tres denuncias distintas validadas en seis horas,
+  decisiones explicadas, reverificación por posible menor, apelaciones por otro
+  revisor y bans por identificadores HMAC. DSA público con cuota y buena fe;
+  cola de riesgo grave para revisión humana. SOS atómico con tres contactos.
+- Exportación completa, solicitudes de rectificación/oposición/restricción con
+  plazo de un mes, y borrado de cuenta con autenticación reciente. Cancela todas
+  las suscripciones en Stripe, retira cliente, fotos, conversaciones y Auth;
+  conserva facturación desvinculada y evidencia legal mínima. Retirada Veriff con reintentos.
+- Panel gratuito real de locales: reclamación, aprobación, edición y eventos.
+  Patrocinio con factura manual, cupos por ciudad y etiqueta; Flash dentro de la
+  app por consentimiento y mayoría de edad. Alcohol cerrado por defecto.
+- Seis productos/precios de Stripe test: Checkout y Portal alojados, cancelación
+  al final del periodo, reanudación y desistimiento con reembolso. Firma del
+  cuerpo original, idempotencia por evento/recurso, entitlements y créditos en
+  servidor. Retorno pendiente hasta que el pedido propio confirma el pago.
+- Promociones atómicas, contacto de pago etiquetado con crédito y compatibilidad
+  en servidor, simulador de compras persistido, outboxes de avisos y PDF con
+  leases/backoff y cron. Flags y audiencia deniegan compras fuera del alcance de test.
+- Catorce migraciones aplicadas por MCP y ocho funciones Edge desplegadas.
+  Secretos configurados por el propietario, sin claves en cliente ni repositorio.
+
+### Hecho cuando y validación
+
+- ✅ Tester compró VIP con tarjeta 4242 en Checkout test: webhook firmado,
+  `simulated=false`, ventajas y lote inicial concedidos una vez.
+- ✅ Portal válido, cancelación conservando el periodo pagado, reanudación y
+  desistimiento con reembolso confirmado; ventajas revocadas y créditos a cero.
+- ✅ `audience=none` oculta/bloquea el pago; las ventajas adquiridas se conservan.
+- ✅ Borrado de punta a punta: dos cuentas Auth independientes, mensajes y foto,
+  export propio, rechazo del login posterior, cliente Stripe eliminado y dos
+  suscripciones canceladas, incluida una aún sin fulfillment local.
+- ✅ `npm run check`: **324/324**, TypeScript, ESLint y formato. Bloques 7/8
+  frontend **69/69**. Build correcto, aviso conocido del chunk diferido Mapbox.
+- ✅ SQL con rollback: bloque 9 **72/72**, matching **62/62**, lugares **19/19**,
+  cuotas **19/19**, OSM **13/13** y RLS **33/33**. Deno **12/12**.
+- ✅ Stripe test **11/11**, borrado **10/10** y comprobaciones de servidor/proveedor.
+  Puertas HTTP/CORS y esquemas internos comprobados por `test:network:9`.
+- ✅ `npm audit`: cero vulnerabilidades. Advisors: doce INFO esperados de tablas
+  privadas cerradas y WARN previo de contraseñas filtradas; ver `docs/SECURITY.md`.
+- ✅ Cron corregido: usa `payment_events.processed_at`, omite titulares borrados
+  y tiene `pg_net` instalado. Ejecución programada del 04/10 a las **11:10 Madrid**:
+  `succeeded`; worker HTTP 200, cero fallos. Concesión semanal VIP sin duplicados
+  y caducidad de ventajas probadas por SQL.
+- ✅ Retención autorizada expresamente en dos respuestas: técnicos 90 días,
+  moderación dos años conservando bans activos, pedidos/facturas seis años
+  conservando pedidos de suscripciones activas, y evidencia al vencer su plazo.
+  Había cero registros vencidos al pedir aprobación. Job diario activo.
+- ✅ Fixtures retirados: un perfil real y cero perfiles de prueba, igual que al inicio.
+
+### Alcance de las pruebas y límites
+
+- Los avisos/PDF de fixtures se registran como simulados; no acreditan SMTP real.
+  La prueba de borrado no tenía una sesión Veriff externa. Su retirada depende
+  de la habilitación pendiente por el proveedor documentada en el Bloque 6.
+- Stripe permanece en test. No se contrataron servicios ni ampliaron planes.
+  Integraciones nativas, Travel y swipes patrocinados esperan el Bloque 11;
+  contratación, costes y activación live esperan el Bloque 12.
+- Los ACL de `net` los administra Supabase; `private` y `net` no se exponen por
+  PostgREST. Las pruebas HTTP verifican la denegación del esquema, sin afirmar
+  una revocación de permisos SQL que el rol `postgres` no pudo efectuar.
+
+### Cómo probarlo
+
+1. `npm run check`, `npm run test:blocks:7-8`, `npm run build` y `npm run test:network:9`.
+2. Ejecutar las suites SQL y Deno siguiendo `docs/BLOCK9_TESTS.md`.
+3. Con tester verificado: Premium → VIP → Checkout Stripe test → retorno →
+   Mi suscripción → Portal / cancelar / reanudar / desistir.
+4. Perfil → Privacidad: exportar, solicitar derecho y consultar estado. Para
+   repetir el borrado usar exclusivamente las cuentas desechables del protocolo.
+5. Admin con MFA: revisar reportes, apelaciones, reclamaciones y facturas manuales.
+   Panel del local: editar, crear evento, ver patrocinio y publicar Flash permitido.
+
+### Publicación
+
+Pendiente de registrar SHA, deployment READY y comprobación del alias público.
+No se inicia el Bloque 10 sin OK explícito.
 
 ## Bloque 8 — Ligar, match en tiempo real y chat (2026-10-04)
 
@@ -90,7 +174,7 @@ Plan en `docs/BLOCK8_PLAN.md`; evidencias y reproducción en `docs/BLOCK8_TESTS.
 5. Para repetir la integración automática, seguir `docs/BLOCK8_TESTS.md`; usa dos
    cuentas temporales propias y no necesita el OTP del propietario.
 
-No se avanza al Bloque 9 sin un OK explícito del propietario.
+OK del propietario para el bloque 8 y autorización de iniciar el bloque 9: 2026-10-04.
 
 ---
 

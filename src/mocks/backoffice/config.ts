@@ -61,6 +61,7 @@ export function createMockConfig(
       { key: 'stats_min_people', value: 5, min: 5, max: 20 },
       { key: 'event_confirmations', value: 3, min: 2, max: 10 },
       { key: 'reports_strike_window_h', value: 6, min: 1, max: 48 },
+      { key: 'sponsorship_slots', value: 3, min: 1, max: 10 },
     ],
     premium: {
       subscription: null,
@@ -81,6 +82,7 @@ export function createMockConfig(
     ],
     redeemAttempts: 0,
     rows: {
+      escalations: [],
       verifications: [
         {
           id: 'vr-1',

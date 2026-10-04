@@ -2,6 +2,52 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 9 — puerta de seguridad, 2026-10-04
+
+- Revisión de migraciones, RLS, RPC, Edge Functions y adaptadores. Helpers en
+  `private` con `search_path=''`, permisos revocados y envoltorios invoker;
+  decisiones administrativas requieren rol y MFA. El cliente no escribe compras,
+  entitlements, créditos, bans ni decisiones de moderación.
+- Stripe SDK 23 en servidor: clave y signing secret en Supabase Secrets. Firma
+  del cuerpo original acotado, tolerancia de 300 segundos, modo y recursos del
+  comercio comprobados. Eventos y concesiones idempotentes; los reembolsos revocan
+  ventajas y créditos. El retorno del navegador consulta el pedido propio.
+- Checkout y Portal alojados, solo HTTPS en los hosts autorizados, sin Stripe.js
+  ni datos de tarjeta en Nightlife. Test exige audiencia, rol y flags; con
+  `audience=none` el servidor deniega compras. No se configuró Stripe live.
+- Borrado con `getUser` y autenticación de los últimos diez minutos: cancela todas
+  las suscripciones del cliente, incluidas las aún sin fulfillment, retira Stripe,
+  Storage y Auth. Facturas conservadas sin usuario; evidencia legal mínima por HMAC.
+  La cola cerrada de Veriff reintenta errores sin registrar cuerpos del proveedor.
+- Exportación completa incluye mensajes propios y excluye el texto del otro
+  participante. SOS atómico con máximo tres contactos. DSA valida URL propia,
+  contacto, explicación y declaración de buena fe, con cuota sin cuenta.
+- Moderación exige denuncias humanas validadas de tres personas distintas en seis
+  horas, decisiones explicadas y apelación por otro revisor. Contacto de pago exige
+  compatibilidad y bloquea semáforo rojo; la flag permanece apagada.
+- Patrocinios requieren factura manual y hueco disponible; no modifican rankings
+  ni estadísticas. Flash exige patrocinio, marketing y mayoría de edad; alcohol
+  cerrado por defecto. Edición gratuita de locales conserva las coordenadas oficiales.
+- Outboxes con leases, diez intentos y backoff; fixtures registrados como simulados.
+  Cron autenticado con clave de Vault. Los esquemas `private` y `net` no se exponen
+  por PostgREST: comprobación HTTP 406/PGRST106. Los ACL administrados de `net`
+  permiten acceso SQL a roles de base de datos; no se atribuye eficacia a los
+  REVOKE de la migración ejecutados por `postgres` sin ser propietario de la extensión.
+- Retención irreversible autorizada expresamente en dos respuestas del propietario:
+  técnicos 90 días, moderación dos años preservando bans activos, facturación seis
+  años preservando pedidos de suscripciones activas, evidencia al vencer su plazo.
+  Previsualización inicial: cero registros vencidos. Último cron y worker correctos.
+- Evidencia: 324/324 Vitest, 72/72 SQL del bloque, 12/12 Deno, compra real test 11/11,
+  borrado 10/10, regresión SQL de bloques 7/8 y RLS sin fallos. `npm audit`: cero
+  vulnerabilidades. Evidencias y límites en [BLOCK9_TESTS.md](./BLOCK9_TESTS.md).
+- Advisors: doce INFO de tablas privadas con RLS sin políticas y grants revocados,
+  [explicación](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy),
+  y WARN previo de [protección de contraseñas filtradas](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+  Sin nuevos hallazgos críticos o altos. Activación de planes/proveedores en bloque 12.
+
+Las dos cuentas y el local de prueba se retiraron: un perfil real y cero fixtures.
+La prueba no contenía una sesión Veriff externa y sus avisos no acreditan SMTP real.
+
 ## Bloque 8 — puerta de seguridad, 2026-10-04
 
 - Revisión de las tres migraciones, RPC, RLS, Storage, adaptadores y generador de

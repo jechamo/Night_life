@@ -9,6 +9,15 @@ export function useDataRequests() {
   return useQuery({ queryKey: requestsKey, queryFn: () => privacy.requests() })
 }
 
+export function useRequestDataRight() {
+  const { privacy } = useServices()
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (kind: 'rectify' | 'object' | 'restrict') => privacy.requestRight(kind),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: requestsKey }),
+  })
+}
+
 /** GDPR art. 15/20: machine-readable export saved through the platform layer. */
 export function useExportMyData() {
   const { privacy } = useServices()

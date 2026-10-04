@@ -118,9 +118,11 @@ export function withdrawalOpen(startedAt: string, now: Date): boolean {
   return now.getTime() - Date.parse(startedAt) < WITHDRAWAL_DAYS * 86_400_000
 }
 
-export type SubscriptionStatus = 'active' | 'cancel_at_period_end' | 'withdrawn' | 'expired'
+export type SubscriptionStatus =
+  'active' | 'cancel_at_period_end' | 'withdrawn' | 'expired' | 'past_due'
 
 export interface Subscription {
+  simulated?: boolean
   id: string
   productCode: ProductCode
   provider: 'stripe' | 'apple' | 'google'

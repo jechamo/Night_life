@@ -11,7 +11,7 @@ export interface MyReport {
 /** Explained decision about my account (DSA art. 17) that I can appeal. */
 export interface ModerationDecision {
   id: string
-  action: 'warning' | 'content_removed' | 'suspension'
+  action: 'warning' | 'content_removed' | 'suspension' | 'ban'
   reason: string
   explanation: string
   createdAt: string
@@ -28,6 +28,7 @@ export interface ModerationService {
     reason: string
     explanation: string
     email: string
+    goodFaith: boolean
   }): Promise<string>
   accountStatus(): Promise<'active' | 'suspended'>
 }

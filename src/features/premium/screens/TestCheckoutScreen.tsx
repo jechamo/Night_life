@@ -1,4 +1,4 @@
-import { CreditCard, FlaskConical } from 'lucide-react'
+import { FlaskConical } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Button } from '@/shared/ui/button'
@@ -8,8 +8,7 @@ import { useCompleteTestPurchase } from '../hooks/use-premium'
 import { formatPrice, productByCode } from '../model/catalog'
 
 /**
- * Stand-in for Stripe Checkout in test mode (Block 9 redirects to the real hosted page,
- * where the Stripe test cards are used). Paying simulates the signed webhook.
+ * Explicit persisted simulator. Real Stripe test-card purchases use hosted Checkout.
  */
 export function TestCheckoutScreen() {
   const { t, i18n } = useTranslation()
@@ -31,9 +30,6 @@ export function TestCheckoutScreen() {
           <p className="font-display text-2xl text-primary">
             {formatPrice(product.priceCents, i18n.language)}
           </p>
-          <p className="font-mono text-sm text-muted-foreground">
-            4242 4242 4242 4242 · 12/34 · 123
-          </p>
         </GlassCard>
         <Button
           block
@@ -41,11 +37,11 @@ export function TestCheckoutScreen() {
           disabled={complete.isPending}
           onClick={() =>
             complete.mutate(product.code, {
-              onSuccess: () => void navigate('/premium/return?status=success', { replace: true }),
+              onSuccess: () => void navigate('/premium/return?status=simulated', { replace: true }),
             })
           }
         >
-          <CreditCard aria-hidden />
+          <FlaskConical aria-hidden />
           {t('premium.testCheckout.pay')}
         </Button>
         <Button

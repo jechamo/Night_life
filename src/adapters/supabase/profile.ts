@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import {
   ONBOARDING_CONSENTS,
   DEFAULT_CONSENTS,
@@ -145,17 +146,13 @@ export function createSafetyService(db: Db): SafetyService {
       return uid ? list(uid) : []
     },
     async saveContacts(next) {
-      const uid = await requireUser(db)
-      must(await db.from('emergency_contacts').delete().eq('user_id', uid).select('id'))
-      if (next.length) {
+      return z.array(z.object({ id: z.string(), name: z.string(), phone: z.string() })).parse(
         must(
-          await db
-            .from('emergency_contacts')
-            .insert(next.slice(0, 3).map((c) => ({ user_id: uid, name: c.name, phone: c.phone })))
-            .select('id'),
-        )
-      }
-      return list(uid)
+          await db.rpc('save_emergency_contacts', {
+            p: next.map((c) => ({ name: c.name, phone: c.phone })),
+          }),
+        ),
+      )
     },
   }
 }

@@ -11,3 +11,20 @@ verify_jwt = false
 [functions.veriff-webhook]
 # Provider calls carry an HMAC-SHA256 of the raw body, never a Supabase user JWT.
 verify_jwt = false
+
+[functions.create-checkout-session]
+verify_jwt = false # requireUser validates the bearer token with Supabase Auth.
+[functions.billing-account]
+verify_jwt = false # requireUser validates the bearer token with Supabase Auth.
+[functions.create-portal-session]
+verify_jwt = false # requireUser validates the bearer token with Supabase Auth.
+[functions.request-withdrawal]
+verify_jwt = false # requireUser validates the bearer token with Supabase Auth.
+[functions.delete-account]
+verify_jwt = false # Verified bearer plus a recent authentication method.
+[functions.stripe-webhook]
+verify_jwt = false # Stripe signature over the bounded original request body.
+[functions.billing-worker]
+verify_jwt = false # Vault key validated inside the service-only claim RPC.
+[functions.signed-documents]
+verify_jwt = false # requireUser validates the bearer token with Supabase Auth.

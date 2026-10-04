@@ -777,7 +777,8 @@
     "read": "Leído",
     "typing": "{{name}} está escribiendo",
     "sendFailed": "No se ha podido enviar el mensaje. Inténtalo de nuevo.",
-    "loadOlder": "Cargar mensajes anteriores"
+    "loadOlder": "Cargar mensajes anteriores",
+    "paidContact": "Mensaje directo"
   },
   "safety": {
     "unavailable": "Este perfil ya no está disponible",
@@ -896,7 +897,9 @@
       "credits": "Tus créditos",
       "invoices": "Facturas",
       "refunded": "reembolsada",
-      "noInvoices": "Aún no tienes facturas."
+      "noInvoices": "Aún no tienes facturas.",
+      "portal": "Facturas y métodos de pago en Stripe",
+      "actionFailed": "No se ha completado la operación. Inténtalo de nuevo."
     },
     "products": {
       "pass_monthly": {
@@ -975,22 +978,27 @@
       "gateway_error": "La pasarela de pago no responde. Inténtalo de nuevo."
     },
     "testCheckout": {
-      "title": "Pasarela de prueba",
-      "body": "Modo test: no se cobra nada. Tarjeta de prueba 4242 4242 4242 4242.",
-      "pay": "Pagar con tarjeta de prueba",
+      "title": "Simulador de compra",
+      "body": "Simulación persistida para testers. No envía pagos ni usa tarjetas de Stripe.",
+      "pay": "Simular compra",
       "cancel": "Cancelar el pago"
     },
     "return": {
       "success": "¡Pago completado!",
       "successBody": "Tus ventajas ya están activas.",
       "cancelled": "Pago cancelado",
-      "cancelledBody": "No se ha cobrado nada."
+      "cancelledBody": "No se ha cobrado nada.",
+      "processing": "Confirmando el pago",
+      "processingBody": "Esperamos la confirmación de Stripe. Tus ventajas aparecerán cuando se confirme el pago.",
+      "simulated": "Compra simulada",
+      "simulatedBody": "Resultado del simulador de pruebas. Puedes consultar las ventajas concedidas en Mi suscripción."
     },
     "status": {
       "active": "Activa",
       "cancel_at_period_end": "Cancelada",
       "withdrawn": "Desistida",
-      "expired": "Caducada"
+      "expired": "Caducada",
+      "past_due": "Pago pendiente"
     },
     "paidDm": {
       "title": "Mensaje directo a {{name}}",
@@ -1144,7 +1152,8 @@
       "export": "Exportación",
       "delete": "Eliminación",
       "rectify": "Rectificación",
-      "object": "Oposición"
+      "object": "Oposición",
+      "restrict": "Limitación"
     },
     "done": "Completada",
     "dueOn": "Respuesta antes del {{date}}",
@@ -1158,7 +1167,18 @@
     "otpLabel": "Código de confirmación",
     "otpHint": "Te lo hemos enviado por SMS. En pruebas: 123456.",
     "wrongCode": "Código incorrecto.",
-    "deleteConfirm": "Eliminar definitivamente"
+    "deleteConfirm": "Eliminar definitivamente",
+    "rights": {
+      "title": "Solicitar un derecho",
+      "rectify": "Rectificación",
+      "object": "Oposición",
+      "restrict": "Limitación",
+      "sent": "Solicitud registrada. Responderemos en un mes.",
+      "failed": "No se pudo registrar la solicitud."
+    },
+    "exportFailed": "No se pudo exportar. No se ha descargado un archivo incompleto.",
+    "requestSent": "Solicitud registrada. Consulta su plazo en el historial.",
+    "failed": "No se pudo completar la operación. Inténtalo de nuevo."
   },
   "moderationCenter": {
     "title": "Moderación y apelaciones",
@@ -1169,7 +1189,8 @@
     "actions": {
       "warning": "Aviso",
       "content_removed": "Contenido retirado",
-      "suspension": "Suspensión"
+      "suspension": "Suspensión",
+      "ban": "Prohibición de acceso"
     },
     "appeal": "Recurrir",
     "appealLabel": "Por qué no estás de acuerdo",
@@ -1290,6 +1311,16 @@
         "active": "Activo"
       },
       "invoice": "Te enviaremos la factura. El equipo lo activa al recibir el pago."
+    },
+    "flash": {
+      "title": "Flash Alerts",
+      "heading": "Título",
+      "body": "Mensaje",
+      "alcohol": "Incluye promoción de alcohol",
+      "submit": "Publicar durante una hora",
+      "hint": "Solo para patrocinadores activos, usuarios con edad verificada y consentimiento comercial.",
+      "saved": "Aviso publicado",
+      "failed": "No se pudo publicar. Comprueba el patrocinio y la política de alcohol."
     }
   },
   "admin": {
@@ -1313,7 +1344,8 @@
       "settings": "Configuración",
       "audit": "Auditoría",
       "users": "Usuarios",
-      "venues": "Locales"
+      "venues": "Locales",
+      "escalations": "Riesgo grave"
     },
     "mfa": {
       "title": "Segundo factor",
@@ -1368,7 +1400,9 @@
       "revoke_tester": "Quitar tester",
       "grant_venue_manager": "Dar gestor de local",
       "revoke_venue_manager": "Quitar gestor",
-      "grant_admin": "Dar admin"
+      "grant_admin": "Dar admin",
+      "ban": "Prohibir acceso",
+      "escalate": "Escalar riesgo grave"
     },
     "sections": {
       "verifications": {
@@ -1430,6 +1464,10 @@
       "users": {
         "title": "Usuarios y roles",
         "body": "Asigna o retira roles (tester, gestor de local, admin). Los teléfonos se muestran enmascarados y cada consulta se audita."
+      },
+      "escalations": {
+        "title": "Riesgo grave y autoridades",
+        "body": "Revisión humana. Registra la actuación y la referencia del aviso a las autoridades."
       }
     },
     "flags": {
@@ -1453,7 +1491,8 @@
         "test_tools_enabled": "Herramientas de prueba. Apagar antes del lanzamiento.",
         "store_payments_enabled": "Compras en App Store / Google Play (Bloque 11).",
         "sponsored_cards_enabled": "Tarjetas patrocinadas de locales en el swipe (Bloque 11).",
-        "travel_mode_enabled": "Modo viaje (Bloque 11)."
+        "travel_mode_enabled": "Modo viaje (Bloque 11).",
+        "flash_alcohol_allowed": "Activar solo tras revisar la normativa autonómica aplicable."
       }
     },
     "payments": {
@@ -1647,7 +1686,8 @@
         "check_in_radius_m": "Radio de check-in (m)",
         "stats_min_people": "Mínimo de personas para estadísticas",
         "event_confirmations": "Confirmaciones para un evento",
-        "reports_strike_window_h": "Ventana de 3 strikes (h)"
+        "reports_strike_window_h": "Ventana de 3 strikes (h)",
+        "sponsorship_slots": "Patrocinios simultáneos por ciudad"
       }
     },
     "status": {

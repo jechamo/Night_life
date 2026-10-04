@@ -17,6 +17,7 @@ import {
   useVenueStats,
 } from '../hooks/use-venue-panel'
 import type { ManagedVenue, SponsorshipTier } from '../services/venue-panel-service'
+import { FlashAlertForm } from '../components/FlashAlerts'
 
 const TIERS: readonly SponsorshipTier[] = ['featured', 'featured_plus', 'top']
 const PRICES = ['1', '2', '3', '4'] as const
@@ -317,6 +318,11 @@ export function VenueDetailScreen() {
         <SponsorshipForm venue={venue} />
       </Section>
       <div className="h-8" />
+      {venue.sponsorship?.status === 'active' && (
+        <Section title={t('venuePanel.flash.title')}>
+          <FlashAlertForm placeId={venue.placeId} />
+        </Section>
+      )}
     </>
   )
 }

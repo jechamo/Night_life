@@ -62,7 +62,7 @@ end $$;
 -- ── anon ─────────────────────────────────────────────────────────────────────
 set local role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
-insert into _results select 'anon reads flags', count(*) = 13 from public.app_settings where kind = 'flag';
+insert into _results select 'anon reads flags', count(*) = 14 from public.app_settings where kind = 'flag';
 insert into _results select 'anon reads published legal docs', count(*) > 0 from public.legal_documents;
 insert into _results select 'anon cannot see inactive premium terms', count(*) = 0 from public.legal_documents where slug = 'premium';
 do $$
@@ -130,7 +130,7 @@ begin
     insert into _results values ('user cannot purge test data', true);
   end;
 end $$;
-insert into public.emergency_contacts (user_id, name, phone) values ('00000000-0000-4000-8000-00000000000a', 'Papá', '+34600000003');
+select public.save_emergency_contacts('[{"name":"Papá","phone":"+34600000003"}]');
 insert into _results select 'user writes own SOS contacts', count(*) = 1 from public.emergency_contacts;
 reset role;
 

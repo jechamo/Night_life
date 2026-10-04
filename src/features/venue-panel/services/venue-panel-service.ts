@@ -29,6 +29,19 @@ export interface VenueStats {
 /** Port for the free venue panel (PRD 6.10). */
 export interface VenuePanelService {
   myVenues(): Promise<ManagedVenue[]>
+  createFlashAlert(
+    placeId: string,
+    input: {
+      title: string
+      body: string
+      startsAt: string
+      endsAt: string
+      containsAlcohol: boolean
+    },
+  ): Promise<void>
+  flashAlerts(
+    placeId: string,
+  ): Promise<{ id: string; title: string; body: string; endsAt: string }[]>
   claim(placeId: string, evidence: string): Promise<Result<ManagedVenue, 'already_claimed'>>
   update(
     placeId: string,

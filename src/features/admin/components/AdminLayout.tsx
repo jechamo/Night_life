@@ -34,6 +34,7 @@ type NavKey =
   | 'users'
   | 'verifications'
   | 'reports'
+  | 'escalations'
   | 'appeals'
   | 'bans'
   | 'claims'
@@ -53,6 +54,7 @@ const NAV: readonly { key: NavKey; to: string; icon: LucideIcon }[] = [
   { key: 'users', to: '/admin/s/users', icon: Users },
   { key: 'verifications', to: '/admin/s/verifications', icon: UserCheck },
   { key: 'reports', to: '/admin/s/reports', icon: ShieldAlert },
+  { key: 'escalations', to: '/admin/s/escalations', icon: ShieldAlert },
   { key: 'appeals', to: '/admin/s/appeals', icon: Scale },
   { key: 'bans', to: '/admin/s/bans', icon: Ban },
   { key: 'claims', to: '/admin/s/claims', icon: Store },

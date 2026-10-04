@@ -71,8 +71,31 @@ suscripción puras (Bloque 4). Rutas: la web pública (`/legal`) y el admin tien
 layout fuera del `AppShell`; el admin exige rol + segundo factor y `RequireOnboarded`
 redirige a `/suspended` si la cuenta está suspendida. El back-office simulado
 (`src/mocks/backoffice`) es mutable para que el admin cambie flags y roles en directo.
-Pendientes por bloque: State machines (7, 9), Idempotency key y
-Transactional outbox (9).
+Desde el Bloque 9 las colas administrativas, moderación, panel de locales y derechos
+usan adaptadores Supabase. Los mocks quedan para tests y ejecución explícita sin backend.
+Las máquinas de estado de compra y suscripción, la idempotencia y los outboxes
+transaccionales se ejecutan en servidor.
+
+## Pagos y operaciones (Bloque 9)
+
+- `billing.ts` y `business.ts` implementan los servicios de Premium, moderación y
+  locales. Los hooks orquestan consultas/mutaciones y la UI usa `platform` para
+  navegar a Checkout y Portal, sin SDK de Stripe en el navegador.
+- `create-checkout-session` autentica, crea un pedido persistido y comprueba el
+  precio del catálogo en Stripe. `stripe-webhook` verifica la firma, consulta el
+  estado actual del proveedor y aplica la transición por RPC de servicio.
+- `billing-account`, `create-portal-session` y `request-withdrawal` comparten
+  autenticación y gestión de suscripción. Ventajas solo por entitlements;
+  créditos por ledger con origen único. Test y simulación son estados explícitos.
+- `pg_cron` caduca ventajas, concede el lote VIP semanal y prepara avisos cada
+  cinco minutos. `pg_net` llama a `billing-worker` con una clave privada en Vault;
+  reclama avisos/PDF con leases y reintentos. La retención tiene además un job diario.
+- `delete-account` y el worker comparten la retirada de Stripe, Storage, Veriff y
+  Auth. Los errores de retirada externa se reintentan mediante una cola privada;
+  se conserva únicamente evidencia legal mínima y facturación sin vínculo al usuario.
+- Moderación y reclamaciones requieren revisión humana; una apelación necesita
+  revisor independiente. Patrocinio se asigna con factura manual y cupos por ciudad.
+  Flash filtra destinatarios en servidor por edad y consentimiento.
 
 ## Backend (Bloque 5)
 
@@ -117,4 +140,5 @@ Transactional outbox (9).
 ## Calidad
 
 - `npm run check` = `tsc -b` (estricto, sin `any`) + ESLint (0 avisos) + Prettier + Vitest.
-- Build sin advertencias; _vendor chunks_ estables (react, motion, data, ui).
+- Build correcto; _vendor chunks_ estables (react, motion, data, ui). Aviso conocido
+  de tamaño del chunk diferido de Mapbox (1,86 MB), fuera del precache.

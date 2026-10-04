@@ -26,7 +26,8 @@ const ACTIONS: Partial<
     ],
   },
   verifications: { on: ['pending'], actions: ['approve', 'reject'] },
-  reports: { on: ['open'], actions: ['warn', 'suspend', 'dismiss'] },
+  reports: { on: ['open'], actions: ['warn', 'suspend', 'ban', 'dismiss', 'escalate'] },
+  escalations: { on: ['pending'], actions: ['done'] },
   appeals: { on: ['pending'], actions: ['accept', 'reject'] },
   bans: { on: ['active'], actions: ['lift'] },
   claims: { on: ['pending'], actions: ['approve', 'reject'] },
@@ -56,9 +57,25 @@ type AdminAction =
   | 'revoke'
   | 'done'
   | 'publish'
+  | 'ban'
+  | 'escalate'
 
 /** Decisions that affect a person must be explained (DSA art. 17): the note is mandatory. */
-const NEEDS_NOTE = new Set<AdminAction>(['reject', 'warn', 'suspend', 'hide', 'delete', 'revoke'])
+const NEEDS_NOTE = new Set<AdminAction>([
+  'reject',
+  'warn',
+  'suspend',
+  'hide',
+  'delete',
+  'revoke',
+  'ban',
+  'escalate',
+  'dismiss',
+  'accept',
+  'lift',
+  'activate',
+  'done',
+])
 
 const STATUSES = [
   'pending',

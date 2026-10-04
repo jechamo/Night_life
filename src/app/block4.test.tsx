@@ -48,7 +48,7 @@ describe('Paywall follows the flags (Block 4 "done when")', () => {
 })
 
 describe('Test purchase → entitlements → cancel and withdraw', () => {
-  it('buys the VIP pass with the test card and manages it from "Mi suscripción"', async () => {
+  it('explicitly simulates the VIP pass and manages it from "Mi suscripción"', async () => {
     const user = userEvent.setup()
     const { router } = renderApp('/premium', quiet)
     await user.click(await screen.findByRole('button', { name: 'Continuar' }))
@@ -57,13 +57,13 @@ describe('Test purchase → entitlements → cancel and withdraw', () => {
     expect(screen.getByText(/Derecho de desistimiento de 14 días/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Suscribirme y pagar' }))
 
-    await user.click(await screen.findByRole('button', { name: /Pagar con tarjeta de prueba/ }))
-    expect(await screen.findByText('¡Pago completado!')).toBeInTheDocument()
+    await user.click(await screen.findByRole('button', { name: /Simular compra/ }))
+    expect(await screen.findByText('Compra simulada')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('link', { name: 'Mi suscripción' }))
+    await router.navigate('/premium/subscription')
     await waitFor(() => expect(router.state.location.pathname).toBe('/premium/subscription'))
     expect(await screen.findByText('Activa')).toBeInTheDocument()
-    expect(screen.getByText('Likes ilimitados')).toBeInTheDocument()
+    expect(await screen.findByText('Likes ilimitados')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Cancelar suscripción' }))
     expect(await screen.findByText('Cancelada')).toBeInTheDocument()

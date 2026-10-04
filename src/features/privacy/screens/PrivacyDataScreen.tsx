@@ -15,6 +15,7 @@ import {
   useExportMyData,
   useLogoutEverywhere,
   useRequestDeletionCode,
+  useRequestDataRight,
 } from '../hooks/use-privacy'
 
 /**
@@ -29,6 +30,7 @@ export function PrivacyDataScreen() {
   const requestCode = useRequestDeletionCode()
   const deleteAccount = useDeleteAccount()
   const logoutAll = useLogoutEverywhere()
+  const requestRight = useRequestDataRight()
   const { data: requests = [] } = useDataRequests()
   const [otp, setOtp] = useState('')
   const wrongCode = deleteAccount.data && !deleteAccount.data.ok
@@ -84,6 +86,20 @@ export function PrivacyDataScreen() {
         </GlassCard>
       </Section>
       <Section title={t('privacyData.requests')}>
+        <GlassCard className="mb-3 space-y-3">
+          {(['rectify', 'object', 'restrict'] as const).map((kind) => (
+            <Button
+              key={kind}
+              block
+              variant="outline"
+              disabled={requestRight.isPending}
+              onClick={() => requestRight.mutate(kind)}
+            >
+              {t(`privacyData.kinds.${kind}`)}
+            </Button>
+          ))}
+          {requestRight.isSuccess && <p role="status">{t('privacyData.requestSent')}</p>}
+        </GlassCard>
         {requests.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t('privacyData.noRequests')}</p>
         ) : (
@@ -163,6 +179,15 @@ export function PrivacyDataScreen() {
         </GlassCard>
       </Section>
       <div className="h-8" />
+      {(exportData.isError ||
+        requestRight.isError ||
+        requestCode.isError ||
+        deleteAccount.isError ||
+        logoutAll.isError) && (
+        <p role="alert" className="px-safe text-danger">
+          {t('privacyData.failed')}
+        </p>
+      )}
     </>
   )
 }

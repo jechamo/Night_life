@@ -2,82 +2,12 @@
 // `consent_records` and the exact versions signed; sent by email to the CONFIRMED
 // address only. Auth: user JWT (verify_jwt) + RLS reads as the caller.
 import { corsHeaders, json, preflight } from '../_shared/http.ts'
-import { buildPdf, type PdfLine } from '../_shared/pdf.ts'
 import { sendMail } from '../_shared/smtp.ts'
 import { requireUser, serviceClient } from '../_shared/supabase.ts'
+import { rpc } from '../_shared/stripe.ts'
 
+import { DOCUMENT_COPY as COPY, renderSignedPdf as renderPdf } from '../_shared/signed-pdf.ts'
 type Language = 'es' | 'en'
-
-const COPY = {
-  es: {
-    title: 'Nightlife Connect — Documentos firmados',
-    holder: 'Titular de la cuenta',
-    account: 'Cuenta',
-    generated: 'Generado el',
-    signed: 'Firmado el',
-    version: 'versión',
-    note: 'Evidencia inmutable conservada en nuestros sistemas (consent_records).',
-    subject: 'Tus documentos firmados — Nightlife Connect',
-    body: 'Hola:\n\nAdjuntamos el PDF con los documentos que aceptaste en Nightlife Connect.\n\nSi no has pedido este email, ignóralo.',
-  },
-  en: {
-    title: 'Nightlife Connect — Signed documents',
-    holder: 'Account holder',
-    account: 'Account',
-    generated: 'Generated on',
-    signed: 'Signed on',
-    version: 'version',
-    note: 'Immutable evidence kept in our systems (consent_records).',
-    subject: 'Your signed documents — Nightlife Connect',
-    body: 'Hi,\n\nAttached is the PDF with the documents you accepted on Nightlife Connect.\n\nIf you did not ask for this email, ignore it.',
-  },
-} as const
-
-type Auth = NonNullable<Awaited<ReturnType<typeof requireUser>>>
-
-async function renderPdf({ db, user }: Auth, language: Language): Promise<Uint8Array> {
-  const copy = COPY[language]
-  const { data: records } = await db
-    .from('consent_records')
-    .select('document_slug, document_version, created_at')
-    .eq('user_id', user.id)
-    .eq('kind', 'legal')
-    .order('created_at', { ascending: false })
-  const latest = new Map<string, { version: string; at: string }>()
-  for (const r of records ?? []) {
-    if (r.document_slug && r.document_version && !latest.has(r.document_slug)) {
-      latest.set(r.document_slug, { version: r.document_version, at: r.created_at })
-    }
-  }
-  const { data: profile } = await db.from('profiles').select('name').eq('id', user.id).maybeSingle()
-  const lines: PdfLine[] = [
-    { text: copy.title, size: 16, bold: true },
-    { text: `${copy.holder}: ${profile?.name ?? '—'}`, gapBefore: 8 },
-    { text: `${copy.account}: ${user.id}` },
-    { text: `${copy.generated}: ${new Date().toISOString()}` },
-    { text: copy.note, size: 9 },
-  ]
-  for (const [slug, signed] of latest) {
-    const { data: doc } = await db
-      .from('legal_documents')
-      .select('title, summary, sections')
-      .eq('slug', slug)
-      .eq('version', signed.version)
-      .eq('language', language)
-      .maybeSingle()
-    lines.push({ text: doc?.title ?? slug, size: 13, bold: true, gapBefore: 14 })
-    lines.push({ text: `${copy.version} ${signed.version} · ${copy.signed} ${signed.at}`, size: 9 })
-    if (doc) {
-      lines.push({ text: doc.summary, gapBefore: 4 })
-      for (const section of (doc.sections ?? []) as { heading: string; body: string }[]) {
-        lines.push({ text: section.heading, bold: true, gapBefore: 6 })
-        lines.push({ text: section.body })
-      }
-    }
-  }
-  return buildPdf(lines)
-}
-
 Deno.serve(async (req) => {
   const early = preflight(req)
   if (early) return early
@@ -98,7 +28,7 @@ Deno.serve(async (req) => {
 
   if (action === 'pdf') {
     const pdf = await renderPdf(auth, language)
-    return new Response(pdf, {
+    return new Response(new Uint8Array(pdf).buffer, {
       headers: {
         ...corsHeaders(req),
         'Content-Type': 'application/pdf',
@@ -115,13 +45,10 @@ Deno.serve(async (req) => {
   if (!gmailUser || !gmailPassword) return json(req, { result: 'not_configured' })
 
   const service = serviceClient()
+  let lease: { id: string; lease_token: string }[] = []
   if (action === 'outbox') {
-    const { count } = await service
-      .from('email_outbox')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .eq('status', 'pending')
-    if (!count) return json(req, { result: 'nothing_pending' })
+    lease = await rpc(service, 'claim_signed_email', { p_user: user.id })
+    if (!lease.length) return json(req, { result: 'nothing_pending' })
   }
   try {
     const pdf = await renderPdf(auth, language)
@@ -150,8 +77,20 @@ Deno.serve(async (req) => {
       .eq('user_id', user.id)
       .eq('template', 'signed_documents')
       .eq('status', 'pending')
+    for (const item of lease)
+      await rpc(service, 'finish_signed_email', {
+        p_id: item.id,
+        p_lease: item.lease_token,
+        p_status: 'sent',
+      })
     return json(req, { result: 'sent' })
   } catch (error) {
+    for (const item of lease)
+      await rpc(service, 'finish_signed_email', {
+        p_id: item.id,
+        p_lease: item.lease_token,
+        p_status: 'retry',
+      })
     // Log the type only: never addresses, tokens or document content (PRD 3.2).
     console.error(
       'signed-documents email failed',

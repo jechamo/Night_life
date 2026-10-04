@@ -13,6 +13,27 @@ export function usePremiumState() {
   return useQuery({ queryKey: premiumKey, queryFn: () => premium.getState() })
 }
 
+export function usePurchaseStatus(id: string | null) {
+  const { premium } = useServices()
+  const refresh = useRefresh()
+  return useQuery({
+    queryKey: ['premium', 'order', id],
+    enabled: !!id,
+    refetchInterval: (q) => (q.state.data && q.state.data !== 'pending' ? false : 1500),
+    queryFn: async () => {
+      const status = await premium.purchaseStatus(id!)
+      if (status === 'paid') await refresh(await premium.getState())
+      return status
+    },
+  })
+}
+
+export function useBillingPortal() {
+  const { premium } = useServices()
+  const { browser } = usePlatform()
+  return useMutation({ mutationFn: async () => browser.openExternalFlow(await premium.portal()) })
+}
+
 /** Any change in purchases refreshes entitlements: they are the only source of truth. */
 function useRefresh() {
   const queryClient = useQueryClient()
@@ -53,7 +74,7 @@ export function useSubscriptionActions() {
     cancel: useMutation({ mutationFn: () => premium.cancel(), onSuccess: refresh }),
     resume: useMutation({ mutationFn: () => premium.resume(), onSuccess: refresh }),
     withdraw: useMutation({
-      mutationFn: () => premium.withdraw(),
+      mutationFn: (orderId?: string) => premium.withdraw(orderId),
       onSuccess: (result) => refresh(result.ok ? result.value : undefined),
     }),
     notifyMe: useMutation({

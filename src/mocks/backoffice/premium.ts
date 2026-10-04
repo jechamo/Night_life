@@ -44,6 +44,8 @@ export function createMockPremiumService(
 
   return {
     getState: () => Promise.resolve(state()),
+    purchaseStatus: () => Promise.resolve('pending'),
+    portal: () => Promise.reject(new Error('mock_portal_unavailable')),
     async startPurchase(code) {
       await wait()
       const product = productByCode(code)

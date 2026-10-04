@@ -1,0 +1,54 @@
+{
+  "account": "acct_1SZoJ5Jrzx7OE9xv",
+  "livemode": false,
+  "prices": [
+    {
+      "code": "pass_monthly",
+      "priceId": "price_1UMjYhJrzx7OE9xvLKwxqpV3",
+      "productId": "prod_VNUX9FIoeBLLUg",
+      "amountCents": 999,
+      "currency": "eur",
+      "lookupKey": "nightlife_pass_monthly_test"
+    },
+    {
+      "code": "vip_monthly",
+      "priceId": "price_1UMjYmJrzx7OE9xvPxfswXn9",
+      "productId": "prod_VNUX1AAkdLEwr6",
+      "amountCents": 1999,
+      "currency": "eur",
+      "lookupKey": "nightlife_vip_monthly_test"
+    },
+    {
+      "code": "one_night",
+      "priceId": "price_1UMjYpJrzx7OE9xvW2C2pCmb",
+      "productId": "prod_VNUX7QnBvvBkiR",
+      "amountCents": 299,
+      "currency": "eur",
+      "lookupKey": "nightlife_one_night_test"
+    },
+    {
+      "code": "sparks_5",
+      "priceId": "price_1UMjYuJrzx7OE9xvkxT5u6bh",
+      "productId": "prod_VNUYIgzLEI9oBx",
+      "amountCents": 499,
+      "currency": "eur",
+      "lookupKey": "nightlife_sparks_5_test"
+    },
+    {
+      "code": "spotlight_1",
+      "priceId": "price_1UMjYzJrzx7OE9xv2yKJstwC",
+      "productId": "prod_VNUYTV84a8t63m",
+      "amountCents": 399,
+      "currency": "eur",
+      "lookupKey": "nightlife_spotlight_1_test"
+    },
+    {
+      "code": "paid_dm_1",
+      "priceId": "price_1UMjZ4Jrzx7OE9xv7sQJjJW0",
+      "productId": "prod_VNUY0bYZ2VXFGM",
+      "amountCents": 199,
+      "currency": "eur",
+      "lookupKey": "nightlife_paid_dm_1_test"
+    }
+  ]
+}

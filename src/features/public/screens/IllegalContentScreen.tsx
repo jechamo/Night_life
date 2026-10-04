@@ -51,6 +51,7 @@ export function IllegalContentScreen() {
             reason,
             explanation: explanation.trim(),
             email: email.trim(),
+            goodFaith,
           })
       }}
     >

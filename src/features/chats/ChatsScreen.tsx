@@ -77,6 +77,9 @@ export function ChatsScreen() {
                 />
                 <span className="min-w-0 flex-1">
                   <span className="block font-medium">{match.person.name}</span>
+                  {match.contactKind === 'paid_dm' && (
+                    <span className="text-xs text-primary">{t('chats.paidContact')}</span>
+                  )}
                   <span className="block truncate text-sm text-muted-foreground">
                     {summary?.last?.fromMe ? `${t('chats.you')}: ` : ''}
                     {summary?.last?.text}

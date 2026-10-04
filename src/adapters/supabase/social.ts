@@ -33,6 +33,7 @@ const contextSchema = z.object({
 })
 const candidateSchema = z.object({ profile: profileSchema, context: contextSchema })
 const matchSchema = z.object({
+  contactKind: z.enum(['mutual', 'paid_dm']).optional(),
   id: z.uuid(),
   person: profileSchema,
   context: contextSchema,

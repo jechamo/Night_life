@@ -69,6 +69,7 @@ export type Database = {
         Row: {
           created_at: string
           decision_id: string
+          explanation: string | null
           id: string
           resolved_at: string | null
           resolved_by: string | null
@@ -79,6 +80,7 @@ export type Database = {
         Insert: {
           created_at?: string
           decision_id: string
+          explanation?: string | null
           id?: string
           resolved_at?: string | null
           resolved_by?: string | null
@@ -89,6 +91,7 @@ export type Database = {
         Update: {
           created_at?: string
           decision_id?: string
+          explanation?: string | null
           id?: string
           resolved_at?: string | null
           resolved_by?: string | null
@@ -188,6 +191,7 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
+          decision_id: string | null
           id: string
           reason: string
           until: string | null
@@ -196,6 +200,7 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          decision_id?: string | null
           id?: string
           reason: string
           until?: string | null
@@ -204,10 +209,61 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          decision_id?: string | null
           id?: string
           reason?: string
           until?: string | null
           user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'bans_decision_id_fkey'
+            columns: ['decision_id']
+            isOneToOne: false
+            referencedRelation: 'moderation_decisions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      billing_notices: {
+        Row: {
+          attempts: number
+          created_at: string
+          id: string
+          lease_token: string | null
+          lease_until: string | null
+          next_attempt_at: string
+          sent_at: string | null
+          source_ref: string
+          status: string
+          template: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          lease_token?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
+          sent_at?: string | null
+          source_ref: string
+          status?: string
+          template: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          lease_token?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
+          sent_at?: string | null
+          source_ref?: string
+          status?: string
+          template?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -271,6 +327,8 @@ export type Database = {
           delta: number
           id: number
           kind: string
+          mode: string
+          origin_ref: string | null
           reason: string
           user_id: string
         }
@@ -279,6 +337,8 @@ export type Database = {
           delta: number
           id?: never
           kind: string
+          mode?: string
+          origin_ref?: string | null
           reason: string
           user_id: string
         }
@@ -287,6 +347,8 @@ export type Database = {
           delta?: number
           id?: never
           kind?: string
+          mode?: string
+          origin_ref?: string | null
           reason?: string
           user_id?: string
         }
@@ -297,6 +359,7 @@ export type Database = {
           closed_at: string | null
           created_at: string
           due_at: string
+          explanation: string | null
           id: string
           kind: string
           status: string
@@ -306,6 +369,7 @@ export type Database = {
           closed_at?: string | null
           created_at?: string
           due_at?: string
+          explanation?: string | null
           id?: string
           kind: string
           status?: string
@@ -315,6 +379,7 @@ export type Database = {
           closed_at?: string | null
           created_at?: string
           due_at?: string
+          explanation?: string | null
           id?: string
           kind?: string
           status?: string
@@ -328,6 +393,9 @@ export type Database = {
           created_at: string
           id: string
           last_error: string | null
+          lease_token: string | null
+          lease_until: string | null
+          next_attempt_at: string
           sent_at: string | null
           status: string
           template: string
@@ -338,6 +406,9 @@ export type Database = {
           created_at?: string
           id?: string
           last_error?: string | null
+          lease_token?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
           sent_at?: string | null
           status?: string
           template: string
@@ -348,6 +419,9 @@ export type Database = {
           created_at?: string
           id?: string
           last_error?: string | null
+          lease_token?: string | null
+          lease_until?: string | null
+          next_attempt_at?: string
           sent_at?: string | null
           status?: string
           template?: string
@@ -386,6 +460,8 @@ export type Database = {
           granted_by: string | null
           id: string
           key: string
+          mode: string
+          origin_ref: string | null
           source: string
           starts_at: string
           status: string
@@ -397,6 +473,8 @@ export type Database = {
           granted_by?: string | null
           id?: string
           key: string
+          mode?: string
+          origin_ref?: string | null
           source: string
           starts_at?: string
           status?: string
@@ -408,6 +486,8 @@ export type Database = {
           granted_by?: string | null
           id?: string
           key?: string
+          mode?: string
+          origin_ref?: string | null
           source?: string
           starts_at?: string
           status?: string
@@ -609,11 +689,52 @@ export type Database = {
         }
         Relationships: []
       }
+      illegal_content_notices: {
+        Row: {
+          category: string
+          created_at: string
+          email: string
+          id: string
+          reference: string
+          report_id: string
+          url: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          email: string
+          id?: string
+          reference: string
+          report_id: string
+          url: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          email?: string
+          id?: string
+          reference?: string
+          report_id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'illegal_content_notices_report_id_fkey'
+            columns: ['report_id']
+            isOneToOne: false
+            referencedRelation: 'reports'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       invoices: {
         Row: {
           amount_cents: number
+          hosted_url: string | null
           id: string
           issued_at: string
+          mode: string
+          payment_intent_id: string | null
           plan_code: string
           provider: string
           provider_invoice_id: string | null
@@ -622,8 +743,11 @@ export type Database = {
         }
         Insert: {
           amount_cents: number
+          hosted_url?: string | null
           id?: string
           issued_at?: string
+          mode?: string
+          payment_intent_id?: string | null
           plan_code: string
           provider: string
           provider_invoice_id?: string | null
@@ -632,8 +756,11 @@ export type Database = {
         }
         Update: {
           amount_cents?: number
+          hosted_url?: string | null
           id?: string
           issued_at?: string
+          mode?: string
+          payment_intent_id?: string | null
           plan_code?: string
           provider?: string
           provider_invoice_id?: string | null
@@ -784,6 +911,7 @@ export type Database = {
       }
       matches: {
         Row: {
+          contact_kind: string
           created_at: string
           id: string
           user_a: string
@@ -791,6 +919,7 @@ export type Database = {
           venue_id: string | null
         }
         Insert: {
+          contact_kind?: string
           created_at?: string
           id?: string
           user_a: string
@@ -798,6 +927,7 @@ export type Database = {
           venue_id?: string | null
         }
         Update: {
+          contact_kind?: string
           created_at?: string
           id?: string
           user_a?: string
@@ -858,6 +988,7 @@ export type Database = {
           id: string
           reason: string
           report_id: string | null
+          revoked_at: string | null
           user_id: string
         }
         Insert: {
@@ -868,6 +999,7 @@ export type Database = {
           id?: string
           reason: string
           report_id?: string | null
+          revoked_at?: string | null
           user_id: string
         }
         Update: {
@@ -878,6 +1010,7 @@ export type Database = {
           id?: string
           reason?: string
           report_id?: string | null
+          revoked_at?: string | null
           user_id?: string
         }
         Relationships: [
@@ -893,25 +1026,31 @@ export type Database = {
       payment_events: {
         Row: {
           id: string
+          mode: string
           processed_at: string
           provider: string
           provider_event_id: string
+          simulated: boolean
           type: string
           user_id: string | null
         }
         Insert: {
           id?: string
+          mode?: string
           processed_at?: string
           provider: string
           provider_event_id: string
+          simulated?: boolean
           type: string
           user_id?: string | null
         }
         Update: {
           id?: string
+          mode?: string
           processed_at?: string
           provider?: string
           provider_event_id?: string
+          simulated?: boolean
           type?: string
           user_id?: string | null
         }
@@ -1027,6 +1166,7 @@ export type Database = {
           discreet: boolean
           gender: Database['public']['Enums']['gender']
           id: string
+          inactivity_warned_at: string | null
           is_test: boolean
           language: string
           last_active_at: string
@@ -1048,6 +1188,7 @@ export type Database = {
           discreet?: boolean
           gender: Database['public']['Enums']['gender']
           id: string
+          inactivity_warned_at?: string | null
           is_test?: boolean
           language?: string
           last_active_at?: string
@@ -1069,6 +1210,7 @@ export type Database = {
           discreet?: boolean
           gender?: Database['public']['Enums']['gender']
           id?: string
+          inactivity_warned_at?: string | null
           is_test?: boolean
           language?: string
           last_active_at?: string
@@ -1149,6 +1291,65 @@ export type Database = {
           },
         ]
       }
+      purchase_orders: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          id: string
+          mode: string
+          paid_at: string | null
+          plan_code: string
+          price_id: string
+          provider_payment_intent_id: string | null
+          provider_session_id: string | null
+          provider_subscription_id: string | null
+          refunded_at: string | null
+          simulated: boolean
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          id?: string
+          mode: string
+          paid_at?: string | null
+          plan_code: string
+          price_id: string
+          provider_payment_intent_id?: string | null
+          provider_session_id?: string | null
+          provider_subscription_id?: string | null
+          refunded_at?: string | null
+          simulated?: boolean
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          id?: string
+          mode?: string
+          paid_at?: string | null
+          plan_code?: string
+          price_id?: string
+          provider_payment_intent_id?: string | null
+          provider_session_id?: string | null
+          provider_subscription_id?: string | null
+          refunded_at?: string | null
+          simulated?: boolean
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'purchase_orders_plan_code_fkey'
+            columns: ['plan_code']
+            isOneToOne: false
+            referencedRelation: 'plans'
+            referencedColumns: ['code']
+          },
+        ]
+      }
       ratings: {
         Row: {
           created_at: string
@@ -1205,6 +1406,8 @@ export type Database = {
           status: string
           target_event_id: string | null
           target_user_id: string | null
+          validated_at: string | null
+          validated_by: string | null
         }
         Insert: {
           comment?: string
@@ -1216,6 +1419,8 @@ export type Database = {
           status?: string
           target_event_id?: string | null
           target_user_id?: string | null
+          validated_at?: string | null
+          validated_by?: string | null
         }
         Update: {
           comment?: string
@@ -1227,6 +1432,8 @@ export type Database = {
           status?: string
           target_event_id?: string | null
           target_user_id?: string | null
+          validated_at?: string | null
+          validated_by?: string | null
         }
         Relationships: [
           {
@@ -1234,6 +1441,41 @@ export type Database = {
             columns: ['target_event_id']
             isOneToOne: false
             referencedRelation: 'events'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      safety_escalations: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          explanation: string
+          id: string
+          report_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          explanation: string
+          id?: string
+          report_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          explanation?: string
+          id?: string
+          report_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'safety_escalations_report_id_fkey'
+            columns: ['report_id']
+            isOneToOne: true
+            referencedRelation: 'reports'
             referencedColumns: ['id']
           },
         ]
@@ -1305,10 +1547,12 @@ export type Database = {
           cancel_at_period_end: boolean
           current_period_end: string
           id: string
+          mode: string
           plan_code: string
           provider: string
           provider_customer_id: string | null
           provider_subscription_id: string | null
+          simulated: boolean
           started_at: string
           status: string
           updated_at: string
@@ -1319,10 +1563,12 @@ export type Database = {
           cancel_at_period_end?: boolean
           current_period_end: string
           id?: string
+          mode?: string
           plan_code: string
           provider: string
           provider_customer_id?: string | null
           provider_subscription_id?: string | null
+          simulated?: boolean
           started_at?: string
           status: string
           updated_at?: string
@@ -1333,10 +1579,12 @@ export type Database = {
           cancel_at_period_end?: boolean
           current_period_end?: string
           id?: string
+          mode?: string
           plan_code?: string
           provider?: string
           provider_customer_id?: string | null
           provider_subscription_id?: string | null
+          simulated?: boolean
           started_at?: string
           status?: string
           updated_at?: string
@@ -1716,6 +1964,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      account_activity: { Args: never; Returns: undefined }
+      admin_case_action: {
+        Args: {
+          p_action: string
+          p_id: string
+          p_note?: string
+          p_section: string
+        }
+        Returns: undefined
+      }
+      admin_case_list: { Args: { p_section: string }; Returns: Json }
       admin_configure_provider: {
         Args: {
           p_capability: string
@@ -1729,6 +1988,10 @@ export type Database = {
       admin_create_venue: { Args: { p: Json }; Returns: string }
       admin_dashboard: { Args: never; Returns: Json }
       admin_delete_venue: { Args: { p_venue: string }; Returns: undefined }
+      admin_entitlement: {
+        Args: { p_days?: number; p_key: string; p_user: string }
+        Returns: undefined
+      }
       admin_import_catalogue: { Args: { p_items: Json }; Returns: Json }
       admin_import_osm_venues: {
         Args: { p_city: string; p_items: Json }
@@ -1748,6 +2011,19 @@ export type Database = {
       admin_list_venues: {
         Args: { p_city?: string; p_query?: string }
         Returns: Json
+      }
+      admin_moderate: {
+        Args: {
+          p_action: string
+          p_id: string
+          p_note: string
+          p_section: string
+        }
+        Returns: undefined
+      }
+      admin_promo: {
+        Args: { p_code: string; p_days: number; p_max: number }
+        Returns: string
       }
       admin_provider_access: { Args: never; Returns: Json }
       admin_resolve_verification: {
@@ -1798,6 +2074,20 @@ export type Database = {
         Args: { p_consent?: boolean; p_level: string; p_method?: string }
         Returns: Json
       }
+      billing_apply: { Args: { p: Json }; Returns: Json }
+      billing_attach_session: {
+        Args: { p_order: string; p_session: string }
+        Returns: undefined
+      }
+      billing_customer: {
+        Args: { p_customer?: string; p_mode: string; p_user: string }
+        Returns: string
+      }
+      billing_price_notice: {
+        Args: { p_mode: string; p_ref: string; p_subscription: string }
+        Returns: undefined
+      }
+      billing_start_order: { Args: { p_code: string }; Returns: Json }
       cancel_going: { Args: never; Returns: Json }
       chat_messages: {
         Args: { p_before?: string; p_before_id?: string; p_match: string }
@@ -1824,6 +2114,8 @@ export type Database = {
         Args: { p_device_id?: string; p_phone: string }
         Returns: string
       }
+      claim_billing_work: { Args: { p_key: string }; Returns: Json }
+      claim_signed_email: { Args: { p_user?: string }; Returns: Json }
       complete_onboarding: { Args: { p: Json }; Returns: undefined }
       complete_provider_verification: {
         Args: {
@@ -1843,7 +2135,20 @@ export type Database = {
       confirm_event: { Args: { p_id: string }; Returns: Json }
       create_event: { Args: { p: Json }; Returns: Json }
       cron_places_tick: { Args: never; Returns: Json }
+      defer_provider_erasure: {
+        Args: { p_provider: string; p_session: string; p_status: number }
+        Returns: undefined
+      }
+      export_my_data: { Args: never; Returns: Json }
       feature_enabled: { Args: { _key: string }; Returns: boolean }
+      finish_billing_notice: {
+        Args: { p_id: string; p_lease: string; p_status: string }
+        Returns: undefined
+      }
+      finish_signed_email: {
+        Args: { p_id: string; p_lease: string; p_status: string }
+        Returns: undefined
+      }
       get_event: { Args: { p_id: string }; Returns: Json }
       get_place_stats: { Args: { p_place_id: string }; Returns: Json }
       has_entitlement: { Args: { _key: string }; Returns: boolean }
@@ -1860,6 +2165,7 @@ export type Database = {
         Args: { p_post_id: string; p_text: string }
         Returns: Json
       }
+      managed_venues: { Args: never; Returns: Json }
       matching_block: { Args: { p_person: string }; Returns: undefined }
       matching_candidates: { Args: { p_place?: string }; Returns: Json }
       matching_like: { Args: { p_person: string }; Returns: Json }
@@ -1874,8 +2180,27 @@ export type Database = {
       matching_status: { Args: never; Returns: Json }
       matching_undo: { Args: never; Returns: Json }
       matching_unmatch: { Args: { p_match: string }; Returns: undefined }
+      moderation_appeal: {
+        Args: { p_decision: string; p_text: string }
+        Returns: Json
+      }
+      moderation_decisions: { Args: never; Returns: Json }
+      moderation_reports: { Args: never; Returns: Json }
       my_attendance: { Args: never; Returns: Json }
+      my_entitlements: { Args: never; Returns: Json }
       my_vibe: { Args: { p_place_id: string }; Returns: string }
+      premium_notify: { Args: { p_on: boolean }; Returns: Json }
+      premium_paid_dm: {
+        Args: { p_person: string; p_text: string }
+        Returns: Json
+      }
+      premium_redeem: { Args: { p_code: string }; Returns: Json }
+      premium_state: { Args: never; Returns: Json }
+      prepare_erasure: { Args: { p_user: string }; Returns: undefined }
+      provider_erasure_result: {
+        Args: { p_id: string; p_status: number }
+        Returns: undefined
+      }
       provider_reserve: {
         Args: { p_capability: string; p_mode: string; p_n?: number }
         Returns: boolean
@@ -1889,12 +2214,14 @@ export type Database = {
         Args: { p_id: string; p_reason: string }
         Returns: undefined
       }
+      request_data_right: { Args: { p_kind: string }; Returns: string }
       request_verification_review: { Args: { p_level: string }; Returns: Json }
       reserve_map_load: { Args: never; Returns: Json }
       save_consents: {
         Args: { p_choices: Json; p_city?: string }
         Returns: undefined
       }
+      save_emergency_contacts: { Args: { p: Json }; Returns: Json }
       search_places: {
         Args: {
           p_city?: string
@@ -1939,16 +2266,38 @@ export type Database = {
       }
       sim_seed_places: { Args: never; Returns: Json }
       sim_social: { Args: { p_action: string }; Returns: Json }
+      simulate_billing: {
+        Args: { p_action?: string; p_code: string }
+        Returns: Json
+      }
       simulate_verification_result: {
         Args: { p_level: string; p_outcome: string }
         Returns: Json
       }
+      submit_illegal_content_notice: { Args: { p: Json }; Returns: string }
       update_my_profile: { Args: { p: Json }; Returns: undefined }
       update_venue_details: {
         Args: { p: Json; p_venue: string }
         Returns: undefined
       }
+      venue_claim: {
+        Args: { p_evidence: string; p_venue: string }
+        Returns: Json
+      }
+      venue_edit: { Args: { p: Json; p_venue: string }; Returns: Json }
+      venue_flash_alert: { Args: { p: Json; p_venue: string }; Returns: string }
+      venue_official_event: {
+        Args: { p: Json; p_venue: string }
+        Returns: string
+      }
+      venue_sponsorship: {
+        Args: { p_from: string; p_tier: string; p_to: string; p_venue: string }
+        Returns: Json
+      }
+      venue_stats: { Args: { p_venue: string }; Returns: Json }
       verification_snapshot: { Args: never; Returns: Json }
+      visible_flash_alerts: { Args: { p_venue: string }; Returns: Json }
+      visible_sponsors: { Args: never; Returns: Json }
       vote_vibe: { Args: { p_place_id: string; p_vibe: string }; Returns: Json }
       who_is_there: { Args: { p_place_id: string }; Returns: Json }
     }

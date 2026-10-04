@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import type { EntitlementService } from '@/shared/entitlements/entitlement-service'
 import {
   ENTITLEMENT_KEYS,
@@ -27,6 +28,7 @@ export function createSessionService(db: Db): SessionService {
     async getRoles() {
       const uid = await currentUserId(db)
       if (!uid) return []
+      must(await db.rpc('account_activity'))
       const rows = must(await db.from('user_roles').select('role').eq('user_id', uid))
       return rows
         .map((r) => r.role)
@@ -64,12 +66,17 @@ export function createEntitlementService(db: Db): EntitlementService {
     async getMine() {
       const uid = await currentUserId(db)
       if (!uid) return []
-      const rows = must(
-        await db
-          .from('entitlements')
-          .select('key, source, status, starts_at, ends_at')
-          .eq('user_id', uid),
-      )
+      const rows = z
+        .array(
+          z.object({
+            key: z.string(),
+            source: z.string(),
+            status: z.string(),
+            starts_at: z.string(),
+            ends_at: z.string().nullable(),
+          }),
+        )
+        .parse(must(await db.rpc('my_entitlements')))
       return rows.flatMap((r): Entitlement[] =>
         isKey(r.key) && isSource(r.source)
           ? [

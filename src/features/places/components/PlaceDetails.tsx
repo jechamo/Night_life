@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAttendance } from '@/features/attendance/hooks/use-attendance'
 import { Badge } from '@/shared/ui/badge'
+import { FlashAlerts } from '@/features/venue-panel/components/FlashAlerts'
 import { Chip } from '@/shared/ui/chip'
 import type { OpeningPeriod } from '../model/cities'
 import { distanceMeters, formatDistance } from '../model/geo'
@@ -78,6 +79,7 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
         </span>
       </div>
       <WhoIsThere stats={place.stats} />
+      {!isEvent(place) && <FlashAlerts placeId={place.id} />}
       {place.description && <p className="text-sm">{place.description}</p>}
       <dl className="grid gap-2 text-sm">
         {hours.length > 0 && (

@@ -2,6 +2,7 @@ import type { Result } from '@/shared/lib/result'
 import type { CreditKind, ProductCode, Subscription } from '../model/catalog'
 
 export interface Invoice {
+  orderId?: string | null
   id: string
   productCode: ProductCode
   amountCents: number
@@ -31,12 +32,14 @@ export type PaidDmError = 'disabled' | 'no_credits' | 'red_light'
  */
 export interface PremiumService {
   getState(): Promise<PremiumState>
+  purchaseStatus(id: string): Promise<'pending' | 'paid' | 'refunded' | 'expired'>
+  portal(): Promise<string>
   startPurchase(code: ProductCode): Promise<Result<PurchaseRedirect, PurchaseError>>
-  /** Test mode only: simulates the provider webhook after a test-card checkout. */
+  /** Explicit persisted simulator; separate from Stripe test-card checkout. */
   completeTestPurchase(code: ProductCode): Promise<PremiumState>
   cancel(): Promise<PremiumState>
   resume(): Promise<PremiumState>
-  withdraw(): Promise<Result<PremiumState, 'window_closed'>>
+  withdraw(orderId?: string): Promise<Result<PremiumState, 'window_closed'>>
   redeem(code: string): Promise<Result<{ productCode: ProductCode; days: number }, RedeemError>>
   setNotifyMe(on: boolean): Promise<PremiumState>
   sendPaidDm(personId: string, text: string): Promise<Result<void, PaidDmError>>

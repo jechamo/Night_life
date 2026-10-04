@@ -5,6 +5,7 @@ export interface Match {
   id: string
   person: PublicProfile
   context: Candidate['context']
+  contactKind?: 'mutual' | 'paid_dm'
   createdAt: string
 }
 
