@@ -63,10 +63,13 @@ QA, SBOM y las guías de nativa y activación de pagos.
   HTTP verifica bundle, CSP, worker, manifest e iconos. Fallback al CLI oficial
   previamente autorizado; sin cambios de plan/protección. Commits posteriores
   de documentación conservan ese SHA como referencia del código publicado.
+- ✅ Instalación/apertura como PWA confirmadas por el propietario en Samsung
+  «fold7z» e iPhone 11; versiones de SO no indicadas. Prueba manual del protocolo
+  de standalone y sesión, sin medición de rendimiento.
 
 ### Checklist todavía abierta
 
-- ❌ QA de instalación, actualización, offline y permisos en Android/iPhone,
+- ❌ QA de actualización, offline y permisos en Android/iPhone,
   VoiceOver/TalkBack y medición de 60 fps. El propietario dispone de ambos.
   La herramienta del navegador integrado no pudo iniciar para comprobar la pestaña
   antigua; no se acredita su actualización ni se borraron caché o sesión.

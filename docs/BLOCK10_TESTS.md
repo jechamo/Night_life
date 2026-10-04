@@ -65,8 +65,13 @@ de ambos participantes. Conserva los casos de denegación; no relaja los guards.
 - Navegador integrado, build local real: `/legal` y documento de privacidad cargan
   desde Supabase, sin desbordamiento a 390 px; main enfocable y enlaces del listado
   entre 64 y 89 px de alto. No se aceptaron términos ni se enviaron formularios.
-- ❌ Instalación, apertura offline real, cámara/geolocalización y VoiceOver/TalkBack
-  en Chrome Android/Safari iOS. El propietario dispone de ambos dispositivos.
+- ✅ Instalación/apertura como app confirmadas por el propietario el 2026-10-04:
+  Samsung «fold7z» (nombre indicado) e iPhone 11. Respondió «Listo, funciona» al
+  protocolo de instalación, apertura standalone y conservación de sesión.
+  No indicó las versiones de Android/iOS; esta evidencia es una prueba manual
+  del propietario, distinta de una medición instrumentada.
+- ❌ Apertura offline real, actualización, cámara/geolocalización y VoiceOver/TalkBack
+  en Chrome Android/Safari iOS.
 - ❌ 60 fps en dispositivos reales: tamaño del build y tokens no prueban fluidez.
 
 ### Protocolo de dispositivos
