@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { useAttendance } from '@/features/attendance/hooks/use-attendance'
-import { useLikesYou } from '@/features/matching/hooks/use-matching'
+import { useLikesYouCount } from '@/features/matching/hooks/use-matching'
 import { PlaceCard } from '@/features/places/components/PlaceCard'
 import { usePlaces } from '@/features/places/hooks/use-places'
 import type { Place } from '@/features/places/model/types'
@@ -25,7 +25,7 @@ export function TonightScreen() {
   const [mode, setMode] = useState<Mode>('here')
   const { data: attendance } = useAttendance()
   const { data: places = [] } = usePlaces()
-  const { data: likesYou = [] } = useLikesYou()
+  const { data: likesYouCount = 0 } = useLikesYouCount()
 
   const open = (placeId: string | null) => {
     if (guard('view_profiles'))
@@ -65,7 +65,7 @@ export function TonightScreen() {
             aria-label={t('matching.likesYou.title')}
           >
             <Heart className="text-accent-event" aria-hidden />
-            {likesYou.length}
+            {likesYouCount}
           </ButtonLink>
         }
       />
