@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { Link, type LinkProps } from 'react-router'
 import { cn } from '@/shared/lib/cn'
 import { PRESS_SCALE } from '@/shared/motion/presets'
+import { usePressReducedMotion } from '@/shared/motion/MotionPreferencesProvider'
 
 export const buttonVariants = cva(
   [
@@ -49,10 +50,11 @@ export function Button({
   type = 'button',
   ...props
 }: ButtonProps) {
+  const reduced = usePressReducedMotion()
   return (
     <motion.button
       type={type}
-      whileTap={{ scale: PRESS_SCALE }}
+      whileTap={reduced ? undefined : { scale: PRESS_SCALE }}
       className={cn(buttonVariants({ variant, size, block }), className)}
       {...props}
     />

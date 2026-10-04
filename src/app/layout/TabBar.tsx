@@ -46,7 +46,8 @@ export function TabBar() {
                     />
                   )}
                   <motion.span
-                    whileTap={{ scale: PRESS_SCALE }}
+                    tabIndex={-1}
+                    whileTap={tokens.reduced ? undefined : { scale: PRESS_SCALE }}
                     className="font-label flex size-full flex-col items-center justify-center gap-0.5"
                   >
                     <Icon className="size-5" aria-hidden />

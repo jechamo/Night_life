@@ -28,7 +28,9 @@ describe('onboarding (Block 2 "done when")', () => {
     const { router } = renderApp('/', fresh)
 
     // Not onboarded → welcome → skip to the flow.
+    await waitFor(() => expect(router.state.location.pathname).toBe('/welcome'))
     await user.click(await screen.findByRole('button', { name: 'Saltar' }))
+    await waitFor(() => expect(router.state.location.pathname).toBe('/onboarding'))
     await passBirthdate('1995-06-15')
 
     // Signature screen: three unticked boxes, sign disabled until all are ticked.

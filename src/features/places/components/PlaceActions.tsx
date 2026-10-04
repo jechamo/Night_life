@@ -13,6 +13,7 @@ import { useVerificationSnapshot } from '@/features/verification/hooks/use-verif
 import { isAgeVerified } from '@/features/verification/model/verification'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 import { Button } from '@/shared/ui/button'
+import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import type { Place } from '../model/types'
 import { CheckInCelebration } from './CheckInCelebration'
 
@@ -25,6 +26,7 @@ export function PlaceActions({
   onToggleLostFound: () => void
 }) {
   const { t, i18n } = useTranslation()
+  const { reduced } = useMotionTokens()
   const navigate = useNavigate()
   const { guard } = useAgeGate()
   const { data: attendance } = useAttendance()
@@ -93,7 +95,9 @@ export function PlaceActions({
         <Button
           variant="glass"
           onClick={() =>
-            document.getElementById('vibe-check')?.scrollIntoView({ behavior: 'smooth' })
+            document
+              .getElementById('vibe-check')
+              ?.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' })
           }
         >
           <Vote aria-hidden />

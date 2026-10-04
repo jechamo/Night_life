@@ -1,4 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { beginSessionWork, useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { DEFAULT_LANGUAGE, isLanguage } from '@/i18n'
 import { usePlatform } from '@/platform'
@@ -17,7 +18,7 @@ export function useLegalDocuments(slugs: readonly LegalDocumentSlug[]) {
 
 export function useSignDocuments() {
   const { legal } = useServices()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (documents: readonly Pick<LegalDocument, 'slug' | 'version'>[]) =>
       legal.sign(documents),
   })
@@ -35,12 +36,14 @@ function useLanguageCode() {
 
 /** Signed PDF from the server, saved through the platform layer (PRD 6.1, 3.3). */
 export function useDownloadSignedPdf() {
-  const { legal } = useServices()
+  const { legal, session } = useServices()
   const { files } = usePlatform()
   const language = useLanguageCode()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async () => {
+      const check = beginSessionWork(session)
       const pdf = await legal.downloadSignedPdf(language)
+      check()
       if (!pdf.ok) return pdf
       return files.downloadBlob('nightlife-connect-documentos-firmados.pdf', pdf.value)
     },
@@ -50,5 +53,5 @@ export function useDownloadSignedPdf() {
 export function useEmailSignedDocuments() {
   const { legal } = useServices()
   const language = useLanguageCode()
-  return useMutation({ mutationFn: () => legal.emailSignedDocuments(language) })
+  return useSessionMutation({ mutationFn: () => legal.emailSignedDocuments(language) })
 }

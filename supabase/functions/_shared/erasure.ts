@@ -1,6 +1,7 @@
 import { serviceClient } from './supabase.ts'
 import { rpc, stripeClient, type PaymentMode } from './stripe.ts'
 import { deleteVeriffSession, veriffBaseUrl } from './veriff.ts'
+import { eraseProfilePhotos } from './photo-erasure.ts'
 
 // The token must already have been validated by Auth.getUser().
 export function recentlyAuthenticated(token: string, userId: string, now = Date.now()): boolean {
@@ -72,15 +73,7 @@ export async function eraseAccount(userId: string): Promise<void> {
         p_status: status,
       })
   }
-  for (;;) {
-    const result = await db.storage.from('profile-photos').list(userId, { limit: 100 })
-    if (result.error) throw new Error('storage_failed')
-    if (!result.data.length) break
-    const removed = await db.storage
-      .from('profile-photos')
-      .remove(result.data.map((f) => `${userId}/${f.name}`))
-    if (removed.error) throw new Error('storage_failed')
-  }
+  await eraseProfilePhotos(db.storage.from('profile-photos'), userId)
   const expired = await db
     .from('subscriptions')
     .update({ status: 'expired', current_period_end: new Date().toISOString() })

@@ -3,6 +3,7 @@
  * Web adapters are wired in `createWebPlatform`; native ones arrive with Annex B.
  */
 export type { Platform } from './platform'
+export type { AppUpdatesService, AppUpdateState } from './app-updates'
 export type { PermissionStatus, PlatformRuntime } from './types'
 export type { Coordinates, GeolocationError } from './geolocation/geolocation'
 export type { CameraError, LiveCameraStream } from './camera/camera'

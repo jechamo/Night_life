@@ -25,13 +25,15 @@ export function CheckboxField({
         id={id}
         checked={checked}
         onCheckedChange={(value) => onCheckedChange(value === true)}
-        className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border-2 border-muted-foreground bg-surface data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+        className="touch-target group flex shrink-0 items-center justify-center rounded-md"
       >
-        <CheckboxPrimitive.Indicator className="text-primary-foreground">
-          <Check className="size-4" strokeWidth={3} aria-hidden />
-        </CheckboxPrimitive.Indicator>
+        <span className="flex size-6 items-center justify-center rounded-md border-2 border-muted-foreground bg-surface group-data-[state=checked]:border-primary group-data-[state=checked]:bg-primary">
+          <CheckboxPrimitive.Indicator className="text-primary-foreground">
+            <Check className="size-4" strokeWidth={3} aria-hidden />
+          </CheckboxPrimitive.Indicator>
+        </span>
       </CheckboxPrimitive.Root>
-      <label htmlFor={id} className="flex-1 cursor-pointer text-sm leading-6">
+      <label htmlFor={id} className="min-h-11 flex-1 cursor-pointer py-2.5 text-sm leading-6">
         {children}
       </label>
     </div>

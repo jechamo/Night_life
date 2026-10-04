@@ -3,6 +3,11 @@
     "name": "Nightlife Connect",
     "slogan": "Tu noche, segura y conectada."
   },
+  "pwa": {
+    "updateAvailable": "Hay una nueva versión. Termina lo que estés escribiendo antes de actualizar.",
+    "update": "Actualizar ahora",
+    "offline": "Sin conexión. Los datos no se pueden actualizar."
+  },
   "tabs": {
     "label": "Navegación principal",
     "discover": "Descubre",
@@ -15,6 +20,7 @@
     "close": "Cerrar",
     "comingSoon": "Próximamente",
     "retry": "Reintentar",
+    "loading": "Cargando…",
     "on": "Activado",
     "off": "Desactivado",
     "skipToContent": "Saltar al contenido",

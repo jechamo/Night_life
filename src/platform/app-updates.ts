@@ -1,10 +1,15 @@
-import { registerSW } from 'virtual:pwa-register'
+/** Public state contains no session or application data. */
+export interface AppUpdateState {
+  online: boolean
+  updateAvailable: boolean
+}
 
-/**
- * Registers the service worker and reloads the page as soon as a new version takes
- * control, so nobody keeps running an old cached bundle after a deploy (PRD 3.1).
- */
-export function registerAppUpdates(): void {
-  if (!('serviceWorker' in navigator)) return
-  void registerSW({ immediate: true })
+/** Web/PWA updates; native builds provide their own adapter without a service worker. */
+export interface AppUpdatesService {
+  getSnapshot: () => AppUpdateState
+  subscribe: (listener: () => void) => () => void
+  start(): void
+  stop(): void
+  /** Reload only after the user has chosen to apply an available version. */
+  applyUpdate(): void
 }

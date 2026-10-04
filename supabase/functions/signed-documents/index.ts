@@ -50,6 +50,15 @@ Deno.serve(async (req) => {
     lease = await rpc(service, 'claim_signed_email', { p_user: user.id })
     if (!lease.length) return json(req, { result: 'nothing_pending' })
   }
+  if (!(await rpc<boolean>(service, 'reserve_document_email', { p_user: user.id }))) {
+    for (const item of lease)
+      await rpc(service, 'finish_signed_email', {
+        p_id: item.id,
+        p_lease: item.lease_token,
+        p_status: 'retry',
+      })
+    return json(req, { result: 'rate_limited' }, 429)
+  }
   try {
     const pdf = await renderPdf(auth, language)
     await sendMail(
@@ -84,7 +93,7 @@ Deno.serve(async (req) => {
         p_status: 'sent',
       })
     return json(req, { result: 'sent' })
-  } catch (error) {
+  } catch {
     for (const item of lease)
       await rpc(service, 'finish_signed_email', {
         p_id: item.id,
@@ -92,10 +101,7 @@ Deno.serve(async (req) => {
         p_status: 'retry',
       })
     // Log the type only: never addresses, tokens or document content (PRD 3.2).
-    console.error(
-      'signed-documents email failed',
-      error instanceof Error ? error.message : 'unknown',
-    )
+    console.error('signed-documents email failed')
     const { data: pending } = await service
       .from('email_outbox')
       .select('id, attempts')

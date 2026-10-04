@@ -101,6 +101,7 @@ export function createMockServices(options: MockServiceOptions = {}): AppService
     verification: createMockVerificationService(store, wait),
     flags: createFlagService({ load: () => Promise.resolve({ ...config.flags }) }),
     session: {
+      getGeneration: () => 0,
       getRoles: () => Promise.resolve([...config.roles]),
       signOut: async () => {
         await store.update((s) => ({ ...s, onboarded: false }))

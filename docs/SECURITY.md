@@ -2,6 +2,57 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 10 — auditoría y correcciones, 2026-10-04
+
+Scan Codex Security `56b027a0-7e56-4eb3-97dc-5f5714b5a153`: revisión independiente
+de fuentes, límites de confianza y controles, complementada por pruebas de servidor.
+No se confirmó ningún crítico/alto en las superficies revisadas. No equivale a una
+auditoría exhaustiva certificada: no se conserva la lista original completa de
+archivos de backend del primer auditor; el informe identifica la cobertura conservada
+y la configuración externa no verificada.
+
+### Correcciones comprobadas
+
+- Ban: `complete_onboarding` usa el teléfono confirmado en Auth y comprueba HMAC
+  normalizado e histórico antes de crear el perfil; dispositivo es señal auxiliar.
+  Una cuenta eliminada no elude el ban creando un UID nuevo con el mismo teléfono.
+- Aislamiento: las mutaciones privadas comprueban generación de sesión antes de
+  publicar callbacks/datos; export/PDF/retornos externos comparten el guard.
+  Una respuesta de A no repuebla la caché de B tras cambiar sesión.
+- Admin: perfil activo, onboarding, rol y aal2 en el helper común y en `test-tools`.
+- Storage: admisión de archivos planos UUID propios, bucket privado 5 MiB y MIME
+  acotado; diez objetos por usuario, sin UPDATE/overwrite. El borrado soporta
+  carpetas anteriores, límites de recorrido y falta de progreso antes de retirar Auth.
+- Recursos: PDF directo y outbox comparten 3 reservas/h usuario y 50/día globales,
+  incluyendo intentos fallidos; firma legal acotada e idempotente por versión.
+- Configuración: producción sin Supabase falla cerrada; imports Edge Supabase
+  fijados a 2.117.2 y Stripe a 23.0.0. No se añadieron proveedores ni secretos cliente.
+- PWA: solo shell en precache, sin API/datos personales/Mapbox; recarga explícita
+  y sin borrar sesión. CSP, allowlists y renderizado React siguen protegiendo origen.
+
+### Límites y puertas pendientes
+
+- ❌ El precheck del navegador no controla una llamada directa a `Auth.signInWithOtp`.
+  El ban se impide en onboarding, pero la emisión/abuso de OTP depende de los límites,
+  captcha y hooks configurados en Auth. No se acreditó esa configuración ni se enviaron
+  SMS para probarla. Revisar enforcement del servidor antes del lanzamiento.
+- ❌ Advisor WARN de [protección de contraseñas filtradas](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+  La UI usa OTP, pero eso no acredita que todos los métodos de Auth estén cerrados.
+  No se cambió plan ni se dio el aviso por resuelto.
+- 13 INFO de [RLS sin políticas](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy)
+  corresponden a tablas `private` sin SELECT para anon/authenticated y no expuestas
+  por PostgREST. Es un cierre deliberado, no se añade una policy permisiva para ocultar INFO.
+- Rendimiento: 14 INFO de [índices sin uso](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index).
+  No hay evidencia de que quitarlos mejore las cargas reales. ❌ Cero Advisors literal.
+- ❌ Instalación/actualización real en Android/iOS, lectores de pantalla y 60 fps.
+  Tokens, unit tests y tamaños del build no acreditan esos resultados.
+- ❌ Revisión jurídica final, datos de empresa y proveedores/costes live: Bloque 12.
+
+Privilegios comprobados tras migración: cero tablas public/private sin RLS,
+cero definers públicos y cero SELECT privados para roles cliente. RLS 33/33,
+bloque 10 19/19, regresiones SQL, Deno 33/33 y frontend 343/343. Un perfil real,
+cero fixtures tras rollback. Evidencias y reproducción: [BLOCK10_TESTS.md](./BLOCK10_TESTS.md).
+
 ## Bloque 9 — puerta de seguridad, 2026-10-04
 
 - Revisión de migraciones, RLS, RPC, Edge Functions y adaptadores. Helpers en

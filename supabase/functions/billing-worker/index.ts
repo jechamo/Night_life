@@ -89,6 +89,8 @@ Deno.serve(async (req) => {
           language = item.language === 'en' ? 'en' : 'es'
         if (!user.email || !user.email_confirmed_at || !username || !password)
           throw new Error('email_unavailable')
+        if (!(await rpc<boolean>(db, 'reserve_document_email', { p_user: user.id })))
+          throw new Error('delivery_limit')
         const bytes = await renderSignedPdf({ db, user }, language)
         await sendMail(
           {

@@ -13,12 +13,60 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 6 – Verificaciones reales                                | ✅ Pruebas cerradas; pendiente de OK del propietario |
 | 7 – Mapa, lugares, eventos y estadísticas reales         | ✅ Terminado; pendiente de OK                        |
 | 8 – Ligar, match en tiempo real y chat                   | ✅ Aprobado (OK del propietario, 2026-10-04)         |
-| 9 – Seguridad, derechos, negocio y pagos en test         | ✅ Terminado; pendiente de OK                        |
-| 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ✅ Aprobado (OK del propietario, 2026-10-04)         |
+| 10 – Auditoría OWASP, pulido, PWA y QA                   | 🔄 Implementación validada; QA real pendiente        |
 | 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
 | 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
 
 ---
+
+## Bloque 10 — Auditoría OWASP, pulido, PWA y QA (2026-10-04)
+
+Inicio autorizado por el propietario con «comienza el bloque 10». Plan en
+`docs/BLOCK10_PLAN.md`. Incluye el pendiente de actualización de caché observado
+en el cierre del bloque 9, auditoría de seguridad, accesibilidad en cinco temas,
+QA, SBOM y las guías de nativa y activación de pagos.
+
+### Implementación y evidencia
+
+- PWA con puerto de actualizaciones, aviso offline y recarga explícita sin borrar
+  sesión. Worker sin caché HTTP duradera; API, datos privados y Mapbox excluidos.
+- Pantallas con carga diferida, fallback accesible y boundary. Entry JS reducido
+  de 489,65 a 130,52 kB; no atribuir esa reducción a todos los preloads ni a fps.
+- Objetivos de checkbox/switch/range de 44 px, foco sin tab duplicado, skip link
+  y movimiento reducido. Contraste de tokens de los cinco temas comprobado.
+- Bans por teléfono confirmado, admin activo, cuota Storage, email y firma legal
+  idempotente; borrado recursivo acotado. Resultados privados tardíos descartados
+  cuando cambia la generación de sesión.
+- Migración `20261004123630_block10_security` aplicada por MCP. Trece funciones
+  Edge redesplegadas ACTIVE, manteniendo su autenticación; imports fijados.
+- ✅ Frontend **343/343**, TypeScript, ESLint, formato y build correctos.
+- ✅ Deno **33/33**, tipos de **13** entrypoints; SQL: bloque 10 **19/19**,
+  bloque 9 **72/72**, RLS **33/33**, matching **62/62**, lugares **19/19**,
+  cuotas **19/19**, OSM **13/13** y verificación **54/54**, con rollback.
+- ✅ Auditorías npm sin vulnerabilidades y SBOM frontend/Edge; ver `docs/SBOM.md`.
+- ✅ Permisos remotos: cero tablas sin RLS, definers públicos o SELECT privados
+  para cliente. Tras fixtures: un perfil real y cero perfiles de prueba.
+- ✅ Navegador local de producción: legal/documento real, 390 px sin desbordamiento,
+  enlaces táctiles y main enfocable. No se cambiaron datos del propietario.
+- Guías `docs/NATIVE.md` y `docs/PAYMENTS_GO_LIVE.md`; evidencia en
+  `docs/BLOCK10_TESTS.md`, controles y límites en `docs/SECURITY.md`.
+
+### Checklist todavía abierta
+
+- ❌ QA de instalación, actualización, offline y permisos en Android/iPhone,
+  VoiceOver/TalkBack y medición de 60 fps. El propietario dispone de ambos.
+- ❌ Cero Advisors: 13 INFO privados cerrados, WARN de contraseñas filtradas y
+  14 INFO de índices sin uso. No se ocultaron ni se contrataron ampliaciones.
+- ❌ Enforcement externo de emisión directa de OTP: el ban ya se impide en el
+  onboarding, pero la cuota del precheck cliente no protege el endpoint Auth.
+- ❌ Auditoría exhaustiva acreditada: límite de conservación de la lista original
+  de cobertura y configuración externa; ningún crítico/alto confirmado en lo revisado.
+- ❌ Borradores jurídicos con datos por completar y puertas live del Bloque 12.
+
+No se marca el bloque terminado mientras estas puertas carezcan de evidencia.
+No se avanza al bloque 11 sin OK explícito. La activación live y los costes
+siguen reservados al bloque 12.
 
 ## Bloque 9 — Seguridad, derechos, negocio y Stripe test (2026-10-04)
 

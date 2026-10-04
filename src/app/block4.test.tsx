@@ -142,7 +142,7 @@ describe('Admin (role + MFA, flags, test tools)', () => {
 
   it('simulated suspension sends the account to the suspension screen', async () => {
     const { user, router } = await enterAdmin('/admin/test-tools')
-    const card = screen.getByText('Simular suspensión').closest('div.glass') as HTMLElement
+    const card = (await screen.findByText('Simular suspensión')).closest('div.glass') as HTMLElement
     await user.click(within(card).getByRole('button', { name: 'Ejecutar' }))
     await user.click(within(card).getByRole('button', { name: 'Sí, ejecutar' }))
     expect(await screen.findByText('Simular suspensión: ok')).toBeInTheDocument()

@@ -1,4 +1,5 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useConsents } from '@/features/consents/hooks/use-consents'
 import { usePlatform } from '@/platform'
@@ -124,7 +125,7 @@ export function useVoteVibe(placeId: string) {
   const { places } = useServices()
   const replace = useReplacePlace()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async (vibe: Vibe) => {
       const result = await places.voteVibe(placeId, vibe)
       if (!result.ok) throw new Error(result.error)
@@ -140,7 +141,7 @@ export function useVoteVibe(placeId: string) {
 export function useConfirmEvent() {
   const { places } = useServices()
   const replace = useReplacePlace()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async (placeId: string) => {
       const result = await places.confirmEvent(placeId)
       if (!result.ok) throw new Error(result.error)
@@ -153,7 +154,7 @@ export function useConfirmEvent() {
 export function useReportEvent() {
   const { places } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({ placeId, reason }: { placeId: string; reason: EventReportReason }) =>
       places.reportEvent(placeId, reason),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: placesKey }),
@@ -163,7 +164,7 @@ export function useReportEvent() {
 export function useCreateEvent() {
   const { places } = useServices()
   const replace = useReplacePlace()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (input: CreateEventInput) => places.createEvent(input),
     onSuccess: (result) => {
       if (result.ok) replace(result.value)

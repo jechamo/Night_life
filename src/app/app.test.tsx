@@ -51,7 +51,7 @@ describe('reduce motion setting', () => {
     await screen.findByRole('navigation')
     expect(document.documentElement.dataset.motion).toBe('full')
 
-    await user.click(screen.getByRole('switch', { name: /Reducir movimiento/ }))
+    await user.click(await screen.findByRole('switch', { name: /Reducir movimiento/ }))
 
     expect(document.documentElement.dataset.motion).toBe('reduced')
     await expect(platform.preferences.get(PREFERENCE_KEYS.reduceMotion)).resolves.toBe('true')

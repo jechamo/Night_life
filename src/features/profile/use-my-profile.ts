@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { ProfilePatch } from './services/profile-service'
 
@@ -12,7 +13,7 @@ export function useMyProfile() {
 export function useUpdateProfile() {
   const { profile } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (patch: ProfilePatch) => profile.update(patch),
     onSuccess: async (me) => {
       queryClient.setQueryData(myProfileKey, me)

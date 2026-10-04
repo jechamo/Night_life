@@ -11,6 +11,12 @@ export function PublicLayout() {
   const { t } = useTranslation()
   return (
     <div className="min-h-dvh bg-background text-foreground">
+      <a
+        href="#public-main"
+        className="fixed top-2 left-2 z-50 -translate-y-24 rounded-full bg-surface px-4 py-3 focus:translate-y-0"
+      >
+        {t('common.skipToContent')}
+      </a>
       <header className="pt-safe px-safe border-b border-border">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 py-3">
           <Link to="/legal" className="font-display flex items-center gap-2 text-lg font-semibold">
@@ -20,7 +26,7 @@ export function PublicLayout() {
           <LanguageSwitch />
         </div>
       </header>
-      <main className="px-safe mx-auto max-w-3xl pb-16">
+      <main id="public-main" tabIndex={-1} className="px-safe mx-auto max-w-3xl pb-16">
         <Outlet />
       </main>
       <footer className="px-safe border-t border-border">

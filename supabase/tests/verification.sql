@@ -6,7 +6,8 @@ insert into auth.users(id,instance_id,aud,role,phone,phone_confirmed_at,created_
 ('00000000-0000-4000-8000-000000000099','00000000-0000-0000-0000-000000000000','authenticated','authenticated','34600111999',now(),now(),now());
 insert into public.profiles(id,name,birthdate,gender,onboarded_at) values
 ('00000000-0000-4000-8000-000000000091','Fixture','1990-01-01','man',now()),
-('00000000-0000-4000-8000-000000000092','Tester','1990-01-01','woman',now());
+('00000000-0000-4000-8000-000000000092','Tester','1990-01-01','woman',now()),
+('00000000-0000-4000-8000-000000000099','Admin','1990-01-01','man',now());
 insert into public.user_roles(user_id,role) values
 ('00000000-0000-4000-8000-000000000091','user'),('00000000-0000-4000-8000-000000000092','tester'),
 ('00000000-0000-4000-8000-000000000099','admin');
@@ -38,6 +39,11 @@ do $$ begin
   insert into _verification_results values('client cannot complete provider',false);
   exception when insufficient_privilege then insert into _verification_results values('client cannot complete provider',true); end;
 end $$;
+-- Block 8 also requires an eligible peer for matches/messages; verify that peer
+-- after the caller's unverified denial assertions, without any provider call.
+reset role;
+insert into public.verification_status(user_id,age_verified,age_mode) values('00000000-0000-4000-8000-000000000091',true,'live');
+set local role authenticated;
 select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-000000000092","role":"authenticated"}',true);
 insert into _verification_results select 'tester role is not age proof',count(*) = 0 from public.search_public_profiles(50);
 select public.begin_verification('age');
@@ -193,11 +199,12 @@ reset role;
 insert into _verification_results select 'document clears reverification, suspension stays',v.age_verified and not v.reverification_required and p.suspended from public.profiles p join public.verification_status v on v.user_id=p.id where p.id='00000000-0000-4000-8000-000000000092';
 update public.profiles set banned = true where id = '00000000-0000-4000-8000-000000000092';
 insert into _verification_results select 'ban revokes age access',not private.is_age_verified('00000000-0000-4000-8000-000000000092');
-insert into _verification_results select 'ban stores keyed phone hash',exists(select 1 from public.ban_identifiers where kind='phone' and hmac=private.hmac_hex(private.normalize_phone('34600111992')));
+insert into _verification_results select 'ban stores keyed phone hash',exists(select 1 from public.ban_identifiers where kind='phone' and hmac=private.hmac_hex('phone:'||private.normalize_phone('34600111992')));
 do $$ begin
   if exists(select 1 from _verification_results where not ok) then
     raise exception 'verification failed: %',(select string_agg(test,', ') from _verification_results where not ok);
   end if;
 end $$;
 select * from _verification_results;
+do $$ begin raise exception 'VERIFICATION_RESULTS %',(select jsonb_build_object('total',count(*),'passed',count(*) filter(where ok),'failed',count(*) filter(where not ok)) from _verification_results); end $$;
 rollback;

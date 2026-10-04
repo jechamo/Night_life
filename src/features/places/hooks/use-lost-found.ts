@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useServices } from '@/shared/services/ServicesProvider'
 import { lostFoundKey } from './use-places'
 
@@ -16,7 +17,7 @@ type Action =
 export function useLostFoundAction(placeId: string) {
   const { places } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async (action: Action) => {
       if (action.kind === 'delete') {
         await places.deleteLostFound(action.postId)

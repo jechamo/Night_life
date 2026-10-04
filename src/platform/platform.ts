@@ -13,6 +13,7 @@ import type { PreferencesService } from './preferences/preferences'
 import type { SecureStorageService } from './secure-storage/secure-storage'
 import type { ShareService } from './share/share'
 import type { PlatformRuntime } from './types'
+import type { AppUpdatesService } from './app-updates'
 
 /**
  * Every device capability the app uses (PRD 3.3 point 1). Features receive this
@@ -21,6 +22,7 @@ import type { PlatformRuntime } from './types'
  */
 export interface Platform {
   runtime: PlatformRuntime
+  appUpdates: AppUpdatesService
   audio: AudioService
   geolocation: GeolocationService
   camera: CameraService

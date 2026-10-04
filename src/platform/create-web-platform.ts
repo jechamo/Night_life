@@ -13,6 +13,7 @@ import type { Platform } from './platform'
 import { createWebPreferences } from './preferences/preferences.web'
 import { createWebSecureStorage } from './secure-storage/secure-storage.web'
 import { createWebShare } from './share/share.web'
+import { createWebAppUpdates } from './app-updates.web'
 
 export interface WebPlatformOptions {
   /** Public origin used for return URLs; defaults to the current origin. */
@@ -24,6 +25,7 @@ export function createWebPlatform({ appUrl }: WebPlatformOptions = {}): Platform
   const preferences = createWebPreferences()
   return {
     runtime: 'web',
+    appUpdates: createWebAppUpdates(),
     audio: createWebAudio(),
     geolocation: createWebGeolocation(),
     camera: createWebCamera(),

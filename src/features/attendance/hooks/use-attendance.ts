@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { usePlatform } from '@/platform'
 import type { LatLng } from '@/features/places/model/types'
 import { useServices } from '@/shared/services/ServicesProvider'
@@ -20,7 +21,7 @@ export function useCheckIn() {
   const { attendance } = useServices()
   const { geolocation } = usePlatform()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async ({
       placeId,
       visible,
@@ -47,7 +48,7 @@ export function useCheckIn() {
 export function useCheckOut() {
   const { attendance } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: () => attendance.checkOut(),
     onSuccess: (state) => queryClient.setQueryData(attendanceKey, state),
   })
@@ -56,7 +57,7 @@ export function useCheckOut() {
 export function useGoingTonight() {
   const { attendance } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async ({ placeId, going }: { placeId: string; going: boolean }) =>
       going
         ? attendance.setGoing(placeId)

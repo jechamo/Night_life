@@ -1,5 +1,5 @@
 import Stripe from 'npm:stripe@23.0.0'
-import type { SupabaseClient } from 'npm:@supabase/supabase-js@2'
+import type { SupabaseClient } from 'npm:@supabase/supabase-js@2.117.2'
 
 export type PaymentMode = 'test' | 'live'
 export const APP_URL = 'https://nightlife-connect-beige.vercel.app'

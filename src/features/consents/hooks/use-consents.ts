@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { ConsentChoices } from '../model/consents'
 
@@ -12,7 +13,7 @@ export function useConsents() {
 export function useSaveConsents() {
   const { consents } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({ choices, city }: { choices: ConsentChoices; city: string | null }) =>
       consents.save(choices, city),
     onSuccess: (state) => queryClient.setQueryData(consentsKey, state),

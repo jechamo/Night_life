@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { ModerationService } from '../services/moderation-service'
 
@@ -24,7 +25,7 @@ export function useDecisions() {
 export function useAppeal() {
   const { moderation } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({ decisionId, text }: { decisionId: string; text: string }) =>
       moderation.appeal(decisionId, text),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: decisionsKey }),
@@ -34,7 +35,7 @@ export function useAppeal() {
 /** Public DSA notice (no login needed). */
 export function useIllegalContentNotice() {
   const { moderation } = useServices()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (input: Parameters<ModerationService['submitIllegalContentNotice']>[0]) =>
       moderation.submitIllegalContentNotice(input),
   })

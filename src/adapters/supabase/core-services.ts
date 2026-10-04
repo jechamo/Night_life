@@ -24,7 +24,9 @@ export function createFlagSource(db: Db): FlagSource {
 }
 
 export function createSessionService(db: Db): SessionService {
+  let generation = 0
   return {
+    getGeneration: () => generation,
     async getRoles() {
       const uid = await currentUserId(db)
       if (!uid) return []
@@ -47,6 +49,7 @@ export function createSessionService(db: Db): SessionService {
           event === 'MFA_CHALLENGE_VERIFIED'
         ) {
           // Deferred: supabase-js forbids awaiting other auth calls inside this callback.
+          generation += 1
           setTimeout(listener, 0)
         }
       })

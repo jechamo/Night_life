@@ -31,12 +31,13 @@ export function AppShell() {
         <NightAmbience />
         <AgeGateProvider>
           {fullBleed ? (
-            <main id="main" className="relative flex-1">
+            <main id="main" tabIndex={-1} className="relative flex-1">
               <Outlet />
             </main>
           ) : (
             <main
               id="main"
+              tabIndex={-1}
               className="relative flex-1 overflow-y-auto pb-[calc(7rem+env(safe-area-inset-bottom))]"
             >
               <div className="mx-auto w-full max-w-3xl">

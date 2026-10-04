@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { beginSessionWork, useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import { usePlatform } from '@/platform'
 import { useServices } from '@/shared/services/ServicesProvider'
@@ -23,11 +24,11 @@ export function useVerificationSnapshot() {
 
 /** Starts a provider flow and follows the redirect (external via the platform browser). */
 export function useStartVerification() {
-  const { verification } = useServices()
+  const { verification, session } = useServices()
   const { browser } = usePlatform()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async ({
       level,
       method,
@@ -39,7 +40,9 @@ export function useStartVerification() {
       consent?: boolean
       simulate?: boolean
     }) => {
+      const check = beginSessionWork(session)
       const result = await verification.start(level, method, consent, simulate)
+      check()
       if (!result.ok) throw new Error(result.error)
       if (result.value.type === 'external') {
         const opened = await browser.openExternalFlow(result.value.url)
@@ -57,7 +60,7 @@ export function useStartVerification() {
 export function useRequestHumanReview() {
   const { verification } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (level: VerificationLevel) => verification.requestHumanReview(level),
     onSuccess: (snapshot) => queryClient.setQueryData(verificationKey, snapshot),
   })
@@ -66,7 +69,7 @@ export function useRequestHumanReview() {
 export function useSimulateVerification() {
   const { verification } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({ level, outcome }: { level: VerificationLevel; outcome: SandboxOutcome }) =>
       verification.simulateResult(level, outcome),
     onSuccess: (snapshot) => queryClient.setQueryData(verificationKey, snapshot),

@@ -71,3 +71,10 @@ export function useMotionPreferences(): MotionPreferences {
 }
 
 export const useMotionTokens = (): MotionTokens => useMotionPreferences().tokens
+
+/** Primitives can also render outside the application providers. */
+export function usePressReducedMotion(): boolean {
+  const preferences = use(MotionContext)
+  const systemReduced = useReducedMotion()
+  return preferences?.tokens.reduced ?? systemReduced ?? false
+}

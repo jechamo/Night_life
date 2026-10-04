@@ -1,5 +1,28 @@
 # Inventario de API — Edge Functions y RPC
 
+## Puerta del Bloque 10
+
+Inventario remoto: 13 Edge Functions ACTIVE, todas utilizadas. `osm-import`
+mantiene `verify_jwt=true`; las restantes conservan autenticación propia existente
+con `getUser`, firma de proveedor o clave de worker. Desactivar la validación de
+gateway no hace pública una operación protegida: se prueban sus guards HTTP.
+
+| Operación                            | Cambio / autorización                                            | Límite                                                      |
+| ------------------------------------ | ---------------------------------------------------------------- | ----------------------------------------------------------- |
+| `complete_onboarding`                | Teléfono confirmado de Auth y bans persistidos antes de escribir | Dispositivo acotado; hashes históricos compatibles          |
+| `check_signup`                       | Precheck anónimo auxiliar; no protege por sí solo Auth OTP       | 5/h teléfono, 20/h IP; no sustituye límites nativos de Auth |
+| `sign_documents`                     | Usuario propio, versión actual, serialización e idempotencia     | 1–8 entradas; repetir no añade evidencia duplicada          |
+| `reserve_document_email`             | Solo service_role; destinatario confirmado                       | 3/h usuario y 50/día global, incluidos fallos               |
+| `signed-documents`, `billing-worker` | Reservan la misma cuota antes de PDF/SMTP                        | 429 directo; outbox reintenta con lease/backoff             |
+| `test-tools`                         | Perfil activo antes de rol/flag y sandbox                        | No ejecuta herramientas con perfil suspendido               |
+| Admin RPC/RLS                        | `private.is_admin`: activo, onboarded, rol y aal2                | Sin autoridad residual por suspensión/ban                   |
+| Storage `profile-photos` INSERT      | Propietario, perfil activo/alta elegible, nombre plano UUID      | 10 objetos, 5 MiB, PNG/JPEG/WebP; UPDATE denegado           |
+| Borrado Storage                      | Carpetas antiguas recursivas, rutas propias, progreso            | 100 solicitudes, profundidad 20; fallo antes de borrar Auth |
+
+La cuota de email no incluye avisos de facturación, cuyo outbox es independiente.
+Las pruebas HTTP de las 13 funciones y exposición de esquemas se reproducen con
+`npm run test:network:10`. Detalle en [BLOCK10_TESTS.md](./BLOCK10_TESTS.md).
+
 Documento vivo (PRD 3.4, 6.15 API9). Cada entrada: propósito, autenticación, rol y límites.
 Se eliminan las funciones sin uso. Las simulaciones exigen rol y herramientas de prueba;
 las verificaciones simuladas no están disponibles en modo live.

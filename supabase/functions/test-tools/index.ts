@@ -47,6 +47,13 @@ Deno.serve(async (req) => {
   const auth = await requireUser(req)
   if (!auth) return json(req, { error: 'unauthorized' }, 401)
   const { db } = auth
+  const { data: caller } = await db
+    .from('profiles')
+    .select('onboarded_at,banned,suspended')
+    .eq('id', auth.user.id)
+    .maybeSingle()
+  if (!caller?.onboarded_at || caller.banned || caller.suspended)
+    return json(req, { error: 'forbidden' }, 403)
   const [{ data: roles }, { data: enabled }] = await Promise.all([
     db.from('user_roles').select('role').eq('user_id', auth.user.id),
     db.rpc('feature_enabled', { _key: 'test_tools_enabled' }),

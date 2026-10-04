@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEntitlement } from '@/shared/entitlements/use-entitlement'
 import { useServices } from '@/shared/services/ServicesProvider'
 import { likesRemaining, rankCandidates } from '../model/matching'
@@ -41,7 +42,7 @@ export function useLikesLeft() {
 export function useSwipeActions() {
   const { matching } = useServices()
   const queryClient = useQueryClient()
-  const like = useMutation({
+  const like = useSessionMutation({
     mutationFn: (personId: string) => matching.like(personId),
     onSuccess: async (result) => {
       if (result.ok) queryClient.setQueryData(['matching', 'likes-used'], result.value.usedToday)
@@ -50,8 +51,8 @@ export function useSwipeActions() {
         await queryClient.invalidateQueries({ queryKey: matchesKey })
     },
   })
-  const pass = useMutation({ mutationFn: (personId: string) => matching.pass(personId) })
-  const undo = useMutation({
+  const pass = useSessionMutation({ mutationFn: (personId: string) => matching.pass(personId) })
+  const undo = useSessionMutation({
     mutationFn: () => matching.undo(),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['matching', 'candidates'] }),
   })
@@ -93,15 +94,15 @@ export function useSafetyActions() {
       .invalidateQueries({ queryKey: ['matching'] })
       .then(() => queryClient.invalidateQueries({ queryKey: ['chat'] }))
   return {
-    unmatch: useMutation({
+    unmatch: useSessionMutation({
       mutationFn: (matchId: string) => matching.unmatch(matchId),
       onSuccess: refresh,
     }),
-    block: useMutation({
+    block: useSessionMutation({
       mutationFn: (personId: string) => matching.block(personId),
       onSuccess: refresh,
     }),
-    report: useMutation({
+    report: useSessionMutation({
       mutationFn: ({
         personId,
         reason,

@@ -1,6 +1,6 @@
 import { Slider } from 'radix-ui'
 
-/** Two-thumb range slider (e.g. age 18-60+). Thumbs are 28 px inside a 44 px hit area. */
+/** Two-thumb range slider. Each 28 px visual thumb has a real 44 px hit area. */
 export function RangeSlider({
   label,
   thumbLabels,
@@ -38,12 +38,18 @@ export function RangeSlider({
         <Slider.Track className="relative h-1.5 grow rounded-full bg-surface-raised">
           <Slider.Range className="absolute h-full rounded-full bg-primary" />
         </Slider.Track>
-        {thumbLabels.map((thumbLabel) => (
+        {thumbLabels.map((thumbLabel, index) => (
           <Slider.Thumb
             key={thumbLabel}
             aria-label={thumbLabel}
-            className="block size-7 rounded-full border-2 border-primary bg-foreground shadow-[0_0_16px_var(--nl-glow)]"
-          />
+            aria-valuetext={formatValue(value[index] ?? min)}
+            className="flex size-11 items-center justify-center rounded-full"
+          >
+            <span
+              aria-hidden
+              className="block size-7 rounded-full border-2 border-primary bg-foreground shadow-[0_0_16px_var(--nl-glow)]"
+            />
+          </Slider.Thumb>
         ))}
       </Slider.Root>
     </div>

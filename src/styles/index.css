@@ -246,6 +246,24 @@
   animation: none;
 }
 
+/* CSS controls must honor the same preference as Motion's components. */
+:root[data-motion='reduced'] *,
+:root[data-motion='reduced'] *::before,
+:root[data-motion='reduced'] *::after {
+  scroll-behavior: auto;
+  transition-property: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nl-breathe,
+  .nl-eq-bar,
+  .nl-live-ring,
+  .nl-glitch,
+  .nl-shimmer::after {
+    animation: none;
+  }
+}
+
 /* Theme switch crossfade (View Transitions API, PRD 3.1). Opacity only. */
 ::view-transition-old(root),
 ::view-transition-new(root) {

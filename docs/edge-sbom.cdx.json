@@ -1,0 +1,371 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:***",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-04T17:10:40.681Z",
+    "lifecycles": [
+      {
+        "phase": "pre-build"
+      }
+    ],
+    "tools": [
+      {
+        "vendor": "npm",
+        "name": "cli",
+        "version": "11.6.2"
+      }
+    ],
+    "component": {
+      "bom-ref": "nightlife-edge-sbom@0.1.0",
+      "type": "library",
+      "name": "block10-edge",
+      "version": "0.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/nightlife-edge-sbom@0.1.0",
+      "properties": [
+        {
+          "name": "cdx:npm:package:private",
+          "value": "true"
+        }
+      ],
+      "externalReferences": []
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "@supabase/auth-js@2.117.2",
+      "type": "library",
+      "name": "@supabase/auth-js",
+      "version": "2.117.2",
+      "scope": "required",
+      "purl": "pkg:npm/%40supabase/auth-js@2.117.2",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.117.2.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "6775a71b0ae985866e6eb2dbc69e48bf4b4b03d0391a1bcacc9fd95e0971ab07764041f6478757465b63549f2c227e31116d814852064f4c802d524881978363"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@supabase/functions-js@2.117.2",
+      "type": "library",
+      "name": "@supabase/functions-js",
+      "version": "2.117.2",
+      "scope": "required",
+      "purl": "pkg:npm/%40supabase/functions-js@2.117.2",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@supabase/functions-js/-/functions-js-2.117.2.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "e834f86488e66716bd00d29a048ae373ce80c8aad7f0cdfbeb29ef35e38105569ddde3fbc77507a967c3476ca71641c6cc2b8ea6bd40fa439b9a76a1c6ec2ea2"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@supabase/phoenix@0.4.5",
+      "type": "library",
+      "name": "@supabase/phoenix",
+      "version": "0.4.5",
+      "scope": "required",
+      "purl": "pkg:npm/%40supabase/phoenix@0.4.5",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@supabase/phoenix/-/phoenix-0.4.5.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "6809fd1fda2f572780a4acb5d4e58eaeb386abc0d5ebcc96787e2e77694df5fce7e1a3bc65be462cbf66d69520f672ea21c4fe6437c072c65ed04fe7a9dbf697"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@supabase/postgrest-js@2.117.2",
+      "type": "library",
+      "name": "@supabase/postgrest-js",
+      "version": "2.117.2",
+      "scope": "required",
+      "purl": "pkg:npm/%40supabase/postgrest-js@2.117.2",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@supabase/postgrest-js/-/postgrest-js-2.117.2.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "5754219fe33cc7326a09ab0ec47676286d7d163dfd3f153bc1e10098e2bae7f293b160915dba01e21710c05bf146f33b66291e3fd21958dbd091f8ef4b1cd817"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@supabase/realtime-js@2.117.2",
+      "type": "library",
+      "name": "@supabase/realtime-js",
+      "version": "2.117.2",
+      "scope": "required",
+      "purl": "pkg:npm/%40supabase/realtime-js@2.117.2",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@supabase/realtime-js/-/realtime-js-2.117.2.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "9585d2008837780280e7cae25040fa55bf930b317c8edc75f2e3a888269527b64cadee85581a7007530f796f81eafca4253fe13dd8aeab071207b20b312db57b"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@supabase/storage-js@2.117.2",
+      "type": "library",
+      "name": "@supabase/storage-js",
+      "version": "2.117.2",
+      "scope": "required",
+      "purl": "pkg:npm/%40supabase/storage-js@2.117.2",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@supabase/storage-js/-/storage-js-2.117.2.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "f20009a156b165afd66abda41517c93311a4e0cd7dd10ee527bd01a1fc06951c54feef6922875de97c93be65e4c4e2975ae218b640da60f66b20052dd53ffb15"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@supabase/supabase-js@2.117.2",
+      "type": "library",
+      "name": "@supabase/supabase-js",
+      "version": "2.117.2",
+      "scope": "required",
+      "purl": "pkg:npm/%40supabase/supabase-js@2.117.2",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.117.2.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "7921b654a9c747e0a5a753e689d675ff0789f0f270a326e3bdadcbd8680aa851b86034b522a99ceb5a6c28664fe71c3a38c4f63bb668acf478d8f63aab504e5e"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "iceberg-js@0.8.1",
+      "type": "library",
+      "name": "iceberg-js",
+      "version": "0.8.1",
+      "scope": "required",
+      "purl": "pkg:npm/iceberg-js@0.8.1",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/iceberg-js/-/iceberg-js-0.8.1.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "d5d8554195e17078deefbf7c21533ec68a3fd597557f338c21cf3fae05528a344adfc103a8e2681ae95af4dffc648e510fc413c4d42d2bf1a8ce9afea94a9144"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "stripe@23.0.0",
+      "type": "library",
+      "name": "stripe",
+      "version": "23.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/stripe@23.0.0",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/stripe/-/stripe-23.0.0.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "303136039655565b985113916991158214a69cb25cdf0e9a1c09594b10d032c3a339bdd5d0eeaba3f0a269e165252e0deee2159ac83df28711b0f9942ba61fc8"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "tslib@2.8.1",
+      "type": "library",
+      "name": "tslib",
+      "version": "2.8.1",
+      "scope": "required",
+      "purl": "pkg:npm/tslib@2.8.1",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "a0916ef781d06fe29576e49440bef09e99aa9df98bb0e03f9c087a6fa107d30084a0ad3f98f79753a737c0a0d5f373243ae1cf447b525ca294f7d2016b34bfdb"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "0BSD"
+          }
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "nightlife-edge-sbom@0.1.0",
+      "dependsOn": ["@supabase/supabase-js@2.117.2", "stripe@23.0.0"]
+    },
+    {
+      "ref": "@supabase/auth-js@2.117.2",
+      "dependsOn": ["tslib@2.8.1"]
+    },
+    {
+      "ref": "@supabase/functions-js@2.117.2",
+      "dependsOn": ["tslib@2.8.1"]
+    },
+    {
+      "ref": "@supabase/phoenix@0.4.5",
+      "dependsOn": []
+    },
+    {
+      "ref": "@supabase/postgrest-js@2.117.2",
+      "dependsOn": ["tslib@2.8.1"]
+    },
+    {
+      "ref": "@supabase/realtime-js@2.117.2",
+      "dependsOn": ["@supabase/phoenix@0.4.5", "tslib@2.8.1"]
+    },
+    {
+      "ref": "@supabase/storage-js@2.117.2",
+      "dependsOn": ["iceberg-js@0.8.1", "tslib@2.8.1"]
+    },
+    {
+      "ref": "@supabase/supabase-js@2.117.2",
+      "dependsOn": [
+        "@supabase/auth-js@2.117.2",
+        "@supabase/functions-js@2.117.2",
+        "@supabase/postgrest-js@2.117.2",
+        "@supabase/realtime-js@2.117.2",
+        "@supabase/storage-js@2.117.2"
+      ]
+    },
+    {
+      "ref": "iceberg-js@0.8.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "stripe@23.0.0",
+      "dependsOn": []
+    },
+    {
+      "ref": "tslib@2.8.1",
+      "dependsOn": []
+    }
+  ]
+}

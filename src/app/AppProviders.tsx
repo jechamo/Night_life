@@ -6,6 +6,7 @@ import { ServicesProvider } from '@/shared/services/ServicesProvider'
 import { SessionBridge } from '@/shared/session/SessionBridge'
 import type { AppServices } from '@/shared/services/services'
 import { ThemeProvider } from '@/shared/theme/ThemeProvider'
+import { AppStatus } from '@/shared/pwa/AppStatus'
 import type { InitialSettings } from './bootstrap'
 
 export function AppProviders({
@@ -28,6 +29,7 @@ export function AppProviders({
           <SessionBridge />
           <ThemeProvider initialThemeId={settings.themeId}>
             <MotionPreferencesProvider initialReduceMotion={settings.reduceMotion}>
+              <AppStatus />
               {children}
             </MotionPreferencesProvider>
           </ThemeProvider>

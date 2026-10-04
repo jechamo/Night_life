@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type {
   ManagedVenue,
@@ -10,7 +11,7 @@ const venuesKey = ['venue-panel', 'venues'] as const
 
 export function useCreateFlashAlert(placeId: string) {
   const { venuePanel } = useServices()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (input: Parameters<VenuePanelService['createFlashAlert']>[1]) =>
       venuePanel.createFlashAlert(placeId, input),
   })
@@ -47,7 +48,7 @@ function useInvalidateVenues() {
 export function useClaimVenue() {
   const { venuePanel } = useServices()
   const invalidate = useInvalidateVenues()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({ placeId, evidence }: { placeId: string; evidence: string }) =>
       venuePanel.claim(placeId, evidence),
     onSuccess: invalidate,
@@ -57,7 +58,7 @@ export function useClaimVenue() {
 export function useUpdateVenue() {
   const { venuePanel } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({
       placeId,
       patch,
@@ -72,7 +73,7 @@ export function useUpdateVenue() {
 export function useRequestSponsorship() {
   const { venuePanel } = useServices()
   const invalidate = useInvalidateVenues()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({
       placeId,
       tier,
@@ -91,7 +92,7 @@ export function useRequestSponsorship() {
 export function useCreateOfficialEvent() {
   const { venuePanel } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({
       placeId,
       input,

@@ -13,8 +13,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      // Registered from the bundle (src/platform/app-updates) so the CSP stays
-      // `script-src 'self'` and the page reloads itself when a new version is live.
+      // Registration lives in the platform adapter; updates reload only on user action.
       injectRegister: false,
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'robots.txt'],
       manifest: {
@@ -51,6 +50,7 @@ export default defineConfig({
         navigateFallback: '/index.html',
         runtimeCaching: [],
         cleanupOutdatedCaches: true,
+        navigateFallbackDenylist: [/^\/api\//, /^\/auth\//, /^\/functions\//],
       },
       devOptions: { enabled: false },
     }),
@@ -64,7 +64,7 @@ export default defineConfig({
     sourcemap: false,
     rolldownOptions: {
       output: {
-        // Stable vendor chunks: better long-term caching and no chunk over 500 kB.
+        // Stable vendors; the large Mapbox SDK stays outside initial loading/precache.
         codeSplitting: {
           groups: [
             {

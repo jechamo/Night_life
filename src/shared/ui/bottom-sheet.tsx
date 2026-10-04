@@ -61,9 +61,9 @@ export function BottomSheet({
             >
               <motion.div
                 className="glass-strong fixed inset-x-0 bottom-0 z-50 mx-auto flex max-h-[85dvh] max-w-lg flex-col rounded-t-[1.75rem] pb-safe text-foreground shadow-[0_-12px_48px_rgb(0_0_0/0.5)] outline-none"
-                initial={{ y: '100%', opacity: 0 }}
+                initial={{ y: tokens.reduced ? 0 : '100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: '100%', opacity: 0 }}
+                exit={{ y: tokens.reduced ? 0 : '100%', opacity: 0 }}
                 transition={tokens.spring.sheet}
                 drag="y"
                 dragControls={dragControls}

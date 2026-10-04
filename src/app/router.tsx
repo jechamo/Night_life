@@ -1,54 +1,11 @@
-import type { ComponentType } from 'react'
+import { lazy, Suspense, type ComponentType } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Skeleton } from '@/shared/ui/skeleton'
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
 import { AdminLayout } from '@/features/admin/components/AdminLayout'
-import { AdminDashboardScreen } from '@/features/admin/screens/AdminDashboardScreen'
-import { AdminFlagsScreen } from '@/features/admin/screens/AdminFlagsScreen'
-import { AdminPaymentsScreen } from '@/features/admin/screens/AdminPaymentsScreen'
-import { AdminSectionScreen } from '@/features/admin/screens/AdminSectionScreen'
-import { AdminSettingsScreen } from '@/features/admin/screens/AdminSettingsScreen'
-import { AdminTestToolsScreen } from '@/features/admin/screens/AdminTestToolsScreen'
-import { AdminVenuesScreen } from '@/features/admin/screens/AdminVenuesScreen'
-import { SignedDocumentsScreen } from '@/features/legal/screens/SignedDocumentsScreen'
-import { ModerationScreen } from '@/features/moderation/screens/ModerationScreen'
-import { SuspendedScreen } from '@/features/moderation/screens/SuspendedScreen'
-import { CheckoutScreen } from '@/features/premium/screens/CheckoutScreen'
-import { MySubscriptionScreen } from '@/features/premium/screens/MySubscriptionScreen'
-import { PaywallScreen } from '@/features/premium/screens/PaywallScreen'
-import { PurchaseReturnScreen } from '@/features/premium/screens/PurchaseReturnScreen'
-import { RedeemScreen } from '@/features/premium/screens/RedeemScreen'
-import { TestCheckoutScreen } from '@/features/premium/screens/TestCheckoutScreen'
-import { PrivacyDataScreen } from '@/features/privacy/screens/PrivacyDataScreen'
 import { PublicLayout } from '@/features/public/PublicLayout'
-import { ContactScreen } from '@/features/public/screens/ContactScreen'
-import { DeleteAccountInfoScreen } from '@/features/public/screens/DeleteAccountInfoScreen'
-import { IllegalContentScreen } from '@/features/public/screens/IllegalContentScreen'
-import { LegalDocumentScreen } from '@/features/public/screens/LegalDocumentScreen'
-import { LegalIndexScreen } from '@/features/public/screens/LegalIndexScreen'
-import { SosScreen } from '@/features/safety/screens/SosScreen'
-import { VenueDetailScreen } from '@/features/venue-panel/screens/VenueDetailScreen'
-import { VenuePanelScreen } from '@/features/venue-panel/screens/VenuePanelScreen'
-import { ChatScreen } from '@/features/chats/ChatScreen'
-import { ChatsScreen } from '@/features/chats/ChatsScreen'
-import { CreateEventScreen } from '@/features/events/CreateEventScreen'
-import { LikesYouScreen } from '@/features/matching/screens/LikesYouScreen'
-import { PersonScreen } from '@/features/matching/screens/PersonScreen'
-import { SwipeScreen } from '@/features/matching/screens/SwipeScreen'
-import { ConsentsSettingsScreen } from '@/features/consents/ConsentsSettingsScreen'
-import { OnboardingScreen } from '@/features/onboarding/screens/OnboardingScreen'
-import { LoginScreen } from '@/features/onboarding/screens/LoginScreen'
-import { WelcomeScreen } from '@/features/onboarding/screens/WelcomeScreen'
-import { AgeVerificationScreen } from '@/features/verification/screens/AgeVerificationScreen'
-import { OptionalVerificationScreen } from '@/features/verification/screens/OptionalVerificationScreen'
-import { ProviderSandboxScreen } from '@/features/verification/screens/ProviderSandboxScreen'
-import { VerificationCenterScreen } from '@/features/verification/screens/VerificationCenterScreen'
 import { AgeVerifiedRoute } from '@/features/verification/components/AgeVerifiedRoute'
 import type { AgeGatedAction } from '@/features/verification/model/verification'
-import { DesignKitScreen } from '@/features/design-kit/DesignKitScreen'
-import { DiscoverScreen } from '@/features/discover/DiscoverScreen'
-import { ProfileScreen } from '@/features/profile/ProfileScreen'
-import { SettingsScreen } from '@/features/settings/SettingsScreen'
-import { ThemesScreen } from '@/features/themes/ThemesScreen'
-import { TonightScreen } from '@/features/tonight/TonightScreen'
 import { ScreenErrorBoundary } from '@/shared/errors/ScreenErrorBoundary'
 import { AppShell } from './layout/AppShell'
 import { NotFoundScreen } from './NotFoundScreen'
@@ -56,10 +13,236 @@ import { RequireOnboarded } from './RequireOnboarded'
 import { RedirectIfOnboarded } from './RedirectIfOnboarded'
 import { RouteErrorScreen } from './RouteErrorScreen'
 
+const AdminDashboardScreen = lazy(() =>
+  import('@/features/admin/screens/AdminDashboardScreen').then((module) => ({
+    default: module.AdminDashboardScreen,
+  })),
+)
+const AdminFlagsScreen = lazy(() =>
+  import('@/features/admin/screens/AdminFlagsScreen').then((module) => ({
+    default: module.AdminFlagsScreen,
+  })),
+)
+const AdminPaymentsScreen = lazy(() =>
+  import('@/features/admin/screens/AdminPaymentsScreen').then((module) => ({
+    default: module.AdminPaymentsScreen,
+  })),
+)
+const AdminSectionScreen = lazy(() =>
+  import('@/features/admin/screens/AdminSectionScreen').then((module) => ({
+    default: module.AdminSectionScreen,
+  })),
+)
+const AdminSettingsScreen = lazy(() =>
+  import('@/features/admin/screens/AdminSettingsScreen').then((module) => ({
+    default: module.AdminSettingsScreen,
+  })),
+)
+const AdminTestToolsScreen = lazy(() =>
+  import('@/features/admin/screens/AdminTestToolsScreen').then((module) => ({
+    default: module.AdminTestToolsScreen,
+  })),
+)
+const AdminVenuesScreen = lazy(() =>
+  import('@/features/admin/screens/AdminVenuesScreen').then((module) => ({
+    default: module.AdminVenuesScreen,
+  })),
+)
+const SignedDocumentsScreen = lazy(() =>
+  import('@/features/legal/screens/SignedDocumentsScreen').then((module) => ({
+    default: module.SignedDocumentsScreen,
+  })),
+)
+const ModerationScreen = lazy(() =>
+  import('@/features/moderation/screens/ModerationScreen').then((module) => ({
+    default: module.ModerationScreen,
+  })),
+)
+const SuspendedScreen = lazy(() =>
+  import('@/features/moderation/screens/SuspendedScreen').then((module) => ({
+    default: module.SuspendedScreen,
+  })),
+)
+const CheckoutScreen = lazy(() =>
+  import('@/features/premium/screens/CheckoutScreen').then((module) => ({
+    default: module.CheckoutScreen,
+  })),
+)
+const MySubscriptionScreen = lazy(() =>
+  import('@/features/premium/screens/MySubscriptionScreen').then((module) => ({
+    default: module.MySubscriptionScreen,
+  })),
+)
+const PaywallScreen = lazy(() =>
+  import('@/features/premium/screens/PaywallScreen').then((module) => ({
+    default: module.PaywallScreen,
+  })),
+)
+const PurchaseReturnScreen = lazy(() =>
+  import('@/features/premium/screens/PurchaseReturnScreen').then((module) => ({
+    default: module.PurchaseReturnScreen,
+  })),
+)
+const RedeemScreen = lazy(() =>
+  import('@/features/premium/screens/RedeemScreen').then((module) => ({
+    default: module.RedeemScreen,
+  })),
+)
+const TestCheckoutScreen = lazy(() =>
+  import('@/features/premium/screens/TestCheckoutScreen').then((module) => ({
+    default: module.TestCheckoutScreen,
+  })),
+)
+const PrivacyDataScreen = lazy(() =>
+  import('@/features/privacy/screens/PrivacyDataScreen').then((module) => ({
+    default: module.PrivacyDataScreen,
+  })),
+)
+const ContactScreen = lazy(() =>
+  import('@/features/public/screens/ContactScreen').then((module) => ({
+    default: module.ContactScreen,
+  })),
+)
+const DeleteAccountInfoScreen = lazy(() =>
+  import('@/features/public/screens/DeleteAccountInfoScreen').then((module) => ({
+    default: module.DeleteAccountInfoScreen,
+  })),
+)
+const IllegalContentScreen = lazy(() =>
+  import('@/features/public/screens/IllegalContentScreen').then((module) => ({
+    default: module.IllegalContentScreen,
+  })),
+)
+const LegalDocumentScreen = lazy(() =>
+  import('@/features/public/screens/LegalDocumentScreen').then((module) => ({
+    default: module.LegalDocumentScreen,
+  })),
+)
+const LegalIndexScreen = lazy(() =>
+  import('@/features/public/screens/LegalIndexScreen').then((module) => ({
+    default: module.LegalIndexScreen,
+  })),
+)
+const SosScreen = lazy(() =>
+  import('@/features/safety/screens/SosScreen').then((module) => ({ default: module.SosScreen })),
+)
+const VenueDetailScreen = lazy(() =>
+  import('@/features/venue-panel/screens/VenueDetailScreen').then((module) => ({
+    default: module.VenueDetailScreen,
+  })),
+)
+const VenuePanelScreen = lazy(() =>
+  import('@/features/venue-panel/screens/VenuePanelScreen').then((module) => ({
+    default: module.VenuePanelScreen,
+  })),
+)
+const ChatScreen = lazy(() =>
+  import('@/features/chats/ChatScreen').then((module) => ({ default: module.ChatScreen })),
+)
+const ChatsScreen = lazy(() =>
+  import('@/features/chats/ChatsScreen').then((module) => ({ default: module.ChatsScreen })),
+)
+const CreateEventScreen = lazy(() =>
+  import('@/features/events/CreateEventScreen').then((module) => ({
+    default: module.CreateEventScreen,
+  })),
+)
+const LikesYouScreen = lazy(() =>
+  import('@/features/matching/screens/LikesYouScreen').then((module) => ({
+    default: module.LikesYouScreen,
+  })),
+)
+const PersonScreen = lazy(() =>
+  import('@/features/matching/screens/PersonScreen').then((module) => ({
+    default: module.PersonScreen,
+  })),
+)
+const SwipeScreen = lazy(() =>
+  import('@/features/matching/screens/SwipeScreen').then((module) => ({
+    default: module.SwipeScreen,
+  })),
+)
+const ConsentsSettingsScreen = lazy(() =>
+  import('@/features/consents/ConsentsSettingsScreen').then((module) => ({
+    default: module.ConsentsSettingsScreen,
+  })),
+)
+const OnboardingScreen = lazy(() =>
+  import('@/features/onboarding/screens/OnboardingScreen').then((module) => ({
+    default: module.OnboardingScreen,
+  })),
+)
+const LoginScreen = lazy(() =>
+  import('@/features/onboarding/screens/LoginScreen').then((module) => ({
+    default: module.LoginScreen,
+  })),
+)
+const WelcomeScreen = lazy(() =>
+  import('@/features/onboarding/screens/WelcomeScreen').then((module) => ({
+    default: module.WelcomeScreen,
+  })),
+)
+const AgeVerificationScreen = lazy(() =>
+  import('@/features/verification/screens/AgeVerificationScreen').then((module) => ({
+    default: module.AgeVerificationScreen,
+  })),
+)
+const OptionalVerificationScreen = lazy(() =>
+  import('@/features/verification/screens/OptionalVerificationScreen').then((module) => ({
+    default: module.OptionalVerificationScreen,
+  })),
+)
+const ProviderSandboxScreen = lazy(() =>
+  import('@/features/verification/screens/ProviderSandboxScreen').then((module) => ({
+    default: module.ProviderSandboxScreen,
+  })),
+)
+const VerificationCenterScreen = lazy(() =>
+  import('@/features/verification/screens/VerificationCenterScreen').then((module) => ({
+    default: module.VerificationCenterScreen,
+  })),
+)
+const DesignKitScreen = lazy(() =>
+  import('@/features/design-kit/DesignKitScreen').then((module) => ({
+    default: module.DesignKitScreen,
+  })),
+)
+const DiscoverScreen = lazy(() =>
+  import('@/features/discover/DiscoverScreen').then((module) => ({
+    default: module.DiscoverScreen,
+  })),
+)
+const ProfileScreen = lazy(() =>
+  import('@/features/profile/ProfileScreen').then((module) => ({ default: module.ProfileScreen })),
+)
+const SettingsScreen = lazy(() =>
+  import('@/features/settings/SettingsScreen').then((module) => ({
+    default: module.SettingsScreen,
+  })),
+)
+const ThemesScreen = lazy(() =>
+  import('@/features/themes/ThemesScreen').then((module) => ({ default: module.ThemesScreen })),
+)
+const TonightScreen = lazy(() =>
+  import('@/features/tonight/TonightScreen').then((module) => ({ default: module.TonightScreen })),
+)
+
+function ScreenLoading() {
+  const { t } = useTranslation()
+  return (
+    <div role="status" className="p-6">
+      <span className="sr-only">{t('common.loading')}</span>
+      <Skeleton className="h-32 w-full" />
+    </div>
+  )
+}
+
 /** Every screen gets its own error boundary (PRD 3.4). */
 const screen = (Screen: ComponentType) => (
   <ScreenErrorBoundary>
-    <Screen />
+    <Suspense fallback={<ScreenLoading />}>
+      <Screen />
+    </Suspense>
   </ScreenErrorBoundary>
 )
 const PhotoVerification = () => <OptionalVerificationScreen level="photo" />

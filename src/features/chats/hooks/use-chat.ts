@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { ChatMessage } from '../services/chat-service'
 import { mergeMessages } from '../model/messages'
@@ -28,7 +29,7 @@ export function useMessages(matchId: string) {
 export function useEarlierMessages(matchId: string) {
   const { chat } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: async () => {
       const first = queryClient.getQueryData<ChatMessage[]>(messagesKey(matchId))?.[0]
       return first ? chat.messages(matchId, { sentAt: first.sentAt, id: first.id }) : []
@@ -54,7 +55,7 @@ export function useTyping(matchId: string): boolean {
 export function useSendMessage(matchId: string) {
   const { chat } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (text: string) => chat.send(matchId, text),
     onSuccess: (message) => {
       queryClient.setQueryData<ChatMessage[]>(messagesKey(matchId), (list = []) =>
@@ -68,7 +69,7 @@ export function useSendMessage(matchId: string) {
 export function useMarkRead(matchId: string) {
   const { chat } = useServices()
   const queryClient = useQueryClient()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: () => chat.markRead(matchId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: summariesKey }),
   })

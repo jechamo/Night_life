@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { beginSessionWork, useSessionMutation } from '@/shared/session/use-session-mutation'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import { usePlatform } from '@/platform'
 import { entitlementsQueryKey } from '@/shared/entitlements/use-entitlement'
@@ -14,24 +15,37 @@ export function usePremiumState() {
 }
 
 export function usePurchaseStatus(id: string | null) {
-  const { premium } = useServices()
+  const { premium, session: premiumSession } = useServices()
   const refresh = useRefresh()
   return useQuery({
     queryKey: ['premium', 'order', id],
     enabled: !!id,
     refetchInterval: (q) => (q.state.data && q.state.data !== 'pending' ? false : 1500),
     queryFn: async () => {
+      const check = beginSessionWork(premiumSession)
       const status = await premium.purchaseStatus(id!)
-      if (status === 'paid') await refresh(await premium.getState())
+      check()
+      if (status === 'paid') {
+        const state = await premium.getState()
+        check()
+        await refresh(state)
+      }
       return status
     },
   })
 }
 
 export function useBillingPortal() {
-  const { premium } = useServices()
+  const { premium, session } = useServices()
   const { browser } = usePlatform()
-  return useMutation({ mutationFn: async () => browser.openExternalFlow(await premium.portal()) })
+  return useSessionMutation({
+    mutationFn: async () => {
+      const check = beginSessionWork(session)
+      const url = await premium.portal()
+      check()
+      return browser.openExternalFlow(url)
+    },
+  })
 }
 
 /** Any change in purchases refreshes entitlements: they are the only source of truth. */
@@ -48,7 +62,7 @@ export function useStartPurchase() {
   const { premium } = useServices()
   const { browser } = usePlatform()
   const navigate = useNavigate()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (code: ProductCode) => premium.startPurchase(code),
     onSuccess: async (result) => {
       if (!result.ok) return
@@ -61,7 +75,7 @@ export function useStartPurchase() {
 export function useCompleteTestPurchase() {
   const { premium } = useServices()
   const refresh = useRefresh()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (code: ProductCode) => premium.completeTestPurchase(code),
     onSuccess: refresh,
   })
@@ -71,13 +85,13 @@ export function useSubscriptionActions() {
   const { premium } = useServices()
   const refresh = useRefresh()
   return {
-    cancel: useMutation({ mutationFn: () => premium.cancel(), onSuccess: refresh }),
-    resume: useMutation({ mutationFn: () => premium.resume(), onSuccess: refresh }),
-    withdraw: useMutation({
+    cancel: useSessionMutation({ mutationFn: () => premium.cancel(), onSuccess: refresh }),
+    resume: useSessionMutation({ mutationFn: () => premium.resume(), onSuccess: refresh }),
+    withdraw: useSessionMutation({
       mutationFn: (orderId?: string) => premium.withdraw(orderId),
       onSuccess: (result) => refresh(result.ok ? result.value : undefined),
     }),
-    notifyMe: useMutation({
+    notifyMe: useSessionMutation({
       mutationFn: (on: boolean) => premium.setNotifyMe(on),
       onSuccess: refresh,
     }),
@@ -87,7 +101,7 @@ export function useSubscriptionActions() {
 export function useRedeemCode() {
   const { premium } = useServices()
   const refresh = useRefresh()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: (code: string) => premium.redeem(code),
     onSuccess: async (result) => {
       if (result.ok) await refresh()
@@ -96,11 +110,16 @@ export function useRedeemCode() {
 }
 
 export function usePaidDm() {
-  const { premium } = useServices()
+  const { premium, session } = useServices()
   const refresh = useRefresh()
-  return useMutation({
+  return useSessionMutation({
     mutationFn: ({ personId, text }: { personId: string; text: string }) =>
       premium.sendPaidDm(personId, text),
-    onSuccess: async () => refresh(await premium.getState()),
+    onSuccess: async () => {
+      const check = beginSessionWork(session)
+      const state = await premium.getState()
+      check()
+      await refresh(state)
+    },
   })
 }

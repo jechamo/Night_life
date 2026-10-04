@@ -72,7 +72,8 @@ layout fuera del `AppShell`; el admin exige rol + segundo factor y `RequireOnboa
 redirige a `/suspended` si la cuenta está suspendida. El back-office simulado
 (`src/mocks/backoffice`) es mutable para que el admin cambie flags y roles en directo.
 Desde el Bloque 9 las colas administrativas, moderación, panel de locales y derechos
-usan adaptadores Supabase. Los mocks quedan para tests y ejecución explícita sin backend.
+usan adaptadores Supabase. Los mocks quedan para tests y desarrollo sin backend.
+Desde el Bloque 10, producción sin configuración Supabase falla al arrancar.
 Las máquinas de estado de compra y suscripción, la idempotencia y los outboxes
 transaccionales se ejecutan en servidor.
 
@@ -99,9 +100,13 @@ transaccionales se ejecutan en servidor.
 
 ## Backend (Bloque 5)
 
-- Raíz de composición `src/app/services.ts`: Supabase si hay `VITE_SUPABASE_*`, mocks si no.
+- Raíz de composición `src/app/services.ts`: Supabase si hay `VITE_SUPABASE_*`;
+  mocks solo en desarrollo. Producción sin configuración falla cerrada.
 - Escrituras sensibles por RPC (`private` + envoltorios en `public`) y Edge Functions.
 - `SessionBridge` (Observer) invalida la caché al entrar/salir o completar el MFA.
+- El contador de generación cambia en el evento Auth antes de notificar observers.
+  `useSessionMutation` descarta callbacks de una sesión anterior; exportaciones,
+  PDF y navegación externa usan el mismo guard. Cancelar queries no cancela mutaciones.
 
 ## Estado y datos
 
@@ -136,6 +141,15 @@ transaccionales se ejecutan en servidor.
 - `vite-plugin-pwa` (generateSW). El _service worker_ precachea solo el _shell_
   (JS, CSS, HTML, fuentes, iconos). `runtimeCaching: []` ⇒ nunca cachea respuestas de API
   ni datos personales (PRD 3.1).
+- `appUpdates` registra el worker solo en producción web y publica conexión y
+  disponibilidad de actualización. `AppStatus` ofrece recarga explícita ES/EN;
+  primera instalación y cambio de controller no recargan formularios automáticamente.
+  Focus/online/visibilidad y un intervalo revisan versiones; los errores de chunks
+  permiten recuperar con una recarga online. El worker no borra Auth.
+- Pantallas importadas con `React.lazy`, Suspense accesible y boundary por pantalla.
+  Mapbox conserva su gate de reserva y queda fuera de HTML inicial/precache.
+- `sw.js` sin caché HTTP duradera; assets con hash inmutables. No hay adaptadores
+  nativos todavía: contratos y pasos en [NATIVE.md](./NATIVE.md).
 
 ## Calidad
 
