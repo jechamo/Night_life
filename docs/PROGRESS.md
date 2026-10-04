@@ -68,6 +68,13 @@ QA, SBOM y las guías de nativa y activación de pagos.
   de standalone y sesión, sin medición de rendimiento.
 - ✅ Modo avión con app cargada: aviso offline, recuperación de datos y sesión
   al reconectar confirmados por el propietario en ambos dispositivos.
+- ✅ Hotfix de carga de roles `a1ad387`, publicado tras el aviso de Admin ausente:
+  el RPC `account_activity` devuelve `void` y su `data: null` se interpretaba como
+  fallo antes de consultar `user_roles`. Se comprueba su error, conservando RLS
+  y MFA. Regresión reproducida antes del cambio; después de publicar pasan
+  **348/348**, tipos, lint y formato. Vercel READY y bundle/worker nuevos verificados;
+  protocolo y límites en `docs/BLOCK10_TESTS.md`. Comprobación en la sesión del
+  propietario pendiente; CUA sigue sin poder iniciar.
 
 ### Checklist todavía abierta
 

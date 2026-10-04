@@ -41,6 +41,17 @@ La configuración externa de Auth/proveedores y QA real no están acreditadas.
 - PWA: solo shell en precache, sin API/datos personales/Mapbox; recarga explícita
   y sin borrar sesión. CSP, allowlists y renderizado React siguen protegiendo origen.
 
+### Hotfix posterior a la auditoría independiente
+
+`a1ad387` corrige la carga de roles: `account_activity` devuelve `void` y un
+retorno nulo sin error debe permitir consultar los roles propios bajo RLS.
+Se conserva el rechazo de errores reales; no se concedieron roles ni se cambió
+el guard de Admin/MFA. Regresión previa reproducida y suite posterior 348/348.
+SQL con rollback confirma lectura propia antes de MFA, denegación del dashboard
+sin MFA, admisión del admin activo en `aal2` y denegación de un caller sin rol.
+Publicación y limitación de CUA documentadas en `BLOCK10_TESTS.md`. Este cambio
+posterior no se atribuye al scan independiente ya cerrado.
+
 ### Límites y puertas pendientes
 
 - Informe final: un riesgo bajo de emisión OTP, con confianza media y prerrequisito

@@ -133,8 +133,42 @@ must-revalidate`. Manifest standalone y tres iconos PNG con dimensiones
   tras reiniciar su sesión. No se borró caché/Auth ni se dio la recarga por probada.
   Las pruebas locales anteriores y las unitarias PWA siguen siendo evidencia distinta.
 
-Los commits posteriores dedicados a documentación no cambian el artefacto web
-publicado; el SHA anterior identifica su implementación exacta.
+Los commits posteriores dedicados a documentación conservan ese artefacto.
+El hotfix descrito a continuación sí sustituye su implementación.
+
+## Hotfix de Admin ausente — 2026-10-04
+
+La cuenta administrativa conserva sus roles en Supabase y puede leerlos con RLS
+en `aal1`. El adaptador llamaba a `must()` sobre `account_activity`, un RPC que
+devuelve `void`: una respuesta correcta con `data: null` lanzaba `no_data` antes
+de leer `user_roles`. El menú ocultaba Admin y `/admin` devolvía al perfil.
+
+- Regresión de adaptador reproducida antes de corregir: falla con `no_data`.
+  Ahora se comprueba `error` del RPC y se permite su retorno vacío; los errores
+  reales y de lectura de roles siguen rechazándose. Sin cambios de roles ni RLS.
+- Por petición del propietario se publicó tras compilar y se ejecutó la suite
+  después: **348/348**, TypeScript, ESLint y Prettier correctos. El build local
+  y el build de Vercel completaron sin errores.
+- Implementación `a1ad387c2b4a8b6c49dd20af5eae4e24b8dfeb43`, enviada a origin.
+  Vercel MCP confirma `dpl_2bYEPajzyLGayBwq5Xuik6UN2Ket` READY, producción,
+  SHA y alias habituales. HTTP a las 20:20 UTC sirve `/assets/index-BF1tIY3e.js`,
+  131.716 bytes, SHA256
+  `568454e7601fb9c89e629cc27e301ef70cfad84dd11736bf1d3f0fb96813c082`;
+  contiene la corrección y `sw.js` referencia ese entry con `no-cache, no-store,
+must-revalidate`.
+- SQL remoto, con rollback: rol Admin legible antes de MFA; dashboard rechazado
+  en `aal1` y admitido para admin activo en `aal2`; caller sin rol Admin rechazado
+  incluso en `aal2`. JWT de prueba y consultas internas no acreditan un login/MFA
+  real. Un primer control que suponía que la otra cuenta seguía siendo usuario
+  normal se descartó: sus roles se habían cambiado antes de esta comprobación.
+- ❌ La herramienta CUA continúa fallando al iniciar (`failed to write kernel
+assets ... os error 3`), también tras reset. No se inspeccionó ni modificó el
+  almacenamiento de la pestaña. Falta confirmar visualmente, tras actualizar,
+  que el propietario ve Admin y entra por el segundo factor.
+
+Para repetir: `npm run check`, `npm run build`; en la cuenta admin actualizar
+la app, abrir Perfil → Admin y completar su TOTP. Una cuenta sin Admin sigue
+sin ese enlace y las acciones de servidor requieren rol activo y `aal2`.
 
 ## Cómo repetir
 
