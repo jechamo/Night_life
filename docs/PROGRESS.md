@@ -13,7 +13,7 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 | 6 – Verificaciones reales                                | ✅ Pruebas cerradas; pendiente de OK del propietario |
 | 7 – Mapa, lugares, eventos y estadísticas reales         | ✅ Terminado; pendiente de OK                        |
 | 8 – Ligar, match en tiempo real y chat                   | ✅ Aprobado (OK del propietario, 2026-10-04)         |
-| 9 – Seguridad, derechos, negocio y pagos en test         | ✅ Validado; preparando publicación                  |
+| 9 – Seguridad, derechos, negocio y pagos en test         | ✅ Terminado; pendiente de OK                        |
 | 10 – Auditoría OWASP, pulido, PWA y QA                   | ⏳                                                   |
 | 11 – Apps nativas y pagos en tiendas                     | ⏳ Añadido al plan (docs/MONETIZATION.md)            |
 | 12 – Contratación, costes, activación live y lanzamiento | ⏳ Costes sujetos a aprobación explícita             |
@@ -101,7 +101,27 @@ Autorizado por el propietario tras aprobar el Bloque 8. Plan en
 
 ### Publicación
 
-Pendiente de registrar SHA, deployment READY y comprobación del alias público.
+- Implementación y pruebas subidas a `codex/block9`: commit inicial
+  `e6e4a4df749e38af6cb462f8fac87dfceab252a3` y ajuste final DSA
+  **`dce0e9a48f9265309b7059d774ee35249278e8dc`**, SHA publicado.
+- Archivo del SHA final desplegado con CLI oficial 62.2.0, en el proyecto y plan
+  existentes. MCP confirma producción **READY**, deployment
+  **`dpl_EgQctbk7bm54SYdfcwSZv4zbwXZT`**, mismo SHA y alias
+  [Nightlife Connect](https://nightlife-connect-beige.vercel.app).
+- HTTP 200 y CSP idéntica a `vercel.json`. Bundle `index-wDvOfjdS.js`, SHA-256
+  `72cc2222983990cc25317dcbac66bcff6fd98bec932497351fdb3ddb219696a8`,
+  con RPC reales del bloque 9. Mapbox fuera del HTML inicial y precache.
+- Build remoto correcto; npm audit remoto cero vulnerabilidades. Avisos conocidos:
+  chunk diferido de Mapbox, `engines >=22` y deprecación de glob transitivo.
+- DSA: valida enlace HTTPS propio y muestra errores conservando los datos para
+  reintentar. La suite final incluye rechazo de enlace externo y fallo de envío.
+- Limitación observada: el navegador integrado conserva `index-CmfGgIun.js` al
+  recargar, aunque una petición HTTP al alias obtiene el bundle nuevo. No se
+  atribuye a esa pestaña una validación visual del código final. Verificar la
+  actualización de esa caché en el QA/PWA del Bloque 10; no se borró su sesión.
+- Credenciales, enlaces de Checkout/Portal y SQL temporal de las cuentas desechables
+  eliminados de `.tmp`. Documentos ajenos `docs/PRD/` y `docs/Places/` conservados.
+
 No se inicia el Bloque 10 sin OK explícito.
 
 ## Bloque 8 — Ligar, match en tiempo real y chat (2026-10-04)

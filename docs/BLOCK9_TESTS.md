@@ -115,3 +115,18 @@ además caducidad y concesión semanal VIP repetida sin duplicar créditos.
 El cron usa processed_at e ignora suscripciones sin propietario. La extensión
 [pg_net](https://supabase.com/docs/guides/database/extensions/pg_net) quedó instalada.
 Los esquemas net y private no son accesibles por la API pública (406/PGRST106).
+
+## Despliegue final
+
+Vercel MCP confirma READY en producción para
+`dce0e9a48f9265309b7059d774ee35249278e8dc`, deployment
+`dpl_EgQctbk7bm54SYdfcwSZv4zbwXZT`.
+El alias público responde HTTP 200, CSP versionada y `index-wDvOfjdS.js`
+(SHA-256 `72cc2222983990cc25317dcbac66bcff6fd98bec932497351fdb3ddb219696a8`).
+El código incluye las RPC reales; Mapbox queda fuera de HTML inicial y precache.
+
+El navegador integrado mostró el bundle antiguo `index-CmfGgIun.js` incluso
+tras recargar. La inspección visual no acredita la UI final; la versión publicada
+se comprobó por HTTP y MCP. La actualización de esa caché queda registrada para
+el QA/PWA del Bloque 10. Las pruebas de Stripe y borrado acreditan las operaciones
+reales del servidor y sus proveedores, y Vitest cubre el formulario y el retorno.
