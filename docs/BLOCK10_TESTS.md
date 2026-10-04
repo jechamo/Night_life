@@ -95,11 +95,37 @@ la reconciliación acredita 469/469 archivos de código seleccionados, con el co
 generado de tipos excluido por no contener implementación. Configuración externa,
 dependencias, documentos y recursos quedan delimitados en `SECURITY.md`; no es una
 certificación de toda la instalación ni de los proveedores.
+El resultado conserva un riesgo bajo condicionado al enforcement externo de OTP
+y la evidencia de los ocho candidatos corregidos.
 
 Advisors de seguridad: 13 INFO de tablas privadas con RLS sin políticas y grants
 cerrados; 1 WARN de protección de contraseñas filtradas. Rendimiento: 14 INFO de
 índices sin uso. ❌ Criterio literal «cero Advisors». No se añadieron políticas
 permisivas ni se eliminaron índices solo para ocultar esos avisos.
+
+## Publicación comprobada
+
+- Rama `codex/block10`, commit de implementación
+  `03c8b4dfb685251ce5483ae664f32107e92ec6b8`, enviado a origin.
+- Vercel MCP confirma `READY`, producción, proyecto existente y el mismo SHA:
+  `dpl_HhUrTTXX6erR4byWVRHrDTXd6BNX`. Alias
+  [Nightlife Connect](https://nightlife-connect-beige.vercel.app).
+  Se utilizó el fallback ya autorizado al CLI oficial; el MCP disponible no
+  expone la creación de despliegues. No se cambió plan, proyecto ni protección.
+- HTTP del alias sirve `/assets/index-gpt5hk31.js`, 131.654 bytes,
+  SHA256 `8bb654ece4a934513967b2ec7af1330ed61b02580a1bd7988016ce3bca247062`.
+  CSP coincide con `vercel.json`; `sw.js` tiene `no-cache, no-store,
+must-revalidate`. Manifest standalone y tres iconos PNG con dimensiones
+  192/512 verificadas; Mapbox no figura en HTML inicial ni precache.
+- Trece funciones Edge ACTIVE; versiones finales `signed-documents` 14 y
+  `test-tools` 12. Guards HTTP de red 29/29 tras esos redespliegues.
+- ❌ No se acreditó la actualización de la pestaña antigua integrada: la herramienta
+  CUA falló al iniciar con `failed to write kernel assets ... os error 3`, incluso
+  tras reiniciar su sesión. No se borró caché/Auth ni se dio la recarga por probada.
+  Las pruebas locales anteriores y las unitarias PWA siguen siendo evidencia distinta.
+
+Los commits posteriores dedicados a documentación no cambian el artefacto web
+publicado; el SHA anterior identifica su implementación exacta.
 
 ## Cómo repetir
 

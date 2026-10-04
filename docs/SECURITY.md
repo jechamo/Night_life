@@ -26,7 +26,9 @@ La configuración externa de Auth/proveedores y QA real no están acreditadas.
   Check-in comprueba también la generación después de esperar GPS y antes de escribir.
 - Privacidad: `search_places` no serializa `sort_key` y ordena los asistentes por
   la banda pública 0/1–4/≥5; evita revelar cifras ocultas mediante campo u orden.
-- Admin: perfil activo, onboarding, rol y aal2 en el helper común y en `test-tools`.
+- Admin: perfil activo, onboarding, rol y aal2 en el helper común. `test-tools`
+  exige perfil activo, rol tester/admin y flag para actuar sobre fixtures;
+  ese handler no exige aal2 y no acredita el guard de administración con MFA.
 - Storage: admisión de archivos planos UUID propios, bucket privado 5 MiB y MIME
   acotado; diez objetos por usuario, sin UPDATE/overwrite. El borrado soporta
   carpetas anteriores, límites de recorrido y falta de progreso antes de retirar Auth.
@@ -41,6 +43,9 @@ La configuración externa de Auth/proveedores y QA real no están acreditadas.
 
 ### Límites y puertas pendientes
 
+- Informe final: un riesgo bajo de emisión OTP, con confianza media y prerrequisito
+  de configuración explícito. Los otros ocho candidatos se conservan con evidencia
+  original y controles corregidos; no se presentan como vulnerabilidades activas.
 - ❌ El precheck del navegador no controla una llamada directa a `Auth.signInWithOtp`.
   El ban se impide en onboarding, pero la emisión/abuso de OTP depende de los límites,
   captcha y hooks configurados en Auth. No se acreditó esa configuración ni se enviaron

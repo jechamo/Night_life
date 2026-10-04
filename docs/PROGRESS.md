@@ -58,11 +58,18 @@ QA, SBOM y las guías de nativa y activación de pagos.
   enlaces táctiles y main enfocable. No se cambiaron datos del propietario.
 - Guías `docs/NATIVE.md` y `docs/PAYMENTS_GO_LIVE.md`; evidencia en
   `docs/BLOCK10_TESTS.md`, controles y límites en `docs/SECURITY.md`.
+- ✅ Implementación `03c8b4d` enviada a origin y publicada en el alias habitual.
+  Vercel MCP verifica `dpl_HhUrTTXX6erR4byWVRHrDTXd6BNX` READY y SHA coincidente;
+  HTTP verifica bundle, CSP, worker, manifest e iconos. Fallback al CLI oficial
+  previamente autorizado; sin cambios de plan/protección. Commits posteriores
+  de documentación conservan ese SHA como referencia del código publicado.
 
 ### Checklist todavía abierta
 
 - ❌ QA de instalación, actualización, offline y permisos en Android/iPhone,
   VoiceOver/TalkBack y medición de 60 fps. El propietario dispone de ambos.
+  La herramienta del navegador integrado no pudo iniciar para comprobar la pestaña
+  antigua; no se acredita su actualización ni se borraron caché o sesión.
 - ❌ Cero Advisors: 13 INFO privados cerrados, WARN de contraseñas filtradas y
   14 INFO de índices sin uso. No se ocultaron ni se contrataron ampliaciones.
 - ❌ Enforcement externo de emisión directa de OTP: el ban ya se impide en el
