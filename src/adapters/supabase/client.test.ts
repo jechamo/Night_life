@@ -46,3 +46,53 @@ describe('persisted onboarding status', () => {
     expect(db.auth.signOut).toHaveBeenCalledWith({ scope: 'local' })
   })
 })
+
+describe('persisted session roles', () => {
+  function fixture({ signedIn = true, activityError = false, rolesError = false } = {}) {
+    const eq = vi.fn().mockResolvedValue({
+      data: [{ role: 'user' }, { role: 'tester' }, { role: 'admin' }],
+      error: rolesError ? { message: 'private role detail' } : null,
+    })
+    const from = vi.fn(() => ({ select: () => ({ eq }) }))
+    const rpc = vi.fn().mockResolvedValue({
+      // PostgREST returns null for the successful void account_activity RPC.
+      data: null,
+      error: activityError ? { message: 'private activity detail' } : null,
+    })
+    const db = {
+      auth: {
+        getSession: vi.fn().mockResolvedValue({
+          data: { session: signedIn ? { user: { id: 'current-user' } } : null },
+        }),
+      },
+      from,
+      rpc,
+    } as unknown as Db
+    return { service: createSessionService(db), from, rpc, eq }
+  }
+
+  it('reads the signed-in roles after a successful void activity response', async () => {
+    const { service, rpc, from, eq } = fixture()
+    await expect(service.getRoles()).resolves.toEqual(['user', 'tester', 'admin'])
+    expect(rpc).toHaveBeenCalledWith('account_activity')
+    expect(from).toHaveBeenCalledWith('user_roles')
+    expect(eq).toHaveBeenCalledWith('user_id', 'current-user')
+  })
+
+  it('does not read roles or record activity without a session', async () => {
+    const { service, rpc, from } = fixture({ signedIn: false })
+    await expect(service.getRoles()).resolves.toEqual([])
+    expect(rpc).not.toHaveBeenCalled()
+    expect(from).not.toHaveBeenCalled()
+  })
+
+  it('still rejects an actual activity error before reading roles', async () => {
+    const { service, from } = fixture({ activityError: true })
+    await expect(service.getRoles()).rejects.toThrow()
+    expect(from).not.toHaveBeenCalled()
+  })
+
+  it('does not invent roles when their database lookup fails', async () => {
+    await expect(fixture({ rolesError: true }).service.getRoles()).rejects.toThrow('db_error')
+  })
+})

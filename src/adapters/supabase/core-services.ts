@@ -30,7 +30,9 @@ export function createSessionService(db: Db): SessionService {
     async getRoles() {
       const uid = await currentUserId(db)
       if (!uid) return []
-      must(await db.rpc('account_activity'))
+      // This RPC returns void: null data is successful when there is no error.
+      const { error: activityError } = await db.rpc('account_activity')
+      if (activityError) throw new Error('account_activity_unavailable')
       const rows = must(await db.from('user_roles').select('role').eq('user_id', uid))
       return rows
         .map((r) => r.role)
