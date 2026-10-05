@@ -2,6 +2,7 @@ import { Clock, Euro, Globe, MapPin, Music, Phone, Shirt, UserCheck } from 'luci
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAttendance } from '@/features/attendance/hooks/use-attendance'
+import { usePlaceDetail } from '@/features/home/hooks/use-dashboard'
 import { Badge } from '@/shared/ui/badge'
 import { FlashAlerts } from '@/features/venue-panel/components/FlashAlerts'
 import { Chip } from '@/shared/ui/chip'
@@ -14,6 +15,7 @@ import { PlaceActions } from './PlaceActions'
 import { PlaceCover } from './PlaceCover'
 import { VibeCheck } from './VibeCheck'
 import { WhoIsThere } from './WhoIsThere'
+import { FavoriteButton } from './FavoriteButton'
 
 /** "Lun 18:00–06:00" lines, Monday first, in the user's language. */
 function openingLines(periods: readonly OpeningPeriod[], language: string): string[] {
@@ -53,6 +55,7 @@ function Detail({
 export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }) {
   const { t, i18n } = useTranslation()
   const { data: attendance } = useAttendance()
+  const detail = usePlaceDetail(place.id, !isEvent(place))
   const [showLostFound, setShowLostFound] = useState(false)
   const checkedInHere = attendance?.checkIn?.placeId === place.id
   const hours = place.openingHours?.length
@@ -63,7 +66,16 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
 
   return (
     <div className="space-y-6 pb-4">
-      <PlaceCover place={place} className="h-32" />
+      <div className="relative">
+        <PlaceCover place={place} className="h-32" />
+        {!isEvent(place) && (
+          <div className="absolute right-2 top-2">
+            <FavoriteButton
+              place={{ ...place, favorite: detail.data?.favorite ?? place.favorite }}
+            />
+          </div>
+        )}
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         <Chip accent={place.type} selected tabIndex={-1} className="pointer-events-none">
           {t(`venueTypes.${place.type}`)}

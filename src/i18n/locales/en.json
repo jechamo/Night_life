@@ -13,7 +13,8 @@
     "discover": "Discover",
     "tonight": "Tonight",
     "chats": "Chats",
-    "profile": "Profile"
+    "profile": "Profile",
+    "home": "Home"
   },
   "common": {
     "back": "Back",
@@ -43,7 +44,7 @@
     "notFound": {
       "title": "No party here",
       "description": "The page you are looking for does not exist.",
-      "action": "Go to Discover"
+      "action": "Go to Home"
     }
   },
   "placeholders": {
@@ -1857,5 +1858,36 @@
     "testSample": "Test sample",
     "remove": "Remove Anthem",
     "failed": "Could not save. Try again."
+  },
+  "home": {
+    "eyebrow": "Your city. Your night.",
+    "title": "Your night starts here.",
+    "subtitle": "Find your place. Connect with your people.",
+    "city": "City to explore",
+    "nearby": "Near me",
+    "nearCenter": "Near the city centre",
+    "localSelection": "Local picks",
+    "tonight": "Going tonight",
+    "now": "Already there",
+    "noActivity": "The night is still waking up. Check back in a little while.",
+    "noPlans": "Be the one to start tonight’s plan.",
+    "likes": "New likes",
+    "likesCaption": "Since your last visit",
+    "likesLocked": "Discover them with Premium",
+    "chats": "Chats to reply to",
+    "chatTotal": "of {{count}} conversations",
+    "chatCaption": "Your next message matters",
+    "matches": "Matches",
+    "matchesCaption": "Active connections",
+    "favorites": "Your favourite places",
+    "noFavorites": "Save places you want to return to using their bookmark button.",
+    "viewAll": "View all · {{count}}",
+    "favorite": "Save {{name}} to favourites",
+    "unfavorite": "Remove {{name}} from favourites",
+    "socialLocked": "Your people are waiting",
+    "verify": "Verify your age to see likes, chats and matches.",
+    "place": "Your next place",
+    "placeUnavailable": "This place is no longer available.",
+    "viewMap": "View on the map"
   }
 }

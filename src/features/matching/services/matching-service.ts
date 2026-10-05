@@ -23,6 +23,8 @@ export type ReportReason =
  * server (Block 8); the client never decides a match.
  */
 export interface MatchingService {
+  likesSnapshot?(): Promise<{ count: number; profiles: PublicProfile[]; snapshotId: string }>
+  markLikesSeen?(snapshotId: string): Promise<void>
   sponsoredCards?(placeId: string | null): Promise<{ id: string; name: string }[]>
   candidates(placeId: string | null): Promise<Candidate[]>
   like(

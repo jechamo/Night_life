@@ -46,6 +46,7 @@ export type MapAccess =
 
 /** Port for venues and events (Supabase + PostGIS from Block 7). */
 export interface PlacesService {
+  getById(id: string): Promise<Place | null>
   /** Venues nearest to `area` (up to 200) plus live events; without area, the first 200. */
   list(area?: LatLng): Promise<Place[]>
   reserveMapLoad(): Promise<MapAccess>

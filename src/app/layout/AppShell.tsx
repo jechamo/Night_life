@@ -17,14 +17,15 @@ const isFullBleed = (handle: unknown) =>
  */
 export function AppShell() {
   const { t } = useTranslation()
-  const fullBleed = useMatches().some((match) => isFullBleed(match.handle))
+  const matches = useMatches()
+  const fullBleed = matches.some((match) => isFullBleed(match.handle))
   return (
     <MatchCelebrationProvider>
       <RealtimeBridge />
       <div className="relative flex h-dvh flex-col overflow-hidden bg-background">
         <a
           href="#main"
-          className="glass fixed top-2 left-2 z-50 -translate-y-24 rounded-full px-4 py-2 focus:translate-y-[env(safe-area-inset-top)]"
+          className="glass fixed top-2 left-2 z-50 -translate-y-24 rounded-full px-4 py-2 focus:translate-y-[var(--nl-safe-area-top)]"
         >
           {t('common.skipToContent')}
         </a>
@@ -38,9 +39,15 @@ export function AppShell() {
             <main
               id="main"
               tabIndex={-1}
-              className="relative flex-1 overflow-y-auto pb-[calc(7rem+env(safe-area-inset-bottom))]"
+              className="relative flex-1 overflow-y-auto pb-[calc(7rem+var(--nl-safe-area-bottom))]"
             >
-              <div className="mx-auto w-full max-w-3xl">
+              <div
+                className={
+                  matches.some((m) => (m.handle as { wide?: boolean } | undefined)?.wide)
+                    ? 'mx-auto w-full max-w-6xl'
+                    : 'mx-auto w-full max-w-3xl'
+                }
+              >
                 <Outlet />
               </div>
             </main>

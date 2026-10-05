@@ -2,6 +2,29 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Inicio sin mapa — previo al bloque 11
+
+`/home` recibe agregados mediante UI → hooks → `DashboardService` → adaptador
+Supabase. `home_summary` calcula rankings de toda la ciudad y totales sociales
+en servidor; no reutiliza las listas acotadas del mapa ni de conversaciones.
+`/places/:placeId` consulta `place_detail` por ID y reutiliza `PlaceDetails`.
+Solo la acción explícita «Ver en el mapa» entra en Descubre y puede reservar carga.
+
+La ciudad explícita se comparte mediante preferencias del puerto de plataforma.
+Sin GPS consentido se usa el centro de la ciudad. Los favoritos se guardan por
+usuario mediante RPC idempotente, RLS y claves foráneas con borrado en cascada.
+Home/favoritos/fichas se actualizan mediante Realtime, reconexión y foco.
+
+Los likes vistos usan un snapshot opaco de servidor y recibos individuales de
+emisor/fecha: confirmar una carga no consume likes posteriores ni de otra sesión.
+El snapshot pertenece al usuario y caduca en una hora; los recibos persisten.
+El evento Realtime `home` invalida el dashboard, sin generar un bucle de aperturas
+de likes. El corazón de Esta Noche conserva el total recibido.
+
+Las variables CSS `--nl-safe-area-*` son el contrato común de insets; el dueño de
+cada pantalla añade su separación visual una sola vez. El empaquetado Capacitor
+y los adaptadores nativos se mantienen en el bloque 11. Publicación: `GITFLOW.md`.
+
 ## Visión general
 
 SPA pura (React 19 + Vite 8, sin SSR) alojada en Vercel, instalable como PWA y preparada

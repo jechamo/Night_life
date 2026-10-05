@@ -19,7 +19,7 @@ describe('account entry and sign out', () => {
     'redirects a finished account from %s',
     async (path) => {
       const { router } = renderApp(path)
-      await waitFor(() => expect(router.state.location.pathname).toBe('/discover'))
+      await waitFor(() => expect(router.state.location.pathname).toBe('/home'))
     },
   )
 
@@ -39,7 +39,7 @@ describe('account entry and sign out', () => {
     const user = await enterPhone()
     vi.spyOn(services.onboarding, 'getStatus').mockResolvedValue('completed')
     await user.click(screen.getByRole('button', { name: 'Verificar' }))
-    await waitFor(() => expect(router.state.location.pathname).toBe('/discover'))
+    await waitFor(() => expect(router.state.location.pathname).toBe('/home'))
   })
 
   it('offers a choice for an incomplete account and signs out before changing numbers', async () => {
@@ -81,7 +81,7 @@ describe('account entry and sign out', () => {
     expect(await screen.findByText('No hay conexión. Inténtalo de nuevo.')).toBeVisible()
     expect(screen.queryByText('Este número no tiene una cuenta terminada')).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Reintentar' }))
-    await waitFor(() => expect(router.state.location.pathname).toBe('/discover'))
+    await waitFor(() => expect(router.state.location.pathname).toBe('/home'))
     expect(status).toHaveBeenCalled()
     expect(verify).toHaveBeenCalledOnce()
   })

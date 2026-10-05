@@ -62,6 +62,9 @@ export function createRealtimeService(db: Db): RealtimeService {
           channel.on('broadcast', { event: 'refresh' }, () => {
             if (current()) handler({ type: 'refresh' })
           })
+          channel.on('broadcast', { event: 'home' }, () => {
+            if (current()) handler({ type: 'dashboard_changed' })
+          })
           channel.on('broadcast', { event: 'typing' }, ({ payload }: { payload: unknown }) => {
             const parsed = matchId.extend({ typing: z.boolean() }).safeParse(payload)
             if (current() && parsed.success) handler({ type: 'typing', ...parsed.data })

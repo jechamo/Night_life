@@ -16,6 +16,7 @@ export type RealtimeEvent =
   | { type: 'messages_changed'; matchId: string }
   | { type: 'removed'; matchId: string }
   | { type: 'refresh' }
+  | { type: 'dashboard_changed' }
 
 export interface RealtimeService {
   subscribe(handler: (event: RealtimeEvent) => void): () => void

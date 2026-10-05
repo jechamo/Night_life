@@ -111,7 +111,8 @@ export function useMyVibe(placeId: string) {
 /** Writes a fresh copy of one place into every cached list. */
 export function useReplacePlace() {
   const queryClient = useQueryClient()
-  return (place: Place) =>
+  return (place: Place) => {
+    queryClient.setQueryData(['places', 'detail', place.id], place)
     queryClient.setQueriesData<Place[]>({ queryKey: placesListKey }, (list) =>
       list
         ? list.some((p) => p.id === place.id)
@@ -119,6 +120,7 @@ export function useReplacePlace() {
           : [...list, place]
         : list,
     )
+  }
 }
 
 export function useVoteVibe(placeId: string) {

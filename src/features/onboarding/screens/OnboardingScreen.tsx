@@ -31,7 +31,7 @@ export function OnboardingScreen() {
   const complete = useCompleteOnboarding()
   const [state, dispatch] = useReducer(onboardingReducer, initialOnboardingState)
 
-  if (status.data === 'completed') return <Navigate to="/discover" replace />
+  if (status.data === 'completed') return <Navigate to="/home" replace />
 
   let content: ReactNode
   let key: string = state.status
@@ -92,7 +92,7 @@ export function OnboardingScreen() {
                 onSuccess: (result) => {
                   if (!result.ok) return
                   dispatch({ type: 'THEME_CHOSEN', themeId })
-                  void navigate('/discover', { replace: true })
+                  void navigate('/home', { replace: true })
                 },
               },
             )

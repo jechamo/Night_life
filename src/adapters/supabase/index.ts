@@ -11,6 +11,7 @@ import { createEntitlementService, createFlagSource, createSessionService } from
 import { createLegalService, startEmailOutbox } from './legal'
 import { createOnboardingService } from './onboarding'
 import { createPlacesService } from './places'
+import { createDashboardService } from './dashboard'
 import { createPrivacyService } from './privacy'
 import { createConsentService, createProfileService, createSafetyService } from './profile'
 import { createRealtimeService } from './realtime'
@@ -42,6 +43,7 @@ export function createSupabaseServices(
   return {
     ...simulated,
     ...gated,
+    dashboard: createDashboardService(db),
     verification,
     flags: createFlagService(createFlagSource(db)),
     entitlements: createEntitlementService(db),

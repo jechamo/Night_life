@@ -75,7 +75,7 @@ export function OnboardingStepLayout({
         <div className="mt-6 space-y-5">{children}</div>
       </main>
       {footer && (
-        <footer className="px-safe glass-strong sticky bottom-0 z-10 space-y-3 border-x-0 border-b-0 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <footer className="px-safe glass-strong sticky bottom-0 z-10 space-y-3 border-x-0 border-b-0 pt-4 pb-[max(1rem,var(--nl-safe-area-bottom))]">
           {footer}
         </footer>
       )}

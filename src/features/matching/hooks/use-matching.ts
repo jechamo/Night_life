@@ -86,9 +86,9 @@ export function useLikesYouCount() {
   })
 }
 
-export function useMatches() {
+export function useMatches(enabled = true) {
   const { matching } = useServices()
-  return useQuery({ queryKey: matchesKey, queryFn: () => matching.matches() })
+  return useQuery({ queryKey: matchesKey, queryFn: () => matching.matches(), enabled })
 }
 
 export function usePerson(personId: string) {

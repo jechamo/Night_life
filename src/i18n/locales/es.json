@@ -13,7 +13,8 @@
     "discover": "Descubre",
     "tonight": "Esta Noche",
     "chats": "Chats",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "home": "Inicio"
   },
   "common": {
     "back": "Volver",
@@ -43,7 +44,7 @@
     "notFound": {
       "title": "Aquí no hay fiesta",
       "description": "La página que buscas no existe.",
-      "action": "Ir a Descubre"
+      "action": "Ir a Inicio"
     }
   },
   "placeholders": {
@@ -1857,5 +1858,36 @@
     "testSample": "Muestra de prueba",
     "remove": "Quitar Anthem",
     "failed": "No se ha podido guardar. Inténtalo de nuevo."
+  },
+  "home": {
+    "eyebrow": "Tu ciudad. Tu noche.",
+    "title": "La noche empieza aquí.",
+    "subtitle": "Encuentra tu sitio. Conecta con tu gente.",
+    "city": "Ciudad que quieres explorar",
+    "nearby": "Cerca de mí",
+    "nearCenter": "Cerca del centro",
+    "localSelection": "Selección local",
+    "tonight": "Van esta noche",
+    "now": "Ya están allí",
+    "noActivity": "La noche aún está despertando. Vuelve a mirar en un rato.",
+    "noPlans": "Sé quien empieza el plan de esta noche.",
+    "likes": "Likes nuevos",
+    "likesCaption": "Desde tu última visita",
+    "likesLocked": "Descúbrelos con Premium",
+    "chats": "Chats por contestar",
+    "chatTotal": "de {{count}} conversaciones",
+    "chatCaption": "Tu próximo mensaje cuenta",
+    "matches": "Matches",
+    "matchesCaption": "Conexiones activas",
+    "favorites": "Tus locales favoritos",
+    "noFavorites": "Guarda los sitios a los que quieres volver con el marcador de cada local.",
+    "viewAll": "Ver todos · {{count}}",
+    "favorite": "Guardar {{name}} en favoritos",
+    "unfavorite": "Quitar {{name}} de favoritos",
+    "socialLocked": "Tu gente está por descubrir",
+    "verify": "Verifica tu edad para ver likes, chats y matches.",
+    "place": "Tu próximo sitio",
+    "placeUnavailable": "Este local ya no está disponible.",
+    "viewMap": "Ver en el mapa"
   }
 }

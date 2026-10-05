@@ -20,6 +20,7 @@ import {
   createMockProfileService,
 } from './world/social-services'
 import { createWorldState } from './world/world-state'
+import { createMockDashboardService } from './world/dashboard-service'
 import { hasEntitlement } from '@/shared/entitlements/entitlements'
 import { createMockAdminService } from './backoffice/admin'
 import { createMockConfig } from './backoffice/config'
@@ -77,6 +78,7 @@ export function createMockServices(options: MockServiceOptions = {}): AppService
     isRedLight: (id) => world.people.find((p) => p.id === id)?.trafficLight === 'red',
   })
   return {
+    dashboard: createMockDashboardService(world, store),
     premium,
     admin: createMockAdminService(config, world, store, premium, wait),
     venuePanel: createMockVenuePanelService(world, config, wait),

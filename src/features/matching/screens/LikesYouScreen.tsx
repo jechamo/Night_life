@@ -6,7 +6,9 @@ import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { PhotoImage } from '@/shared/images/PhotoImage'
 import { cn } from '@/shared/lib/cn'
 import { ScreenHeader } from '@/shared/ui/screen-header'
-import { useLikesYou, useLikesYouCount } from '../hooks/use-matching'
+import { useLikesView } from '../hooks/use-likes-view'
+import { Button } from '@/shared/ui/button'
+import { Skeleton } from '@/shared/ui/skeleton'
 import { SparkNotice } from '@/features/premium/components/SparkNotice'
 
 /**
@@ -15,8 +17,9 @@ import { SparkNotice } from '@/features/premium/components/SparkNotice'
  */
 export function LikesYouScreen() {
   const { t } = useTranslation()
-  const { data: people = [] } = useLikesYou()
-  const { data: count = people.length } = useLikesYouCount()
+  const view = useLikesView()
+  const people = view.data?.profiles ?? []
+  const count = view.data?.count ?? 0
   const { granted } = useEntitlement('see_likes')
   const paywall = usePaywallState()
   const locked = !granted
@@ -29,6 +32,18 @@ export function LikesYouScreen() {
         backTo="/tonight"
       />
       <SparkNotice />
+      {view.isPending && <Skeleton className="m-4 h-48" />}
+      {(view.isError || view.seenError) && (
+        <div role="alert" className="px-safe mt-4">
+          <p>{t('errors.generic.description')}</p>
+          <Button
+            variant="outline"
+            onClick={() => (view.isError ? void view.refetch() : view.retrySeen())}
+          >
+            {t('common.retry')}
+          </Button>
+        </div>
+      )}
       {locked && paywall !== 'hidden' && (
         <Link
           to="/premium"

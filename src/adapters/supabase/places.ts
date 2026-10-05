@@ -232,18 +232,26 @@ export function createPlacesService(db: Db): PlacesService {
     })
   }
 
-  // One place by id, wherever it is: search_places has no id filter, so narrow by name/city.
+  const detailById = async (id: string): Promise<Place | null> => {
+    const response = await db.rpc('place_detail', { p_place: id })
+    if (response.error) must(response)
+    const raw = response.data
+    if (!isRecord(raw)) return null
+    const result = venueToPlace(raw, asText(raw.description))
+    return result
+      ? { ...result, favorite: raw.favorite === true, sponsored: raw.sponsored === true }
+      : null
+  }
+
+  // Venue details must not depend on a bounded search page. Events retain their API.
   const findPlace = async (id: string): Promise<Place> => {
-    const { data: venue } = await db.from('venues').select('name, city').eq('id', id).maybeSingle()
-    const candidates = venue
-      ? await loadVenues({ p_query: venue.name, p_city: venue.city })
-      : await loadEvents()
-    const place = candidates.find((p) => p.id === id)
+    const place = (await detailById(id)) ?? (await loadEvents()).find((p) => p.id === id)
     if (!place) throw new Error('not_found')
     return place
   }
 
   return {
+    getById: detailById,
     async list(area) {
       const [venues, events] = await Promise.all([
         loadVenues(area ? { p_lat: area.lat, p_lng: area.lng } : {}),

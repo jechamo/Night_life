@@ -305,7 +305,7 @@ export const MapboxMap = forwardRef<
       {/* mapbox-gl.css forces `position: relative` on its container and beats layered utilities. */}
       <div ref={hostRef} className="h-full w-full" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent" />
-      <div className="absolute right-3 bottom-[calc(7.5rem+env(safe-area-inset-bottom))] flex flex-col gap-2 lg:bottom-10">
+      <div className="absolute right-[calc(0.75rem+var(--nl-safe-area-right))] bottom-[calc(7.5rem+var(--nl-safe-area-bottom))] flex flex-col gap-2 lg:bottom-[calc(2.5rem+var(--nl-safe-area-bottom))]">
         <Button
           variant="glass"
           size="icon"
