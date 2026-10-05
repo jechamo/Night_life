@@ -158,7 +158,7 @@ export function DiscoverScreen() {
           onCityChange={selectCity}
         />
         <Button
-          className="absolute bottom-[calc(7.5rem+var(--nl-safe-area-bottom))] left-3 z-20 lg:bottom-6"
+          className="absolute bottom-[calc(7.5rem+var(--nl-safe-area-bottom))] left-[calc(0.75rem+var(--nl-safe-area-left))] z-20 lg:bottom-[calc(1.5rem+var(--nl-safe-area-bottom))]"
           onClick={() => guard('create_event') && void navigate('/events/new')}
         >
           <Plus aria-hidden />

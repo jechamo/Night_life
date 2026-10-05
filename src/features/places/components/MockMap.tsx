@@ -129,7 +129,7 @@ export const MockMap = forwardRef<
         })}
       </motion.div>
       <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background to-transparent" />
-      <div className="absolute right-3 bottom-[calc(7.5rem+var(--nl-safe-area-bottom))] flex flex-col gap-2 lg:bottom-6">
+      <div className="absolute right-[calc(0.75rem+var(--nl-safe-area-right))] bottom-[calc(7.5rem+var(--nl-safe-area-bottom))] flex flex-col gap-2 lg:bottom-[calc(1.5rem+var(--nl-safe-area-bottom))]">
         <Button
           variant="glass"
           size="icon"

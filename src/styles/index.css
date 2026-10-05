@@ -85,8 +85,8 @@
   padding-bottom: calc(var(--nl-safe-area-bottom) + var(--nl-safe-bottom-gap, 0px));
 }
 @utility px-safe {
-  padding-left: max(1rem, var(--nl-safe-area-left));
-  padding-right: max(1rem, var(--nl-safe-area-right));
+  padding-left: calc(1rem + var(--nl-safe-area-left));
+  padding-right: calc(1rem + var(--nl-safe-area-right));
 }
 
 .nl-illustration-fade {

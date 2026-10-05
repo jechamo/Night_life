@@ -29,7 +29,7 @@ export function DiscoverTopBar({
   const { t } = useTranslation()
   const count = activeFilterCount(filters)
   return (
-    <div className="pt-safe pointer-events-none absolute inset-x-0 top-0 z-20 space-y-2 px-3 [--nl-safe-top-gap:0.75rem]">
+    <div className="pt-safe px-safe pointer-events-none absolute inset-x-0 top-0 z-20 space-y-2 [--nl-safe-top-gap:0.75rem]">
       <div className="pointer-events-auto flex gap-2">
         <label className="glass flex h-12 flex-1 items-center gap-2 rounded-full px-4">
           <Search className="size-5 shrink-0 text-muted-foreground" aria-hidden />
