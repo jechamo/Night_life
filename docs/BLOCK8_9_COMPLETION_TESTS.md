@@ -110,7 +110,32 @@ independiente sellado del bloque 10 ni inicia aplicaciones nativas del bloque 11
 
 ## Publicación web
 
-Se completa con el SHA, deployment READY y comprobación HTTP después del despliegue.
+- Implementación `87e4b916e20ff76589168825bd6d4c5d4367921e`, subida a
+  `origin/codex/block10` y publicada en [Nightlife Connect](https://nightlife-connect-beige.vercel.app).
+- MCP verifica **READY**, target production, alias habitual y SHA coincidente:
+  `dpl_Hm5PhAKRjiHCtsTqsF6NBjXwPAz3`. CLI oficial en el proyecto/plan existentes,
+  sin cambiar protección; primer intento rechazado, sesión CLI renovada y segundo
+  correcto. No se utilizó una cuenta distinta ni se modificaron permisos.
+- HTTP 200, CSP idéntica a `vercel.json`, manifest standalone e iconos disponibles.
+  Worker contiene la entrada publicada y excluye el SDK de Mapbox.
+- **15/15 archivos idénticos por SHA-256** al build del archivo Git del commit:
+  entrada, CSS, dos catálogos, ES/EN, hooks y pantallas de swipe, likes, perfil,
+  temas, panel de local, paywall, Checkout, retorno y Mi suscripción.
+  Para reproducir se usaron las variables existentes de producción y los 18
+  metadatos públicos `VITE_VERCEL_*` que Vercel añade automáticamente, partiendo
+  de `dist` vacío en la copia temporal. No basta comparar contra variables de desarrollo.
+
+| Archivo publicado               | SHA-256                                                            |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `index-Cqs-BVsN.js`             | `be64051a9ce3b4ded1483897a4c123b8468112e76db9b185d29fffd36f4fcdb7` |
+| `index-BWzis6Mn.css`            | `046cee852540b73934ea397d0a770c1593aa849fbe4dd7e3b112f5c5c01d8d9e` |
+| `SwipeScreen-wxqGFcC0.js`       | `0d1fc7b078d362bd67aa4df902a97a45898accfb9f990881ddbd90acd67f7d5e` |
+| `VenueDetailScreen-XczJfHMz.js` | `5dc5614b6ca39634e95327e21eece2d670087bf1db200d7384a0bd33d91b287c` |
+
+Las variables descargadas para esta comprobación se retiraron después. El build
+remoto terminó correctamente y su auditoría de dependencias también dio cero
+vulnerabilidades. Los avisos existentes de chunk Mapbox, `engines >=22` y glob
+transitivo no se ocultaron.
 
 ## Reproducción manual cuando el propietario vuelva
 

@@ -51,7 +51,10 @@ en `BLOCK8_9_COMPLETION_TESTS.md`. No cierra la QA física pendiente del bloque 
 - ✅ Cuentas/locales temporales retirados; ocho pedidos TEST expirados y
   desvinculados. Sesiones Stripe sin pago caducan automáticamente en 24 h.
 
-La publicación y su SHA se registran en el informe después de verificar Vercel.
+- ✅ Implementación `87e4b916` subida y desplegada: Vercel
+  `dpl_Hm5PhAKRjiHCtsTqsF6NBjXwPAz3` READY, producción y SHA coincidente.
+  HTTP confirma CSP/manifest/worker y 15 archivos idénticos al build de producción.
+
 Este cambio posterior no se atribuye al scan independiente sellado del bloque 10.
 
 ## Bloque 10 — Auditoría OWASP, pulido, PWA y QA (2026-10-04)
