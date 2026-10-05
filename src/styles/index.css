@@ -69,16 +69,40 @@
   display: none;
 }
 
-/* Safe areas for notches and home indicators (PRD 3.3, Capacitor-ready). */
+/* Layout owns one inset; native adapters can override these four variables. */
+:root {
+  --nl-safe-area-top: env(safe-area-inset-top, 0px);
+  --nl-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --nl-safe-area-left: env(safe-area-inset-left, 0px);
+  --nl-safe-area-right: env(safe-area-inset-right, 0px);
+  --nl-nav-clearance: calc(7rem + var(--nl-safe-area-bottom));
+}
+/* Safe areas plus each component's visual spacing, without competing paddings. */
 @utility pt-safe {
-  padding-top: env(safe-area-inset-top);
+  padding-top: calc(var(--nl-safe-area-top) + var(--nl-safe-top-gap, 0px));
 }
 @utility pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: calc(var(--nl-safe-area-bottom) + var(--nl-safe-bottom-gap, 0px));
 }
 @utility px-safe {
-  padding-left: max(1rem, env(safe-area-inset-left));
-  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-left: max(1rem, var(--nl-safe-area-left));
+  padding-right: max(1rem, var(--nl-safe-area-right));
+}
+
+.nl-illustration-fade {
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 42%, #000 56%, transparent 73%);
+  mask-image: radial-gradient(ellipse at center, #000 42%, #000 56%, transparent 73%);
+}
+:root[data-theme='mono'] .nl-illustration-glow {
+  display: none;
+}
+.home-zone {
+  border-radius: var(--nl-radius);
+  border: 1px solid var(--nl-border);
+  background: var(--nl-surface);
+}
+.home-venue {
+  height: 100%;
 }
 
 /* 44px minimum touch targets (PRD 3.3). */

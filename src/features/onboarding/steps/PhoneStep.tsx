@@ -86,7 +86,7 @@ export function PhoneStep({
       const status = await onboarding.getStatus()
       if (status === 'completed') {
         await queryClient.invalidateQueries()
-        return void navigate('/discover', { replace: true })
+        return void navigate('/home', { replace: true })
       }
       setPhase(login ? 'no_account' : 'email')
     } catch {

@@ -40,6 +40,7 @@ export function createMockPlacesService(
   const findPost = (id: string) => state.lostFound.find((p) => p.id === id)
 
   return {
+    getById: (id) => Promise.resolve(placeById(state, id) ?? null),
     async list() {
       await wait()
       refreshEvents()

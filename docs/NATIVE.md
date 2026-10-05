@@ -5,6 +5,22 @@ de tiendas pertenecen al Bloque 11. No hay proyecto Capacitor, binarios, firma
 de tiendas ni adaptadores nativos implementados. Referencias: PRD 3.3–3.5,
 Anexo B y [guía oficial de Capacitor](https://capacitorjs.com/docs/getting-started).
 
+## Contrato de zonas seguras antes del bloque 11
+
+El documento web usa `viewport-fit=cover`. Las cuatro variables CSS
+`--nl-safe-area-top/bottom/left/right` toman `env(safe-area-inset-*, 0px)`.
+El adaptador nativo podrá sobrescribirlas si su WebView no expone esos valores.
+Nunca sumar a la vez inset de CSS, margen nativo y padding del encabezado.
+`pt-safe`/`pb-safe` añaden el inset y la separación visual del componente;
+`px-safe` protege ambos lados en horizontal. Encabezado y navegación son sus
+respectivos dueños, el área de scroll reserva espacio para la navegación.
+
+La PWA permite orientación horizontal. Las sheets limitan su altura disponible
+sin alcanzar el inset superior, y el chat mantiene su área de escritura separada
+del borde inferior. Quedan pendientes pruebas físicas de Safari/PWA con notch,
+orientación y teclado, además de la configuración nativa de StatusBar/Keyboard.
+Referencia: [Status Bar de Capacitor](https://capacitorjs.com/docs/apis/status-bar).
+
 ## Punto de partida
 
 `src/platform/platform.ts` reúne las capacidades. Las pantallas reciben puertos

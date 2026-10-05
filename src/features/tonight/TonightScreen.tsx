@@ -1,9 +1,12 @@
 import { Heart, MapPinCheck, Users } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { useAttendance } from '@/features/attendance/hooks/use-attendance'
-import { useLikesYouCount } from '@/features/matching/hooks/use-matching'
+import { useLikesYouCount, useMatches } from '@/features/matching/hooks/use-matching'
+import { useVerificationSnapshot } from '@/features/verification/hooks/use-verification'
+import { isAgeVerified } from '@/features/verification/model/verification'
+import { PhotoImage } from '@/shared/images/PhotoImage'
 import { PlaceCard } from '@/features/places/components/PlaceCard'
 import { usePlaces } from '@/features/places/hooks/use-places'
 import type { Place } from '@/features/places/model/types'
@@ -27,6 +30,13 @@ export function TonightScreen() {
   const { data: attendance } = useAttendance()
   const { data: places = [] } = usePlaces()
   const { data: likesYouCount = 0 } = useLikesYouCount()
+  const { data: verification } = useVerificationSnapshot()
+  const verified = verification != null && isAgeVerified(verification)
+  const { data: matches = [] } = useMatches(verified)
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (hash === '#matches' && verified) document.getElementById('matches')?.scrollIntoView()
+  }, [hash, verified, matches.length])
 
   const open = (placeId: string | null) => {
     if (guard('view_profiles'))
@@ -102,6 +112,30 @@ export function TonightScreen() {
             </Button>
           }
         />
+      )}
+      {verified && (
+        <section id="matches" className="scroll-mt-4">
+          <Section title={t('home.matches')}>
+            <ul className="flex flex-wrap gap-4">
+              {matches.slice(0, 6).map((match) => (
+                <li key={match.id}>
+                  <Link to={`/chats/${match.id}`} className="flex w-20 flex-col items-center gap-2">
+                    <PhotoImage
+                      src={match.person.photos[0]}
+                      alt=""
+                      sizes="64px"
+                      className="size-16 rounded-full border-2 border-primary object-cover"
+                    />
+                    <span className="max-w-full truncate text-sm">{match.person.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <ButtonLink to="/chats" variant="ghost" className="mt-3">
+              {t('tabs.chats')}
+            </ButtonLink>
+          </Section>
+        </section>
       )}
       <Section title={mode === 'here' ? t('matching.liveNow') : t('matching.goingTonightList')}>
         <ul className="space-y-2">

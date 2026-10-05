@@ -31,7 +31,7 @@ export function WelcomeScreen() {
   const slide = SLIDES[index] ?? 'live'
   const last = index === SLIDES.length - 1
 
-  if (status.data === 'completed') return <Navigate to="/discover" replace />
+  if (status.data === 'completed') return <Navigate to="/home" replace />
 
   const go = (next: number) => setIndex(Math.min(SLIDES.length - 1, Math.max(0, next)))
   const onDragEnd = (_: unknown, info: PanInfo) => {
@@ -53,7 +53,7 @@ export function WelcomeScreen() {
           <SlideArt slide={slide} />
         </motion.div>
       </AnimatePresence>
-      <div className="pt-safe px-safe flex min-h-16 items-center justify-between gap-3 pt-4">
+      <div className="pt-safe px-safe flex min-h-16 items-center justify-between gap-3 [--nl-safe-top-gap:1rem]">
         <Badge tone="live">{t('app.name')}</Badge>
         <LanguageSwitch />
       </div>
@@ -106,7 +106,7 @@ export function WelcomeScreen() {
           ))}
         </div>
       </motion.section>
-      <footer className="px-safe mx-auto grid w-full max-w-lg gap-3 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+      <footer className="px-safe mx-auto grid w-full max-w-lg gap-3 pb-[max(1.5rem,var(--nl-safe-area-bottom))]">
         {last ? (
           <Button block size="lg" onClick={() => void navigate('/onboarding')}>
             {t('onboarding.welcome.start')}

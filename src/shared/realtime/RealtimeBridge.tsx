@@ -31,7 +31,14 @@ export function RealtimeBridge() {
     () =>
       realtime.subscribe((event) => {
         switch (event.type) {
+          case 'dashboard_changed':
+            void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+            void queryClient.invalidateQueries({ queryKey: ['favorites'] })
+            void queryClient.invalidateQueries({ queryKey: ['places', 'detail'] })
+            break
           case 'stats':
+            void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+            void queryClient.invalidateQueries({ queryKey: ['places', 'detail', event.placeId] })
             queryClient.setQueriesData<Place[]>({ queryKey: placesListKey }, (list) =>
               list?.map((p) => (p.id === event.placeId ? { ...p, stats: event.stats } : p)),
             )
@@ -53,11 +60,13 @@ export function RealtimeBridge() {
             break
           }
           case 'match':
+            void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
             void queryClient.invalidateQueries({ queryKey: matchesKey })
             void queryClient.invalidateQueries({ queryKey: summariesKey })
             celebrate(event.match)
             break
           case 'message':
+            void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
             queryClient.setQueryData<ChatMessage[]>(messagesKey(event.message.matchId), (list) =>
               list && !list.some((m) => m.id === event.message.id)
                 ? [...list, event.message]
@@ -72,10 +81,12 @@ export function RealtimeBridge() {
             break
           case 'read':
           case 'messages_changed':
+            void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
             void queryClient.invalidateQueries({ queryKey: messagesKey(event.matchId) })
             void queryClient.invalidateQueries({ queryKey: summariesKey })
             break
           case 'removed':
+            void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
             queryClient.setQueryData<Match[]>(matchesKey, (list) =>
               list?.filter((m) => m.id !== event.matchId),
             )
@@ -85,6 +96,8 @@ export function RealtimeBridge() {
             void queryClient.invalidateQueries({ queryKey: summariesKey })
             break
           case 'refresh':
+            void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+            void queryClient.invalidateQueries({ queryKey: ['favorites'] })
             void queryClient.invalidateQueries({ queryKey: ['premium'] })
             void queryClient.invalidateQueries({ queryKey: ['venue-panel'] })
             void queryClient.invalidateQueries({ queryKey: ['entitlements'] })

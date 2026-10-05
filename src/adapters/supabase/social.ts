@@ -84,6 +84,18 @@ async function hydrateCandidate(db: Db, candidate: Candidate): Promise<Candidate
 export function createMatchingService(db: Db): MatchingService {
   const likeStatus = async () => statusSchema.parse(must(await db.rpc('matching_status')))
   return {
+    async likesSnapshot() {
+      const result = likesSchema
+        .extend({ snapshotId: z.uuid() })
+        .parse(must(await db.rpc('matching_likes_snapshot')))
+      return {
+        ...result,
+        profiles: await Promise.all(result.profiles.map((p) => signSocialProfile(db, p))),
+      }
+    },
+    async markLikesSeen(snapshotId) {
+      must(await db.rpc('matching_likes_seen', { p_snapshot: snapshotId }))
+    },
     async sponsoredCards(placeId) {
       return z
         .array(z.object({ id: z.uuid(), name: z.string() }))

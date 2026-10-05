@@ -2003,6 +2003,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      home_summary: { Args: { p_city: string; p_lat?: number; p_lng?: number }; Returns: Json }
+      place_detail: { Args: { p_place: string }; Returns: Json }
+      favorites_list: { Args: { p_offset?: number }; Returns: Json }
+      favorite_set: { Args: { p_place: string; p_saved: boolean }; Returns: undefined }
+      matching_likes_snapshot: { Args: Record<PropertyKey, never>; Returns: Json }
+      matching_likes_seen: { Args: { p_snapshot: string }; Returns: undefined }
       account_activity: { Args: never; Returns: undefined }
       admin_case_action: {
         Args: {

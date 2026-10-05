@@ -7,8 +7,8 @@ import { FiltersSheet } from '@/features/places/components/FiltersSheet'
 import { MockMap, type MockMapHandle } from '@/features/places/components/MockMap'
 import { PlaceCard } from '@/features/places/components/PlaceCard'
 import { PlaceDetails } from '@/features/places/components/PlaceDetails'
-import { useMapAccess, useMyPosition, usePlaces } from '@/features/places/hooks/use-places'
-import { CITIES, cityCenter, DEFAULT_CITY, isCity } from '@/features/places/model/cities'
+import { useMapAccess, usePlaces } from '@/features/places/hooks/use-places'
+import { useExploreCity } from '@/features/places/hooks/use-explore-city'
 import { applyFilters, DEFAULT_FILTERS, type PlaceFilters } from '@/features/places/model/filters'
 import { distanceMeters } from '@/features/places/model/geo'
 import type { LatLng } from '@/features/places/model/types'
@@ -36,15 +36,7 @@ export function DiscoverScreen() {
   const desktop = useMediaQuery('(min-width: 1024px)')
   const [params, setParams] = useSearchParams()
   const selectedId = params.get('place')
-  const cityParam = params.get('city')
-  const { position: me, city: consentCity } = useMyPosition()
-  const nearCity = me
-    ? CITIES.find((c) => distanceMeters(me, c.center) <= CITY_RADIUS_M)
-    : undefined
-  const city = isCity(cityParam)
-    ? cityParam
-    : (nearCity?.name ?? (isCity(consentCity) ? consentCity : DEFAULT_CITY))
-  const focus = me && nearCity?.name === city ? me : (cityCenter(city) ?? MOCK_CENTER)
+  const { city, origin: focus, position: me, selectCity } = useExploreCity()
   // Where the map is looking (after a pan); venues load around it.
   const [viewed, setViewed] = useState<{ city: string; center: LatLng } | null>(null)
   const { data: places, isPending } = usePlaces(viewed?.city === city ? viewed.center : focus)
@@ -147,12 +139,12 @@ export function DiscoverScreen() {
         {/* The map stays mounted under the list: each new map instance is a billed load. */}
         {map}
         {view === 'list' && !desktop && (
-          <div className="absolute inset-0 z-10 overflow-y-auto bg-background px-3 pt-[calc(11rem+env(safe-area-inset-top))] pb-[calc(8rem+env(safe-area-inset-bottom))]">
+          <div className="absolute inset-0 z-10 overflow-y-auto bg-background px-3 pt-[calc(11rem+var(--nl-safe-area-top))] pb-[calc(8rem+var(--nl-safe-area-bottom))]">
             {list}
           </div>
         )}
         {fallbackNotice && view === 'map' && (
-          <p className="glass pointer-events-none absolute bottom-[calc(11.5rem+env(safe-area-inset-bottom))] left-3 z-20 max-w-[15rem] rounded-theme px-3 py-2 text-xs text-muted-foreground lg:bottom-20">
+          <p className="glass pointer-events-none absolute bottom-[calc(11.5rem+var(--nl-safe-area-bottom))] left-3 z-20 max-w-[15rem] rounded-theme px-3 py-2 text-xs text-muted-foreground lg:bottom-20">
             {fallbackNotice}
           </p>
         )}
@@ -163,10 +155,10 @@ export function DiscoverScreen() {
           view={view}
           onToggleView={() => setView((v) => (v === 'map' ? 'list' : 'map'))}
           city={real ? city : null}
-          onCityChange={(next) => updateParams({ city: next, place: null })}
+          onCityChange={selectCity}
         />
         <Button
-          className="absolute bottom-[calc(7.5rem+env(safe-area-inset-bottom))] left-3 z-20 lg:bottom-6"
+          className="absolute bottom-[calc(7.5rem+var(--nl-safe-area-bottom))] left-3 z-20 lg:bottom-6"
           onClick={() => guard('create_event') && void navigate('/events/new')}
         >
           <Plus aria-hidden />
@@ -174,7 +166,7 @@ export function DiscoverScreen() {
         </Button>
       </div>
       {desktop ? (
-        <aside className="glass-strong h-full overflow-y-auto border-y-0 border-r-0 p-4 pb-28">
+        <aside className="glass-strong h-full overflow-y-auto border-y-0 border-r-0 px-safe pt-safe pb-[calc(7rem+var(--nl-safe-area-bottom))] [--nl-safe-top-gap:1rem]">
           {selected ? (
             <>
               <div className="mb-4 flex items-start justify-between gap-2">

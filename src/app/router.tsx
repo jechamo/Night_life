@@ -207,6 +207,15 @@ const DesignKitScreen = lazy(() =>
     default: module.DesignKitScreen,
   })),
 )
+const HomeScreen = lazy(() =>
+  import('@/features/home/HomeScreen').then((m) => ({ default: m.HomeScreen })),
+)
+const FavoritesScreen = lazy(() =>
+  import('@/features/home/FavoritesScreen').then((m) => ({ default: m.FavoritesScreen })),
+)
+const PlaceScreen = lazy(() =>
+  import('@/features/places/PlaceScreen').then((m) => ({ default: m.PlaceScreen })),
+)
 const DiscoverScreen = lazy(() =>
   import('@/features/discover/DiscoverScreen').then((module) => ({
     default: module.DiscoverScreen,
@@ -328,7 +337,10 @@ export const routes: RouteObject[] = [
     ),
     errorElement: <RouteErrorScreen />,
     children: [
-      { index: true, element: <Navigate to="/discover" replace /> },
+      { index: true, element: <Navigate to="/home" replace /> },
+      { path: 'home', element: screen(HomeScreen), handle: { wide: true } },
+      { path: 'favorites', element: screen(FavoritesScreen) },
+      { path: 'places/:placeId', element: screen(PlaceScreen) },
       { path: 'discover', element: screen(DiscoverScreen), handle: { fullBleed: true } },
       { path: 'tonight', element: screen(TonightScreen) },
       { path: 'tonight/swipe', element: verifiedScreen(SwipeScreen, 'view_profiles') },

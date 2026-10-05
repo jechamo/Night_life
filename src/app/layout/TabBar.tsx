@@ -1,4 +1,4 @@
-import { Map, MessageCircle, PartyPopper, User, type LucideIcon } from 'lucide-react'
+import { House, Map, MessageCircle, PartyPopper, User, type LucideIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -6,9 +6,10 @@ import { cn } from '@/shared/lib/cn'
 import { PRESS_SCALE } from '@/shared/motion/presets'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 
-type TabKey = 'discover' | 'tonight' | 'chats' | 'profile'
+type TabKey = 'home' | 'discover' | 'tonight' | 'chats' | 'profile'
 
 const TABS: readonly { key: TabKey; to: string; icon: LucideIcon }[] = [
+  { key: 'home', to: '/home', icon: House },
   { key: 'discover', to: '/discover', icon: Map },
   { key: 'tonight', to: '/tonight', icon: PartyPopper },
   { key: 'chats', to: '/chats', icon: MessageCircle },
@@ -22,7 +23,7 @@ export function TabBar() {
   return (
     <nav
       aria-label={t('tabs.label')}
-      className="px-safe pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      className="px-safe pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center pb-[calc(0.75rem+var(--nl-safe-area-bottom))]"
     >
       <ul className="glass-strong pointer-events-auto flex w-full max-w-md gap-1 rounded-full p-1.5 shadow-[0_12px_40px_rgb(0_0_0/0.5)]">
         {TABS.map(({ key, to, icon: Icon }) => (

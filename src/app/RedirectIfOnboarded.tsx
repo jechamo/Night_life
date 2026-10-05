@@ -6,7 +6,7 @@ import { GenericErrorFallback } from '@/shared/errors/ScreenErrorBoundary'
 /** Keep the phone form mounted while Auth refreshes the onboarding query. */
 export function RedirectIfOnboarded({ children }: { children: ReactNode }) {
   const { data, isPending, isError, refetch } = useOnboardingStatus()
-  if (data === 'completed' && !isError) return <Navigate to="/discover" replace />
+  if (data === 'completed' && !isError) return <Navigate to="/home" replace />
   return (
     <>
       {isPending && <div className="min-h-dvh bg-background" aria-busy="true" />}

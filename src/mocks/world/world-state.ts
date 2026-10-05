@@ -17,6 +17,8 @@ export interface WorldState {
   attendance: AttendanceState
   checkInsByPlace: Map<string, number>
   liked: Set<string>
+  likesSeen: Set<string>
+  likesSnapshots: Map<string, string[]>
   passed: string[]
   blocked: Set<string>
   likesUsed: number
@@ -42,6 +44,8 @@ export function createWorldState(): WorldState {
     attendance: { checkIn: null, going: null, lastCheckInAt: null },
     checkInsByPlace: new Map(),
     liked: new Set(),
+    likesSeen: new Set(),
+    likesSnapshots: new Map(),
     passed: [],
     blocked: new Set(),
     likesUsed: 0,
