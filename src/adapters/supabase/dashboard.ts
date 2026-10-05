@@ -65,7 +65,8 @@ export function createDashboardService(db: Db): DashboardService {
       return { places: dashboardPlaces(result.places), total: result.total }
     },
     async setFavorite(placeId, saved) {
-      must(await db.rpc('favorite_set', { p_place: placeId, p_saved: saved }))
+      const { error } = await db.rpc('favorite_set', { p_place: placeId, p_saved: saved })
+      if (error) throw error
     },
   }
 }

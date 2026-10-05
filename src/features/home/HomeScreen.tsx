@@ -102,7 +102,7 @@ function ActivityZone({ places, live, city }: { places: Place[]; live?: boolean;
   const { t } = useTranslation()
   const maximum = Math.max(1, ...places.map((p) => (live ? p.stats.people : p.stats.goingTonight)))
   return (
-    <section className="home-zone col-span-2 overflow-hidden p-4 sm:col-span-1 lg:col-span-4">
+    <section className="home-zone col-span-2 overflow-hidden p-4 sm:col-span-1 lg:col-span-6">
       <ZoneTitle
         icon={
           live ? (
@@ -195,11 +195,7 @@ function Metric({
       to={route}
       className={cn(
         'home-zone relative isolate flex min-h-48 flex-col justify-between overflow-hidden p-4 transition-opacity active:opacity-80',
-        kind === 'chats'
-          ? 'col-span-2 lg:col-span-6 lg:order-2'
-          : kind === 'matches'
-            ? 'col-span-1 lg:col-span-3 lg:order-3'
-            : 'col-span-1 lg:col-span-3 lg:order-1',
+        kind === 'chats' ? 'col-span-2 lg:col-span-6' : 'col-span-1 lg:col-span-3',
       )}
     >
       <div className="flex items-center gap-2 font-label text-xs text-muted-foreground">
@@ -316,35 +312,6 @@ export function HomeScreen() {
         ) : (
           query.data && (
             <>
-              <section
-                id="nearby"
-                className="home-zone col-span-2 p-3 sm:p-4 lg:col-span-8 lg:row-span-2"
-              >
-                <ZoneTitle
-                  icon={<MapPin className="size-5 text-primary" />}
-                  trailing={<Badge>{t('home.localSelection')}</Badge>}
-                >
-                  {t(centered ? 'home.nearCenter' : 'home.nearby')}
-                </ZoneTitle>
-                {query.data.nearby.length === 0 ? (
-                  <p className="flex min-h-60 items-center justify-center text-center text-muted-foreground">
-                    {t('places.emptyCity', { city })}
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:auto-rows-fr">
-                    {query.data.nearby.map((p, i) => (
-                      <div
-                        key={p.id}
-                        className={cn('min-w-0', i === 0 && 'col-span-2 sm:row-span-2')}
-                      >
-                        <VenueTile place={p} origin={origin} hero={i === 0} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-              <ActivityZone places={query.data.tonight} city={city} />
-              <ActivityZone places={query.data.now} city={city} live />
               {query.data.social ? (
                 <div className="col-span-2 grid grid-cols-2 gap-3 lg:col-span-12 lg:grid-cols-12 lg:gap-4">
                   <Metric kind="likes" count={query.data.social.newLikes} locked={!seeLikes} />
@@ -368,6 +335,8 @@ export function HomeScreen() {
                   <ArrowUpRight aria-hidden />
                 </Link>
               )}
+              <ActivityZone places={query.data.tonight} city={city} />
+              <ActivityZone places={query.data.now} city={city} live />
               <section className="home-zone col-span-2 p-4 lg:col-span-12">
                 <ZoneTitle
                   icon={<Bookmark className="size-5 text-secondary" />}
@@ -398,6 +367,30 @@ export function HomeScreen() {
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {query.data.favorites.map((p) => (
                       <VenueTile key={p.id} place={p} origin={origin} />
+                    ))}
+                  </div>
+                )}
+              </section>
+              <section id="nearby" className="home-zone col-span-2 p-3 sm:p-4 lg:col-span-12">
+                <ZoneTitle
+                  icon={<MapPin className="size-5 text-primary" />}
+                  trailing={<Badge>{t('home.localSelection')}</Badge>}
+                >
+                  {t(centered ? 'home.nearCenter' : 'home.nearby')}
+                </ZoneTitle>
+                {query.data.nearby.length === 0 ? (
+                  <p className="flex min-h-60 items-center justify-center text-center text-muted-foreground">
+                    {t('places.emptyCity', { city })}
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:auto-rows-fr">
+                    {query.data.nearby.map((p, i) => (
+                      <div
+                        key={p.id}
+                        className={cn('min-w-0', i === 0 && 'col-span-2 sm:row-span-2')}
+                      >
+                        <VenueTile place={p} origin={origin} hero={i === 0} />
+                      </div>
                     ))}
                   </div>
                 )}
