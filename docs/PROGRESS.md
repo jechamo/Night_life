@@ -22,7 +22,8 @@
   siete temas sin desbordamiento. Las pruebas de interfaz comprueban cero reservas
   de mapa al abrir/actualizar Inicio, favoritos y fichas, y ausencia de solicitud
   GPS sin consentimiento. No equivale a una captura de red autenticada en móvil.
-- ✅ `npm run check`: 413/413 pruebas, tipos, lint y formato. Build correcto;
+- ✅ `npm run check`: 413/413 pruebas, tipos, lint y formato. Dos pruebas adicionales
+  comprueban agrupación de ráfagas de actividad y cancelación al cambiar de sesión. Build correcto;
   `npm audit`: cero vulnerabilidades; comprobaciones HTTP de red: 29/29.
 - Pendientes físicos: Safari/PWA con notch, teclado y orientación en dispositivos
   reales; recorridos entre dispositivos, Advisors y publicación se registrarán

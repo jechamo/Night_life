@@ -7,7 +7,8 @@ La URL de producción se conserva: https://nightlife-connect-beige.vercel.app.
 
 1. Crear una rama `codex/...` desde `develop`.
 2. Cada push genera una preview en Vercel. CI `Quality` ejecuta instalación con
-   lockfile, tipos, lint, formato, pruebas y build en Node 24.
+   lockfile y sin scripts de instalación, tipos, lint, formato, pruebas y build
+   en Node 24. Las acciones oficiales se fijan por SHA.
 3. Abrir PR a `develop`, comprobar CI y preview, e integrar conservando commits.
 4. Aplicar las migraciones compatibles a Supabase y comprobar RLS y los RPC antes
    de publicar un frontend que los necesite. Preview y producción son destinos
