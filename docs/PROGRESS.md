@@ -75,6 +75,12 @@ QA, SBOM y las guías de nativa y activación de pagos.
   **348/348**, tipos, lint y formato. Vercel READY y bundle/worker nuevos verificados;
   protocolo y límites en `docs/BLOCK10_TESTS.md`. Comprobación en la sesión del
   propietario pendiente; CUA sigue sin poder iniciar.
+- ✅ Hotfix del corazón `c40bac9`: usa el total de likes recibidos del servidor,
+  compartido con la pantalla de likes, en vez del número de perfiles visibles.
+  Sin Premium muestra el total manteniendo el candado y ocultando identidades.
+  Publicado antes de probar, según petición del propietario; **350/350** después,
+  con regresiones de un like bloqueado y actualización Realtime. Vercel READY
+  y chunk publicado idéntico al compilado; evidencia en `docs/BLOCK10_TESTS.md`.
 
 ### Checklist todavía abierta
 

@@ -52,6 +52,11 @@ sin MFA, admisión del admin activo en `aal2` y denegación de un caller sin rol
 Publicación y limitación de CUA documentadas en `BLOCK10_TESTS.md`. Este cambio
 posterior no se atribuye al scan independiente ya cerrado.
 
+`c40bac9` conecta el corazón al contador agregado del servidor y conserva el
+paywall sobre perfiles. No amplía acceso a nombres, imágenes ni identidades.
+Las regresiones prueban total visible con profiles vacíos y su actualización
+Realtime; suite posterior 350/350. Tampoco se atribuye al scan cerrado.
+
 ### Límites y puertas pendientes
 
 - Informe final: un riesgo bajo de emisión OTP, con confianza media y prerrequisito

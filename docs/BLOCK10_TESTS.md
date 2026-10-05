@@ -170,6 +170,28 @@ Para repetir: `npm run check`, `npm run build`; en la cuenta admin actualizar
 la app, abrir Perfil → Admin y completar su TOTP. Una cuenta sin Admin sigue
 sin ese enlace y las acciones de servidor requieren rol activo y `aal2`.
 
+## Hotfix del contador del corazón — 2026-10-04
+
+`TonightScreen` usaba la longitud de los perfiles visibles. El RPC ya devuelve
+`count` aunque Premium oculte `profiles`, por lo que podía verse 0 en el corazón
+y una tarjeta con candado en su destino. Ahora usa `useLikesYouCount`, compartido
+con esa pantalla. No se cambian entitlements, exposición de perfiles ni servidor.
+
+- Implementación `c40bac9e4d6333bf423e3a87935c643d07dc767a`, enviada a origin.
+  Build y publicación antes de tests, por petición del propietario. Después:
+  **350/350**, tipos, lint y formato correctos. Las dos regresiones comprueban
+  count=1 con profiles vacíos, destino bloqueado y actualización por Realtime.
+- Vercel MCP confirma `dpl_Akx4LAPp6FBbCXcrctv39qD8u4Uj` READY, producción,
+  SHA y alias habituales. HTTP a las 20:53 UTC sirve `/assets/index-CCGg0MT0.js`,
+  SHA256 `876b7635eae364cb7e0d5cb1143bd38593f87b6ce96c510d240bbc4906a17887`.
+  `/assets/TonightScreen-WBgBib_v.js` coincide byte por byte con el build local:
+  SHA256 `85e2d644ec62ff50b928c0e449062e045969bb006c020f477c5bd28dd48f3d77`.
+  El worker referencia ambos archivos actuales.
+- ❌ No se acredita la actualización visual de los dispositivos del propietario.
+  Para confirmar: actualizar app, abrir Esta Noche en la cuenta receptora sin
+  Premium y comprobar que el corazón y la pantalla de likes muestran el mismo
+  total, con las tarjetas todavía bloqueadas.
+
 ## Cómo repetir
 
 1. `npm ci`, `npm run check`, `npm run build`, `npm audit`, `npm run test:network:10`.
