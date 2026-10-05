@@ -195,9 +195,7 @@ function Metric({
       to={route}
       className={cn(
         'home-zone relative isolate flex min-h-48 flex-col justify-between overflow-hidden p-4 transition-opacity active:opacity-80',
-        kind === 'chats'
-          ? 'col-span-2 lg:col-span-6'
-          : 'col-span-1 lg:col-span-3',
+        kind === 'chats' ? 'col-span-2 lg:col-span-6' : 'col-span-1 lg:col-span-3',
       )}
     >
       <div className="flex items-center gap-2 font-label text-xs text-muted-foreground">

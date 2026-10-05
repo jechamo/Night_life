@@ -60,11 +60,14 @@ describe('map-free server adapter', () => {
       ['favorite_set', { p_place: 'v1', p_saved: false }],
     ])
   })
-  it.each([true, false])('accepts the empty response of a successful favorite write (%s)', async (saved) => {
-    const { db, rpc } = backend(null)
-    await expect(createDashboardService(db).setFavorite('v1', saved)).resolves.toBeUndefined()
-    expect(rpc).toHaveBeenCalledWith('favorite_set', { p_place: 'v1', p_saved: saved })
-  })
+  it.each([true, false])(
+    'accepts the empty response of a successful favorite write (%s)',
+    async (saved) => {
+      const { db, rpc } = backend(null)
+      await expect(createDashboardService(db).setFavorite('v1', saved)).resolves.toBeUndefined()
+      expect(rpc).toHaveBeenCalledWith('favorite_set', { p_place: 'v1', p_saved: saved })
+    },
+  )
   it('still rejects failed favorite writes', async () => {
     const error = { code: '54000', message: 'rate limited' }
     const { db } = backend(null, error)
