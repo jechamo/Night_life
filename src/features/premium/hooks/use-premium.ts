@@ -5,7 +5,7 @@ import { usePlatform } from '@/platform'
 import { entitlementsQueryKey } from '@/shared/entitlements/use-entitlement'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { ProductCode } from '../model/catalog'
-import type { PremiumState } from '../services/premium-service'
+import type { PremiumState, VenueProductCode } from '../services/premium-service'
 
 export const premiumKey = ['premium', 'state'] as const
 
@@ -35,13 +35,13 @@ export function usePurchaseStatus(id: string | null) {
   })
 }
 
-export function useBillingPortal() {
+export function useBillingPortal(venueId?: string) {
   const { premium, session } = useServices()
   const { browser } = usePlatform()
   return useSessionMutation({
     mutationFn: async () => {
       const check = beginSessionWork(session)
-      const url = await premium.portal()
+      const url = await premium.portal(venueId)
       check()
       return browser.openExternalFlow(url)
     },
@@ -55,6 +55,7 @@ function useRefresh() {
     if (state) queryClient.setQueryData(premiumKey, state)
     await queryClient.invalidateQueries({ queryKey: entitlementsQueryKey })
     await queryClient.invalidateQueries({ queryKey: ['matching', 'likes-used'] })
+    await queryClient.invalidateQueries({ queryKey: ['venue-panel'] })
   }
 }
 
@@ -68,6 +69,26 @@ export function useStartPurchase() {
       if (!result.ok) return
       if (result.value.type === 'internal') await navigate(result.value.path)
       else await browser.openExternalFlow(result.value.url)
+    },
+  })
+}
+
+export function useStartVenuePurchase() {
+  const { premium } = useServices()
+  const { browser } = usePlatform()
+  return useSessionMutation({
+    mutationFn: ({
+      code,
+      venueId,
+      from,
+    }: {
+      code: VenueProductCode
+      venueId: string
+      from?: string
+    }) => premium.startVenuePurchase!(code, venueId, from),
+    onSuccess: async (result) => {
+      if (result.ok && result.value.type === 'external')
+        await browser.openExternalFlow(result.value.url)
     },
   })
 }

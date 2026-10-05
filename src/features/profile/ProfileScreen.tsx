@@ -31,6 +31,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { MyProfileCard } from './components/MyProfileCard'
 import { PreferencesSheet } from './components/PreferencesSheet'
+import { IncognitoControl } from '@/features/premium/components/IncognitoControl'
 
 function ActionRow({
   icon: Icon,
@@ -77,6 +78,7 @@ export function ProfileScreen() {
   return (
     <>
       <ScreenHeader title={t('profile.title')} />
+      <IncognitoControl />
       <MyProfileCard />
       <Section title={t('profileMenu.me')}>
         <GlassCard className="divide-y divide-border p-0">

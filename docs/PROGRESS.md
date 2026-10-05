@@ -20,6 +20,40 @@ Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendien
 
 ---
 
+## Cierre funcional adicional de los bloques 8/9 (2026-10-05)
+
+El propietario pidió completar las ventajas anunciadas, subir/desplegar y enviar
+un correo a su propia cuenta. Alcance en `BLOCK8_9_COMPLETION_PLAN.md`, evidencia
+en `BLOCK8_9_COMPLETION_TESTS.md`. No cierra la QA física pendiente del bloque 10.
+
+- Chispa con botón, consumo atómico y aviso anónimo persistente; Foco de 30 min
+  en local con check-in o ciudad; Prioridad VIP e Incógnito en consultas/fotos.
+- Cinco temas base gratuitos y Gold/Sapphire con Pase, fallback al perder ventaja.
+  Mensaje previo al match habilitado con sus permisos, saldo y semáforo existentes.
+- Tarjetas patrocinadas de locales cercanos y abiertos, etiquetadas y máximo 1/10;
+  el Pase las elimina. TEST aislado del público y sin red publicitaria externa.
+- Packs 1/5/15 y Pase mensual/trimestral/anual. Ocho productos nuevos Stripe TEST,
+  incluidos patrocinios de 30 días Destacado/Plus/Top y Pro mensual por local.
+  Precios provisionales, sin cobros reales ni ampliación de planes.
+- Patrocinios activados por pago confirmado con reservas/cupos; tres niveles con
+  comportamiento distinto. Pro independiente del Pase personal; titular del pago
+  gestiona Portal/cancelación. Básicas gratis y Pro con agregados/umbrales.
+- Seis migraciones aplicadas por MCP; condiciones de patrocinio ES/EN versión 1.1
+  preservando 1.0. Cuatro Edge de pagos desplegadas ACTIVE con autenticación propia.
+- ✅ 393/393 frontend, tipos/lint/formato, build; Deno 33/33 y cinco entrypoints.
+  SQL rollback: nuevas 45/45, bloque 9 72/72, matching 62/62, RLS 33/33.
+- ✅ Ocho productos abren Checkout alojado de Stripe TEST; 12 comprobaciones HTTP
+  de compra/idempotencia/no concesión anticipada y 29 de red/acceso. No se pagaron
+  estos ocho Checkout; la concesión/caducidad/reembolso nuevos se probaron por SQL.
+- ✅ npm audit sin vulnerabilidades; cero tablas sin RLS, definers públicos o
+  SELECT privados de cliente. Advisors: 16 INFO privados cerrados, WARN previo de
+  contraseñas filtradas y 16 INFO de índices sin uso, documentados sin ocultarlos.
+- ✅ Cuentas/locales temporales retirados; ocho pedidos TEST expirados y
+  desvinculados. Sesiones Stripe sin pago caducan automáticamente en 24 h.
+
+La publicación y su SHA se registran en el informe después de verificar Vercel.
+Este cambio posterior no se atribuye al scan independiente sellado del bloque 10.
+
 ## Bloque 10 — Auditoría OWASP, pulido, PWA y QA (2026-10-04)
 
 Inicio autorizado por el propietario con «comienza el bloque 10». Plan en

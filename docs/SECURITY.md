@@ -2,6 +2,38 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Cierre funcional adicional 8/9 — 2026-10-05
+
+Revisión del cambio y regresiones propias, posterior al scan independiente del
+bloque 10; no se atribuye cobertura nueva a aquel informe ya sellado.
+
+- Nuevas tablas sociales `private` con RLS y grants cerrados; envoltorios públicos
+  invoker, helpers con `search_path=''`. Cero tablas sin RLS, definers públicos ni
+  SELECT privados para cliente, comprobados tras aplicar las seis migraciones.
+- Chispa serializa perfil/pareja/saldo y consumo/like/aviso en una transacción.
+  No saldo, incompatibilidad o cuota agotada no consumen. Reintentar la pareja
+  no cobra otra Chispa. El aviso solo contiene un total, sin identidad del emisor.
+- Foco verifica edad, semáforo, ciudad y check-in para el local; no elude filtros.
+  Prioridad y permiso de Incógnito se comprueban en servidor, incluida la ficha
+  directa/fotos. TEST nunca se muestra ni gasta cuando el modo es LIVE.
+- Compra B2B requiere gestión del local, bloqueos por usuario/local y cupos diarios
+  por ciudad. Reservas pendientes 24 h, precio/moneda/modo/intervalo/count comprobados
+  en Stripe. Solo fulfillment pagado activa Pro/patrocinio; reembolso revoca.
+  Portal/cancelación exige titular del pago y conserva ese acceso tras perder el
+  rol de gestor. Ningún Pro concede ventajas personales.
+- Pro devuelve agregados bajo autorización: edad/semáforo con mínimo cinco,
+  comparación de zona con al menos cinco personas y tres locales; sin identidades.
+  Tarjetas sin trackers y solo cercanas/abiertas. Top Flash exige consentimiento
+  comercial y mayoría verificada; promociones de alcohol siguen apagadas.
+- Evidencia: 393 frontend, 33 Deno; SQL 45 nuevas + 72 bloque 9 + 62 matching + 33 RLS,
+  todas correctas y con rollback. 12 checks reales de Checkout TEST sin efectuar pago,
+  29 HTTP/CORS y audit npm sin vulnerabilidades. Ver [informe](./BLOCK8_9_COMPLETION_TESTS.md).
+- Advisors actuales: 16 INFO de [RLS privado cerrado](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy),
+  WARN anterior de [contraseñas filtradas](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)
+  y 16 INFO de [índices sin uso](https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index).
+  No se añaden políticas permisivas ni se amplía un plan para ocultarlos. Las puertas
+  externas/QA/jurídicas/live del bloque 10/12 siguen vigentes.
+
 ## Bloque 10 — auditoría y correcciones, 2026-10-04
 
 Scan Codex Security `56b027a0-7e56-4eb3-97dc-5f5714b5a153`: revisión independiente

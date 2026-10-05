@@ -5,7 +5,7 @@ import { THEME_SIGNATURES } from '@/shared/images/catalog'
 import { cn } from '@/shared/lib/cn'
 import { PRESS_SCALE, stamp } from '@/shared/motion/presets'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
-import type { ThemeId } from '@/shared/theme/themes'
+import { THEMES, type ThemeId } from '@/shared/theme/themes'
 import { LivePulse } from '@/shared/ui/live-pulse'
 
 const SWATCHES = [
@@ -90,7 +90,7 @@ export function ThemePreviewCard({
         </span>
         <span className="glass font-label inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs text-live">
           <LivePulse className="size-2" />
-          {t('themes.free')}
+          {t(THEMES[themeId].premium ? 'themes.pass' : 'themes.free')}
         </span>
       </span>
     </motion.button>

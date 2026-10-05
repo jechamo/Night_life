@@ -290,13 +290,14 @@ describe('Privacy & data, moderation, SOS', () => {
 })
 
 describe('Venue panel', () => {
-  it('shows aggregated stats and requests a sponsorship', async () => {
+  it('shows free aggregated totals and requests a sponsorship while self-service is off', async () => {
     const user = userEvent.setup()
     renderApp('/venue', quiet)
     await user.click(await screen.findByRole('link', { name: /Bar Cobalto/ }))
+    expect(await screen.findByText('Check-ins esta semana')).toBeInTheDocument()
     expect(
-      await screen.findByRole('img', { name: 'Gráfico de barras de afluencia por hora' }),
-    ).toBeInTheDocument()
+      screen.queryByRole('img', { name: 'Gráfico de barras de afluencia por hora' }),
+    ).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /^Destacado Plus/ }))
     await user.click(screen.getByRole('button', { name: 'Solicitar patrocinio' }))
     expect(await screen.findByText('Solicitado')).toBeInTheDocument()

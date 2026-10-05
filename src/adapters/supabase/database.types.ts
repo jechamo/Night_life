@@ -1112,6 +1112,7 @@ export type Database = {
           active: boolean
           apple_product_id: string | null
           billing_interval: string | null
+          billing_interval_count: number
           code: string
           created_at: string
           credits: Json
@@ -1127,6 +1128,7 @@ export type Database = {
           active?: boolean
           apple_product_id?: string | null
           billing_interval?: string | null
+          billing_interval_count?: number
           code: string
           created_at?: string
           credits?: Json
@@ -1142,6 +1144,7 @@ export type Database = {
           active?: boolean
           apple_product_id?: string | null
           billing_interval?: string | null
+          billing_interval_count?: number
           code?: string
           created_at?: string
           credits?: Json
@@ -1305,8 +1308,10 @@ export type Database = {
           provider_subscription_id: string | null
           refunded_at: string | null
           simulated: boolean
+          sponsorship_from: string | null
           status: string
           user_id: string | null
+          venue_id: string | null
         }
         Insert: {
           amount_cents: number
@@ -1321,8 +1326,10 @@ export type Database = {
           provider_subscription_id?: string | null
           refunded_at?: string | null
           simulated?: boolean
+          sponsorship_from?: string | null
           status?: string
           user_id?: string | null
+          venue_id?: string | null
         }
         Update: {
           amount_cents?: number
@@ -1337,8 +1344,10 @@ export type Database = {
           provider_subscription_id?: string | null
           refunded_at?: string | null
           simulated?: boolean
+          sponsorship_from?: string | null
           status?: string
           user_id?: string | null
+          venue_id?: string | null
         }
         Relationships: [
           {
@@ -1347,6 +1356,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'plans'
             referencedColumns: ['code']
+          },
+          {
+            foreignKeyName: 'purchase_orders_venue_id_fkey'
+            columns: ['venue_id']
+            isOneToOne: false
+            referencedRelation: 'venues'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1504,6 +1520,8 @@ export type Database = {
           ends_on: string
           id: string
           invoice_ref: string | null
+          mode: string
+          purchase_order_id: string | null
           requested_by: string | null
           starts_on: string
           status: string
@@ -1515,6 +1533,8 @@ export type Database = {
           ends_on: string
           id?: string
           invoice_ref?: string | null
+          mode?: string
+          purchase_order_id?: string | null
           requested_by?: string | null
           starts_on: string
           status?: string
@@ -1526,6 +1546,8 @@ export type Database = {
           ends_on?: string
           id?: string
           invoice_ref?: string | null
+          mode?: string
+          purchase_order_id?: string | null
           requested_by?: string | null
           starts_on?: string
           status?: string
@@ -1533,6 +1555,13 @@ export type Database = {
           venue_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: 'sponsorships_purchase_order_id_fkey'
+            columns: ['purchase_order_id']
+            isOneToOne: true
+            referencedRelation: 'purchase_orders'
+            referencedColumns: ['id']
+          },
           {
             foreignKeyName: 'sponsorships_venue_id_fkey'
             columns: ['venue_id']
@@ -1557,6 +1586,7 @@ export type Database = {
           status: string
           updated_at: string
           user_id: string
+          venue_id: string | null
           withdrawal_requested_at: string | null
         }
         Insert: {
@@ -1573,6 +1603,7 @@ export type Database = {
           status: string
           updated_at?: string
           user_id: string
+          venue_id?: string | null
           withdrawal_requested_at?: string | null
         }
         Update: {
@@ -1589,6 +1620,7 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
+          venue_id?: string | null
           withdrawal_requested_at?: string | null
         }
         Relationships: [
@@ -1598,6 +1630,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'plans'
             referencedColumns: ['code']
+          },
+          {
+            foreignKeyName: 'subscriptions_venue_id_fkey'
+            columns: ['venue_id']
+            isOneToOne: false
+            referencedRelation: 'venues'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2088,6 +2127,10 @@ export type Database = {
         Returns: undefined
       }
       billing_start_order: { Args: { p_code: string }; Returns: Json }
+      billing_start_venue_order: {
+        Args: { p_code: string; p_from?: string; p_venue: string }
+        Returns: Json
+      }
       cancel_going: { Args: never; Returns: Json }
       chat_messages: {
         Args: { p_before?: string; p_before_id?: string; p_match: string }
@@ -2177,6 +2220,7 @@ export type Database = {
         Args: { p_comment: string; p_person: string; p_reason: string }
         Returns: undefined
       }
+      matching_sponsored_cards: { Args: { p_place?: string }; Returns: Json }
       matching_status: { Args: never; Returns: Json }
       matching_undo: { Args: never; Returns: Json }
       matching_unmatch: { Args: { p_match: string }; Returns: undefined }
@@ -2189,12 +2233,17 @@ export type Database = {
       my_attendance: { Args: never; Returns: Json }
       my_entitlements: { Args: never; Returns: Json }
       my_vibe: { Args: { p_place_id: string }; Returns: string }
+      premium_incognito: { Args: { p_on: boolean }; Returns: Json }
       premium_notify: { Args: { p_on: boolean }; Returns: Json }
       premium_paid_dm: {
         Args: { p_person: string; p_text: string }
         Returns: Json
       }
       premium_redeem: { Args: { p_code: string }; Returns: Json }
+      premium_social_state: { Args: never; Returns: Json }
+      premium_spark: { Args: { p_person: string }; Returns: Json }
+      premium_sparks_seen: { Args: never; Returns: Json }
+      premium_spotlight: { Args: { p_place?: string }; Returns: Json }
       premium_state: { Args: never; Returns: Json }
       prepare_erasure: { Args: { p_user: string }; Returns: undefined }
       provider_erasure_result: {
@@ -2216,6 +2265,7 @@ export type Database = {
       }
       request_data_right: { Args: { p_kind: string }; Returns: string }
       request_verification_review: { Args: { p_level: string }; Returns: Json }
+      reserve_document_email: { Args: { p_user: string }; Returns: boolean }
       reserve_map_load: { Args: never; Returns: Json }
       save_consents: {
         Args: { p_choices: Json; p_city?: string }
@@ -2280,6 +2330,7 @@ export type Database = {
         Args: { p: Json; p_venue: string }
         Returns: undefined
       }
+      venue_billing_state: { Args: { p_venue: string }; Returns: Json }
       venue_claim: {
         Args: { p_evidence: string; p_venue: string }
         Returns: Json
@@ -2298,6 +2349,7 @@ export type Database = {
       verification_snapshot: { Args: never; Returns: Json }
       visible_flash_alerts: { Args: { p_venue: string }; Returns: Json }
       visible_sponsors: { Args: never; Returns: Json }
+      visible_sponsorships: { Args: never; Returns: Json }
       vote_vibe: { Args: { p_place_id: string; p_vibe: string }; Returns: Json }
       who_is_there: { Args: { p_place_id: string }; Returns: Json }
     }

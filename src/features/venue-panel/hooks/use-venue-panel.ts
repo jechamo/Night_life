@@ -8,6 +8,14 @@ import type {
 } from '../services/venue-panel-service'
 
 const venuesKey = ['venue-panel', 'venues'] as const
+export function useVenueBilling(placeId: string) {
+  const { venuePanel } = useServices()
+  return useQuery({
+    queryKey: ['venue-panel', 'billing', placeId],
+    queryFn: () => venuePanel.billingState!(placeId),
+    enabled: !!venuePanel.billingState,
+  })
+}
 
 export function useCreateFlashAlert(placeId: string) {
   const { venuePanel } = useServices()

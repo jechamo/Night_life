@@ -47,6 +47,7 @@ export function rankCandidates(
     .map((c, index) => ({ c, index }))
     .sort(
       (a, b) =>
+        (a.c.visibilityPriority ?? 2) - (b.c.visibilityPriority ?? 2) ||
         priorityGroup(a.c) - priorityGroup(b.c) ||
         Number(b.c.profile.photoVerified) - Number(a.c.profile.photoVerified) ||
         (a.c.context.distanceMeters ?? Infinity) - (b.c.context.distanceMeters ?? Infinity) ||

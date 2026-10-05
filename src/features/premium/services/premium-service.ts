@@ -1,5 +1,21 @@
 import type { Result } from '@/shared/lib/result'
 import type { CreditKind, ProductCode, Subscription } from '../model/catalog'
+import type { Match } from '@/features/matching/services/matching-service'
+
+export interface PremiumSocialState {
+  incognito: boolean
+  spotlightUntil: string | null
+  sparksUnread: number
+}
+export type SocialPurchaseError =
+  | 'no_credits'
+  | 'limit_reached'
+  | 'already_active'
+  | 'wrong_place'
+  | 'unavailable'
+  | 'already_matched'
+export type VenueProductCode =
+  'sponsor_featured' | 'sponsor_featured_plus' | 'sponsor_top' | 'venue_pro_monthly'
 
 export interface Invoice {
   orderId?: string | null
@@ -33,7 +49,21 @@ export type PaidDmError = 'disabled' | 'no_credits' | 'red_light'
 export interface PremiumService {
   getState(): Promise<PremiumState>
   purchaseStatus(id: string): Promise<'pending' | 'paid' | 'refunded' | 'expired'>
-  portal(): Promise<string>
+  portal(venueId?: string): Promise<string>
+  getSocialState?(): Promise<PremiumSocialState>
+  setIncognito?(on: boolean): Promise<PremiumSocialState>
+  markSparksSeen?(): Promise<PremiumSocialState>
+  sendSpark?(
+    personId: string,
+  ): Promise<Result<{ usedToday: number; match: Match | null }, SocialPurchaseError>>
+  activateSpotlight?(
+    placeId: string | null,
+  ): Promise<Result<PremiumSocialState, SocialPurchaseError>>
+  startVenuePurchase?(
+    code: VenueProductCode,
+    venueId: string,
+    from?: string,
+  ): Promise<Result<PurchaseRedirect, PurchaseError>>
   startPurchase(code: ProductCode): Promise<Result<PurchaseRedirect, PurchaseError>>
   /** Explicit persisted simulator; separate from Stripe test-card checkout. */
   completeTestPurchase(code: ProductCode): Promise<PremiumState>

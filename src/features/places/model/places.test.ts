@@ -69,6 +69,20 @@ describe('geo', () => {
 })
 
 describe('sponsored placement (PRD 6.5)', () => {
+  it('Featured keeps its natural list position while Top leads Plus', () => {
+    const results = [
+      place('ordinary'),
+      place('featured', { sponsored: true, sponsorshipTier: 'featured' }),
+      place('plus', { sponsored: true, sponsorshipTier: 'featured_plus' }),
+      place('top', { sponsored: true, sponsorshipTier: 'top' }),
+    ]
+    expect(placeSponsored(results).map((p) => p.id)).toEqual([
+      'top',
+      'plus',
+      'ordinary',
+      'featured',
+    ])
+  })
   it('max 2 on top, then 1 in every 5, extra sponsored dropped', () => {
     const list = [
       ...['s1', 's2', 's3', 's4', 's5'].map((id) => place(id, { sponsored: true })),

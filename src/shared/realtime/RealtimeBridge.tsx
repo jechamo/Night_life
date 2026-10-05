@@ -85,6 +85,9 @@ export function RealtimeBridge() {
             void queryClient.invalidateQueries({ queryKey: summariesKey })
             break
           case 'refresh':
+            void queryClient.invalidateQueries({ queryKey: ['premium'] })
+            void queryClient.invalidateQueries({ queryKey: ['venue-panel'] })
+            void queryClient.invalidateQueries({ queryKey: ['entitlements'] })
             void queryClient.invalidateQueries({ queryKey: ['matching'] })
             void queryClient.invalidateQueries({ queryKey: ['chat'] })
             break

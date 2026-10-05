@@ -192,8 +192,13 @@ export function createPlacesService(db: Db): PlacesService {
   }): Promise<Place[]> => {
     const venues = await db.rpc('search_places', { ...args, p_limit: 200 })
     if (venues.error) fail(venues.error)
-    const sponsors = must(await db.rpc('visible_sponsors'))
-    const sponsored = new Set(z.array(z.string()).parse(sponsors))
+    const sponsors = must(await db.rpc('visible_sponsorships'))
+    const sponsored = new Map(
+      z
+        .array(z.object({ id: z.string(), tier: z.enum(['featured', 'featured_plus', 'top']) }))
+        .parse(sponsors)
+        .map((s) => [s.id, s.tier]),
+    )
     const venueRows = rows(venues.data)
     const ids = venueRows.map((r) => asText(r.id)).filter(Boolean)
     const descriptions = ids.length
@@ -202,7 +207,15 @@ export function createPlacesService(db: Db): PlacesService {
     const byId = new Map((descriptions.data ?? []).map((d) => [d.id, d.description]))
     return venueRows.flatMap((row) => {
       const place = venueToPlace(row, byId.get(asText(row.id)) ?? '')
-      return place ? [{ ...place, sponsored: sponsored.has(place.id) }] : []
+      return place
+        ? [
+            {
+              ...place,
+              sponsored: sponsored.has(place.id),
+              sponsorshipTier: sponsored.get(place.id),
+            },
+          ]
+        : []
     })
   }
 

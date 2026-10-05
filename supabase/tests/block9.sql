@@ -16,7 +16,7 @@ insert into venues(id,name,type,address,city,location,is_test) values
 update app_settings set value='test' where key='payments_mode';
 update app_settings set value='testers' where key='payments_audience';
 update app_settings set value='on' where key in('test_tools_enabled','premium_enabled');
-update app_settings set value='off' where key='flash_alcohol_allowed';
+update app_settings set value='off' where key in('flash_alcohol_allowed','paid_dm_enabled');
 create temp table _b9_results(test text primary key,ok bool not null);
 create temp table _b9_ctx(key text primary key,value jsonb);
 grant all on _b9_results,_b9_ctx to authenticated,anon;
@@ -92,7 +92,7 @@ insert into _b9_results select 'promo redemption atomic',public.premium_redeem((
 insert into _b9_results select 'promo duplicate prevented',public.premium_redeem((select value#>>'{}' from _b9_ctx where key='promo'))->>'error'='used';
 insert into _b9_results select 'manager edit persisted',public.venue_edit('00000000-0000-4000-8000-0000000a9901','{"description":"Test description","hours":"22:00-06:00","price":2}')->>'description'='Test description';
 insert into _b9_results select 'small venue stats threshold',(public.venue_stats('00000000-0000-4000-8000-0000000a9901')->>'checkInsWeek')::int=0;
-select public.venue_sponsorship('00000000-0000-4000-8000-0000000a9901','featured',current_date,current_date+10);
+select public.venue_sponsorship('00000000-0000-4000-8000-0000000a9901','top',current_date,current_date+10);
 select set_config('request.jwt.claims','{"sub":"00000000-0000-4000-8000-00000000a908","role":"authenticated","aal":"aal2"}',true);
 insert into _b9_results select 'activation requires manual invoice',pg_temp.denied(format('select public.admin_case_action(%L,%L,%L,%L)','sponsorships',(select id from sponsorships where venue_id='00000000-0000-4000-8000-0000000a9901'),'activate',''));
 select public.admin_case_action('sponsorships',(select id from sponsorships where venue_id='00000000-0000-4000-8000-0000000a9901'),'activate','INV-B9-TEST');

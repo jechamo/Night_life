@@ -13,6 +13,8 @@ interface Order {
   priceId: string
   amount: number
   sessionId: string | null
+  interval: 'month' | 'year' | null
+  intervalCount: number
 }
 Deno.serve(async (req) => {
   const early = preflight(req)
@@ -21,9 +23,29 @@ Deno.serve(async (req) => {
   const auth = await requireUser(req)
   if (!auth) return json(req, { error: 'unauthorized' }, 401)
   try {
-    const input = (await boundedJson(req, 2048)) as { code?: unknown }
+    const input = (await boundedJson(req, 2048)) as {
+      code?: unknown
+      venueId?: unknown
+      from?: unknown
+    }
     if (typeof input.code !== 'string') return json(req, { error: 'invalid_plan' }, 400)
-    const order = await rpc<Order>(auth.db, 'billing_start_order', { p_code: input.code })
+    if (
+      input.venueId !== undefined &&
+      (typeof input.venueId !== 'string' || !/^[\da-f-]{36}$/i.test(input.venueId))
+    )
+      return json(req, { error: 'invalid_venue' }, 400)
+    if (
+      input.from !== undefined &&
+      (typeof input.from !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(input.from))
+    )
+      return json(req, { error: 'invalid_dates' }, 400)
+    const order = input.venueId
+      ? await rpc<Order>(auth.db, 'billing_start_venue_order', {
+          p_code: input.code,
+          p_venue: input.venueId,
+          p_from: input.from ?? null,
+        })
+      : await rpc<Order>(auth.db, 'billing_start_order', { p_code: input.code })
     const stripe = stripeClient(order.mode)
     const service = serviceClient()
     let customer = await rpc<string | null>(service, 'billing_customer', {
@@ -47,7 +69,11 @@ Deno.serve(async (req) => {
       price.livemode !== (order.mode === 'live') ||
       !price.active ||
       price.unit_amount !== order.amount ||
-      price.currency !== 'eur'
+      price.currency !== 'eur' ||
+      (order.kind === 'subscription'
+        ? price.recurring?.interval !== order.interval ||
+          price.recurring?.interval_count !== order.intervalCount
+        : price.recurring !== null)
     )
       throw new Error('price_mismatch')
     const old = order.sessionId ? await stripe.checkout.sessions.retrieve(order.sessionId) : null
@@ -68,8 +94,8 @@ Deno.serve(async (req) => {
         client_reference_id: order.id,
         expires_at: Math.floor(Date.parse(order.createdAt) / 1000) + 86400,
         line_items: [{ price: order.priceId, quantity: 1 }],
-        success_url: `${APP_URL}/premium/return?status=success&order=${order.id}`,
-        cancel_url: `${APP_URL}/premium/return?status=cancelled`,
+        success_url: `${APP_URL}/premium/return?status=success&order=${order.id}${input.venueId ? `&venue=${input.venueId}` : ''}`,
+        cancel_url: `${APP_URL}/premium/return?status=cancelled${input.venueId ? `&venue=${input.venueId}` : ''}`,
         metadata: { app: 'nightlife_connect', order_id: order.id },
         integration_identifier: `nightlife_web_${suffix}`,
         ...(order.kind === 'subscription'

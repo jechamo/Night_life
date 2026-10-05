@@ -38,7 +38,11 @@ export function CheckoutScreen() {
             <dt className="text-muted-foreground">{t('premium.checkout.vat')}</dt>
             <dd>{money(price.vatCents)}</dd>
             <dt className="font-semibold">
-              {subscription ? t('premium.checkout.totalMonthly') : t('premium.checkout.total')}
+              {subscription
+                ? t('premium.checkout.totalPeriod', {
+                    interval: t(`premium.intervals.${product.interval ?? 'month'}`),
+                  })
+                : t('premium.checkout.total')}
             </dt>
             <dd className="font-semibold text-primary">{money(price.totalCents)}</dd>
           </dl>
@@ -46,7 +50,13 @@ export function CheckoutScreen() {
         <ul className="space-y-2 text-sm">
           {subscription ? (
             <>
-              <li>• {t('premium.checkout.renewal', { price: money(price.totalCents) })}</li>
+              <li>
+                •{' '}
+                {t('premium.checkout.renewalPeriod', {
+                  price: money(price.totalCents),
+                  interval: t(`premium.intervals.${product.interval ?? 'month'}`),
+                })}
+              </li>
               <li>• {t('premium.checkout.cancel')}</li>
             </>
           ) : (

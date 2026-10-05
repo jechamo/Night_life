@@ -1,4 +1,4 @@
-import { CalendarPlus, Megaphone, Sparkles } from 'lucide-react'
+import { CalendarPlus, Megaphone } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router'
@@ -18,6 +18,11 @@ import {
 } from '../hooks/use-venue-panel'
 import type { ManagedVenue, SponsorshipTier } from '../services/venue-panel-service'
 import { FlashAlertForm } from '../components/FlashAlerts'
+import { ProSubscriptionCard } from '../components/ProSubscriptionCard'
+import { useStartVenuePurchase } from '@/features/premium/hooks/use-premium'
+import { formatPrice, VENUE_PRICES } from '@/features/premium/model/catalog'
+import { usePaywallState } from '@/shared/flags/use-paywall-state'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 
 const TIERS: readonly SponsorshipTier[] = ['featured', 'featured_plus', 'top']
 const PRICES = ['1', '2', '3', '4'] as const
@@ -36,41 +41,47 @@ function StatsCard({ placeId }: { placeId: string }) {
   const max = Math.max(...stats.byHour.map((h) => h.people), 1)
   return (
     <GlassCard className="space-y-4">
-      <figure>
-        <figcaption className="mb-2 text-sm text-muted-foreground">
-          {t('venuePanel.stats.byHour')}
-        </figcaption>
-        <div
-          className="flex h-32 items-end gap-1"
-          role="img"
-          aria-label={t('venuePanel.stats.chartLabel')}
-        >
-          {stats.byHour.map((h) => (
-            <div key={h.hour} className="flex h-full flex-1 flex-col items-center gap-1">
-              <div className="flex w-full flex-1 items-end">
-                <div
-                  className="w-full rounded-t-md bg-primary"
-                  style={{ height: `${Math.max(4, (h.people / max) * 100)}%` }}
-                />
+      {stats.pro && (
+        <figure>
+          <figcaption className="mb-2 text-sm text-muted-foreground">
+            {t('venuePanel.stats.byHour')}
+          </figcaption>
+          <div
+            className="flex h-32 items-end gap-1"
+            role="img"
+            aria-label={t('venuePanel.stats.chartLabel')}
+          >
+            {stats.byHour.map((h) => (
+              <div key={h.hour} className="flex h-full flex-1 flex-col items-center gap-1">
+                <div className="flex w-full flex-1 items-end">
+                  <div
+                    className="w-full rounded-t-md bg-primary"
+                    style={{ height: `${Math.max(4, (h.people / max) * 100)}%` }}
+                  />
+                </div>
+                <span className="font-label text-[10px] text-muted-foreground">
+                  {String(h.hour).padStart(2, '0')}
+                </span>
               </div>
-              <span className="font-label text-[10px] text-muted-foreground">
-                {String(h.hour).padStart(2, '0')}
-              </span>
-            </div>
-          ))}
-        </div>
-      </figure>
+            ))}
+          </div>
+        </figure>
+      )}
       <dl className="grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <dt className="text-muted-foreground">{t('venuePanel.stats.averageAge')}</dt>
-          <dd className="font-display text-xl">{stats.averageAge ?? '—'}</dd>
-        </div>
-        <div>
-          <dt className="text-muted-foreground">{t('venuePanel.stats.green')}</dt>
-          <dd className="font-display text-xl">
-            {stats.greenPercent === null ? '—' : `${stats.greenPercent} %`}
-          </dd>
-        </div>
+        {stats.pro && (
+          <div>
+            <dt className="text-muted-foreground">{t('venuePanel.stats.averageAge')}</dt>
+            <dd className="font-display text-xl">{stats.averageAge ?? '—'}</dd>
+          </div>
+        )}
+        {stats.pro && (
+          <div>
+            <dt className="text-muted-foreground">{t('venuePanel.stats.green')}</dt>
+            <dd className="font-display text-xl">
+              {stats.greenPercent === null ? '—' : `${stats.greenPercent} %`}
+            </dd>
+          </div>
+        )}
         <div>
           <dt className="text-muted-foreground">{t('venuePanel.stats.checkInsWeek')}</dt>
           <dd className="font-display text-xl">{stats.checkInsWeek}</dd>
@@ -80,6 +91,11 @@ function StatsCard({ placeId }: { placeId: string }) {
           <dd className="font-display text-xl">{stats.goingTonight}</dd>
         </div>
       </dl>
+      {stats.pro && (
+        <p className="text-sm">
+          {t('venuePanel.stats.zoneAverage', { value: stats.zoneAverageCheckIns ?? '—' })}
+        </p>
+      )}
       <p className="text-xs text-muted-foreground">{t('venuePanel.stats.threshold')}</p>
     </GlassCard>
   )
@@ -211,11 +227,14 @@ function OfficialEventForm({ placeId }: { placeId: string }) {
 function SponsorshipForm({ venue }: { venue: ManagedVenue }) {
   const { t, i18n } = useTranslation()
   const request = useRequestSponsorship()
+  const checkout = useStartVenuePurchase()
+  const selfService = useFeatureFlag('sponsorship_self_service_enabled') === 'on'
+  const canBuy = usePaywallState() === 'checkout'
   const today = new Date().toISOString().slice(0, 10)
   const [tier, setTier] = useState<SponsorshipTier>('featured')
   const [from, setFrom] = useState(today)
   const [to, setTo] = useState(today)
-  if (venue.sponsorship) {
+  if (venue.sponsorship?.status === 'active' || (venue.sponsorship && !selfService)) {
     return (
       <GlassCard className="space-y-2">
         <div className="flex items-center justify-between gap-2">
@@ -230,7 +249,9 @@ function SponsorshipForm({ venue }: { venue: ManagedVenue }) {
           {new Date(venue.sponsorship.from).toLocaleDateString(i18n.language)} →{' '}
           {new Date(venue.sponsorship.to).toLocaleDateString(i18n.language)}
         </p>
-        <p className="text-xs text-muted-foreground">{t('venuePanel.sponsor.invoice')}</p>
+        <p className="text-xs text-muted-foreground">
+          {t(selfService ? 'venuePanel.sponsor.paid' : 'venuePanel.sponsor.invoice')}
+        </p>
       </GlassCard>
     )
   }
@@ -251,6 +272,12 @@ function SponsorshipForm({ venue }: { venue: ManagedVenue }) {
             <span className="block text-sm text-muted-foreground">
               {t(`venuePanel.sponsor.tiers.${value}.body`)}
             </span>
+            {selfService && (
+              <span className="block text-primary">
+                {formatPrice(VENUE_PRICES[value], i18n.language)} ·{' '}
+                {t('venuePanel.sponsor.duration')}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -262,23 +289,40 @@ function SponsorshipForm({ venue }: { venue: ManagedVenue }) {
           value={from}
           onChange={(e) => setFrom(e.target.value)}
         />
-        <TextField
-          type="date"
-          label={t('venuePanel.sponsor.to')}
-          min={from}
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-        />
+        {!selfService && (
+          <TextField
+            type="date"
+            label={t('venuePanel.sponsor.to')}
+            min={from}
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          />
+        )}
       </div>
       <p className="text-xs text-muted-foreground">{t('venuePanel.sponsor.rules')}</p>
+      {selfService && (
+        <p className="text-xs text-muted-foreground">{t('venuePanel.sponsor.checkoutTerms')}</p>
+      )}
       <Button
         block
-        disabled={to < from || request.isPending}
-        onClick={() => request.mutate({ placeId: venue.placeId, tier, from, to })}
+        disabled={selfService ? !canBuy || checkout.isPending : to < from || request.isPending}
+        onClick={() =>
+          selfService
+            ? checkout.mutate({ code: `sponsor_${tier}`, venueId: venue.placeId, from })
+            : request.mutate({ placeId: venue.placeId, tier, from, to })
+        }
       >
         <Megaphone aria-hidden />
-        {t('venuePanel.sponsor.submit')}
+        {t(selfService ? 'premium.checkout.pay' : 'venuePanel.sponsor.submit')}
       </Button>
+      {(checkout.isError || (checkout.data && !checkout.data.ok)) && (
+        <p role="alert" className="text-danger">
+          {t('venuePanel.billingError')}
+        </p>
+      )}
+      {selfService && !canBuy && (
+        <p className="text-sm text-muted-foreground">{t('premium.comingSoon.body')}</p>
+      )}
       <ButtonLink to="/legal/sponsorship" variant="ghost" size="sm" block>
         {t('publicWeb.docs.sponsorship')}
       </ButtonLink>
@@ -299,14 +343,7 @@ export function VenueDetailScreen() {
       <ScreenHeader title={venue.name} backTo="/venue" />
       <Section title={t('venuePanel.stats.title')}>
         <StatsCard placeId={venue.placeId} />
-        <GlassCard className="mt-3 flex items-start gap-3">
-          <Sparkles className="size-5 shrink-0 text-warning" aria-hidden />
-          <div>
-            <p className="font-semibold">{t('venuePanel.pro.title')}</p>
-            <p className="text-sm text-muted-foreground">{t('venuePanel.pro.body')}</p>
-            <Badge className="mt-2">{t('common.comingSoon')}</Badge>
-          </div>
-        </GlassCard>
+        <ProSubscriptionCard placeId={venue.placeId} />
       </Section>
       <Section title={t('venuePanel.edit.title')}>
         <EditForm venue={venue} />
@@ -318,7 +355,7 @@ export function VenueDetailScreen() {
         <SponsorshipForm venue={venue} />
       </Section>
       <div className="h-8" />
-      {venue.sponsorship?.status === 'active' && (
+      {venue.sponsorship?.status === 'active' && venue.sponsorship.tier === 'top' && (
         <Section title={t('venuePanel.flash.title')}>
           <FlashAlertForm placeId={venue.placeId} />
         </Section>

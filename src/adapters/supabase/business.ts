@@ -67,6 +67,21 @@ export function createModerationService(db: Db, base: ModerationService): Modera
 }
 export function createVenuePanelService(db: Db): VenuePanelService {
   return {
+    async billingState(id) {
+      return z
+        .object({
+          pro: z.boolean(),
+          subscription: z
+            .object({
+              id: z.string(),
+              status: z.string(),
+              currentPeriodEnd: z.string(),
+              canManage: z.boolean().optional(),
+            })
+            .nullable(),
+        })
+        .parse(must(await db.rpc('venue_billing_state', { p_venue: id })))
+    },
     async myVenues() {
       return z.array(managedVenueSchema).parse(must(await db.rpc('managed_venues')))
     },
@@ -85,6 +100,8 @@ export function createVenuePanelService(db: Db): VenuePanelService {
       return z
         .object({
           byHour: z.array(z.object({ hour: z.number(), people: z.number() })),
+          pro: z.boolean().optional(),
+          zoneAverageCheckIns: z.number().nullable().optional(),
           averageAge: z.number().nullable(),
           greenPercent: z.number().nullable(),
           checkInsWeek: z.number(),

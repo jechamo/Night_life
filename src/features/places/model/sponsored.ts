@@ -9,8 +9,10 @@ export const SPONSORED_EVERY = 5
  * at most 1 in every block of 5 results. They never change the stats.
  */
 export function placeSponsored(results: readonly Place[]): Place[] {
-  const sponsored = results.filter((p) => p.sponsored)
-  const organic = results.filter((p) => !p.sponsored)
+  const sponsored = results
+    .filter((p) => p.sponsored && p.sponsorshipTier !== 'featured')
+    .sort((a, b) => Number(b.sponsorshipTier === 'top') - Number(a.sponsorshipTier === 'top'))
+  const organic = results.filter((p) => !p.sponsored || p.sponsorshipTier === 'featured')
   const out: Place[] = sponsored.splice(0, MAX_SPONSORED_ON_TOP)
   let sinceLast = 0
   for (const place of organic) {

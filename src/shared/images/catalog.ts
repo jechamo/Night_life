@@ -152,6 +152,8 @@ export type IllustrationName = keyof typeof ILLUSTRATIONS
 
 /** Theme signatures keep their authored palettes; they are never tinted. */
 export const THEME_SIGNATURES: Record<ThemeId, ImageAsset> = {
+  gold: asset(themeVelvet640, themeVelvet1080, 640, 1080, 1.5),
+  sapphire: asset(themeNeonNoir640, themeNeonNoir1080, 640, 1080, 1.5),
   'neon-noir': asset(themeNeonNoir640, themeNeonNoir1080, 640, 1080, 1.5),
   cyberpunk: asset(themeCyberpunk640, themeCyberpunk1080, 640, 1080, 1.5),
   velvet: asset(themeVelvet640, themeVelvet1080, 640, 1080, 1.5),

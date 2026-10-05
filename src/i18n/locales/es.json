@@ -96,6 +96,15 @@
     "mono": {
       "name": "Mono",
       "description": "Alto contraste y movimiento mínimo."
+    },
+    "pass": "Pase",
+    "gold": {
+      "name": "Oro",
+      "description": "Contraste nítido, detalles dorados y tipografía elegante. Exclusivo del Pase."
+    },
+    "sapphire": {
+      "name": "Zafiro",
+      "description": "Azules fríos y una noche tranquila. Exclusivo del Pase."
     }
   },
   "settings": {
@@ -931,6 +940,38 @@
       "paid_dm_1": {
         "name": "Mensaje directo",
         "tagline": "Escribe antes del match"
+      },
+      "sparks_1": {
+        "name": "1 Chispa",
+        "tagline": "Un like destacado con aviso anónimo"
+      },
+      "sparks_15": {
+        "name": "15 Chispas",
+        "tagline": "Destaca tus likes"
+      },
+      "pass_quarterly": {
+        "name": "Pase trimestral",
+        "tagline": "Todas las ventajas del Pase durante tres meses"
+      },
+      "pass_annual": {
+        "name": "Pase anual",
+        "tagline": "Todas las ventajas del Pase durante un año"
+      },
+      "sponsor_featured": {
+        "name": "Patrocinio Destacado",
+        "tagline": "30 días de visibilidad para tu local"
+      },
+      "sponsor_featured_plus": {
+        "name": "Patrocinio Destacado Plus",
+        "tagline": "30 días de visibilidad destacada"
+      },
+      "sponsor_top": {
+        "name": "Patrocinio Top",
+        "tagline": "30 días en los primeros huecos patrocinados"
+      },
+      "venue_pro_monthly": {
+        "name": "Estadísticas Pro",
+        "tagline": "Datos agregados y comparación de la zona"
       }
     },
     "perMonth": "al mes",
@@ -975,7 +1016,9 @@
       "secure": "Pago seguro y cifrado",
       "subscribe": "Suscribirme y pagar",
       "pay": "Pagar",
-      "conditions": "Condiciones de Premium"
+      "conditions": "Condiciones de Premium",
+      "totalPeriod": "Total {{interval}}",
+      "renewalPeriod": "Se renueva automáticamente por {{price}} {{interval}}. Puedes cancelar antes de la renovación."
     },
     "errors": {
       "payments_disabled": "Los pagos no están disponibles ahora mismo.",
@@ -1020,7 +1063,37 @@
       },
       "cta": "Mensaje directo"
     },
-    "seePlans": "Ver Premium"
+    "seePlans": "Ver Premium",
+    "intervals": {
+      "month": "/ mes",
+      "quarter": "/ trimestre",
+      "year": "/ año"
+    },
+    "social": {
+      "spark": "Enviar Chispa (saldo: {{count}})",
+      "sparkNotice_one": "Alguien ha sentido la chispa. Tienes una Chispa nueva.",
+      "sparkNotice_other": "Alguien ha sentido la chispa. Tienes {{count}} Chispas nuevas.",
+      "dismiss": "Entendido",
+      "incognito": "Modo Incógnito",
+      "incognitoBody": "Solo podrán ver tu perfil las personas a quienes des like y tus matches. Necesitas VIP activo.",
+      "wallet": "Saldo: {{sparks}} Chispas · {{spotlights}} Focos",
+      "activateSpotlight": "Activar Foco · 30 minutos",
+      "spotlightActive": "Foco activo hasta las {{time}}",
+      "buyCredits": "Comprar Chispas o Focos",
+      "sponsored": "Patrocinado",
+      "sponsorBody": "Un local abierto a menos de 5 km de tu local. Los patrocinios no alteran las estadísticas.",
+      "viewVenue": "Ver local",
+      "errors": {
+        "no_credits": "No tienes créditos disponibles. Puedes comprarlos en Premium.",
+        "limit_reached": "Has alcanzado el límite de likes de hoy. No se ha gastado la Chispa.",
+        "already_active": "Ya tienes un Foco activo. No se ha gastado otro.",
+        "wrong_place": "Para activar el Foco aquí, indica que estás en este local o que vas esta noche.",
+        "unavailable": "Activa tu perfil para ligar y elige una ciudad antes de usar el Foco.",
+        "already_matched": "Ya tienes un match con esta persona. No se ha gastado la Chispa."
+      },
+      "spotlightVenueScope": "Te destaca 30 minutos en este local. Requiere un check-in vigente.",
+      "spotlightCityScope": "Te destaca 30 minutos entre los perfiles compatibles de tu ciudad."
+    }
   },
   "publicWeb": {
     "title": "Información legal",
@@ -1272,11 +1345,17 @@
       "green": "En verde",
       "checkInsWeek": "Check-ins esta semana",
       "goingTonight": "Van esta noche",
-      "threshold": "Siempre agregadas y anónimas. Con menos de 5 personas no se muestran edad ni semáforo."
+      "threshold": "Siempre agregadas y anónimas. Con menos de 5 personas no se muestran edad ni semáforo.",
+      "zoneAverage": "Media de check-ins semanales por local cercano: {{value}}"
     },
     "pro": {
       "title": "Estadísticas Pro",
-      "body": "Comparativa con tu zona, tendencias por día y exportación. Suscripción mensual para locales."
+      "body": "Detalles por hora, edad media, semáforo y comparación de la zona. Solo datos agregados; los grupos pequeños permanecen ocultos.",
+      "billingTerms": "Suscripción mensual con renovación automática. Cancela desde el portal de facturación; conserva el acceso hasta el fin del periodo.",
+      "active": "Estadísticas Pro activas",
+      "inactive": "Suscripción sin acceso activo",
+      "manage": "Gestionar suscripción Pro",
+      "payerOnly": "La suscripción la gestiona la cuenta que la contrató."
     },
     "edit": {
       "title": "Ficha",
@@ -1318,7 +1397,10 @@
         "requested": "Solicitado",
         "active": "Activo"
       },
-      "invoice": "Te enviaremos la factura. El equipo lo activa al recibir el pago."
+      "invoice": "Te enviaremos la factura. El equipo lo activa al recibir el pago.",
+      "paid": "Activado tras confirmar el pago en Stripe.",
+      "duration": "30 días · IVA incluido",
+      "checkoutTerms": "Pago único, sin renovación automática. El patrocinio comienza en la fecha elegida y dura 30 días. La disponibilidad se valida antes de abrir Stripe; la activación espera la confirmación del pago."
     },
     "flash": {
       "title": "Flash Alerts",
@@ -1329,7 +1411,8 @@
       "hint": "Solo para patrocinadores activos, usuarios con edad verificada y consentimiento comercial.",
       "saved": "Aviso publicado",
       "failed": "No se pudo publicar. Comprueba el patrocinio y la política de alcohol."
-    }
+    },
+    "billingError": "No se ha podido abrir el pago. Comprueba la disponibilidad del patrocinio o una suscripción existente y vuelve a intentarlo."
   },
   "admin": {
     "title": "Admin",

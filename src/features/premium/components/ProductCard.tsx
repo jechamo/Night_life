@@ -39,7 +39,7 @@ export function ProductCard({
             {formatPrice(product.priceCents, i18n.language)}
           </span>
           <span className="font-label block text-xs text-muted-foreground">
-            {product.interval ? t('premium.perMonth') : t('premium.oneTime')} ·{' '}
+            {product.interval ? t(`premium.intervals.${product.interval}`) : t('premium.oneTime')} ·{' '}
             {t('premium.vatIncluded')}
           </span>
         </span>

@@ -34,7 +34,8 @@ export function MySubscriptionScreen() {
             {t('premium.mine.actionFailed')}
           </p>
         )}
-        {sub && !sub.simulated && (
+        {((sub && !sub.simulated) ||
+          state?.invoices.some((i) => i.productCode === 'venue_pro_monthly')) && (
           <Button
             block
             variant="outline"

@@ -8,6 +8,16 @@ import type { AppServices } from '@/shared/services/services'
 import { ThemeProvider } from '@/shared/theme/ThemeProvider'
 import { AppStatus } from '@/shared/pwa/AppStatus'
 import type { InitialSettings } from './bootstrap'
+import { useEntitlement } from '@/shared/entitlements/use-entitlement'
+
+function AppTheme({ settings, children }: { settings: InitialSettings; children: ReactNode }) {
+  const { granted } = useEntitlement('premium_themes')
+  return (
+    <ThemeProvider initialThemeId={settings.themeId} premiumAllowed={granted}>
+      {children}
+    </ThemeProvider>
+  )
+}
 
 export function AppProviders({
   platform,
@@ -27,12 +37,12 @@ export function AppProviders({
       <ServicesProvider services={services}>
         <QueryClientProvider client={queryClient}>
           <SessionBridge />
-          <ThemeProvider initialThemeId={settings.themeId}>
+          <AppTheme settings={settings}>
             <MotionPreferencesProvider initialReduceMotion={settings.reduceMotion}>
               <AppStatus />
               {children}
             </MotionPreferencesProvider>
-          </ThemeProvider>
+          </AppTheme>
         </QueryClientProvider>
       </ServicesProvider>
     </PlatformProvider>

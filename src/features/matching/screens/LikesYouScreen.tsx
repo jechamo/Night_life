@@ -7,6 +7,7 @@ import { PhotoImage } from '@/shared/images/PhotoImage'
 import { cn } from '@/shared/lib/cn'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { useLikesYou, useLikesYouCount } from '../hooks/use-matching'
+import { SparkNotice } from '@/features/premium/components/SparkNotice'
 
 /**
  * "Quién te ha dado like" (PRD 6.6.1, premium `see_likes`). Without the entitlement
@@ -27,6 +28,7 @@ export function LikesYouScreen() {
         description={t('matching.likesYou.count', { count })}
         backTo="/tonight"
       />
+      <SparkNotice />
       {locked && paywall !== 'hidden' && (
         <Link
           to="/premium"

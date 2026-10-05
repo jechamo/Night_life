@@ -18,18 +18,35 @@ export async function handleBillingAccount(req: Request, forcedAction?: string):
   const auth = await requireUser(req)
   if (!auth) return json(req, { error: 'unauthorized' }, 401)
   try {
-    const input = (await boundedJson(req, 2048)) as { action?: string; orderId?: string }
+    const input = (await boundedJson(req, 2048)) as {
+      action?: string
+      orderId?: string
+      venueId?: string
+    }
     if (forcedAction) input.action = forcedAction
     if (!['portal', 'cancel', 'resume', 'withdraw'].includes(input.action ?? ''))
       return json(req, { error: 'invalid_action' }, 400)
     const service = serviceClient()
-    const { data: sub, error: subError } = await service
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', auth.user.id)
+    let subQuery = service.from('subscriptions').select('*').eq('user_id', auth.user.id)
+    subQuery = input.venueId
+      ? subQuery.eq('venue_id', input.venueId)
+      : subQuery.is('venue_id', null)
+    let { data: sub, error: subError } = await subQuery
       .order('started_at', { ascending: false })
       .limit(1)
       .maybeSingle()
+    if (!sub && !subError && input.action === 'portal' && !input.venueId) {
+      const fallback = await service
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', auth.user.id)
+        .eq('simulated', false)
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      sub = fallback.data
+      subError = fallback.error
+    }
     if (subError) throw new Error('gateway_error')
     if (sub?.simulated && input.action !== 'portal' && !input.orderId) {
       const state = await rpc(auth.db, 'simulate_billing', {
@@ -99,7 +116,9 @@ export async function handleBillingAccount(req: Request, forcedAction?: string):
         const session = await stripe.billingPortal.sessions.create({
           customer,
           configuration: config.id,
-          return_url: `${APP_URL}/premium/subscription`,
+          return_url: input.venueId
+            ? `${APP_URL}/venue/${input.venueId}`
+            : `${APP_URL}/premium/subscription`,
         })
         return json(req, { url: session.url })
       }

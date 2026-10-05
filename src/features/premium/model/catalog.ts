@@ -9,7 +9,20 @@ import type { EntitlementKey } from '@/shared/entitlements/entitlements'
 export type ProductKind = 'subscription' | 'one_night' | 'credits'
 export type CreditKind = 'spark' | 'spotlight' | 'paid_dm'
 export type ProductCode =
-  'pass_monthly' | 'vip_monthly' | 'one_night' | 'sparks_5' | 'spotlight_1' | 'paid_dm_1'
+  | 'pass_monthly'
+  | 'vip_monthly'
+  | 'one_night'
+  | 'sparks_5'
+  | 'spotlight_1'
+  | 'paid_dm_1'
+  | 'sparks_1'
+  | 'sparks_15'
+  | 'pass_quarterly'
+  | 'pass_annual'
+  | 'sponsor_featured'
+  | 'sponsor_featured_plus'
+  | 'sponsor_top'
+  | 'venue_pro_monthly'
 
 export interface Product {
   code: ProductCode
@@ -17,7 +30,7 @@ export interface Product {
   /** Price in cents, VAT included (PRD 6.13 "precio con IVA"). */
   priceCents: number
   currency: 'EUR'
-  interval: 'month' | null
+  interval: 'month' | 'quarter' | 'year' | null
   entitlements: readonly EntitlementKey[]
   credits?: { kind: CreditKind; amount: number; perWeek?: boolean }[]
   highlighted?: boolean
@@ -31,8 +44,43 @@ const PASS: EntitlementKey[] = [
   'no_sponsored_cards',
 ]
 const VIP: EntitlementKey[] = [...PASS, 'see_likes', 'priority_likes', 'incognito', 'boost']
+export const VENUE_PRICES = { featured: 2900, featured_plus: 4900, top: 7900, pro: 1999 } as const
 
 export const CATALOG: readonly Product[] = [
+  {
+    code: 'pass_quarterly',
+    kind: 'subscription',
+    priceCents: 2699,
+    currency: 'EUR',
+    interval: 'quarter',
+    entitlements: PASS,
+  },
+  {
+    code: 'pass_annual',
+    kind: 'subscription',
+    priceCents: 8999,
+    currency: 'EUR',
+    interval: 'year',
+    entitlements: PASS,
+  },
+  {
+    code: 'sparks_1',
+    kind: 'credits',
+    priceCents: 149,
+    currency: 'EUR',
+    interval: null,
+    entitlements: [],
+    credits: [{ kind: 'spark', amount: 1 }],
+  },
+  {
+    code: 'sparks_15',
+    kind: 'credits',
+    priceCents: 1199,
+    currency: 'EUR',
+    interval: null,
+    entitlements: [],
+    credits: [{ kind: 'spark', amount: 15 }],
+  },
   {
     code: 'pass_monthly',
     kind: 'subscription',

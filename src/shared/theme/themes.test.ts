@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ACCENT_KEYS } from '@/shared/domain/venue-types'
 import { AA_NON_TEXT, AA_TEXT, composite, contrastRatio, parseColor } from './contrast'
-import { THEME_IDS, THEMES } from './themes'
+import { BASE_THEME_IDS, THEME_IDS, THEMES } from './themes'
 
 const toCss = ({ r, g, b }: { r: number; g: number; b: number }) =>
   `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
@@ -56,8 +56,9 @@ describe.each(THEME_IDS)('theme %s meets WCAG 2.1 AA', (id) => {
 })
 
 describe('theme registry', () => {
-  it('only free base themes ship in the MVP', () => {
-    expect(THEME_IDS).toHaveLength(5)
-    expect(THEME_IDS.every((id) => !THEMES[id].premium)).toBe(true)
+  it('keeps five free base themes and adds Pass exclusives', () => {
+    expect(BASE_THEME_IDS).toHaveLength(5)
+    expect(BASE_THEME_IDS.every((id) => !THEMES[id].premium)).toBe(true)
+    expect(THEMES.gold.premium && THEMES.sapphire.premium).toBe(true)
   })
 })

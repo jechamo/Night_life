@@ -11,7 +11,8 @@
  */
 import type { AccentKey } from '../domain/venue-types.ts'
 
-export const THEME_IDS = ['neon-noir', 'cyberpunk', 'velvet', 'sunset', 'mono'] as const
+export const BASE_THEME_IDS = ['neon-noir', 'cyberpunk', 'velvet', 'sunset', 'mono'] as const
+export const THEME_IDS = [...BASE_THEME_IDS, 'gold', 'sapphire'] as const
 export type ThemeId = (typeof THEME_IDS)[number]
 export const DEFAULT_THEME_ID: ThemeId = 'neon-noir'
 
@@ -339,6 +340,28 @@ export const THEMES: Readonly<Record<ThemeId, ThemeDefinition>> = {
   velvet,
   sunset,
   mono,
+  gold: {
+    ...mono,
+    id: 'gold',
+    premium: true,
+    fonts: velvet.fonts,
+    radius: '1.25rem',
+    colors: { ...mono.colors, primary: '#ffe08a', ring: '#ffe08a', glow: 'rgba(255,224,138,0.16)' },
+    map: { lightPreset: 'night', theme: 'faded' },
+  },
+  sapphire: {
+    ...neonNoir,
+    id: 'sapphire',
+    premium: true,
+    motion: 'calm',
+    colors: {
+      ...neonNoir.colors,
+      primary: '#8fdbff',
+      ring: '#8fdbff',
+      glow: 'rgba(143,219,255,0.18)',
+    },
+    map: { lightPreset: 'night', theme: 'monochrome' },
+  },
 }
 
 export function isThemeId(value: unknown): value is ThemeId {

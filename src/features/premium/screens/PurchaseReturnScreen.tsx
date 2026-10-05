@@ -11,6 +11,8 @@ export function PurchaseReturnScreen() {
   const [params] = useSearchParams()
   const requested = params.get('status') === 'success'
   const id = params.get('order')
+  const venue = params.get('venue')
+  const venuePath = venue && /^[0-9a-f-]{36}$/i.test(venue) ? `/venue/${venue}` : null
   const { data: status } = usePurchaseStatus(
     requested && id && /^[0-9a-f-]{36}$/i.test(id) ? id : null,
   )
@@ -45,8 +47,12 @@ export function PurchaseReturnScreen() {
                   : t('premium.return.cancelledBody')
         }
         action={
-          <ButtonLink to={ok || simulated ? '/premium/subscription' : '/premium'}>
-            {ok || simulated ? t('premium.mine.cta') : t('common.back')}
+          <ButtonLink to={venuePath ?? (ok || simulated ? '/premium/subscription' : '/premium')}>
+            {venuePath
+              ? t('venuePanel.manage')
+              : ok || simulated
+                ? t('premium.mine.cta')
+                : t('common.back')}
           </ButtonLink>
         }
       />

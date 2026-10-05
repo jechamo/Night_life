@@ -23,6 +23,9 @@ export function withPersistedAgeGate(
   return {
     matching: {
       ...base.matching,
+      ...(base.matching.sponsoredCards
+        ? { sponsoredCards: guarded(base.matching.sponsoredCards.bind(base.matching)) }
+        : {}),
       candidates: guarded(base.matching.candidates.bind(base.matching)),
       like: guarded(base.matching.like.bind(base.matching)),
       pass: guarded(base.matching.pass.bind(base.matching)),
@@ -52,7 +55,19 @@ export function withPersistedAgeGate(
       },
     },
     places: { ...base.places, createEvent: guarded(base.places.createEvent.bind(base.places)) },
-    premium: { ...base.premium, sendPaidDm: guarded(base.premium.sendPaidDm.bind(base.premium)) },
+    premium: {
+      ...base.premium,
+      sendPaidDm: guarded(base.premium.sendPaidDm.bind(base.premium)),
+      ...(base.premium.sendSpark
+        ? { sendSpark: guarded(base.premium.sendSpark.bind(base.premium)) }
+        : {}),
+      ...(base.premium.activateSpotlight
+        ? { activateSpotlight: guarded(base.premium.activateSpotlight.bind(base.premium)) }
+        : {}),
+      ...(base.premium.setIncognito
+        ? { setIncognito: guarded(base.premium.setIncognito.bind(base.premium)) }
+        : {}),
+    },
     realtime: {
       subscribe(handler) {
         let active = true

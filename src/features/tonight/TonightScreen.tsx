@@ -14,6 +14,7 @@ import { EmptyState } from '@/shared/ui/empty-state'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { SegmentedControl } from '@/shared/ui/segmented-control'
+import { SparkNotice } from '@/features/premium/components/SparkNotice'
 
 type Mode = 'here' | 'tonight'
 
@@ -55,6 +56,7 @@ export function TonightScreen() {
 
   return (
     <>
+      <SparkNotice />
       <ScreenHeader
         title={t('tabs.tonight')}
         trailing={

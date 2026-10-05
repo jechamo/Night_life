@@ -1,9 +1,9 @@
-import { Heart, Rewind, X } from 'lucide-react'
+import { Heart, Rewind, Sparkles, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useRef, useState, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
-import { Button } from '@/shared/ui/button'
+import { Button, ButtonLink } from '@/shared/ui/button'
 import type { Candidate } from '../model/people'
 import { SwipeCard, type SwipeDirection } from './SwipeCard'
 
@@ -36,6 +36,9 @@ export function SwipeDeck({
   onUndo,
   canUndo,
   empty,
+  onSpark,
+  sparkBalance = 0,
+  sponsors = [],
 }: {
   candidates: readonly Candidate[]
   onLike: (candidate: Candidate) => Promise<LikeOutcome>
@@ -43,22 +46,27 @@ export function SwipeDeck({
   onUndo: () => Promise<boolean>
   canUndo: boolean
   empty: React.ReactNode
+  onSpark?: (candidate: Candidate) => Promise<LikeOutcome>
+  sparkBalance?: number
+  sponsors?: readonly { id: string; name: string }[]
 }) {
   const { t } = useTranslation()
   const tokens = useMotionTokens()
   const [history, setHistory] = useState<{ dir: SwipeDirection; id: string }[]>([])
   const [exit, setExit] = useState<Exit>({ dir: 'none' })
   const [rewinding, setRewinding] = useState(false)
+  const [adsShown, setAdsShown] = useState(0)
   // One decision at a time: a second tap while the like is in flight would like twice.
   const deciding = useRef(false)
   const available = candidates.filter((c) => !history.some((h) => h.id === c.profile.id))
   const [top, next] = available
 
-  const decide = async (dir: SwipeDirection) => {
+  const decide = async (dir: SwipeDirection, spark = false) => {
     if (!top || deciding.current) return
     deciding.current = true
     try {
-      if (dir === 'like' && (await onLike(top)) === 'limit') return
+      if (dir === 'like' && (await (spark && onSpark ? onSpark(top) : onLike(top))) === 'limit')
+        return
       if (dir === 'pass') await onPass(top)
       setRewinding(false)
       setExit({ dir })
@@ -91,6 +99,25 @@ export function SwipeDeck({
     if (event.key === 'ArrowLeft') void decide('pass')
   }
 
+  const sponsor = sponsors[adsShown % sponsors.length]
+  if (sponsor && Math.floor(history.length / 10) > adsShown)
+    return (
+      <div className="glass mx-auto flex aspect-[3/4] w-full max-w-sm flex-col items-center justify-center gap-4 rounded-theme p-5">
+        <span className="text-xs uppercase tracking-widest text-muted-foreground">
+          {t('premium.social.sponsored')}
+        </span>
+        <p className="font-display text-2xl">{sponsor.name}</p>
+        <p className="text-center text-sm text-muted-foreground">
+          {t('premium.social.sponsorBody')}
+        </p>
+        <ButtonLink to={`/discover?place=${sponsor.id}`}>
+          {t('premium.social.viewVenue')}
+        </ButtonLink>
+        <Button variant="ghost" onClick={() => setAdsShown((n) => n + 1)}>
+          {t('common.continue')}
+        </Button>
+      </div>
+    )
   if (!top) return <>{empty}</>
 
   return (
@@ -131,6 +158,18 @@ export function SwipeDeck({
         </AnimatePresence>
       </div>
       <div className="flex items-center justify-center gap-4">
+        {onSpark && (
+          <Button
+            variant="glass"
+            size="icon"
+            className="size-14"
+            disabled={sparkBalance <= 0}
+            aria-label={t('premium.social.spark', { count: sparkBalance })}
+            onClick={() => void decide('like', true)}
+          >
+            <Sparkles className="text-warning" aria-hidden />
+          </Button>
+        )}
         <Button
           variant="glass"
           size="icon"

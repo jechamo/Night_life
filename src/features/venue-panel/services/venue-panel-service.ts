@@ -19,6 +19,8 @@ export interface ManagedVenue {
 
 /** Aggregated, thresholded stats only (PRD 4.3): never individual data. */
 export interface VenueStats {
+  pro?: boolean
+  zoneAverageCheckIns?: number | null
   byHour: { hour: number; people: number }[]
   averageAge: number | null
   greenPercent: number | null
@@ -28,6 +30,15 @@ export interface VenueStats {
 
 /** Port for the free venue panel (PRD 6.10). */
 export interface VenuePanelService {
+  billingState?(placeId: string): Promise<{
+    pro: boolean
+    subscription: {
+      id: string
+      status: string
+      currentPeriodEnd: string
+      canManage?: boolean
+    } | null
+  }>
   myVenues(): Promise<ManagedVenue[]>
   createFlashAlert(
     placeId: string,

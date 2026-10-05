@@ -50,6 +50,7 @@ export interface Place {
   openNow: boolean
   rating: number | null
   sponsored: boolean
+  sponsorshipTier?: 'featured' | 'featured_plus' | 'top'
   stats: PlaceStats
   vibes: Record<Vibe, number>
   event?: PlaceEvent

@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { usePlatform } from '@/platform'
 import { PREFERENCE_KEYS } from '@/shared/config/preferences'
-import { THEMES, type ThemeDefinition, type ThemeId } from './themes'
+import { DEFAULT_THEME_ID, THEMES, type ThemeDefinition, type ThemeId } from './themes'
 
 interface ThemeContextValue {
   themeId: ThemeId
@@ -33,23 +33,28 @@ function applyThemeToDocument(theme: ThemeDefinition) {
 
 export function ThemeProvider({
   initialThemeId,
+  premiumAllowed = false,
   children,
 }: {
   initialThemeId: ThemeId
+  premiumAllowed?: boolean
   children: ReactNode
 }) {
   const { preferences } = usePlatform()
-  const [themeId, setThemeId] = useState(initialThemeId)
+  const [selectedThemeId, setThemeId] = useState(initialThemeId)
+  const themeId =
+    THEMES[selectedThemeId].premium && !premiumAllowed ? DEFAULT_THEME_ID : selectedThemeId
 
   useLayoutEffect(() => applyThemeToDocument(THEMES[themeId]), [themeId])
 
   const setTheme = useCallback(
     (id: ThemeId) => {
+      if (THEMES[id].premium && !premiumAllowed) return
       applyThemeToDocument(THEMES[id])
       setThemeId(id)
       void preferences.set(PREFERENCE_KEYS.theme, id)
     },
-    [preferences],
+    [preferences, premiumAllowed],
   )
 
   const value = useMemo(() => ({ themeId, theme: THEMES[themeId], setTheme }), [themeId, setTheme])

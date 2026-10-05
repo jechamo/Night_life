@@ -14,7 +14,7 @@ nunca funciones básicas, verificaciones ni seguridad".
 | --------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
 | **App iOS / Android** | Compras dentro de la app de Apple y Google (obligatorio para ventajas digitales) | 15 % en el programa de pequeñas empresas de Apple (< 1 M$/año) y en todas las suscripciones de Google; hasta 30 % en otros casos | Cuando se empaqueten las apps (Anexo B) |
 | **Web / PWA**         | Stripe (ya previsto en 6.13)                                                     | ~1,5 % + 0,25 € por tarjeta UE                                                                                                   | Desde el lanzamiento web                |
-| **Locales (B2B)**     | Factura / Stripe desde el panel web                                              | Stripe o transferencia                                                                                                           | MVP: factura manual                     |
+| **Locales (B2B)**     | Checkout y Portal de Stripe desde el panel web                                   | Stripe                                                                                                                           | Autoservicio TEST desde 05/10/2026      |
 
 - **Recomendación:** web con Stripe + apps con las tiendas, con **un único catálogo** y los mismos
   entitlements (origen `stripe` / `apple` / `google`). La arquitectura ya lo permite (PRD 6.13).
@@ -78,7 +78,7 @@ Las ventajas siguen siendo **entitlements** (suscripciones y pase de una noche) 
   - Flash Alerts.
   - Nueva: **tarjeta patrocinada de local en el swipe** (máx. 1 de cada 10, siempre etiquetada,
     solo locales cercanos y abiertos, alcohol solo a mayores verificados y según la normativa
-    autonómica). Son contextuales, se venden por factura y no rastrean a nadie.
+    autonómica). Son contextuales, se contratan por Stripe desde el panel y no rastrean a nadie.
   - Los suscriptores no ven las tarjetas del swipe; los pines patrocinados se mantienen
     porque son información.
 - **Más B2B:** "Estadísticas Pro" para locales (afluencia por horas, edad media, comparativa
@@ -86,15 +86,46 @@ Las ventajas siguen siendo **entitlements** (suscripciones y pase de una noche) 
 
 ## 5. Encaje en el plan
 
-| Bloque          | Cambio                                                                                                                                                                                                                                                    |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 4 (UI simulada) | Paywall, comparativa y checkout con este catálogo (Pase, VIP, Pase de una noche, Chispas, Foco, Mensaje), botón de compra según la plataforma (web = Stripe; app = tienda) y estado "Próximamente"                                                        |
-| 8 (ligar)       | Chispa, Prioridad y Foco en el servidor (orden del swipe y avisos)                                                                                                                                                                                        |
-| 9 (pagos test)  | Tablas de catálogo con IDs de producto de Stripe, Apple y Google; saldo de créditos; webhooks de Stripe                                                                                                                                                   |
-| **11 (nuevo)**  | **Apps nativas y tiendas**: Capacitor (Anexo B), compras en App Store y Google Play, notificaciones de servidor de las tiendas → entitlements, restaurar compras, fichas de las tiendas (18+, privacidad), Modo viaje y tarjetas patrocinadas en el swipe |
+| Bloque          | Cambio                                                                                                                                                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4 (UI simulada) | Paywall, comparativa y checkout con este catálogo (Pase, VIP, Pase de una noche, Chispas, Foco, Mensaje), botón de compra según la plataforma (web = Stripe; app = tienda) y estado "Próximamente"                     |
+| 8 (ligar)       | Chispa, Prioridad y Foco en el servidor (orden del swipe y avisos)                                                                                                                                                     |
+| 9 (pagos test)  | Tablas de catálogo con IDs de producto de Stripe, Apple y Google; saldo de créditos; webhooks de Stripe                                                                                                                |
+| **11 (nuevo)**  | **Apps nativas y tiendas**: Capacitor (Anexo B), compras en App Store y Google Play, notificaciones de servidor de las tiendas → entitlements, restaurar compras, fichas de las tiendas (18+, privacidad) y Modo viaje |
 
-Flags nuevos: `store_payments_enabled` (off), `sponsored_cards_enabled` (off),
-`travel_mode_enabled` (off). Todo sigue apagado por defecto y se activa sin redesplegar.
+Flags: `store_payments_enabled` y `travel_mode_enabled` siguen off. En el cierre
+autorizado del 05/10, `paid_dm_enabled`, `sponsored_cards_enabled` y
+`sponsorship_self_service_enabled` pasan a on. Pagos TEST y audiencia de testers
+siguen aislados; la web pública no recibe compras ni patrocinios TEST.
+
+### Cierre web autorizado de los bloques 8/9 (2026-10-05)
+
+Chispa, Foco, Prioridad e Incógnito tienen acción y autorización del servidor.
+Foco usa el local con check-in vigente o la ciudad del perfil durante 30 min.
+Se mantienen los cinco temas base gratuitos del PRD y se añaden Gold/Sapphire
+para `premium_themes`. Las tarjetas de locales patrocinados son como máximo una
+por cada diez decisiones, cercanas y abiertas; el Pase las elimina.
+
+| Producto nuevo   | Precio provisional Stripe TEST | Periodo                   |
+| ---------------- | ------------------------------ | ------------------------- |
+| Chispa ×1        | 1,49 €                         | Consumible                |
+| Chispas ×15      | 11,99 €                        | Consumible                |
+| Pase trimestral  | 26,99 €                        | 3 meses, renovable        |
+| Pase anual       | 89,99 €                        | 1 año, renovable          |
+| Destacado        | 29 €                           | 30 días, pago único       |
+| Destacado Plus   | 49 €                           | 30 días, pago único       |
+| Top              | 79 €                           | 30 días, pago único       |
+| Estadísticas Pro | 19,99 €                        | Mes, renovable, por local |
+
+Los precios existentes se conservan. Destacado etiqueta el pin y admite tarjetas;
+Plus añade prioridad en listados; Top precede a Plus y permite Flash a adultos
+verificados con consentimiento comercial. Básicas de local gratis; Pro abre horas,
+edad/semáforo y comparativa de zona a 5 km con umbrales de anonimato. Pro es
+independiente de la suscripción personal. Cancelación/Portal corresponden al titular
+del pago. Evidencias y límites: [BLOCK8_9_COMPLETION_TESTS.md](./BLOCK8_9_COMPLETION_TESTS.md).
+
+No se activan cobros reales ni se aprueban estos importes como precios definitivos;
+las puertas jurídicas, fiscales, de proveedor y coste siguen en el bloque 12.
 
 ## 6. Decisiones (aprobadas por el propietario: "lo que recomiendes")
 
@@ -102,5 +133,6 @@ Flags nuevos: `store_payments_enabled` (off), `sponsored_cards_enabled` (off),
 2. RevenueCat autorizado para el Bloque 11 (se revisa su tarifa vigente antes de integrarlo);
    si no compensa, validación propia con Edge Functions.
 3. Catálogo y nombres: Pase, Pase VIP, Pase de una noche, Chispa, Foco, Mensaje directo, Modo viaje.
-4. Sin anuncios de terceros; tarjetas patrocinadas de locales en el swipe (Bloque 11).
+4. Sin anuncios de terceros; tarjetas patrocinadas de locales en el swipe web
+   adelantadas al cierre de 8/9 por solicitud expresa del propietario (05/10/2026).
 5. Todos los filtros gratis: se retira `advanced_filters`.

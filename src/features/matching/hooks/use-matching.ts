@@ -4,6 +4,19 @@ import { useEntitlement } from '@/shared/entitlements/use-entitlement'
 import { useServices } from '@/shared/services/ServicesProvider'
 import { likesRemaining, rankCandidates } from '../model/matching'
 import type { ReportReason } from '../services/matching-service'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
+
+export function useSponsoredCards(placeId: string | null) {
+  const { matching } = useServices()
+  const enabled = useFeatureFlag('sponsored_cards_enabled') === 'on'
+  const { granted } = useEntitlement('no_sponsored_cards')
+  const query = useQuery({
+    queryKey: ['matching', 'sponsors', placeId],
+    queryFn: () => matching.sponsoredCards!(placeId),
+    enabled: enabled && !granted && !!matching.sponsoredCards,
+  })
+  return { ...query, data: !enabled || granted ? [] : query.data }
+}
 
 export const matchesKey = ['matching', 'matches'] as const
 

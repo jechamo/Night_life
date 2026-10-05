@@ -96,6 +96,15 @@
     "mono": {
       "name": "Mono",
       "description": "High contrast and minimal motion."
+    },
+    "pass": "Pass",
+    "gold": {
+      "name": "Gold",
+      "description": "Sharp contrast, gold details and elegant typography. Pass exclusive."
+    },
+    "sapphire": {
+      "name": "Sapphire",
+      "description": "Cool blues and a calm night. Pass exclusive."
     }
   },
   "settings": {
@@ -931,6 +940,38 @@
       "paid_dm_1": {
         "name": "Direct message",
         "tagline": "Write before the match"
+      },
+      "sparks_1": {
+        "name": "1 Spark",
+        "tagline": "A highlighted like with an anonymous notice"
+      },
+      "sparks_15": {
+        "name": "15 Sparks",
+        "tagline": "Make your likes stand out"
+      },
+      "pass_quarterly": {
+        "name": "Quarterly Pass",
+        "tagline": "All Pass benefits for three months"
+      },
+      "pass_annual": {
+        "name": "Annual Pass",
+        "tagline": "All Pass benefits for a year"
+      },
+      "sponsor_featured": {
+        "name": "Featured sponsorship",
+        "tagline": "30 days of venue visibility"
+      },
+      "sponsor_featured_plus": {
+        "name": "Featured Plus sponsorship",
+        "tagline": "30 days of highlighted visibility"
+      },
+      "sponsor_top": {
+        "name": "Top sponsorship",
+        "tagline": "30 days in leading sponsored slots"
+      },
+      "venue_pro_monthly": {
+        "name": "Pro Statistics",
+        "tagline": "Aggregated data and nearby venue comparison"
       }
     },
     "perMonth": "per month",
@@ -975,7 +1016,9 @@
       "secure": "Secure, encrypted payment",
       "subscribe": "Subscribe and pay",
       "pay": "Pay",
-      "conditions": "Premium terms"
+      "conditions": "Premium terms",
+      "totalPeriod": "Total {{interval}}",
+      "renewalPeriod": "Automatically renews for {{price}} {{interval}}. Cancel before renewal."
     },
     "errors": {
       "payments_disabled": "Payments aren't available right now.",
@@ -1020,7 +1063,37 @@
       },
       "cta": "Direct message"
     },
-    "seePlans": "See Premium"
+    "seePlans": "See Premium",
+    "intervals": {
+      "month": "/ month",
+      "quarter": "/ quarter",
+      "year": "/ year"
+    },
+    "social": {
+      "spark": "Send Spark (balance: {{count}})",
+      "sparkNotice_one": "Someone felt the spark. You have a new Spark.",
+      "sparkNotice_other": "Someone felt the spark. You have {{count}} new Sparks.",
+      "dismiss": "Got it",
+      "incognito": "Incognito mode",
+      "incognitoBody": "Only people you like and your matches can see your profile. Requires an active VIP subscription.",
+      "wallet": "Balance: {{sparks}} Sparks · {{spotlights}} Spotlights",
+      "activateSpotlight": "Activate Spotlight · 30 minutes",
+      "spotlightActive": "Spotlight active until {{time}}",
+      "buyCredits": "Buy Sparks or Spotlights",
+      "sponsored": "Sponsored",
+      "sponsorBody": "An open venue within 5 km of your venue. Sponsorships never alter statistics.",
+      "viewVenue": "View venue",
+      "errors": {
+        "no_credits": "You have no credits available. You can buy them in Premium.",
+        "limit_reached": "You reached today’s like limit. Your Spark was not spent.",
+        "already_active": "You already have an active Spotlight. Another credit was not spent.",
+        "wrong_place": "To activate a Spotlight here, check in or indicate you are going tonight.",
+        "unavailable": "Enable your dating profile and choose a city before using Spotlight.",
+        "already_matched": "You already matched with this person. Your Spark was not spent."
+      },
+      "spotlightVenueScope": "Stand out for 30 minutes at this venue. Requires an active check-in.",
+      "spotlightCityScope": "Stand out for 30 minutes among compatible profiles in your city."
+    }
   },
   "publicWeb": {
     "title": "Legal information",
@@ -1272,11 +1345,17 @@
       "green": "On green",
       "checkInsWeek": "Check-ins this week",
       "goingTonight": "Going tonight",
-      "threshold": "Always aggregated and anonymous. Below 5 people, age and traffic light are hidden."
+      "threshold": "Always aggregated and anonymous. Below 5 people, age and traffic light are hidden.",
+      "zoneAverage": "Average weekly check-ins per nearby venue: {{value}}"
     },
     "pro": {
       "title": "Pro Stats",
-      "body": "Comparison with your area, trends by day and export. Monthly subscription for venues."
+      "body": "Hourly details, average age, traffic lights and nearby venue comparison. Aggregated data only; small groups remain hidden.",
+      "billingTerms": "Monthly subscription with automatic renewal. Cancel in the billing portal and retain access until the period ends.",
+      "active": "Pro Statistics active",
+      "inactive": "Subscription without active access",
+      "manage": "Manage Pro subscription",
+      "payerOnly": "The subscription is managed by the account that purchased it."
     },
     "edit": {
       "title": "Page",
@@ -1318,7 +1397,10 @@
         "requested": "Requested",
         "active": "Active"
       },
-      "invoice": "We'll send you the invoice. The team activates it once paid."
+      "invoice": "We'll send you the invoice. The team activates it once paid.",
+      "paid": "Activated after Stripe confirms payment.",
+      "duration": "30 days · VAT included",
+      "checkoutTerms": "One-time payment without automatic renewal. Sponsorship starts on your selected date and lasts 30 days. Availability is checked before opening Stripe; activation waits for confirmed payment."
     },
     "flash": {
       "title": "Flash Alerts",
@@ -1329,7 +1411,8 @@
       "hint": "Only for active sponsors and users with verified age and marketing consent.",
       "saved": "Alert published",
       "failed": "Could not publish. Check the sponsorship and alcohol policy."
-    }
+    },
+    "billingError": "Unable to open payment. Check sponsorship availability or an existing subscription and try again."
   },
   "admin": {
     "title": "Admin",

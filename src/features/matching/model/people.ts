@@ -31,6 +31,8 @@ export interface MatchingProfile extends PublicProfile {
 }
 
 export interface Candidate {
+  /** Server-assigned, after all compatibility/privacy filters. */
+  visibilityPriority?: number
   profile: PublicProfile
   /** Where they are relative to me (no exact location or times are ever exposed). */
   context: {

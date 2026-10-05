@@ -95,8 +95,34 @@ transaccionales se ejecutan en servidor.
   Auth. Los errores de retirada externa se reintentan mediante una cola privada;
   se conserva únicamente evidencia legal mínima y facturación sin vínculo al usuario.
 - Moderación y reclamaciones requieren revisión humana; una apelación necesita
-  revisor independiente. Patrocinio se asigna con factura manual y cupos por ciudad.
-  Flash filtra destinatarios en servidor por edad y consentimiento.
+  revisor independiente. Desde el cierre funcional del 05/10, el panel contrata
+  patrocinio mediante Stripe TEST con cupos por ciudad y reservas pendientes de 24 h.
+  El webhook activa 30 días una sola vez y el reembolso completo lo termina.
+  Destacado etiqueta el pin; Plus prioriza listados; Top precede a Plus y habilita
+  Flash, que filtra destinatarios en servidor por edad y consentimiento.
+
+### Ventajas sociales y locales (cierre de los bloques 8/9)
+
+- `premium_social_state`, `premium_spark`, `premium_spotlight` e `premium_incognito`
+  usan hooks/servicios/adaptadores. El ledger y los efectos sociales se escriben
+  en la misma transacción, con locks por usuario/pareja/saldo y origen único.
+  El aviso de Chispa no revela al emisor; el Broadcast solo invalida consultas propias.
+- Foco ordena candidatos compatibles durante 30 min en un local con check-in o
+  la ciudad del perfil. Prioridad VIP ordena likes entrantes y candidatos; Incógnito
+  filtra candidatos, ficha directa y fotos salvo likes salientes/matches existentes.
+  Vencer la ventaja deja de aplicar el filtro, sin cambiar los bloqueos ni la edad.
+- Cinco temas base gratuitos y dos extras autorizados por `premium_themes`.
+  `ThemeProvider` usa el entitlement del servidor y vuelve a un tema base al perderlo.
+  Las tarjetas de locales patrocinados requieren proximidad y apertura; como máximo
+  una tras cada diez decisiones del deck, sin red de anuncios ni datos de terceros.
+- Pedidos y suscripciones B2B llevan `venue_id`; una suscripción Pro no concede
+  un Pase personal. Checkout exige gestor del local; cancelación/Portal exige titular
+  del pago incluso si deja de gestionar el local. Las facturas propias permiten entrar
+  al Portal desde Mi suscripción. El precio se verifica por modo, importe, moneda e
+  intervalo/count, incluidos el Pase trimestral y anual.
+- Estadísticas básicas gratuitas; Pro autoriza series horarias y agregados de edad/
+  semáforo. Comparativa a 5 km solo con al menos cinco personas y tres locales.
+  TEST/LIVE se separan en créditos, ventajas, suscripciones, patrocinios y tarjetas.
 
 ## Backend (Bloque 5)
 

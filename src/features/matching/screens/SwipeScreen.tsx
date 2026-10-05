@@ -19,7 +19,18 @@ import { LikeLimitSheet } from '../components/LikeLimitSheet'
 import { LiveNotice } from '../components/LiveNotice'
 import { useMatchCelebration } from '../components/MatchCelebration'
 import { SwipeDeck } from '../components/SwipeDeck'
-import { useCandidates, useLikesLeft, useSwipeActions } from '../hooks/use-matching'
+import {
+  useCandidates,
+  useLikesLeft,
+  useSwipeActions,
+  useSponsoredCards,
+} from '../hooks/use-matching'
+import { usePremiumState } from '@/features/premium/hooks/use-premium'
+import {
+  useSocialPremium,
+  useSocialPremiumActions,
+} from '@/features/premium/hooks/use-social-premium'
+import { SparkNotice } from '@/features/premium/components/SparkNotice'
 
 /** Swipe for one place (or everyone around). Guarded: needs verified age (PRD 5.2.10). */
 export function SwipeScreen() {
@@ -31,6 +42,10 @@ export function SwipeScreen() {
   const { data: verification } = useVerificationSnapshot()
   const place = places.find((p) => p.id === placeId)
   const [onlyVerified, setOnlyVerified] = useState(false)
+  const { data: wallet } = usePremiumState()
+  const { data: social } = useSocialPremium()
+  const { spark, spotlight } = useSocialPremiumActions()
+  const { data: sponsors = [] } = useSponsoredCards(placeId)
   const switchId = useId()
   const candidates = useCandidates(placeId, onlyVerified)
   const { like, pass, undo } = useSwipeActions()
@@ -91,6 +106,52 @@ export function SwipeScreen() {
           void queryClient.invalidateQueries({ queryKey: ['matching', 'candidates'] })
         }}
       />
+      <SparkNotice />
+      <div className="px-safe mt-3 space-y-2">
+        <p className="text-sm text-muted-foreground">
+          {t('premium.social.wallet', {
+            sparks: wallet?.credits.spark ?? 0,
+            spotlights: wallet?.credits.spotlight ?? 0,
+          })}
+        </p>
+        <Button
+          variant="outline"
+          disabled={
+            spotlight.isPending || !!social?.spotlightUntil || (wallet?.credits.spotlight ?? 0) <= 0
+          }
+          onClick={() => spotlight.mutate(placeId)}
+        >
+          {social?.spotlightUntil
+            ? t('premium.social.spotlightActive', {
+                time: new Date(social.spotlightUntil).toLocaleTimeString(undefined, {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                }),
+              })
+            : t('premium.social.activateSpotlight')}
+        </Button>
+        <p className="text-xs text-muted-foreground">
+          {t(placeId ? 'premium.social.spotlightVenueScope' : 'premium.social.spotlightCityScope')}
+        </p>
+        <ButtonLink to="/premium" variant="ghost" size="sm">
+          {t('premium.social.buyCredits')}
+        </ButtonLink>
+        {(spark.isError || spotlight.isError) && (
+          <p role="alert" className="text-sm text-danger">
+            {t('matching.failed')}
+          </p>
+        )}
+        {spark.data && !spark.data.ok && (
+          <p role="alert" className="text-sm text-danger">
+            {t(`premium.social.errors.${spark.data.error}`)}
+          </p>
+        )}
+        {spotlight.data && !spotlight.data.ok && (
+          <p role="alert" className="text-sm text-danger">
+            {t(`premium.social.errors.${spotlight.data.error}`)}
+          </p>
+        )}
+      </div>
       <div className="px-safe mt-3 flex items-center justify-end gap-2">
         <label htmlFor={switchId} className="text-sm">
           {t('matching.onlyVerified')}
@@ -125,6 +186,17 @@ export function SwipeScreen() {
             key={`${placeId}-${onlyVerified}`}
             candidates={candidates.data ?? []}
             canUndo={canUndo}
+            sponsors={sponsors}
+            sparkBalance={wallet?.credits.spark ?? 0}
+            onSpark={async (candidate) => {
+              const result = await spark.mutateAsync(candidate.profile.id)
+              if (!result.ok) {
+                if (result.error === 'limit_reached') setLimitOpen(true)
+                return 'limit'
+              }
+              if (result.value.match) celebrate(result.value.match)
+              return 'ok'
+            }}
             onLike={async (candidate) => {
               const result = await like.mutateAsync(candidate.profile.id)
               if (!result.ok) {

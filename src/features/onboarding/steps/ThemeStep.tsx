@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { ThemePreviewCard } from '@/features/themes/components/ThemePreviewCard'
 import { useTheme } from '@/shared/theme/ThemeProvider'
-import { THEME_IDS } from '@/shared/theme/themes'
+import { BASE_THEME_IDS } from '@/shared/theme/themes'
 import { useThemeSwitch } from '@/shared/theme/use-theme-switch'
 import { Button } from '@/shared/ui/button'
 import { OnboardingStepLayout } from '../components/OnboardingStepLayout'
@@ -36,7 +36,7 @@ export function ThemeStep({
       }
     >
       <ul className="grid gap-3">
-        {THEME_IDS.map((id) => (
+        {BASE_THEME_IDS.map((id) => (
           <li key={id}>
             <ThemePreviewCard themeId={id} selected={id === themeId} onSelect={switchTheme} />
           </li>

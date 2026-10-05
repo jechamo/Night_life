@@ -31,7 +31,11 @@ const contextSchema = z.object({
   venueName: z.string().nullable(),
   sharedArtist: z.string().nullable(),
 })
-const candidateSchema = z.object({ profile: profileSchema, context: contextSchema })
+const candidateSchema = z.object({
+  profile: profileSchema,
+  context: contextSchema,
+  visibilityPriority: z.number().int().min(0).max(2).optional(),
+})
 const matchSchema = z.object({
   contactKind: z.enum(['mutual', 'paid_dm']).optional(),
   id: z.uuid(),
@@ -80,6 +84,12 @@ async function hydrateCandidate(db: Db, candidate: Candidate): Promise<Candidate
 export function createMatchingService(db: Db): MatchingService {
   const likeStatus = async () => statusSchema.parse(must(await db.rpc('matching_status')))
   return {
+    async sponsoredCards(placeId) {
+      return z
+        .array(z.object({ id: z.uuid(), name: z.string() }))
+        .max(5)
+        .parse(must(await db.rpc('matching_sponsored_cards', { p_place: placeId ?? undefined })))
+    },
     async candidates(placeId) {
       const list = z
         .array(candidateSchema)

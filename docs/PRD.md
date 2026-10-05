@@ -689,12 +689,18 @@ Recuadro de información básica en cada formulario, con enlace a la política c
 - **Premium (entitlements):**
   - `unlimited_likes`.
   - `see_likes`.
-  - `advanced_filters`.
+  - Todos los filtros siguen gratis (decisión de monetización aprobada).
   - `incognito`.
-  - `boost`.
+  - `priority_likes`.
+  - `travel_mode` (integración pendiente del bloque 11).
+  - `no_sponsored_cards`.
   - `undo`.
   - `premium_themes`.
 - **Mensaje directo de pago sin match** (`paid_dm`, pago único). Respeta el semáforo rojo.
+- **Créditos:** Chispa (`spark`) con aviso anónimo y like; Foco (`spotlight`) con
+  prioridad 30 minutos en un local con check-in o la ciudad del perfil; mensaje
+  directo (`paid_dm`). Consumo transaccional en servidor. Chispas 1/5/15 y Pase
+  mensual/trimestral/anual en el catálogo web TEST del cierre autorizado de 8/9.
 
 **Locales**
 - Aparecer y gestionar la ficha es gratis.
@@ -702,7 +708,15 @@ Recuadro de información básica en cada formulario, con enlace a la política c
   - **Destacado.**
   - **Destacado Plus.**
   - **Top.**
-- **En el MVP:** factura manual y activación por el admin. **Más adelante:** autoservicio con Stripe, detrás de un flag.
+- **Autoservicio web Stripe TEST** (autorizado el 05/10/2026): patrocinios de
+  30 días desde el panel, detrás de `sponsorship_self_service_enabled`. Importes
+  provisionales: Destacado 29 €, Plus 49 €, Top 79 €. El webhook activa tras pago
+  confirmado; cupos por ciudad y reserva pendiente de 24 h, sin renovación automática.
+- Destacado etiqueta el pin y admite tarjetas; Plus añade prioridad en listados;
+  Top precede a Plus y habilita Flash. El Pase elimina tarjetas del swipe, máximo 1/10.
+- **Estadísticas Pro:** 19,99 €/mes de prueba por local; suscripción independiente,
+  agregados por hora/edad/semáforo y comparativa anónima de zona. Estadísticas básicas
+  gratis. La gestión del pago corresponde a su titular mediante Portal de Stripe.
 - **Reglas fijas:** etiqueta siempre visible, nunca altera los datos, solo aparece si cumple los filtros y los huecos son limitados.
 - **Flash Alerts:** dentro de la app, con consentimiento y edad verificada. Alcohol según la normativa autonómica.
 
@@ -1051,7 +1065,9 @@ Todo son tokens (variables CSS). Cada tema cambia los colores, la tipografía, e
   - Terraza: naranja.
   - Beach club: turquesa.
   - Eventos: magenta.
-- **Los 5 temas base son gratis.** El entitlement `premium_themes` abre temas extra en el futuro.
+- **Los 5 temas base son gratis.** El entitlement `premium_themes` abre Gold y
+  Sapphire, añadidos en el cierre funcional de 8/9 del 05/10/2026. Al perder la
+  ventaja se aplica un tema base.
 
 ### 8.3. Tipografía
 - Autoalojada y con licencia OFL.
