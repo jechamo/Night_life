@@ -23,6 +23,12 @@ export function withPersistedAgeGate(
   return {
     matching: {
       ...base.matching,
+      ...(base.matching.likesSnapshot
+        ? { likesSnapshot: guarded(base.matching.likesSnapshot.bind(base.matching)) }
+        : {}),
+      ...(base.matching.markLikesSeen
+        ? { markLikesSeen: guarded(base.matching.markLikesSeen.bind(base.matching)) }
+        : {}),
       ...(base.matching.sponsoredCards
         ? { sponsoredCards: guarded(base.matching.sponsoredCards.bind(base.matching)) }
         : {}),
@@ -72,7 +78,12 @@ export function withPersistedAgeGate(
       subscribe(handler) {
         let active = true
         const unsubscribe = base.realtime.subscribe((event) => {
-          if (event.type === 'stats' || event.type === 'removed' || event.type === 'refresh') {
+          if (
+            event.type === 'stats' ||
+            event.type === 'removed' ||
+            event.type === 'refresh' ||
+            event.type === 'dashboard_changed'
+          ) {
             handler(event)
             return
           }

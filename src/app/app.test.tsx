@@ -5,13 +5,13 @@ import { PREFERENCE_KEYS } from '@/shared/config/preferences'
 import { renderApp } from '@/test/render-app'
 
 describe('app shell', () => {
-  it('redirects to Discover and marks the active tab', async () => {
+  it('redirects to Home and marks the active tab', async () => {
     const { router } = renderApp('/')
     const nav = await screen.findByRole('navigation', { name: 'Navegación principal' })
-    await waitFor(() => expect(router.state.location.pathname).toBe('/discover'))
-    expect(within(nav).getAllByRole('link')).toHaveLength(4)
+    await waitFor(() => expect(router.state.location.pathname).toBe('/home'))
+    expect(within(nav).getAllByRole('link')).toHaveLength(5)
     await waitFor(() =>
-      expect(within(nav).getByRole('link', { name: 'Descubre' })).toHaveAttribute(
+      expect(within(nav).getByRole('link', { name: 'Inicio' })).toHaveAttribute(
         'aria-current',
         'page',
       ),

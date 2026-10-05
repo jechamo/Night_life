@@ -12,6 +12,10 @@ function fixture(initialCount = 1) {
     ...createMockServices({ latencyMs: 0, realtime: false }).matching,
     likesYou: vi.fn().mockResolvedValue([]),
     likesYouCount: vi.fn(() => Promise.resolve(count)),
+    likesSnapshot: vi.fn(() =>
+      Promise.resolve({ count, profiles: [], snapshotId: crypto.randomUUID() }),
+    ),
+    markLikesSeen: vi.fn(() => Promise.resolve()),
   }
   const view = renderApp('/tonight', {
     services: {

@@ -82,7 +82,7 @@ describe('onboarding (Block 2 "done when")', () => {
 
     // Theme → into the app.
     await user.click(await screen.findByRole('button', { name: 'Entrar en la noche' }))
-    await waitFor(() => expect(router.state.location.pathname).toBe('/discover'))
+    await waitFor(() => expect(router.state.location.pathname).toBe('/home'))
   }, 20_000)
 
   it('under 18: shows a neutral stop screen and creates nothing', async () => {

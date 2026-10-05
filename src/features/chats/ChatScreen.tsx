@@ -66,8 +66,8 @@ export function ChatScreen() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-7rem-env(safe-area-inset-bottom))] min-h-0 flex-col">
-      <header className="pt-safe px-safe glass-strong z-10 flex shrink-0 items-center gap-2 border-x-0 border-t-0 py-2">
+    <div className="flex h-[calc(100dvh-7rem-var(--nl-safe-area-bottom))] min-h-0 flex-col">
+      <header className="pt-safe px-safe glass-strong z-10 flex shrink-0 items-center gap-2 border-x-0 border-t-0 pb-2 [--nl-safe-top-gap:0.5rem]">
         <ButtonLink to="/chats" variant="ghost" size="icon" aria-label={t('common.back')}>
           <ChevronLeft aria-hidden />
         </ButtonLink>

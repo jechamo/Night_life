@@ -1,4 +1,5 @@
 import type { ConsentService } from '@/features/consents/services/consent-service'
+import type { DashboardService } from '@/features/home/services/dashboard-service'
 import type { LegalService } from '@/features/legal/services/legal-service'
 import type { OnboardingService } from '@/features/onboarding/services/onboarding-service'
 import type { VerificationService } from '@/features/verification/services/verification-service'
@@ -23,6 +24,7 @@ import type { SessionService } from '@/shared/session/session-service'
  * src/mocks; Block 5 swaps in Supabase-backed services without touching hooks/UI.
  */
 export interface AppServices {
+  dashboard: DashboardService
   flags: FlagService
   entitlements: EntitlementService
   session: SessionService

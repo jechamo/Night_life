@@ -96,6 +96,26 @@ export function createMockMatchingService(
         ? ok({ profile: person, context: contextFor(state, person) })
         : err('nothing_to_undo')
     },
+    async likesSnapshot() {
+      await wait()
+      const profiles = state.people.filter(
+        (p) =>
+          p.likesMe && !state.blocked.has(p.id) && !state.matches.some((m) => m.person.id === p.id),
+      )
+      const snapshotId = crypto.randomUUID()
+      state.likesSnapshots.set(
+        snapshotId,
+        profiles.map((p) => p.id),
+      )
+      return { count: profiles.length, profiles, snapshotId }
+    },
+    async markLikesSeen(snapshotId) {
+      await wait()
+      const included = state.likesSnapshots.get(snapshotId)
+      if (!included) throw new Error('invalid snapshot')
+      for (const id of included) state.likesSeen.add(id)
+      emit(state, { type: 'dashboard_changed' })
+    },
     likesUsedToday: () => Promise.resolve(state.likesUsed),
     async likesYou() {
       await wait()

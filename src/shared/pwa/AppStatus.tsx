@@ -12,7 +12,7 @@ export function AppStatus() {
   const { t } = useTranslation()
   if (online && !updateAvailable) return null
   return (
-    <aside className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] z-[60] mx-auto max-w-lg rounded-2xl border border-border bg-surface p-4 shadow-xl">
+    <aside className="fixed inset-x-3 top-[calc(0.75rem+var(--nl-safe-area-top))] z-[60] mx-auto max-w-lg rounded-2xl border border-border bg-surface p-4 shadow-xl">
       <p role="status" className="text-sm text-foreground">
         {t(online ? 'pwa.updateAvailable' : 'pwa.offline')}
       </p>

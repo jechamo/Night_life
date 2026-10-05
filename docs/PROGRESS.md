@@ -1,5 +1,34 @@
 # Progreso — Nightlife Connect
 
+## Inicio visual previo al bloque 11 — 05/10/2026
+
+- Implementado `/home` como entrada de login, alta y PWA. Se conservan enlaces
+  directos. Navegación: Inicio, Descubre, Esta Noche, Chats, Perfil.
+- Mosaico con cinco cercanos (hasta dos patrocinios), dos rankings de tres locales,
+  likes nuevos, chats pendientes, matches activos y favoritos. Datos agregados en
+  servidor por ciudad, GPS solo consentido y alternativa «Cerca del centro».
+- Fichas por ID, favoritos persistentes e idempotentes y recibos de likes por
+  snapshot. El contador del corazón conserva el total recibido; Premium sigue
+  ocultando perfiles. Los mensajes leídos de la otra persona siguen pendientes.
+- Ilustraciones con máscara radial estándar/WebKit y Mono sin glow decorativo.
+  Insets compartidos, separación visual aditiva y orientación horizontal de PWA.
+- Migración aplicada manualmente por el propietario, confirmada el 05/10/2026;
+  seis RPC existentes y acceso anónimo rechazado. MCP sigue inestable: Advisors,
+  tests SQL con rollback e historial de migración siguen pendientes de acceso.
+- Vercel conectado al repositorio existente; `main`/`develop` conservan historial
+  desde `3835fffb`. `main` predeterminada, producción y protegida con PR/CI estricto.
+  CI, publicación y rollback documentados en `GITFLOW.md`; pagos siguen en TEST.
+- Revisión responsive local con fixtures: 320, 390, escritorio y horizontal,
+  siete temas sin desbordamiento. Las pruebas de interfaz comprueban cero reservas
+  de mapa al abrir/actualizar Inicio, favoritos y fichas, y ausencia de solicitud
+  GPS sin consentimiento. No equivale a una captura de red autenticada en móvil.
+- ✅ `npm run check`: 413/413 pruebas, tipos, lint y formato. Dos pruebas adicionales
+  comprueban agrupación de ráfagas de actividad y cancelación al cambiar de sesión. Build correcto;
+  `npm audit`: cero vulnerabilidades; comprobaciones HTTP de red: 29/29.
+- Pendientes físicos: Safari/PWA con notch, teclado y orientación en dispositivos
+  reales; recorridos entre dispositivos, Advisors y publicación se registrarán
+  con su evidencia. El bloque 11 no se inicia con este trabajo.
+
 Registro por bloque (PRD 11.1): qué se hizo, decisiones, desviaciones y pendientes.
 **No se pasa al siguiente bloque sin un OK explícito del propietario.**
 

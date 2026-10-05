@@ -11,7 +11,7 @@ export function NotFoundScreen() {
         icon={Compass}
         title={t('errors.notFound.title')}
         description={t('errors.notFound.description')}
-        action={<ButtonLink to="/discover">{t('errors.notFound.action')}</ButtonLink>}
+        action={<ButtonLink to="/home">{t('errors.notFound.action')}</ButtonLink>}
       />
     </div>
   )

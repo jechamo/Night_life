@@ -2,6 +2,31 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Inicio previo al bloque 11 — 05/10/2026
+
+- Migración aditiva `20261005173548_home_dashboard`: favoritos con RLS de dueño,
+  escritura exclusivamente RPC, estados deseados idempotentes y FK Auth con
+  cascada. Snapshots/recibos en `private`, con RLS y sin grants de cliente.
+- Envoltorios públicos invoker y helpers privados con `search_path=''`. Los
+  callers exigen registro activo y cuotas; métricas y snapshots sociales exigen
+  mayoría verificada y reutilizan filtros de pareja/match, bloqueos y TEST.
+- Rankings «Ya están allí» usan la banda pública, también para ordenar y dibujar
+  barras; por debajo de cinco no se devuelven edad, semáforo ni proporciones.
+- La confirmación de likes usa token opaco ligado al usuario, plazo de una hora
+  y emisor/fecha exactos. No se acepta una marca temporal suministrada por cliente.
+  Los perfiles continúan sujetos al entitlement Premium y su autorización de fotos.
+- El propietario confirmó la aplicación manual en SQL Editor. Se comprobaron por
+  HTTP las seis funciones: 401/42501 sin sesión, sin escrituras. Red del bloque 10:
+  29/29; `npm audit`: cero vulnerabilidades, incluyendo desarrollo.
+- MCP Supabase sigue sin estar disponible de forma estable. No se presenta como
+  ejecutada la validación SQL con rollback ni una nueva lectura de Advisors.
+  También queda pendiente registrar la versión aplicada en historial de migraciones
+  y regenerar todos los tipos desde servidor. Ver `GITFLOW.md` antes de `db push`.
+- Revisión local de interfaces, fallo de carga, caché y generación de sesión;
+  no atribuir el cambio al scan independiente anterior ni a pruebas físicas nuevas.
+- `main` exige PR, `Quality`, rama actualizada y conversaciones resueltas, también
+  para administradores. No se permiten force-push ni borrado de la rama.
+
 ## Cierre funcional adicional 8/9 — 2026-10-05
 
 Revisión del cambio y regresiones propias, posterior al scan independiente del
