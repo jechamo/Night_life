@@ -2,6 +2,13 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Historial de migraciones — 08/10/2026
+
+- Historial remoto y repositorio coinciden (60 versiones). Un `db push` ya no
+  reaplicaría SQL existente. Solo se insertaron filas en el historial y un índice aditivo.
+- Advisors tras el cambio: seguridad igual (0 errores, 1 WARN conocido, 18 INFO
+  intencionados); la FK sin índice de `private.likes_seen` queda resuelta.
+
 ## Revisión 08/10/2026 (Bloque 0 y compras)
 
 - A05/A08: corregido el riesgo de que las E2E reutilizaran `npm run preview` (Supabase
@@ -13,9 +20,8 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
   `block10.sql` pendiente de aprobación manual). Advisors sin errores.
 - Stripe: Edge Functions desplegadas idénticas al repo (firma, pedido, cliente,
   importe/periodo y modo verificados en servidor). Sin claves ni precios LIVE.
-- Pendiente: alinear el historial de migraciones remoto (versiones del 05/10 y
-  `home_dashboard` sin registrar), auditoría de red HTTP y revisión de eventos del
-  webhook en el panel de Stripe.
+- Pendiente: auditoría de red HTTP y revisión de eventos del webhook en el panel de
+  Stripe.
 
 ## Roadmap 2026-10 · Bloque 0 (red de regresión E2E) — 08/10/2026
 

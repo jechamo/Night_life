@@ -20,15 +20,21 @@ La URL de producción se conserva: https://nightlife-connect-beige.vercel.app.
 `main` y `develop` parten del estado validado `3835fffb`, conservando ramas e
 historial anteriores. `main` es la rama predeterminada y de producción.
 
-## Migración aplicada manualmente
+## Historial de migraciones
 
-El propietario confirmó la ejecución de `20261005173548_home_dashboard.sql` en
-SQL Editor el 05/10/2026. Las seis funciones existen y rechazan acceso anónimo.
-La ejecución manual no registra automáticamente `supabase_migrations`.
-Antes de usar `db push`, verificar el esquema y registrar esa versión como
-aplicada con `supabase migration repair 20261005173548 --status applied --linked`
-desde una cuenta autorizada, o el mecanismo equivalente de Management API.
-No volver a ejecutar las sentencias CREATE sobre el esquema ya existente.
+Alineado el 08/10/2026 (60 versiones, idénticas en el repositorio y en
+`supabase_migrations.schema_migrations`):
+
+- Las seis migraciones del 05/10 se renombraron en el repositorio a la versión con
+  la que se aplicaron (contenido verificado por md5).
+- `20261005173548_home_dashboard` y las cuatro del Bloque 5 (`rpc_block5`,
+  `purge_test_data`, `seed_legal_documents`, `grants`), aplicadas en el SQL Editor,
+  se registraron en el historial sin volver a ejecutarse (sus objetos existen).
+- Nueva `20261008092243_likes_seen_sender_idx` (índice aditivo, MCP).
+
+Regla: toda migración nueva se aplica con MCP `apply_migration` (o `db push`) y el
+fichero se guarda con la versión que devuelve el historial remoto. Si algo se aplica a
+mano, registrar su versión en el mismo cambio.
 
 ## Rollback
 

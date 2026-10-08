@@ -71,12 +71,12 @@ Los importes son propuestas de prueba pendientes de validación antes del bloque
 
 Seis migraciones versionadas, generadas con CLI y aplicadas con MCP:
 
-- `20261005053450_premium_social_completion`.
-- `20261005053810_venue_billing_completion`.
-- `20261005055441_completion_hardening_and_flags`.
-- `20261005060129_sponsorship_tiers_privacy`.
-- `20261005061406_completion_runtime_guards`.
-- `20261005063445_sponsorship_self_service_terms` (ES/EN 1.1, conserva 1.0).
+- `20261005054223_premium_social_completion`.
+- `20261005054229_venue_billing_completion`.
+- `20261005055647_completion_hardening_and_flags`.
+- `20261005060249_sponsorship_tiers_privacy`.
+- `20261005061609_completion_runtime_guards`.
+- `20261005063614_sponsorship_self_service_terms` (ES/EN 1.1, conserva 1.0).
 
 Edge ACTIVE: `create-checkout-session` v6, `billing-account` v6,
 `create-portal-session` v5, `request-withdrawal` v5. Se conserva autenticación

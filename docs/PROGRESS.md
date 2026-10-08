@@ -1,6 +1,13 @@
 # Progreso — Nightlife Connect
 
-## Roadmap 2026-10 · Revisión del Bloque 0 y de compras Stripe — 08/10/2026
+## Historial de migraciones alineado — 08/10/2026 (OK del propietario)
+
+- Seis ficheros del 05/10 renombrados a su versión remota (mismo contenido, md5).
+- Registradas sin re-ejecutar `home_dashboard` y las cuatro del Bloque 5 aplicadas en el
+  SQL Editor; antes se comprobó que todos sus objetos existen.
+- Nueva migración aditiva `20261008092243_likes_seen_sender_idx` (FK sin índice).
+- ✅ Historial remoto = repositorio: 60/60 versiones, mismo hash. Advisors de seguridad
+  sin cambios (sin errores); rendimiento solo INFO de índices sin uso.
 
 Revisión pedida por el propietario («que no falte nada: OWASP, configuración, BBDD,
 compras antiguas y nuevas»). Sin migraciones ni despliegues de Edge Functions.
@@ -27,8 +34,7 @@ compras antiguas y nuevas»). Sin migraciones ni despliegues de Edge Functions.
 - **Compras Stripe (TEST):** ver `PAYMENTS_GO_LIVE.md` § «Verificación 08/10/2026».
   14 productos con precio TEST que existe en Stripe; solo el Pase VIP probado de punta
   a punta con tarjeta; 13 pendientes de una ronda de compras manual.
-- **Pendientes del propietario:** alinear el historial de migraciones (pide OK),
-  auditoría de red (dominio Supabase bloqueado en este entorno), Vercel MCP (403 en el
+- **Pendientes del propietario:** auditoría de red (dominio Supabase bloqueado en este entorno), Vercel MCP (403 en el
   equipo `chaplications-projects`), eventos del webhook en el panel de Stripe.
 - ✅ `npm run check` 420/420 · build · `npm audit` 0 · E2E 108/108 (3 pasadas).
 
