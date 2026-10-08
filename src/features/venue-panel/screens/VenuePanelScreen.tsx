@@ -1,4 +1,4 @@
-import { Building2, Store } from 'lucide-react'
+import { BookOpen, Building2, Store } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePlaces } from '@/features/places/hooks/use-places'
@@ -88,6 +88,16 @@ export function VenuePanelScreen() {
         description={t('venuePanel.body')}
         backTo="/profile"
       />
+      <Section title={t('guide.nav.title')}>
+        <GlassCard className="p-0">
+          <ListRow
+            to="/guia/locales"
+            icon={BookOpen}
+            label={t('guide.nav.venues')}
+            hint={t('guide.nav.venuesHint')}
+          />
+        </GlassCard>
+      </Section>
       {manager && (
         <Section title={t('venuePanel.myVenues')}>
           {venues.length === 0 ? (

@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { LayeredInfoBox } from '@/features/legal/components/LayeredInfoBox'
@@ -34,7 +34,13 @@ export function PhoneStep({
   dispatch,
   mode = 'signup',
   onBack,
-}: StepProps & { mode?: 'signup' | 'login'; onBack?: () => void }) {
+  alternate,
+}: StepProps & {
+  mode?: 'signup' | 'login'
+  onBack?: () => void
+  /** Login only: switch to another sign-in method (roadmap R1, email code). */
+  alternate?: ReactNode
+}) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -42,6 +48,7 @@ export function PhoneStep({
   const signOut = useSignOut()
   const login = mode === 'login'
   const testTools = useFeatureFlag('test_tools_enabled') === 'on'
+  const emailLogin = useFeatureFlag('email_login_enabled') === 'on'
   const [phase, setPhase] = useState<Phase>('enter')
   const [prefix, setPrefix] = useState<CountryPrefix>('+34')
   const [national, setNational] = useState('')
@@ -164,6 +171,7 @@ export function PhoneStep({
           value={email}
           onChange={(event) => setEmail(event.target.value.trim())}
         />
+        {emailLogin && <p className="text-sm text-live">{t('onboarding.phone.emailLoginHint')}</p>}
       </OnboardingStepLayout>
     )
   }
@@ -265,6 +273,7 @@ export function PhoneStep({
         />
       </div>
       <LayeredInfoBox form="phone" />
+      {alternate}
     </OnboardingStepLayout>
   )
 }

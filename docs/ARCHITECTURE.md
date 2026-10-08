@@ -2,6 +2,14 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Roadmap R1 — email y guías
+
+`/login` elige método según `email_login_enabled`: `EmailLoginStep` (código por email,
+`OnboardingService.requestEmailOtp/verifyEmailOtp`) o el `PhoneStep` existente. Ajustes ›
+Cuenta usa `getAccountEmail/changeEmail` mediante `use-account-email`. Las guías
+(`/guia`, `/guia/locales`) reutilizan `PublicLayout`; sus claves i18n están tipadas una a
+una para que falte una traducción sea un error de compilación.
+
 ## Inicio sin mapa — previo al bloque 11
 
 `/home` recibe agregados mediante UI → hooks → `DashboardService` → adaptador

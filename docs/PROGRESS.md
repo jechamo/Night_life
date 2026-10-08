@@ -1,5 +1,38 @@
 # Progreso — Nightlife Connect
 
+## Roadmap 2026-10 · R1 — Entrar por email y guías públicas — 08/10/2026
+
+Plan: [R1_PLAN.md](./R1_PLAN.md). Todo aditivo; con el flag apagado la app es idéntica.
+
+- **Entrar con código por email** detrás de `email_login_enabled` (migración
+  `20261008093138_email_login_flag`, apagado). `/login` ofrece email primero y SMS a un
+  toque; nunca se crean cuentas por email y la respuesta es igual exista o no la cuenta.
+  Ajustes › Cuenta para añadir/cambiar el email; el paso de email del alta explica su uso.
+- **Guías públicas sin login:** `/guia` (usuarios) y `/guia/locales` (locales), ES/EN,
+  enlazadas desde Bienvenida («Cómo funciona»), índice legal, pie público, Perfil y
+  Panel de locales. Sin precios: los pagos siguen en pruebas.
+- Configuración pendiente del propietario en Supabase Auth: [AUTH_EMAIL.md](./AUTH_EMAIL.md).
+- Estabilidad: la E2E de alta esperaba a los documentos legales solo implícitamente; su
+  lista crece encima de las casillas al cargar y un clic se perdió 1 vez en 126. Ahora
+  espera a los tres documentos (8/8 y 126/126 después).
+
+**Hecho cuando**
+
+- ✅ Flag apagado: login solo SMS (unitaria + E2E); el resto de E2E sin cambios.
+- ✅ Flag encendido: login por email de punta a punta con el simulador (unitarias + E2E
+  admin enciende → usuario añade email → cierra sesión → entra con código).
+- ✅ Email desconocido: misma respuesta y nunca entra; email mal escrito se rechaza.
+- ✅ Guías accesibles sin sesión, enlazadas, ES/EN con las mismas claves.
+- ✅ `npm run check` 436/436 (+16) · E2E 126/126 (3 pasadas) · build · `npm audit` 0.
+- ✅ Supabase: RLS 35/35 (2 pruebas nuevas del flag) · 15 flags · flag en `off` ·
+  Advisors sin errores nuevos · historial 61 = repositorio.
+- ❌ Envío real de emails: depende de configurar SMTP y la plantilla (AUTH_EMAIL.md).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r1-email-guides` o, en local, Admin › Feature
+flags › `email_login_enabled` = on → Perfil › Ajustes › Cuenta → cerrar sesión → entrar
+con email (código simulado 123456). Las guías: `/guia` y `/guia/locales`.
+
 ## Historial de migraciones alineado — 08/10/2026 (OK del propietario)
 
 - Seis ficheros del 05/10 renombrados a su versión remota (mismo contenido, md5).

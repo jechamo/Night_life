@@ -1,4 +1,4 @@
-import { FileText, Mail, ShieldAlert, Trash2 } from 'lucide-react'
+import { BookOpen, FileText, Mail, ShieldAlert, Store, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { LegalDocumentSlug } from '@/features/legal/model/legal'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
@@ -29,6 +29,25 @@ export function LegalIndexScreen() {
     <>
       <h1 className="mt-8 text-3xl font-semibold">{t('publicWeb.title')}</h1>
       <p className="mt-2 max-w-prose text-muted-foreground">{t('publicWeb.intro')}</p>
+      <section className="mt-8">
+        <h2 className="font-label mb-3 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+          {t('guide.nav.title')}
+        </h2>
+        <GlassCard className="divide-y divide-border p-0">
+          <ListRow
+            to="/guia"
+            icon={BookOpen}
+            label={t('guide.nav.user')}
+            hint={t('guide.nav.userHint')}
+          />
+          <ListRow
+            to="/guia/locales"
+            icon={Store}
+            label={t('guide.nav.venues')}
+            hint={t('guide.nav.venuesHint')}
+          />
+        </GlassCard>
+      </section>
       <section className="mt-8">
         <h2 className="font-label mb-3 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
           {t('publicWeb.documents')}

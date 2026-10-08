@@ -46,6 +46,52 @@ export function createOnboardingService(db: Db, platform: Platform): OnboardingS
       return err('network')
     },
 
+    async requestEmailOtp(email) {
+      const { error } = await db.auth.signInWithOtp({
+        email,
+        options: { shouldCreateUser: false },
+      })
+      if (!error) return ok({ resendAfterSeconds: RESEND_AFTER_SECONDS })
+      if (errorStatus(error) === 429) return err('rate_limited')
+      const code = errorCode(error)
+      // No account for this address: answer exactly like a sent code (no enumeration).
+      if (code === 'otp_disabled' || code === 'user_not_found' || code === 'signup_disabled')
+        return ok({ resendAfterSeconds: RESEND_AFTER_SECONDS })
+      if (code === 'validation_failed' || code === 'email_address_invalid')
+        return err('invalid_email')
+      return err('network')
+    },
+
+    async verifyEmailOtp(email, code) {
+      const { error } = await db.auth.verifyOtp({ email, token: code, type: 'email' })
+      if (!error) return ok(undefined)
+      if (errorStatus(error) === 429) return err('too_many_attempts')
+      if (errorCode(error) === 'otp_expired' || errorStatus(error) === 403) return err('wrong_code')
+      return err('network')
+    },
+
+    async getAccountEmail() {
+      const { data, error } = await db.auth.getUser()
+      if (error || !data.user) throw new Error('session_unavailable')
+      const user = data.user
+      return {
+        email: user.email || null,
+        confirmed: Boolean(user.email && user.email_confirmed_at),
+        pendingEmail: user.new_email || null,
+      }
+    },
+
+    async changeEmail(email) {
+      const { error } = await db.auth.updateUser({ email })
+      if (!error) return ok(undefined)
+      if (errorStatus(error) === 429) return err('rate_limited')
+      const code = errorCode(error)
+      if (code === 'email_exists') return err('in_use')
+      if (code === 'validation_failed' || code === 'email_address_invalid')
+        return err('invalid_email')
+      return err('network')
+    },
+
     async complete(data) {
       const uid = await currentUserId(db)
       if (!uid || !data.profile || !data.birthdate) return err('network')

@@ -118,6 +118,16 @@ const LegalDocumentScreen = lazy(() =>
     default: module.LegalDocumentScreen,
   })),
 )
+const UserGuideScreen = lazy(() =>
+  import('@/features/public/screens/GuideScreen').then((module) => ({
+    default: module.UserGuideScreen,
+  })),
+)
+const VenueGuideScreen = lazy(() =>
+  import('@/features/public/screens/GuideScreen').then((module) => ({
+    default: module.VenueGuideScreen,
+  })),
+)
 const LegalIndexScreen = lazy(() =>
   import('@/features/public/screens/LegalIndexScreen').then((module) => ({
     default: module.LegalIndexScreen,
@@ -288,6 +298,16 @@ export const routes: RouteObject[] = [
       { path: 'illegal-content', element: screen(IllegalContentScreen) },
       { path: 'contact', element: screen(ContactScreen) },
       { path: ':slug', element: screen(LegalDocumentScreen) },
+    ],
+  },
+  // Public guides for people and venues (roadmap R1): no login, same public frame.
+  {
+    path: 'guia',
+    element: <PublicLayout />,
+    errorElement: <RouteErrorScreen />,
+    children: [
+      { index: true, element: screen(UserGuideScreen) },
+      { path: 'locales', element: screen(VenueGuideScreen) },
     ],
   },
   { path: 'suspended', element: screen(SuspendedScreen), errorElement: <RouteErrorScreen /> },

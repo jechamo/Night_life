@@ -17,6 +17,10 @@ test.describe('Alta y acceso', () => {
 
     // Firma: tres casillas sin marcar y botón deshabilitado hasta marcarlas.
     const sign = page.getByRole('button', { name: t('onboarding.legal.sign') })
+    // Wait for the three documents: their list grows above the boxes when it loads.
+    await expect(
+      page.getByRole('button', { name: new RegExp(`^${t('common.read')}:`) }),
+    ).toHaveCount(3)
     const boxes = page.getByRole('checkbox')
     await expect(boxes).toHaveCount(3)
     for (const box of await boxes.all()) await expect(box).not.toBeChecked()

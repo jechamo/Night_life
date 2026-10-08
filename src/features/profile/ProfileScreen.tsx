@@ -1,4 +1,5 @@
 import {
+  BookOpen,
   Crown,
   Database,
   FileText,
@@ -156,6 +157,12 @@ export function ProfileScreen() {
       </Section>
       <Section title={t('profileMenu.about')}>
         <GlassCard className="divide-y divide-border p-0">
+          <ListRow
+            to="/guia"
+            icon={BookOpen}
+            label={t('guide.nav.user')}
+            hint={t('guide.nav.userHint')}
+          />
           <ListRow
             to="/legal"
             icon={FileText}

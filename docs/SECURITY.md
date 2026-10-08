@@ -2,6 +2,18 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## R1 — Entrar por email y guías — 08/10/2026
+
+- A07 (autenticación): código por email con `shouldCreateUser: false`; el alta sigue
+  exigiendo teléfono, firma y comprobación de bans. Sin enumeración de cuentas: misma
+  respuesta y mismo error de código con o sin cuenta. Límites de Supabase Auth.
+- Cuentas creadas solo con email por la API no pueden completar el alta (teléfono
+  confirmado obligatorio) ni usar RPC (`require_registered`: completa, no baneada ni
+  suspendida). El flag solo lo cambia un admin con `aal2` (RLS 35/35, 2 pruebas nuevas).
+- A04: flag apagado por defecto y valor seguro `off` en cliente; sin flag, cero cambios.
+- Guías públicas: solo textos traducidos, sin datos personales ni llamadas a red.
+- Pendiente: SMTP propio y plantilla con `{{ .Token }}` (`docs/AUTH_EMAIL.md`).
+
 ## Historial de migraciones — 08/10/2026
 
 - Historial remoto y repositorio coinciden (60 versiones). Un `db push` ya no
