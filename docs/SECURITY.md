@@ -2,6 +2,27 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## R4 — Escaparate del local — 08/10/2026
+
+- A01/API1/API5: tablas `private.venue_photos/details/notices/view_marks/daily_views` con RLS
+  y sin grants; solo RPC `security definer` con envoltorios `invoker` para `authenticated`;
+  gestionar fotos, ficha, avisos e informe exige ser gestor de ese local; moderar exige
+  admin + `aal2` y queda auditado.
+- Storage (PRD 6.15 D): bucket privado, 5 MB, solo imágenes; ruta estricta
+  `<venue>/<uuid>.(webp|jpg|png)`; subir solo gestores del local con el flag y hasta 2× el
+  límite de su plan (las subidas abandonadas no llenan el bucket); leer solo fotos
+  aprobadas y visibles por plan (usuarios registrados), o gestor/admin; sin `update`;
+  borrar solo cuando ninguna fila apunta al objeto. URLs firmadas de 15 min. Las fotos se
+  recodifican en el dispositivo sin EXIF/GPS.
+- A04/integridad: flag comprobado en servidor; todo lo que publica el local va etiquetado
+  «Lo dice el local»; avisos con caducidad (90 min / máx. 8 h); límites de uso
+  (`case_limit`/`place_limit`); valores cerrados validados en servidor.
+- Privacidad (PRD 4.3): vistas contadas con una marca HMAC (sin id de persona) que se borra
+  a los 2 días; solo se guardan contadores diarios (400 días); el informe nunca baja de 5
+  personas; las vistas del propio gestor y de cuentas de prueba no cuentan.
+- Pendiente: parte 5 (borrado de fotos y limpieza diaria) a ejecutar por el propietario.
+- Pruebas: showcase 61/61, RLS 37/37; Advisors sin errores.
+
 ## R3 — Partners y contratos — 08/10/2026
 
 - A01/API1/API5: empresas, contratos, ventajas e invitaciones en tablas `private` con RLS y

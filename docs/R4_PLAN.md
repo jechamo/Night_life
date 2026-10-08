@@ -44,9 +44,12 @@ almost_full|full`, caduca a los 90 min), «entrada gratis hasta» y «happy hour
 
 ## Hecho cuando
 
-- Flag apagado: ficha, panel, portadas y admin idénticos (unitarias + E2E).
-- Flag encendido: el gestor sube una foto → pendiente → el admin la aprueba → se ve en la
-  ficha y como portada; límite 3/10; avisos y ficha enriquecida visibles; informe (unitarias + E2E).
-- SQL por rol (`supabase/tests/showcase.sql`): anónimo, usuario, gestor de otro local,
-  gestor, admin aal1/aal2; flag apagado; límites; Storage; umbrales; auditoría.
-- Suites previas repetidas (RLS, partners, live-status, block9), Advisors, `npm audit`, docs.
+- ✅ Flag apagado: ficha, panel, portadas, admin y guías idénticos (unitarias + E2E).
+- ✅ Flag encendido: el gestor sube una foto → pendiente → el admin la aprueba → se ve en la
+  ficha y como portada; límite 3/10; avisos y ficha enriquecida visibles; informe
+  (unitarias + E2E).
+- ✅ SQL por rol (`supabase/tests/showcase.sql`, 61/61): anónimo, usuario, gestor de otro
+  local, gestor, admin aal1/aal2; flag apagado; límites; Storage; umbrales; auditoría.
+- ✅ RLS 37/37, Advisors sin errores, `npm audit` 0, docs.
+- ❌ Parte 5 (`PENDING_5_venue_showcase_cleanup.sql`, con `DELETE`): Supabase la cancela sin
+  confirmación; la ejecuta el propietario en el SQL Editor.

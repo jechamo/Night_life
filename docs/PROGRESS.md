@@ -1,5 +1,49 @@
 # Progreso — Nightlife Connect
 
+## Roadmap 2026-10 · R4 — Escaparate del local — 08/10/2026
+
+Plan: [R4_PLAN.md](./R4_PLAN.md). Todo aditivo y detrás de `venue_showcase_enabled`
+(apagado): ficha, panel, portadas, admin y guías no cambian con el flag apagado.
+
+- **Fotos del local:** bucket privado `venue-photos` (5 MB; WebP/JPEG/PNG), subida desde el
+  panel con `usePlatform().images` (recomprime y quita EXIF/GPS), todas pendientes hasta que
+  el admin las aprueba (Admin › Fotos de locales, rechazo con motivo). Gratis 3 y 10 con
+  patrocinio o Estadísticas Pro (comprados o por contrato); al terminar el plan las de más
+  se ocultan, no se borran. La portada aprobada sustituye a la ilustración en listas, mapa y
+  ficha; sin portada, la de siempre. URLs firmadas de 15 minutos.
+- **«Lo dice el local»:** puerta (sin cola, poca, larga, casi lleno, completo; 90 min) y
+  ofertas «entrada gratis hasta» / «happy hour hasta» (máx. 8 h), siempre etiquetado.
+- **Ficha enriquecida:** dress code, edad mínima, precio de entrada y de copa, terraza y
+  accesible (solo en la ficha; el buscador no cambia).
+- **Resultados:** vistas de la ficha (una por persona, local y noche; las del propio gestor
+  no cuentan), «Voy», check-ins y paso de «Voy» a check-in en 30 días, y resultado de cada
+  patrocinio (mismos días antes) y Flash (misma franja la semana anterior). Siempre con
+  umbral de 5. Con Estadísticas Pro: evolución por noche y 30 días anteriores.
+- **Servidor:** migraciones `20261008174514_venue_showcase_schema`, `…175719_storage`,
+  `…184836_photos`, `…184900_page`, `…184936_report`, aplicadas por MCP. La parte 5
+  (`PENDING_5_venue_showcase_cleanup.sql`: borrar una foto y limpieza diaria) contiene
+  `DELETE` y Supabase la cancela sin confirmación: **pendiente de ejecutar por el
+  propietario** en el SQL Editor; hasta entonces «Borrar foto» falla y no hay limpieza
+  diaria (no afecta con el flag apagado). Quitar un aviso ya no borra filas: lo caduca.
+
+**Hecho cuando**
+
+- ✅ Flag apagado: panel, ficha, admin y guías idénticos (unitarias + E2E).
+- ✅ Flag encendido: subir → pendiente → aprobar → foto y portada en la ficha; límite 3/10;
+  rechazo con motivo; avisos y ficha enriquecida; informe con umbral y detalle Pro
+  (unitarias 20 nuevas + E2E r4 4/4).
+- ✅ SQL: showcase 61/61 (anónimo, usuario, gestor, gestor de otro local, admin aal1/aal2,
+  flag apagado, Storage, límites, umbrales, auditoría) · RLS 37/37 (18 flags) · sin restos ·
+  historial 72 = repositorio (+ parte 5 pendiente).
+- ✅ `npm run check` 482/482 · build · `npm audit` 0 · E2E completas 56/56 ×3.
+- ✅ Advisors: 0 errores; 5 INFO nuevos intencionados (tablas `private` sin acceso directo).
+- ❌ Parte 5 de la migración pendiente (ver arriba).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r4-showcase` o, en local, Admin › Feature flags ›
+`venue_showcase_enabled` = on → Perfil › Panel de locales › Bar Cobalto › Fotos › «Añadir
+foto» → Admin › Fotos de locales › Aprobar → Descubrir › Bar Cobalto.
+
 ## Roadmap 2026-10 · R3 — Partners y contratos — 08/10/2026
 
 Plan: [R3_PLAN.md](./R3_PLAN.md). Todo aditivo y detrás de `venue_partners_enabled`

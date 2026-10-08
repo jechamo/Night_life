@@ -2,6 +2,19 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Roadmap R4 — escaparate del local
+
+Modelo en `places/model/showcase.ts` (zod; listas cerradas como en el servidor). Ficha:
+`ShowcaseSection` (en `PlaceDetails`) y `PlaceCover` → `use-showcase` (`useVenueShowcase`,
+`useVenueCover`, `useTrackPlaceView`) → `PlacesService.showcase/covers/trackView`. Panel:
+`ShowcaseCards` (`PhotosCard`, `LiveNoticeCard`, `ExtrasCard`, `ReportCard`) →
+`use-showcase-panel` (la subida pasa por `usePlatform().camera` e `images.sanitize`) →
+`VenuePanelService.photos/uploadPhoto/removePhoto/setCoverPhoto/saveExtras/setNotice/
+clearNotice/report`. Admin: `AdminVenuePhotosScreen` → `useAdminVenuePhotos/
+useReviewVenuePhoto` → `AdminService.venuePhotos/reviewVenuePhoto`. El adaptador
+`supabase/showcase.ts` firma las rutas privadas (15 min); el simulador
+(`mocks/backoffice/showcase.ts`) guarda las fotos en memoria.
+
 ## Roadmap R3 — partners y contratos
 
 Modelo en `venue-panel/model/partners.ts` (zod). Admin: `AdminPartnersScreen` → hooks de
