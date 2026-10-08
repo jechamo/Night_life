@@ -10,6 +10,7 @@ import { isTaxId, normalizeTaxId } from '@/features/venue-panel/model/partners'
 import { err, ok } from '@/shared/lib/result'
 import { audit, type MockConfig } from './config'
 import { createInvitation, invitationStatus } from './partners'
+import { createMockShowcaseAdmin } from './showcase'
 
 type Wait = () => Promise<void>
 
@@ -149,6 +150,7 @@ export function createMockAdminService(
   }
 
   return {
+    ...createMockShowcaseAdmin(config, world, wait),
     async dashboard() {
       await wait()
       const open = (rows: AdminRow[]) =>

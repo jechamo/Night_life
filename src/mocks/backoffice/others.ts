@@ -11,6 +11,7 @@ import { liveStatusOf, type WorldState } from '../world/world-state'
 import { normalizeInviteCode } from '@/features/venue-panel/model/partners'
 import { MOCK_LEGAL_VERSION } from '../legal-documents.mock'
 import { audit, type MockConfig } from './config'
+import { createMockShowcasePanel } from './showcase'
 import {
   activeContract,
   contractBenefits,
@@ -77,6 +78,7 @@ export function createMockVenuePanelService(
     return venues.find((v) => v.placeId === placeId)!
   }
   return {
+    ...createMockShowcasePanel(config, world, wait),
     myVenues: () => Promise.resolve(venues.map(withContract)),
     createFlashAlert: () => Promise.resolve(),
     async setMusic(placeId, genres, lineup) {

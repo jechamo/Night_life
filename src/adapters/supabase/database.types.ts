@@ -2438,6 +2438,25 @@ export type Database = {
       }
       venue_stats: { Args: { p_venue: string }; Returns: Json }
       venue_team: { Args: { p_venue: string }; Returns: Json }
+      venue_photos_manage: { Args: { p_venue: string }; Returns: Json }
+      venue_photo_add: { Args: { p_path: string; p_venue: string }; Returns: Json }
+      venue_photo_remove: { Args: { p_photo: string; p_venue: string }; Returns: string }
+      venue_photo_set_cover: { Args: { p_photo: string; p_venue: string }; Returns: Json }
+      venue_details_save: { Args: { p: Json; p_venue: string }; Returns: Json }
+      venue_notice_set: {
+        Args: { p_kind: string; p_until: string | null; p_value: string | null; p_venue: string }
+        Returns: Json
+      }
+      venue_notice_clear: { Args: { p_kind: string; p_venue: string }; Returns: Json }
+      venue_showcase: { Args: { p_venue: string }; Returns: Json }
+      venue_covers: { Args: never; Returns: Json }
+      place_view: { Args: { p_venue: string }; Returns: undefined }
+      venue_report: { Args: { p_venue: string }; Returns: Json }
+      admin_venue_photos: { Args: { p_status: string }; Returns: Json }
+      admin_venue_photo_review: {
+        Args: { p_approve: boolean; p_photo: string; p_reason: string | null }
+        Returns: undefined
+      }
       verification_snapshot: { Args: never; Returns: Json }
       visible_flash_alerts: { Args: { p_venue: string }; Returns: Json }
       visible_sponsors: { Args: never; Returns: Json }

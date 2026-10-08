@@ -9,6 +9,7 @@ import { invitationSchema, partnerAccountSchema } from '@/features/venue-panel/m
 import { err, ok } from '@/shared/lib/result'
 import { done, refusal } from './business'
 import { must } from './errors'
+import { createShowcaseAdmin } from './showcase'
 
 const count = z.number().int().nonnegative()
 const providerQuotasSchema = z.array(
@@ -117,6 +118,7 @@ const ROLE_ACTION = /^(grant|revoke)_(tester|venue_manager|admin)$/
  */
 export function createAdminService(db: Db, base: AdminService): AdminService {
   const service: AdminService = {
+    ...createShowcaseAdmin(db),
     ...base,
     mode: 'live',
     setSimulatedRoles() {

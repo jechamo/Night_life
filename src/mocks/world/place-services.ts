@@ -12,6 +12,8 @@ import { isEvent, type Place } from '@/features/places/model/types'
 import type { LostFoundError, PlacesService } from '@/features/places/services/places-service'
 import { err, ok, type Result } from '@/shared/lib/result'
 import type { MockStore } from '../mock-store'
+import type { MockConfig } from '../backoffice/config'
+import { createMockShowcasePlaces } from '../backoffice/showcase'
 import { emit, liveStatusOf, placeById, type WorldState } from './world-state'
 
 type Wait = () => Promise<void>
@@ -21,6 +23,7 @@ export function createMockPlacesService(
   state: WorldState,
   store: MockStore,
   wait: Wait,
+  config?: MockConfig,
 ): PlacesService {
   const refreshEvents = (now = new Date()) => {
     state.places = state.places.map((p) =>
@@ -40,6 +43,7 @@ export function createMockPlacesService(
   const findPost = (id: string) => state.lostFound.find((p) => p.id === id)
 
   return {
+    ...createMockShowcasePlaces(config, state),
     getById: (id) => Promise.resolve(placeById(state, id) ?? null),
     async list() {
       await wait()

@@ -1,4 +1,13 @@
 import type { LiveStatus, MusicGenre } from '@/features/places/model/live-status'
+import type {
+  DoorState,
+  NoticeKind,
+  OfferKind,
+  VenueExtras,
+  VenueNotice,
+  VenuePhotos,
+  VenueReport,
+} from '@/features/places/model/showcase'
 import type { Result } from '@/shared/lib/result'
 import type {
   Invitation,
@@ -101,4 +110,17 @@ export interface VenuePanelService {
       'invalid_code' | 'already_manager' | 'terms_required'
     >
   >
+  // Roadmap R4 (flag `venue_showcase_enabled`, checked by the server).
+  photos(placeId: string): Promise<VenuePhotos>
+  /** `blob` must already be re-encoded without metadata (`usePlatform().images`). */
+  uploadPhoto(placeId: string, blob: Blob): Promise<Result<VenuePhotos, 'photo_limit'>>
+  removePhoto(placeId: string, photoId: string): Promise<VenuePhotos>
+  setCoverPhoto(placeId: string, photoId: string): Promise<VenuePhotos>
+  saveExtras(placeId: string, extras: VenueExtras): Promise<VenueExtras>
+  setNotice(
+    placeId: string,
+    notice: { kind: 'door'; value: DoorState } | { kind: OfferKind; until: string },
+  ): Promise<VenueNotice[]>
+  clearNotice(placeId: string, kind: NoticeKind): Promise<VenueNotice[]>
+  report(placeId: string): Promise<VenueReport>
 }

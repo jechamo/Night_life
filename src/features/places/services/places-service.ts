@@ -1,5 +1,6 @@
 import type { Result } from '@/shared/lib/result'
 import type { LiveQuestion, LiveStatus } from '../model/live-status'
+import type { VenueShowcase } from '../model/showcase'
 import type { LatLng, Place, Vibe } from '../model/types'
 
 export interface LostFoundReply {
@@ -60,6 +61,12 @@ export interface PlacesService {
     question: LiveQuestion,
     answer: string,
   ): Promise<Result<LiveStatus, 'no_check_in' | 'own_venue'>>
+  /** Roadmap R4 escaparate (flag `venue_showcase_enabled`, checked by the server). */
+  showcase(placeId: string): Promise<VenueShowcase>
+  /** Approved cover per venue id, as short-lived URLs. */
+  covers(): Promise<Record<string, string>>
+  /** One counted view per person, venue and night (aggregated for the venue's report). */
+  trackView(placeId: string): Promise<void>
   confirmEvent(placeId: string): Promise<Result<Place, 'already_confirmed' | 'not_unconfirmed'>>
   reportEvent(placeId: string, reason: EventReportReason): Promise<void>
   createEvent(input: CreateEventInput): Promise<Result<Place, CreateEventError>>

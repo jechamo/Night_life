@@ -30,6 +30,7 @@ export const FLAG_SCHEMAS = {
   live_status_enabled: onOff,
   // Roadmap 2026-10 R3: partner companies, contracts, invitations and venue teams.
   venue_partners_enabled: onOff,
+  venue_showcase_enabled: onOff,
 } as const
 
 export type FlagKey = keyof typeof FLAG_SCHEMAS
@@ -54,6 +55,7 @@ export const SAFE_FLAG_DEFAULTS: Readonly<FeatureFlags> = {
   email_login_enabled: 'off',
   live_status_enabled: 'off',
   venue_partners_enabled: 'off',
+  venue_showcase_enabled: 'off',
 }
 
 /** Initial values from PRD 6.13 (what the admin seeds in `app_settings`). */
@@ -75,6 +77,7 @@ export const INITIAL_FLAG_VALUES: Readonly<FeatureFlags> = {
   email_login_enabled: 'off',
   live_status_enabled: 'off',
   venue_partners_enabled: 'off',
+  venue_showcase_enabled: 'off',
 }
 
 /**

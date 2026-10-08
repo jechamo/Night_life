@@ -20,6 +20,7 @@ import type {
 import { ACCENT_KEYS, type AccentKey } from '@/shared/domain/venue-types'
 import { err, ok } from '@/shared/lib/result'
 import type { Db } from './client'
+import { createShowcasePlaces } from './showcase'
 import { asText, errorMessage } from './errors'
 
 type Row = Record<string, unknown>
@@ -252,6 +253,7 @@ export function createPlacesService(db: Db): PlacesService {
   }
 
   return {
+    ...createShowcasePlaces(db),
     getById: detailById,
     async list(area) {
       const [venues, events] = await Promise.all([
