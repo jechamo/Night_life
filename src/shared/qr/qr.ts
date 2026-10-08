@@ -114,10 +114,12 @@ function interleave(data: readonly number[], version: number, ecc: QrEcc): numbe
 }
 
 class Grid {
+  readonly version: number
   readonly size: number
   readonly modules: boolean[][]
   readonly isFunction: boolean[][]
-  constructor(readonly version: number) {
+  constructor(version: number) {
+    this.version = version
     this.size = version * 4 + 17
     this.modules = Array.from({ length: this.size }, () =>
       new Array<boolean>(this.size).fill(false),

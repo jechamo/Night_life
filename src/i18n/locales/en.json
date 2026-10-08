@@ -1874,7 +1874,8 @@
         "live_status_enabled": "\"How it is now\": crowd, queue and music voted with check-in, plus music declared by the venue (R2).",
         "venue_partners_enabled": "Partners and contracts: venue invitations, venue terms, plan and team (R3).",
         "venue_showcase_enabled": "Venue showcase: moderated photos, «The venue says», extra details and results report (R4).",
-        "flash_alcohol_allowed": "Enable only after reviewing the applicable regional regulations."
+        "flash_alcohol_allowed": "Enable only after reviewing the applicable regional regulations.",
+        "venue_bookings_enabled": "Reservations without payment and guest lists with QR (R5)."
       }
     },
     "payments": {

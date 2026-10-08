@@ -12,6 +12,8 @@ const fresh = {
     camera: {
       pickPhoto: () => Promise.resolve(ok(new File(['x'], 'photo.jpg', { type: 'image/jpeg' }))),
       openLiveStream: () => Promise.reject(new Error('not used')),
+      canDetectQr: () => false,
+      detectQr: () => Promise.resolve(null),
     },
   },
 }

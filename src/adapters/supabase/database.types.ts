@@ -2438,6 +2438,36 @@ export type Database = {
       }
       venue_stats: { Args: { p_venue: string }; Returns: Json }
       venue_team: { Args: { p_venue: string }; Returns: Json }
+      venue_bookings: { Args: { p_venue: string }; Returns: Json }
+      reservation_request: {
+        Args: { p_arrive_at: string; p_kind: string; p_party: number; p_venue: string }
+        Returns: Json
+      }
+      reservation_cancel: { Args: { p_id: string }; Returns: Json }
+      guestlist_join: { Args: { p_list: string }; Returns: Json }
+      guestlist_leave: { Args: { p_entry: string }; Returns: Json }
+      my_bookings: { Args: never; Returns: Json }
+      venue_booking_settings_save: {
+        Args: {
+          p_guestlists: boolean
+          p_max_party: number
+          p_reservations: boolean
+          p_venue: string
+        }
+        Returns: Json
+      }
+      venue_reservations: { Args: { p_venue: string }; Returns: Json }
+      venue_reservation_decide: {
+        Args: { p_accept: boolean; p_id: string; p_reason: string | null; p_venue: string }
+        Returns: Json
+      }
+      venue_guestlist: { Args: { p_venue: string }; Returns: Json }
+      venue_guestlist_save: {
+        Args: { p_capacity: number; p_title: string; p_valid_until: string; p_venue: string }
+        Returns: Json
+      }
+      venue_guestlist_close: { Args: { p_venue: string }; Returns: Json }
+      venue_guestlist_checkin: { Args: { p_code: string; p_venue: string }; Returns: Json }
       venue_photos_manage: { Args: { p_venue: string }; Returns: Json }
       venue_photo_add: { Args: { p_path: string; p_venue: string }; Returns: Json }
       venue_photo_remove: { Args: { p_photo: string; p_venue: string }; Returns: string }

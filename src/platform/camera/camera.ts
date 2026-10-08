@@ -15,4 +15,10 @@ export interface LiveCameraStream {
 export interface CameraService {
   pickPhoto(source: 'camera' | 'gallery'): Promise<Result<File, CameraError>>
   openLiveStream(facing: CameraFacing): Promise<Result<LiveCameraStream, CameraError>>
+  /**
+   * Roadmap R5 (door of the guest list): whether QR codes can be read from a live video
+   * on this device (web: `BarcodeDetector`; native: the camera plugin), and one read.
+   */
+  canDetectQr(): boolean
+  detectQr(video: HTMLVideoElement): Promise<string | null>
 }

@@ -1,6 +1,15 @@
 import { err, ok } from '@/shared/lib/result'
 import type { CameraService } from './camera'
 
+/** Chromium/Android expose `BarcodeDetector`; iOS Safari does not (the door types the code). */
+interface QrDetector {
+  detect(source: HTMLVideoElement): Promise<{ rawValue: string }[]>
+}
+type QrDetectorClass = new (options: { formats: string[] }) => QrDetector
+
+const detectorClass = (): QrDetectorClass | undefined =>
+  (globalThis as { BarcodeDetector?: QrDetectorClass }).BarcodeDetector
+
 export function createWebCamera(): CameraService {
   return {
     pickPhoto(source) {
@@ -29,6 +38,17 @@ export function createWebCamera(): CameraService {
       } catch (error) {
         const name = error instanceof DOMException ? error.name : ''
         return err(name === 'NotAllowedError' ? 'permission_denied' : 'unavailable')
+      }
+    },
+    canDetectQr: () => detectorClass() !== undefined,
+    async detectQr(video) {
+      const Detector = detectorClass()
+      if (!Detector) return null
+      try {
+        const codes = await new Detector({ formats: ['qr_code'] }).detect(video)
+        return codes[0]?.rawValue ?? null
+      } catch {
+        return null
       }
     },
   }

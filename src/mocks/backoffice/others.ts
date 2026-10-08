@@ -12,6 +12,7 @@ import { normalizeInviteCode } from '@/features/venue-panel/model/partners'
 import { MOCK_LEGAL_VERSION } from '../legal-documents.mock'
 import { audit, type MockConfig } from './config'
 import { createMockShowcasePanel } from './showcase'
+import { createMockBookingPanel } from './bookings'
 import {
   activeContract,
   contractBenefits,
@@ -79,6 +80,7 @@ export function createMockVenuePanelService(
   }
   return {
     ...createMockShowcasePanel(config, world, wait),
+    ...createMockBookingPanel(config, world, wait),
     myVenues: () => Promise.resolve(venues.map(withContract)),
     createFlashAlert: () => Promise.resolve(),
     async setMusic(placeId, genres, lineup) {

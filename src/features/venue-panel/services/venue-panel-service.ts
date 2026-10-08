@@ -8,6 +8,13 @@ import type {
   VenuePhotos,
   VenueReport,
 } from '@/features/places/model/showcase'
+import type {
+  BookingSettings,
+  DoorResult,
+  Reservation,
+  VenueGuestlist,
+  VenueReservations,
+} from '@/features/bookings/model/bookings'
 import type { Result } from '@/shared/lib/result'
 import type {
   Invitation,
@@ -123,4 +130,20 @@ export interface VenuePanelService {
   ): Promise<VenueNotice[]>
   clearNotice(placeId: string, kind: NoticeKind): Promise<VenueNotice[]>
   report(placeId: string): Promise<VenueReport>
+  // Roadmap R5 (flag `venue_bookings_enabled`, checked by the server).
+  saveBookingSettings(placeId: string, settings: BookingSettings): Promise<BookingSettings>
+  reservations(placeId: string): Promise<VenueReservations>
+  decideReservation(
+    placeId: string,
+    reservationId: string,
+    accept: boolean,
+    reason?: string,
+  ): Promise<Reservation>
+  guestlist(placeId: string): Promise<VenueGuestlist>
+  saveGuestlist(
+    placeId: string,
+    input: { title: string; validUntil: string; capacity: number },
+  ): Promise<Result<VenueGuestlist, 'not_available'>>
+  closeGuestlist(placeId: string): Promise<VenueGuestlist>
+  checkInGuest(placeId: string, code: string): Promise<Result<DoorResult, 'invalid_code'>>
 }

@@ -14,6 +14,7 @@ import type { Db } from './client'
 import { errorMessage, must } from './errors'
 import { withRealAccountStatus } from './privacy'
 import { createShowcasePanel } from './showcase'
+import { createBookingPanel } from './bookings'
 
 export const managedVenueSchema = z.object({
   placeId: z.string(),
@@ -92,6 +93,7 @@ export function done(result: { error: unknown }): void {
 export function createVenuePanelService(db: Db): VenuePanelService {
   return {
     ...createShowcasePanel(db),
+    ...createBookingPanel(db),
     async billingState(id) {
       return z
         .object({

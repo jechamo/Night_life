@@ -1874,7 +1874,8 @@
         "live_status_enabled": "«Cómo está ahora»: gente, cola y música votadas con check-in y música declarada por el local (R2).",
         "venue_partners_enabled": "Partners y contratos: invitaciones a locales, Condiciones para Locales, plan y equipo (R3).",
         "venue_showcase_enabled": "Escaparate del local: fotos moderadas, «Lo dice el local», ficha enriquecida e informe de resultados (R4).",
-        "flash_alcohol_allowed": "Activar solo tras revisar la normativa autonómica aplicable."
+        "flash_alcohol_allowed": "Activar solo tras revisar la normativa autonómica aplicable.",
+        "venue_bookings_enabled": "Reservas sin pago y lista de invitados con QR (R5)."
       }
     },
     "payments": {

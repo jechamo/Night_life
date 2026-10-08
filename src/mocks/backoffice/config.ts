@@ -9,6 +9,7 @@ import type { FeatureFlags } from '@/shared/flags/flags'
 import type { Role } from '@/shared/session/roles'
 import { createMockPartnerState, type MockPartnerState } from './partners'
 import { createMockShowcaseState, type MockShowcaseState } from './showcase'
+import { createMockBookingsState, type MockBookingsState } from './bookings'
 
 /**
  * Mutable simulated back-office (Blocks 1-4): flags, roles, entitlements, settings and
@@ -46,6 +47,8 @@ export interface MockConfig {
   partners: MockPartnerState
   /** Roadmap R4: venue photos, details, notices and views. */
   showcase: MockShowcaseState
+  /** Roadmap R5: reservations and guest lists. */
+  bookings: MockBookingsState
 }
 
 const ago = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString()
@@ -238,6 +241,7 @@ export function createMockConfig(
     mfaOk: false,
     partners: createMockPartnerState(),
     showcase: createMockShowcaseState(),
+    bookings: createMockBookingsState(),
   }
 }
 

@@ -8,6 +8,8 @@ const settings = { reduceMotion: true }
 const camera = {
   pickPhoto: () => Promise.resolve(ok(new File(['x'], 'local.jpg', { type: 'image/jpeg' }))),
   openLiveStream: () => Promise.reject(new Error('not used')),
+  canDetectQr: () => false,
+  detectQr: () => Promise.resolve(null),
 }
 const on = {
   services: { flags: { venue_showcase_enabled: 'on' } },

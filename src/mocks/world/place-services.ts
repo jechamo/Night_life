@@ -14,6 +14,7 @@ import { err, ok, type Result } from '@/shared/lib/result'
 import type { MockStore } from '../mock-store'
 import type { MockConfig } from '../backoffice/config'
 import { createMockShowcasePlaces } from '../backoffice/showcase'
+import { createMockBookingPlaces } from '../backoffice/bookings'
 import { emit, liveStatusOf, placeById, type WorldState } from './world-state'
 
 type Wait = () => Promise<void>
@@ -44,6 +45,7 @@ export function createMockPlacesService(
 
   return {
     ...createMockShowcasePlaces(config, state),
+    ...createMockBookingPlaces(config, state, store),
     getById: (id) => Promise.resolve(placeById(state, id) ?? null),
     async list() {
       await wait()
