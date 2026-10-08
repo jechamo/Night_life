@@ -3,16 +3,16 @@
 > Aprobado por el propietario el 08/10/2026. Cada punto se ejecuta como bloque con su plan,
 > pruebas, puerta de seguridad y OK explícito antes del siguiente (CLAUDE.md).
 
-## Mapa de bloques (estado al 08/10/2026)
+## Mapa de bloques (estado al 08/10/2026: roadmap cerrado)
 
-| Bloque | Estado                  | Contenido                                                                         |
-| ------ | ----------------------- | --------------------------------------------------------------------------------- |
-| R0     | ✅ Hecho                | Red de regresión E2E, revisión de compras, SBOM y migraciones alineadas           |
-| R1     | ✅ Hecho                | Entrar con código por email (flag) y guías públicas                               |
-| R2     | ✅ Hecho                | «Cómo está ahora» (gente, cola, música, ambiente) y música declarada por el local |
-| R3     | ✅ Hecho                | Partners y contratos, ventajas de local como entitlements, invitaciones, equipo   |
-| R4     | ✅ Hecho                | Fotos del local, estado en directo, ficha enriquecida e informe de resultados     |
-| R5     | ✅ Hecho (pendiente OK) | Reservas sin pago y lista de invitados con QR                                     |
+| Bloque | Estado   | Contenido                                                                         |
+| ------ | -------- | --------------------------------------------------------------------------------- |
+| R0     | ✅ Hecho | Red de regresión E2E, revisión de compras, SBOM y migraciones alineadas           |
+| R1     | ✅ Hecho | Entrar con código por email (flag) y guías públicas                               |
+| R2     | ✅ Hecho | «Cómo está ahora» (gente, cola, música, ambiente) y música declarada por el local |
+| R3     | ✅ Hecho | Partners y contratos, ventajas de local como entitlements, invitaciones, equipo   |
+| R4     | ✅ Hecho | Fotos del local, estado en directo, ficha enriquecida e informe de resultados     |
+| R5     | ✅ Hecho | Reservas sin pago y lista de invitados con QR                                     |
 
 Fuera del roadmap: Bloque 11 (nativo, Face ID/huella, tiendas, modo viaje) y Bloque 12
 (live). Ideas aparcadas: códigos de RRPP, promos por check-in, sello «Local seguro»,
