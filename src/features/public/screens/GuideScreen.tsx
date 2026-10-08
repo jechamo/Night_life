@@ -17,6 +17,7 @@ const USER_GUIDE = [
       'guide.user.sections.discover.items.stats',
       'guide.user.sections.discover.items.search',
       'guide.user.sections.discover.items.place',
+      'guide.user.sections.discover.items.venueSays',
     ],
   },
   {
@@ -118,6 +119,10 @@ const VENUE_GUIDE = [
       'guide.venues.sections.free.items.stats',
       'guide.venues.sections.free.items.music',
       'guide.venues.sections.free.items.team',
+      'guide.venues.sections.free.items.photos',
+      'guide.venues.sections.free.items.live',
+      'guide.venues.sections.free.items.details',
+      'guide.venues.sections.free.items.report',
     ],
   },
   {
@@ -164,6 +169,13 @@ const LIVE_STATUS_ITEMS: readonly string[] = [
   'guide.user.sections.events.items.live',
   'guide.venues.sections.free.items.music',
 ]
+const SHOWCASE_ITEMS: readonly string[] = [
+  'guide.user.sections.discover.items.venueSays',
+  'guide.venues.sections.free.items.photos',
+  'guide.venues.sections.free.items.live',
+  'guide.venues.sections.free.items.details',
+  'guide.venues.sections.free.items.report',
+]
 const PARTNER_ITEMS: readonly string[] = [
   'guide.venues.sections.access.items.invite',
   'guide.venues.sections.free.items.team',
@@ -191,6 +203,7 @@ export function UserGuideScreen() {
   const { t } = useTranslation()
   const emailLogin = useFeatureFlag('email_login_enabled') === 'on'
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
+  const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
   return (
     <>
       <h1 className="mt-8 text-3xl font-semibold">{t('guide.user.title')}</h1>
@@ -201,6 +214,7 @@ export function UserGuideScreen() {
           title={t(section.title)}
           items={section.items
             .filter((item) => liveStatus || !LIVE_STATUS_ITEMS.includes(item))
+            .filter((item) => showcase || !SHOWCASE_ITEMS.includes(item))
             .map((item) =>
               // Sign-in copy follows the email sign-in flag (roadmap R1).
               item === 'guide.user.sections.account.items.login' && emailLogin
@@ -225,6 +239,7 @@ export function VenueGuideScreen() {
   const { t } = useTranslation()
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
   const partners = useFeatureFlag('venue_partners_enabled') === 'on'
+  const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
   return (
     <>
       <h1 className="mt-8 text-3xl font-semibold">{t('guide.venues.title')}</h1>
@@ -236,6 +251,7 @@ export function VenueGuideScreen() {
           items={section.items
             .filter((item) => liveStatus || !LIVE_STATUS_ITEMS.includes(item))
             .filter((item) => partners || !PARTNER_ITEMS.includes(item))
+            .filter((item) => showcase || !SHOWCASE_ITEMS.includes(item))
             .map((item) => t(item))}
         />
       ))}

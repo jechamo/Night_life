@@ -1,5 +1,6 @@
 import {
   Handshake,
+  Images,
   BadgeCheck,
   Ban,
   CalendarDays,
@@ -29,6 +30,7 @@ import { Button, ButtonLink, buttonVariants } from '@/shared/ui/button'
 import { GlassCard } from '@/shared/ui/card'
 import { TextField } from '@/shared/ui/text-field'
 import { useMfaSession } from '../hooks/use-admin'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 
 type NavKey =
   | 'dashboard'
@@ -46,6 +48,7 @@ type NavKey =
   | 'testTools'
   | 'venues'
   | 'partners'
+  | 'venuePhotos'
   | 'dataRequests'
   | 'legalDocs'
   | 'settings'
@@ -62,6 +65,7 @@ const NAV: readonly { key: NavKey; to: string; icon: LucideIcon }[] = [
   { key: 'claims', to: '/admin/s/claims', icon: Store },
   { key: 'venues', to: '/admin/venues', icon: MapPin },
   { key: 'partners', to: '/admin/partners', icon: Handshake },
+  { key: 'venuePhotos', to: '/admin/venue-photos', icon: Images },
   { key: 'events', to: '/admin/s/events', icon: CalendarDays },
   { key: 'sponsorships', to: '/admin/s/sponsorships', icon: Megaphone },
   { key: 'payments', to: '/admin/payments', icon: CreditCard },
@@ -159,6 +163,8 @@ export function AdminLayout() {
   const { t } = useTranslation()
   const { roles, isPending } = useRolesState()
   const { verified, pending: mfaPending } = useMfaSession()
+  // Roadmap R4: the photo moderation section only exists with its flag on.
+  const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
   if (isPending || mfaPending) return <div className="min-h-dvh bg-background" aria-busy="true" />
   if (!hasRole(roles, 'admin')) return <Navigate to="/profile" replace />
   if (!verified) return <MfaGate />
@@ -176,24 +182,26 @@ export function AdminLayout() {
           aria-label={t('admin.navLabel')}
           className="px-safe flex gap-2 overflow-x-auto pb-3 lg:flex-col lg:gap-1 lg:px-2"
         >
-          {NAV.map(({ key, to, icon: Icon }) => (
-            <NavLink
-              key={key}
-              to={to}
-              end={to === '/admin'}
-              className={({ isActive }) =>
-                cn(
-                  'font-label flex min-h-11 shrink-0 items-center gap-2 rounded-full px-3 text-sm whitespace-nowrap transition-opacity lg:rounded-theme',
-                  isActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground',
-                )
-              }
-            >
-              <Icon className="size-4" aria-hidden />
-              {t(`admin.nav.${key}`)}
-            </NavLink>
-          ))}
+          {NAV.filter((item) => showcase || item.key !== 'venuePhotos').map(
+            ({ key, to, icon: Icon }) => (
+              <NavLink
+                key={key}
+                to={to}
+                end={to === '/admin'}
+                className={({ isActive }) =>
+                  cn(
+                    'font-label flex min-h-11 shrink-0 items-center gap-2 rounded-full px-3 text-sm whitespace-nowrap transition-opacity lg:rounded-theme',
+                    isActive
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )
+                }
+              >
+                <Icon className="size-4" aria-hidden />
+                {t(`admin.nav.${key}`)}
+              </NavLink>
+            ),
+          )}
         </nav>
       </aside>
       <main id="main" className="min-w-0 flex-1 pb-12">

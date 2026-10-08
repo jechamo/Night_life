@@ -776,6 +776,36 @@
         "own_venue": "You manage this venue, so you cannot vote here.",
         "generic": "Could not save. Please try again."
       }
+    },
+    "showcase": {
+      "title": "The venue says",
+      "hint": "Posted by the venue itself.",
+      "photos": "Venue photos",
+      "photoAlt": "Photo {{n}} of {{name}}",
+      "door": {
+        "no_queue": "No queue",
+        "short_queue": "Short queue",
+        "long_queue": "Long queue",
+        "almost_full": "Almost full",
+        "full": "Full"
+      },
+      "offer": {
+        "free_entry": "Free entry until {{time}}",
+        "happy_hour": "Happy hour until {{time}}"
+      },
+      "detailsLabel": "Venue details",
+      "dress": {
+        "none": "No dress code",
+        "casual": "Dress code: casual",
+        "smart": "Dress code: smart",
+        "elegant": "Dress code: elegant"
+      },
+      "minAge": "Ages {{age}}+",
+      "entryFree": "Free entry",
+      "entry": "Entry: €{{price}}",
+      "drink": "Drink: €{{price}}",
+      "terrace": "Terrace",
+      "accessible": "Accessible"
     }
   },
   "matching": {
@@ -1590,6 +1620,83 @@
       "claimTermsRequired": "Accept the venue terms to send the request.",
       "sectionPlan": "Plan and advantages",
       "sectionTeam": "Team"
+    },
+    "showcase": {
+      "photos": {
+        "title": "Photos",
+        "body": "Upload photos of your venue. They are re-encoded on your device without location data and Nightlife reviews them before they go live.",
+        "limit": "{{used}} of {{limit}} photos",
+        "planHint": "With a sponsorship or Pro stats you can have up to 10 photos.",
+        "add": "Add photo",
+        "empty": "No photos yet.",
+        "alt": "Venue photo ({{status}})",
+        "status": {
+          "pending": "Pending review",
+          "approved": "Published",
+          "rejected": "Rejected"
+        },
+        "reason": "Reason: {{reason}}",
+        "hidden": "Hidden: over your plan's limit.",
+        "cover": "Cover",
+        "makeCover": "Use as cover",
+        "remove": "Delete",
+        "errors": {
+          "photo_limit": "You have reached your plan's photo limit.",
+          "unsupported_type": "Unsupported format. Use JPG, PNG or WebP.",
+          "too_large": "The photo is too large.",
+          "decode_failed": "The photo could not be read.",
+          "generic": "The photo could not be uploaded. Please try again."
+        }
+      },
+      "live": {
+        "title": "Live",
+        "body": "Tell people how your venue is right now. It shows as «The venue says»: the door status expires after 90 minutes and offers at the time you choose (8 hours at most).",
+        "door": "Door right now",
+        "offers": "Tonight's offers",
+        "freeEntry": "Free entry until",
+        "happyHour": "Happy hour until",
+        "publish": "Publish",
+        "clear": "Remove",
+        "active": "Published until {{time}}",
+        "invalidTime": "Choose a time within the next 8 hours."
+      },
+      "extras": {
+        "title": "Venue details",
+        "body": "Details people will see on your page. Leave empty anything you do not want to state.",
+        "dressCode": "Dress code",
+        "unset": "Not stated",
+        "minAge": "Minimum age",
+        "entry": "Entry price (€)",
+        "entryHint": "0 = free entry.",
+        "drink": "Price of a drink (€)",
+        "terrace": "Has a terrace",
+        "accessible": "Wheelchair accessible",
+        "save": "Save details",
+        "saved": "Details saved.",
+        "invalidPrice": "Invalid price."
+      },
+      "report": {
+        "title": "Results",
+        "body": "Last 30 days, always aggregated. Below 5 people it shows «fewer than 5».",
+        "views": "Page views",
+        "going": "Said «I'm going»",
+        "checkIns": "Check-ins",
+        "conversion": "From «I'm going» to check-in",
+        "lessThan": "Fewer than 5",
+        "sponsorships": "Sponsorships",
+        "sponsorshipRow": "{{tier}} · {{from}} → {{to}}",
+        "during": "During: {{views}} views · {{checkIns}} check-ins",
+        "before": "Same days before: {{views}} views · {{checkIns}} check-ins",
+        "change": "Views {{value}} % vs before",
+        "flashes": "Flash Alerts",
+        "flashRow": "{{title}} · {{date}}",
+        "flashResult": "Check-ins during the alert and 3 h after: {{now}} · same slot the week before: {{before}}",
+        "none": "No sponsorships or Flash in the last 90 days.",
+        "proTitle": "Night by night (Pro stats)",
+        "previous": "Previous 30 days: {{views}} views · {{checkIns}} check-ins",
+        "night": "{{date}}: {{views}} views · {{checkIns}} check-ins",
+        "proUpsell": "With Pro stats you see night-by-night trends and the comparison with the previous 30 days."
+      }
     }
   },
   "admin": {
@@ -1615,7 +1722,8 @@
       "users": "Users",
       "venues": "Venues",
       "escalations": "Severe risk",
-      "partners": "Partners"
+      "partners": "Partners",
+      "venuePhotos": "Venue photos"
     },
     "mfa": {
       "title": "Second factor",
@@ -2112,6 +2220,26 @@
         "proSuffix": " + Pro stats",
         "note": "The signed contract (PDF) is kept outside the app. When activated, the advantages apply to every linked venue and end by themselves on the end date. Contract sponsorships do not use the 3 slots per city."
       }
+    },
+    "venuePhotos": {
+      "title": "Venue photos",
+      "body": "Review the photos venues upload. Only approved ones are shown in the app.",
+      "filter": "Status",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "empty": "No photos with this status.",
+      "alt": "Photo of {{venue}}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "withdraw": "Withdraw",
+      "reasonLabel": "Reason (the venue will see it)",
+      "reasonHint": "Between 3 and 200 characters.",
+      "cover": "Cover",
+      "test": "Test",
+      "reason": "Reason: {{reason}}"
     }
   },
   "anthem": {
@@ -2173,7 +2301,8 @@
             "map": "Live map with the venues and events in your city and how many people are at each one.",
             "stats": "At each place you see people, average age and share in green. It is always aggregated and anonymous: with fewer than 5 people you only see \"Fewer than 5\".",
             "search": "Search and every filter for free: venue type, open now, price, distance and more.",
-            "place": "Each venue page shows opening hours, price, address, the Vibe Check and lost & found. Save it to your favourites to come back."
+            "place": "Each venue page shows opening hours, price, address, the Vibe Check and lost & found. Save it to your favourites to come back.",
+            "venueSays": "«The venue says»: some venues publish their photos (reviewed by Nightlife), how the door is, tonight's offers, dress code and prices. It is always marked as coming from the venue itself."
           }
         },
         "tonight": {
@@ -2278,7 +2407,11 @@
             "events": "Publish official events: they show as \"Official\" without waiting for confirmations.",
             "stats": "Basic stats: check-ins this week and how many people are going tonight, always aggregated and anonymous.",
             "music": "Music and atmosphere: declare up to 3 styles and tonight's line-up; the venue page shows it next to what checked-in people vote (anonymous, from 3 votes). Managers cannot vote at their own venue.",
-            "team": "Team: the owner can invite and remove managers; everyone sees the plan and the active advantages of the venue."
+            "team": "Team: the owner can invite and remove managers; everyone sees the plan and the active advantages of the venue.",
+            "photos": "Photos: up to 3 for free (cover included) and up to 10 with a sponsorship or Pro stats. They go live after review and are uploaded without location data.",
+            "live": "Live: say whether there is a queue or it is full (lasts 90 minutes) and offers like «free entry until» or «happy hour until». It shows as «The venue says».",
+            "details": "Extra details: dress code, minimum age, entry and drink prices, terrace and accessibility.",
+            "report": "Results: your page views, «I'm going» and check-ins over the last 30 days and the effect of your sponsorships and Flash. Always aggregated (fewer than 5 people is never shown). With Pro stats, night-by-night trends."
           }
         },
         "sponsor": {

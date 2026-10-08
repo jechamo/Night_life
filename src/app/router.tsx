@@ -43,6 +43,11 @@ const AdminTestToolsScreen = lazy(() =>
     default: module.AdminTestToolsScreen,
   })),
 )
+const AdminVenuePhotosScreen = lazy(() =>
+  import('@/features/admin/screens/AdminVenuePhotosScreen').then((module) => ({
+    default: module.AdminVenuePhotosScreen,
+  })),
+)
 const AdminPartnersScreen = lazy(() =>
   import('@/features/admin/screens/AdminPartnersScreen').then((module) => ({
     default: module.AdminPartnersScreen,
@@ -354,6 +359,7 @@ export const routes: RouteObject[] = [
       { path: 'test-tools', element: screen(AdminTestToolsScreen) },
       { path: 'venues', element: screen(AdminVenuesScreen) },
       { path: 'partners', element: screen(AdminPartnersScreen) },
+      { path: 'venue-photos', element: screen(AdminVenuePhotosScreen) },
       { path: 'settings', element: screen(AdminSettingsScreen) },
     ],
   },

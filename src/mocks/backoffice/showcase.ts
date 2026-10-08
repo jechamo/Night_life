@@ -43,9 +43,15 @@ function requireShowcase(config: MockConfig) {
   if (config.flags.venue_showcase_enabled !== 'on') throw new Error('disabled')
 }
 
-/** The simulated backend keeps the re-encoded blob in memory (object URL in browsers). */
-const photoUrl = (blob: Blob, id: string) =>
-  typeof URL.createObjectURL === 'function' ? URL.createObjectURL(blob) : `mock://venue-photo/${id}`
+/** The simulated backend keeps the re-encoded photo in memory as a data URL. */
+async function photoUrl(blob: Blob, id: string): Promise<string> {
+  if (typeof blob.arrayBuffer !== 'function') return `mock://venue-photo/${id}`
+  const bytes = new Uint8Array(await blob.arrayBuffer())
+  let binary = ''
+  for (let i = 0; i < bytes.length; i += 0x8000)
+    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000))
+  return `data:${blob.type || 'image/webp'};base64,${btoa(binary)}`
+}
 
 function hasPlan(config: MockConfig, world: WorldState, venueId: string) {
   return (
@@ -167,7 +173,7 @@ export function createMockShowcasePanel(
       state.photos.push({
         id,
         venueId: placeId,
-        url: photoUrl(blob, id),
+        url: await photoUrl(blob, id),
         status: 'pending',
         reason: null,
         isCover: false,

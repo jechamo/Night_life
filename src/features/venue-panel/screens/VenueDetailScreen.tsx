@@ -19,6 +19,7 @@ import {
 import type { ManagedVenue, SponsorshipTier } from '../services/venue-panel-service'
 import { FlashAlertForm } from '../components/FlashAlerts'
 import { MusicCard } from '../components/MusicCard'
+import { ExtrasCard, LiveNoticeCard, PhotosCard, ReportCard } from '../components/ShowcaseCards'
 import { PlanCard, TeamCard } from '../components/PartnerCards'
 import { useVenuePartnerState } from '../hooks/use-venue-panel'
 import { ProSubscriptionCard } from '../components/ProSubscriptionCard'
@@ -341,6 +342,7 @@ export function VenueDetailScreen() {
   const venue = venues?.find((v) => v.placeId === placeId && v.claimStatus === 'approved')
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
   const partners = useFeatureFlag('venue_partners_enabled') === 'on'
+  const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
   const { data: partnerState } = useVenuePartnerState(placeId, partners && !!venue)
   if (isPending) return null
   if (!venue) return <Navigate to="/venue" replace />
@@ -356,9 +358,29 @@ export function VenueDetailScreen() {
         <StatsCard placeId={venue.placeId} />
         <ProSubscriptionCard placeId={venue.placeId} />
       </Section>
+      {showcase && (
+        <Section title={t('venuePanel.showcase.report.title')}>
+          <ReportCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {showcase && (
+        <Section title={t('venuePanel.showcase.live.title')}>
+          <LiveNoticeCard placeId={venue.placeId} />
+        </Section>
+      )}
       <Section title={t('venuePanel.edit.title')}>
         <EditForm venue={venue} />
       </Section>
+      {showcase && (
+        <Section title={t('venuePanel.showcase.photos.title')}>
+          <PhotosCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {showcase && (
+        <Section title={t('venuePanel.showcase.extras.title')}>
+          <ExtrasCard placeId={venue.placeId} />
+        </Section>
+      )}
       {liveStatus && (
         <Section title={t('venuePanel.music.title')}>
           <MusicCard placeId={venue.placeId} />

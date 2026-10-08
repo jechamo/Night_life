@@ -776,6 +776,36 @@
         "own_venue": "Gestionas este local: no puedes votar en él.",
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
       }
+    },
+    "showcase": {
+      "title": "Lo dice el local",
+      "hint": "Lo publica el propio local.",
+      "photos": "Fotos del local",
+      "photoAlt": "Foto {{n}} de {{name}}",
+      "door": {
+        "no_queue": "Sin cola",
+        "short_queue": "Poca cola",
+        "long_queue": "Cola larga",
+        "almost_full": "Casi lleno",
+        "full": "Completo"
+      },
+      "offer": {
+        "free_entry": "Entrada gratis hasta las {{time}}",
+        "happy_hour": "Happy hour hasta las {{time}}"
+      },
+      "detailsLabel": "Detalles del local",
+      "dress": {
+        "none": "Sin dress code",
+        "casual": "Dress code: informal",
+        "smart": "Dress code: arreglado",
+        "elegant": "Dress code: elegante"
+      },
+      "minAge": "Desde {{age}} años",
+      "entryFree": "Entrada gratis",
+      "entry": "Entrada: {{price}} €",
+      "drink": "Copa: {{price}} €",
+      "terrace": "Terraza",
+      "accessible": "Accesible"
     }
   },
   "matching": {
@@ -1590,6 +1620,83 @@
       "claimTermsRequired": "Acepta las Condiciones para Locales para enviar la solicitud.",
       "sectionPlan": "Plan y ventajas",
       "sectionTeam": "Equipo"
+    },
+    "showcase": {
+      "photos": {
+        "title": "Fotos",
+        "body": "Sube fotos de tu local. Se recomprimen en tu dispositivo sin datos de ubicación y Nightlife las revisa antes de publicarlas.",
+        "limit": "{{used}} de {{limit}} fotos",
+        "planHint": "Con un patrocinio o Estadísticas Pro puedes tener hasta 10 fotos.",
+        "add": "Añadir foto",
+        "empty": "Aún no hay fotos.",
+        "alt": "Foto del local ({{status}})",
+        "status": {
+          "pending": "Pendiente de revisión",
+          "approved": "Publicada",
+          "rejected": "Rechazada"
+        },
+        "reason": "Motivo: {{reason}}",
+        "hidden": "Oculta: supera el límite de tu plan.",
+        "cover": "Portada",
+        "makeCover": "Usar como portada",
+        "remove": "Borrar",
+        "errors": {
+          "photo_limit": "Has llegado al límite de fotos de tu plan.",
+          "unsupported_type": "Formato no admitido. Usa JPG, PNG o WebP.",
+          "too_large": "La foto es demasiado grande.",
+          "decode_failed": "No se pudo leer la foto.",
+          "generic": "No se pudo subir la foto. Inténtalo de nuevo."
+        }
+      },
+      "live": {
+        "title": "En directo",
+        "body": "Cuenta cómo está tu local ahora. Se muestra como «Lo dice el local»: la puerta caduca a los 90 minutos y las ofertas a la hora que elijas (máximo 8 horas).",
+        "door": "Puerta ahora",
+        "offers": "Ofertas de esta noche",
+        "freeEntry": "Entrada gratis hasta",
+        "happyHour": "Happy hour hasta",
+        "publish": "Publicar",
+        "clear": "Quitar",
+        "active": "Publicado hasta las {{time}}",
+        "invalidTime": "Elige una hora dentro de las próximas 8 horas."
+      },
+      "extras": {
+        "title": "Ficha del local",
+        "body": "Datos que verá la gente en tu ficha. Deja vacío lo que no quieras indicar.",
+        "dressCode": "Dress code",
+        "unset": "Sin indicar",
+        "minAge": "Edad mínima",
+        "entry": "Precio de entrada (€)",
+        "entryHint": "0 = entrada gratis.",
+        "drink": "Precio de una copa (€)",
+        "terrace": "Tiene terraza",
+        "accessible": "Accesible en silla de ruedas",
+        "save": "Guardar ficha",
+        "saved": "Ficha guardada.",
+        "invalidPrice": "Precio no válido."
+      },
+      "report": {
+        "title": "Resultados",
+        "body": "Últimos 30 días, siempre en conjunto. Por debajo de 5 personas se muestra «menos de 5».",
+        "views": "Vistas de la ficha",
+        "going": "Dijeron «Voy»",
+        "checkIns": "Check-ins",
+        "conversion": "De «Voy» a check-in",
+        "lessThan": "Menos de 5",
+        "sponsorships": "Patrocinios",
+        "sponsorshipRow": "{{tier}} · {{from}} → {{to}}",
+        "during": "Durante: {{views}} vistas · {{checkIns}} check-ins",
+        "before": "Mismos días antes: {{views}} vistas · {{checkIns}} check-ins",
+        "change": "Vistas {{value}} % frente a antes",
+        "flashes": "Flash Alerts",
+        "flashRow": "{{title}} · {{date}}",
+        "flashResult": "Check-ins durante la alerta y 3 h después: {{now}} · misma franja la semana anterior: {{before}}",
+        "none": "Sin patrocinios ni Flash en los últimos 90 días.",
+        "proTitle": "Evolución por noche (Estadísticas Pro)",
+        "previous": "30 días anteriores: {{views}} vistas · {{checkIns}} check-ins",
+        "night": "{{date}}: {{views}} vistas · {{checkIns}} check-ins",
+        "proUpsell": "Con Estadísticas Pro ves la evolución por noche y la comparación con los 30 días anteriores."
+      }
     }
   },
   "admin": {
@@ -1615,7 +1722,8 @@
       "users": "Usuarios",
       "venues": "Locales",
       "escalations": "Riesgo grave",
-      "partners": "Partners"
+      "partners": "Partners",
+      "venuePhotos": "Fotos de locales"
     },
     "mfa": {
       "title": "Segundo factor",
@@ -2112,6 +2220,26 @@
         "proSuffix": " + Estadísticas Pro",
         "note": "El contrato firmado (PDF) se guarda fuera de la app. Al activarlo, las ventajas se aplican a todos los locales vinculados y terminan solas en la fecha de fin. Los patrocinios por contrato no ocupan los 3 huecos por ciudad."
       }
+    },
+    "venuePhotos": {
+      "title": "Fotos de locales",
+      "body": "Revisa las fotos que suben los locales. Solo se ven en la app las aprobadas.",
+      "filter": "Estado",
+      "status": {
+        "pending": "Pendientes",
+        "approved": "Aprobadas",
+        "rejected": "Rechazadas"
+      },
+      "empty": "No hay fotos en este estado.",
+      "alt": "Foto de {{venue}}",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "withdraw": "Retirar",
+      "reasonLabel": "Motivo (lo verá el local)",
+      "reasonHint": "Entre 3 y 200 caracteres.",
+      "cover": "Portada",
+      "test": "Prueba",
+      "reason": "Motivo: {{reason}}"
     }
   },
   "anthem": {
@@ -2173,7 +2301,8 @@
             "map": "Mapa en directo con locales y eventos de tu ciudad, y cuánta gente hay en cada uno.",
             "stats": "En cada sitio ves personas, edad media y porcentaje en verde. Siempre son datos agregados y anónimos: con menos de 5 personas solo verás «Menos de 5».",
             "search": "Buscador y todos los filtros gratis: tipo de local, abierto ahora, precio, distancia y más.",
-            "place": "La ficha de cada local muestra horario, precio, dirección, el Vibe Check y objetos perdidos. Guárdalo en favoritos para volver."
+            "place": "La ficha de cada local muestra horario, precio, dirección, el Vibe Check y objetos perdidos. Guárdalo en favoritos para volver.",
+            "venueSays": "«Lo dice el local»: algunos locales publican sus fotos (revisadas por Nightlife), cómo está la puerta, ofertas de la noche, dress code y precios. Siempre se indica que lo dice el propio local."
           }
         },
         "tonight": {
@@ -2278,7 +2407,11 @@
             "events": "Publica eventos oficiales: salen como «Oficial» sin esperar confirmaciones.",
             "stats": "Estadísticas básicas: check-ins de la semana y cuánta gente va esta noche, siempre agregadas y anónimas.",
             "music": "Música y ambiente: declara hasta 3 estilos y el line-up de la noche; la ficha lo muestra junto a lo que vota la gente con check-in (anónimo, desde 3 votos). Los gestores no votan en su propio local.",
-            "team": "Equipo: el titular puede invitar a encargados y quitarlos; todos ven el plan y las ventajas activas del local."
+            "team": "Equipo: el titular puede invitar a encargados y quitarlos; todos ven el plan y las ventajas activas del local.",
+            "photos": "Fotos: gratis hasta 3 (portada incluida) y hasta 10 con un patrocinio o Estadísticas Pro. Se publican tras revisarlas y se suben sin datos de ubicación.",
+            "live": "En directo: indica si hay cola o está lleno (dura 90 minutos) y ofertas como «entrada gratis hasta» o «happy hour hasta». Aparece como «Lo dice el local».",
+            "details": "Ficha enriquecida: dress code, edad mínima, precio de entrada y de copa, terraza y accesibilidad.",
+            "report": "Resultados: vistas de tu ficha, «Voy» y check-ins de los últimos 30 días y el efecto de tus patrocinios y Flash. Siempre agregado (menos de 5 personas no se muestra). Con Estadísticas Pro, evolución por noche."
           }
         },
         "sponsor": {

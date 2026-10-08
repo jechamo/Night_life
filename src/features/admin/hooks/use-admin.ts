@@ -7,6 +7,7 @@ import type { CatalogueRow } from '../model/venue-csv'
 import type { VenueInput } from '../model/venue'
 import type { AdminSection, AdminService, AdminSetting, TestTool } from '../services/admin-service'
 import type { ContractInput, PartnerInput } from '@/features/venue-panel/model/partners'
+import type { PhotoStatus } from '@/features/places/model/showcase'
 
 const adminKey = ['admin'] as const
 export const mfaKey = ['admin', 'mfa'] as const
@@ -179,4 +180,18 @@ export const useRevokeInvitation = () =>
 export const useRemoveVenueManager = () =>
   useAdminMutation((admin, a: { venueId: string; userId: string }) =>
     admin.removeManager(a.venueId, a.userId),
+  )
+
+// Roadmap R4: moderation of venue photos.
+export function useAdminVenuePhotos(status: PhotoStatus) {
+  const { admin } = useServices()
+  return useQuery({
+    queryKey: [...adminKey, 'venue-photos', status],
+    queryFn: () => admin.venuePhotos(status),
+  })
+}
+
+export const useReviewVenuePhoto = () =>
+  useAdminMutation((admin, input: { photoId: string; approve: boolean; reason?: string }) =>
+    admin.reviewVenuePhoto(input.photoId, input.approve, input.reason),
   )

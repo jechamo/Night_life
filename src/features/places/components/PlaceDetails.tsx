@@ -19,6 +19,7 @@ import { FavoriteButton } from './FavoriteButton'
 import { LiveStatusSection, useAnswerLabel } from './LiveStatusSection'
 import { isAnswer } from '../model/live-status'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
+import { ShowcaseSection } from './ShowcaseSection'
 
 /** "Lun 18:00–06:00" lines, Monday first, in the user's language. */
 function openingLines(periods: readonly OpeningPeriod[], language: string): string[] {
@@ -62,6 +63,7 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
   const [showLostFound, setShowLostFound] = useState(false)
   const checkedInHere = attendance?.checkIn?.placeId === place.id
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
+  const showcase = useFeatureFlag('venue_showcase_enabled') === 'on' && !isEvent(place)
   const answerLabel = useAnswerLabel()
   const hours = place.openingHours?.length
     ? openingLines(place.openingHours, i18n.language)
@@ -97,6 +99,7 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
       </div>
       <WhoIsThere stats={place.stats} />
       {!isEvent(place) && <FlashAlerts placeId={place.id} />}
+      {showcase && <ShowcaseSection placeId={place.id} name={place.name} />}
       {place.description && <p className="text-sm">{place.description}</p>}
       <dl className="grid gap-2 text-sm">
         {hours.length > 0 && (
