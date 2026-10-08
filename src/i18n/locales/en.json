@@ -2303,7 +2303,8 @@
             "stats": "At each place you see people, average age and share in green. It is always aggregated and anonymous: with fewer than 5 people you only see \"Fewer than 5\".",
             "search": "Search and every filter for free: venue type, open now, price, distance and more.",
             "place": "Each venue page shows opening hours, price, address, the Vibe Check and lost & found. Save it to your favourites to come back.",
-            "venueSays": "«The venue says»: some venues publish their photos (reviewed by Nightlife), how the door is, tonight's offers, dress code and prices. It is always marked as coming from the venue itself."
+            "venueSays": "«The venue says»: some venues publish their photos (reviewed by Nightlife), how the door is, tonight's offers, dress code and prices. It is always marked as coming from the venue itself.",
+            "bookings": "Bookings and guest lists: at venues that offer them you can request a table (no payment; the venue accepts or declines) or join tonight's list and get in with your QR. You need a verified age; the venue only sees your profile name."
           }
         },
         "tonight": {
@@ -2412,7 +2413,8 @@
             "photos": "Photos: up to 3 for free (cover included) and up to 10 with a sponsorship or Pro stats. They go live after review and are uploaded without location data.",
             "live": "Live: say whether there is a queue or it is full (lasts 90 minutes) and offers like «free entry until» or «happy hour until». It shows as «The venue says».",
             "details": "Extra details: dress code, minimum age, entry and drink prices, terrace and accessibility.",
-            "report": "Results: your page views, «I'm going» and check-ins over the last 30 days and the effect of your sponsorships and Flash. Always aggregated (fewer than 5 people is never shown). With Pro stats, night-by-night trends."
+            "report": "Results: your page views, «I'm going» and check-ins over the last 30 days and the effect of your sponsorships and Flash. Always aggregated (fewer than 5 people is never shown). With Pro stats, night-by-night trends.",
+            "bookings": "Bookings and lists (free): accept or decline table requests and open a list for the night with places and a time limit. At the door each QR or code works once. You only see the profile name, party size and time."
           }
         },
         "sponsor": {
@@ -2463,6 +2465,108 @@
       "openApp": "Open the app",
       "otherUser": "Do you run a venue? See the guide for venues",
       "otherVenue": "Looking for how to use the app? See the app guide"
+    }
+  },
+  "bookings": {
+    "place": {
+      "title": "Reservations and guest list",
+      "reserveTitle": "Book a table",
+      "hint": "No payment. The venue accepts or declines your request and you will see it in My bookings.",
+      "date": "Day",
+      "time": "Arrival time",
+      "party": "People",
+      "kind": "Type",
+      "submit": "Request booking",
+      "sent": "Request sent. You will see the venue's answer in My bookings.",
+      "ageRequired": "To book or join a list you need a verified age.",
+      "verify": "Verify age",
+      "ownVenue": "This is your venue: manage bookings from your panel.",
+      "myReservation": "Your booking: {{date}} · {{party}} people · {{status}}",
+      "guestlistTitle": "Guest list",
+      "guestlistUntil": "Valid until {{time}}",
+      "join": "Join the list",
+      "joined": "You are on the list. Your QR is in My bookings.",
+      "full": "The list is full.",
+      "seeMine": "See my bookings"
+    },
+    "kinds": {
+      "table": "Table",
+      "bottle": "Table with bottle"
+    },
+    "status": {
+      "requested": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Declined",
+      "cancelled": "Cancelled",
+      "expired": "No answer"
+    },
+    "guestStatus": {
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "checked_in": "Used"
+    },
+    "errors": {
+      "not_available": "This venue is not taking bookings right now.",
+      "own_venue": "This is your venue: manage bookings from your panel.",
+      "booking_limit": "You already have 3 active bookings.",
+      "already_booked": "You already have a booking at this venue that night.",
+      "age_required": "You need a verified age to book.",
+      "invalid": "Check the day, time and party size (from 30 minutes up to 14 days ahead).",
+      "list_full": "The list is full.",
+      "generic": "Could not complete. Please try again."
+    },
+    "mine": {
+      "title": "My bookings",
+      "hint": "Table bookings and guest lists",
+      "lead": "What you asked venues for and your guest list entries.",
+      "empty": "No bookings or lists yet.",
+      "reservations": "Bookings",
+      "entries": "Guest lists",
+      "party": "{{count}} people · {{kind}}",
+      "reason": "Reason: {{reason}}",
+      "cancel": "Cancel booking",
+      "qrLabel": "QR code of your entry at {{place}}",
+      "code": "Code: {{code}}",
+      "showAtDoor": "Show it at the door before {{time}}.",
+      "used": "Entry used.",
+      "leave": "Leave the list"
+    },
+    "venue": {
+      "settingsTitle": "Reservations and guest list",
+      "settingsBody": "Free. You decide whether to take table requests and open lists. You only see the profile name, party size and time; never phone numbers.",
+      "acceptReservations": "Take booking requests",
+      "acceptGuestlists": "Open guest lists",
+      "maxParty": "Maximum people per booking",
+      "save": "Save",
+      "saved": "Saved.",
+      "requestsTitle": "Booking requests",
+      "noRequests": "No requests.",
+      "requestRow": "{{name}} · {{party}} people · {{kind}}",
+      "accept": "Accept",
+      "reject": "Decline",
+      "reasonLabel": "Reason (optional, the person will see it)",
+      "listTitle": "Tonight's list",
+      "listName": "Title",
+      "listNameHint": "For example: Free entry before 1:30",
+      "listUntil": "Valid until",
+      "capacity": "Places",
+      "createList": "Open list",
+      "updateList": "Update list",
+      "closeList": "Close list",
+      "closed": "List closed",
+      "counts": "{{taken}} of {{capacity}} joined · {{used}} came in",
+      "enableFirst": "Turn on «Open guest lists» to create one.",
+      "invalidTime": "Choose a time within the next 12 hours.",
+      "doorTitle": "Door",
+      "codeLabel": "Entry code",
+      "check": "Check",
+      "scan": "Scan QR",
+      "stopScan": "Stop scanning",
+      "scanUnsupported": "This device cannot scan: type the code.",
+      "cameraError": "The camera could not be opened: type the code.",
+      "ok": "{{name}} can come in.",
+      "alreadyUsed": "{{name}}: this entry was already used at {{time}}.",
+      "invalidCode": "Code not valid for tonight's list."
     }
   }
 }

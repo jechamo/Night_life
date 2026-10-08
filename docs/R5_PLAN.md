@@ -23,7 +23,7 @@ sin TPV y sin terceros nuevos.
   Máx. 3 solicitudes activas por persona y 1 por local y noche; hasta 14 días vista.
 - `private.venue_guestlists` (una por local y noche: título, válida hasta, aforo, abierta o
   cerrada) y `private.venue_guestlist_entries` (una por persona; `confirmed|cancelled|
-  checked_in`). El código de la entrada se deriva con HMAC del id (no se guarda en claro) y
+checked_in`). El código de la entrada se deriva con HMAC del id (no se guarda en claro) y
   la puerta lo valida con límite de intentos.
 - Cron: caduca solicitudes sin respuesta y cierra listas pasadas (solo `update`); a los 90
   días se desvincula a la persona (`user_id` nulo) y se conservan solo los totales.

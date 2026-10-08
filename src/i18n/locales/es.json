@@ -2303,7 +2303,8 @@
             "stats": "En cada sitio ves personas, edad media y porcentaje en verde. Siempre son datos agregados y anónimos: con menos de 5 personas solo verás «Menos de 5».",
             "search": "Buscador y todos los filtros gratis: tipo de local, abierto ahora, precio, distancia y más.",
             "place": "La ficha de cada local muestra horario, precio, dirección, el Vibe Check y objetos perdidos. Guárdalo en favoritos para volver.",
-            "venueSays": "«Lo dice el local»: algunos locales publican sus fotos (revisadas por Nightlife), cómo está la puerta, ofertas de la noche, dress code y precios. Siempre se indica que lo dice el propio local."
+            "venueSays": "«Lo dice el local»: algunos locales publican sus fotos (revisadas por Nightlife), cómo está la puerta, ofertas de la noche, dress code y precios. Siempre se indica que lo dice el propio local.",
+            "bookings": "Reservas y lista de invitados: en los locales que lo ofrecen puedes pedir mesa (sin pago; el local acepta o rechaza) o apuntarte a la lista de la noche y entrar con tu QR. Necesitas la edad verificada; el local solo ve tu nombre de perfil."
           }
         },
         "tonight": {
@@ -2412,7 +2413,8 @@
             "photos": "Fotos: gratis hasta 3 (portada incluida) y hasta 10 con un patrocinio o Estadísticas Pro. Se publican tras revisarlas y se suben sin datos de ubicación.",
             "live": "En directo: indica si hay cola o está lleno (dura 90 minutos) y ofertas como «entrada gratis hasta» o «happy hour hasta». Aparece como «Lo dice el local».",
             "details": "Ficha enriquecida: dress code, edad mínima, precio de entrada y de copa, terraza y accesibilidad.",
-            "report": "Resultados: vistas de tu ficha, «Voy» y check-ins de los últimos 30 días y el efecto de tus patrocinios y Flash. Siempre agregado (menos de 5 personas no se muestra). Con Estadísticas Pro, evolución por noche."
+            "report": "Resultados: vistas de tu ficha, «Voy» y check-ins de los últimos 30 días y el efecto de tus patrocinios y Flash. Siempre agregado (menos de 5 personas no se muestra). Con Estadísticas Pro, evolución por noche.",
+            "bookings": "Reservas y listas (gratis): acepta o rechaza solicitudes de mesa y abre una lista para la noche con plazas y hora límite. En la puerta valida cada QR o código una sola vez. Solo ves el nombre de perfil, las personas y la hora."
           }
         },
         "sponsor": {
@@ -2463,6 +2465,108 @@
       "openApp": "Abrir la app",
       "otherUser": "¿Tienes un local? Mira la guía para locales",
       "otherVenue": "¿Buscas cómo usar la app? Mira la guía de la app"
+    }
+  },
+  "bookings": {
+    "place": {
+      "title": "Reservas y lista de invitados",
+      "reserveTitle": "Reservar mesa",
+      "hint": "Sin pago. El local acepta o rechaza tu solicitud y lo verás en Mis reservas.",
+      "date": "Día",
+      "time": "Hora de llegada",
+      "party": "Personas",
+      "kind": "Tipo",
+      "submit": "Solicitar reserva",
+      "sent": "Solicitud enviada. Verás la respuesta del local en Mis reservas.",
+      "ageRequired": "Para reservar o apuntarte a una lista necesitas la edad verificada.",
+      "verify": "Verificar edad",
+      "ownVenue": "Es tu local: gestiona las reservas desde tu panel.",
+      "myReservation": "Tu reserva: {{date}} · {{party}} personas · {{status}}",
+      "guestlistTitle": "Lista de invitados",
+      "guestlistUntil": "Válida hasta las {{time}}",
+      "join": "Apuntarme",
+      "joined": "Estás en la lista. Tu QR está en Mis reservas.",
+      "full": "La lista está completa.",
+      "seeMine": "Ver mis reservas"
+    },
+    "kinds": {
+      "table": "Mesa",
+      "bottle": "Mesa con botella"
+    },
+    "status": {
+      "requested": "Pendiente",
+      "accepted": "Aceptada",
+      "rejected": "Rechazada",
+      "cancelled": "Cancelada",
+      "expired": "Sin respuesta"
+    },
+    "guestStatus": {
+      "confirmed": "Confirmada",
+      "cancelled": "Cancelada",
+      "checked_in": "Usada"
+    },
+    "errors": {
+      "not_available": "Este local no acepta reservas ahora mismo.",
+      "own_venue": "Es tu local: gestiona las reservas desde tu panel.",
+      "booking_limit": "Ya tienes 3 reservas activas.",
+      "already_booked": "Ya tienes una reserva en este local esa noche.",
+      "age_required": "Para reservar necesitas la edad verificada.",
+      "invalid": "Revisa el día, la hora y las personas (desde 30 minutos hasta 14 días vista).",
+      "list_full": "La lista está completa.",
+      "generic": "No se pudo completar. Inténtalo de nuevo."
+    },
+    "mine": {
+      "title": "Mis reservas",
+      "hint": "Reservas de mesa y listas de invitados",
+      "lead": "Lo que has pedido a los locales y tus entradas de lista.",
+      "empty": "Aún no tienes reservas ni listas.",
+      "reservations": "Reservas",
+      "entries": "Listas de invitados",
+      "party": "{{count}} personas · {{kind}}",
+      "reason": "Motivo: {{reason}}",
+      "cancel": "Cancelar reserva",
+      "qrLabel": "Código QR de tu entrada en {{place}}",
+      "code": "Código: {{code}}",
+      "showAtDoor": "Enséñalo en la puerta antes de las {{time}}.",
+      "used": "Entrada usada.",
+      "leave": "Salir de la lista"
+    },
+    "venue": {
+      "settingsTitle": "Reservas y lista de invitados",
+      "settingsBody": "Gratis. Tú decides si aceptas solicitudes de mesa y si abres listas. Solo verás el nombre de perfil, las personas y la hora; nada de teléfonos.",
+      "acceptReservations": "Aceptar solicitudes de reserva",
+      "acceptGuestlists": "Abrir listas de invitados",
+      "maxParty": "Máximo de personas por reserva",
+      "save": "Guardar",
+      "saved": "Guardado.",
+      "requestsTitle": "Solicitudes de reserva",
+      "noRequests": "No hay solicitudes.",
+      "requestRow": "{{name}} · {{party}} personas · {{kind}}",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "reasonLabel": "Motivo (opcional, lo verá la persona)",
+      "listTitle": "Lista de esta noche",
+      "listName": "Título",
+      "listNameHint": "Por ejemplo: Entrada gratis antes de la 1:30",
+      "listUntil": "Válida hasta",
+      "capacity": "Plazas",
+      "createList": "Abrir lista",
+      "updateList": "Actualizar lista",
+      "closeList": "Cerrar lista",
+      "closed": "Lista cerrada",
+      "counts": "{{taken}} de {{capacity}} apuntados · {{used}} han entrado",
+      "enableFirst": "Activa «Abrir listas de invitados» para crear una.",
+      "invalidTime": "Elige una hora dentro de las próximas 12 horas.",
+      "doorTitle": "Puerta",
+      "codeLabel": "Código de la entrada",
+      "check": "Validar",
+      "scan": "Escanear QR",
+      "stopScan": "Dejar de escanear",
+      "scanUnsupported": "Este dispositivo no puede escanear: teclea el código.",
+      "cameraError": "No se pudo abrir la cámara: teclea el código.",
+      "ok": "{{name}} puede entrar.",
+      "alreadyUsed": "{{name}}: esta entrada ya se usó a las {{time}}.",
+      "invalidCode": "Código no válido para la lista de esta noche."
     }
   }
 }

@@ -196,6 +196,7 @@ export function createMockBookingPlaces(
       return ok(reservationView(reservation))
     },
     async cancelReservation(id) {
+      await Promise.resolve()
       const c = on()
       const r = c.bookings.reservations.find((x) => x.id === id && x.userId === ME)
       if (!r || !isActiveReservation(r)) throw new Error('not found')
@@ -226,6 +227,7 @@ export function createMockBookingPlaces(
       return ok(entryJson(state, world, entry))
     },
     async leaveGuestlist(entryId) {
+      await Promise.resolve()
       const c = on()
       const e = c.bookings.entries.find((x) => x.id === entryId && x.userId === ME)
       if (e?.status !== 'confirmed') throw new Error('not found')
@@ -233,6 +235,7 @@ export function createMockBookingPlaces(
       return entryJson(c.bookings, world, e)
     },
     async myBookings() {
+      await Promise.resolve()
       const c = on()
       const state = c.bookings
       return {

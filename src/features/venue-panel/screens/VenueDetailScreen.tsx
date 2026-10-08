@@ -20,6 +20,11 @@ import type { ManagedVenue, SponsorshipTier } from '../services/venue-panel-serv
 import { FlashAlertForm } from '../components/FlashAlerts'
 import { MusicCard } from '../components/MusicCard'
 import { ExtrasCard, LiveNoticeCard, PhotosCard, ReportCard } from '../components/ShowcaseCards'
+import {
+  BookingSettingsCard,
+  GuestlistCard,
+  ReservationRequestsCard,
+} from '@/features/bookings/components/BookingCards'
 import { PlanCard, TeamCard } from '../components/PartnerCards'
 import { useVenuePartnerState } from '../hooks/use-venue-panel'
 import { ProSubscriptionCard } from '../components/ProSubscriptionCard'
@@ -343,6 +348,7 @@ export function VenueDetailScreen() {
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
   const partners = useFeatureFlag('venue_partners_enabled') === 'on'
   const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
+  const bookings = useFeatureFlag('venue_bookings_enabled') === 'on'
   const { data: partnerState } = useVenuePartnerState(placeId, partners && !!venue)
   if (isPending) return null
   if (!venue) return <Navigate to="/venue" replace />
@@ -358,6 +364,16 @@ export function VenueDetailScreen() {
         <StatsCard placeId={venue.placeId} />
         <ProSubscriptionCard placeId={venue.placeId} />
       </Section>
+      {bookings && (
+        <Section title={t('bookings.venue.listTitle')}>
+          <GuestlistCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {bookings && (
+        <Section title={t('bookings.venue.requestsTitle')}>
+          <ReservationRequestsCard placeId={venue.placeId} />
+        </Section>
+      )}
       {showcase && (
         <Section title={t('venuePanel.showcase.report.title')}>
           <ReportCard placeId={venue.placeId} />
@@ -384,6 +400,11 @@ export function VenueDetailScreen() {
       {liveStatus && (
         <Section title={t('venuePanel.music.title')}>
           <MusicCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {bookings && (
+        <Section title={t('bookings.venue.settingsTitle')}>
+          <BookingSettingsCard placeId={venue.placeId} />
         </Section>
       )}
       <Section title={t('venuePanel.event.sectionTitle')}>

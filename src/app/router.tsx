@@ -161,6 +161,11 @@ const VenueDetailScreen = lazy(() =>
     default: module.VenueDetailScreen,
   })),
 )
+const MyBookingsScreen = lazy(() =>
+  import('@/features/bookings/screens/MyBookingsScreen').then((module) => ({
+    default: module.MyBookingsScreen,
+  })),
+)
 const VenuePanelScreen = lazy(() =>
   import('@/features/venue-panel/screens/VenuePanelScreen').then((module) => ({
     default: module.VenuePanelScreen,
@@ -413,6 +418,7 @@ export const routes: RouteObject[] = [
       { path: 'premium/return', element: screen(PurchaseReturnScreen) },
       { path: 'premium/subscription', element: screen(MySubscriptionScreen) },
       { path: 'premium/redeem', element: screen(RedeemScreen) },
+      { path: 'reservas', element: screen(MyBookingsScreen) },
       { path: 'venue', element: screen(VenuePanelScreen) },
       { path: 'venue/invitacion', element: screen(RedeemInviteScreen) },
       { path: 'venue/:placeId', element: screen(VenueDetailScreen) },
