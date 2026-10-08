@@ -2,6 +2,22 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## R2 — «Cómo está ahora» — 08/10/2026
+
+- A01/API1: votos en `private.place_reports` sin permisos de cliente (RLS activo, sin
+  grants); solo RPC `security definer` en `private` con envoltorios `invoker` en `public`,
+  ejecutables solo por `authenticated`. Respuestas agregadas, nunca quién votó.
+- A04 anti-manipulación: flag comprobado en servidor; cuenta completa no baneada; voto solo
+  con check-in activo en ese sitio; un voto por persona, pregunta y noche (cambiarlo no
+  suma); gestores no votan en su local; valores de lista cerrada; límites de uso por
+  persona (60 votos, 600 lecturas, 30 cambios de música); umbral de 3 votos.
+- Datos de prueba: votos de cuentas `is_test` solo cuentan para testers/admin.
+- RGPD: los votos salen en la exportación de datos; retención 60 días (cron diario);
+  borrado en cascada con la cuenta, el local o el evento.
+- Line-up: texto ≤120 caracteres, recortado, mostrado como texto (React escapa); caduca al
+  cambiar de noche. Acciones del gestor auditadas (`venue.music`).
+- Pruebas: SQL 27/27, RLS 36/36 (usuario no puede encender el flag), Advisors sin errores.
+
 ## R1 — Entrar por email y guías — 08/10/2026
 
 - A07 (autenticación): código por email con `shouldCreateUser: false`; el alta sigue

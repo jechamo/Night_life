@@ -1762,6 +1762,32 @@ export type Database = {
           },
         ]
       }
+      venue_favorites: {
+        Row: {
+          created_at: string
+          user_id: string
+          venue_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+          venue_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'venue_favorites_venue_id_fkey'
+            columns: ['venue_id']
+            isOneToOne: false
+            referencedRelation: 'venues'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       venue_managers: {
         Row: {
           created_at: string
@@ -1806,6 +1832,7 @@ export type Database = {
           hours: string
           id: string
           is_test: boolean
+          lineup_night: string | null
           location: unknown
           location_source: string
           min_age: number | null
@@ -1819,6 +1846,7 @@ export type Database = {
           price: number | null
           rating: number | null
           rating_count: number
+          tonight_lineup: string | null
           type: Database['public']['Enums']['venue_type']
           updated_at: string
           website: string
@@ -1840,6 +1868,7 @@ export type Database = {
           hours?: string
           id?: string
           is_test?: boolean
+          lineup_night?: string | null
           location?: unknown
           location_source?: string
           min_age?: number | null
@@ -1853,6 +1882,7 @@ export type Database = {
           price?: number | null
           rating?: number | null
           rating_count?: number
+          tonight_lineup?: string | null
           type: Database['public']['Enums']['venue_type']
           updated_at?: string
           website?: string
@@ -1874,6 +1904,7 @@ export type Database = {
           hours?: string
           id?: string
           is_test?: boolean
+          lineup_night?: string | null
           location?: unknown
           location_source?: string
           min_age?: number | null
@@ -1887,6 +1918,7 @@ export type Database = {
           price?: number | null
           rating?: number | null
           rating_count?: number
+          tonight_lineup?: string | null
           type?: Database['public']['Enums']['venue_type']
           updated_at?: string
           website?: string
@@ -2003,12 +2035,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      home_summary: { Args: { p_city: string; p_lat?: number; p_lng?: number }; Returns: Json }
-      place_detail: { Args: { p_place: string }; Returns: Json }
-      favorites_list: { Args: { p_offset?: number }; Returns: Json }
-      favorite_set: { Args: { p_place: string; p_saved: boolean }; Returns: undefined }
-      matching_likes_snapshot: { Args: Record<PropertyKey, never>; Returns: Json }
-      matching_likes_seen: { Args: { p_snapshot: string }; Returns: undefined }
       account_activity: { Args: never; Returns: undefined }
       admin_case_action: {
         Args: {
@@ -2189,6 +2215,11 @@ export type Database = {
         Returns: undefined
       }
       export_my_data: { Args: never; Returns: Json }
+      favorite_set: {
+        Args: { p_place: string; p_saved: boolean }
+        Returns: undefined
+      }
+      favorites_list: { Args: { p_offset?: number }; Returns: Json }
       feature_enabled: { Args: { _key: string }; Returns: boolean }
       finish_billing_notice: {
         Args: { p_id: string; p_lease: string; p_status: string }
@@ -2201,6 +2232,10 @@ export type Database = {
       get_event: { Args: { p_id: string }; Returns: Json }
       get_place_stats: { Args: { p_place_id: string }; Returns: Json }
       has_entitlement: { Args: { _key: string }; Returns: boolean }
+      home_summary: {
+        Args: { p_city: string; p_lat?: number; p_lng?: number }
+        Returns: Json
+      }
       list_cities: { Args: never; Returns: string[] }
       list_events: { Args: { p_city?: string }; Returns: Json }
       lost_found_delete: { Args: { p_id: string }; Returns: undefined }
@@ -2218,6 +2253,8 @@ export type Database = {
       matching_block: { Args: { p_person: string }; Returns: undefined }
       matching_candidates: { Args: { p_place?: string }; Returns: Json }
       matching_like: { Args: { p_person: string }; Returns: Json }
+      matching_likes_seen: { Args: { p_snapshot: string }; Returns: undefined }
+      matching_likes_snapshot: { Args: never; Returns: Json }
       matching_likes_you: { Args: never; Returns: Json }
       matching_matches: { Args: never; Returns: Json }
       matching_pass: { Args: { p_person: string }; Returns: undefined }
@@ -2239,6 +2276,8 @@ export type Database = {
       my_attendance: { Args: never; Returns: Json }
       my_entitlements: { Args: never; Returns: Json }
       my_vibe: { Args: { p_place_id: string }; Returns: string }
+      place_detail: { Args: { p_place: string }; Returns: Json }
+      place_live_status: { Args: { p_place: string }; Returns: Json }
       premium_incognito: { Args: { p_on: boolean }; Returns: Json }
       premium_notify: { Args: { p_on: boolean }; Returns: Json }
       premium_paid_dm: {
@@ -2268,6 +2307,10 @@ export type Database = {
       report_event: {
         Args: { p_id: string; p_reason: string }
         Returns: undefined
+      }
+      report_place_status: {
+        Args: { p_dimension: string; p_place: string; p_value: string }
+        Returns: Json
       }
       request_data_right: { Args: { p_kind: string }; Returns: string }
       request_verification_review: { Args: { p_level: string }; Returns: Json }
@@ -2346,6 +2389,10 @@ export type Database = {
       venue_official_event: {
         Args: { p: Json; p_venue: string }
         Returns: string
+      }
+      venue_set_music: {
+        Args: { p_genres: string[]; p_lineup: string; p_venue: string }
+        Returns: Json
       }
       venue_sponsorship: {
         Args: { p_from: string; p_tier: string; p_to: string; p_venue: string }

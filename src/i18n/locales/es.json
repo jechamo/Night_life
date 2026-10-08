@@ -722,6 +722,60 @@
         "quota": "Mapa de prueba: se ha alcanzado el límite gratuito de mapas por hoy.",
         "unavailable": "Mapa de prueba: el mapa real no está disponible ahora mismo."
       }
+    },
+    "live": {
+      "title": "Cómo está ahora",
+      "subtitle": "Últimos {{minutes}} min · anónimo, solo se muestran totales",
+      "loading": "Cargando…",
+      "fewVotes": "Aún pocos votos",
+      "share": "{{answer}} · {{percent}} %",
+      "venueSays": "El local dice: {{genres}}",
+      "lineup": "Esta noche: {{lineup}}",
+      "peopleSays": "La gente dice: {{answer}} ({{percent}} %)",
+      "usually": "Normalmente a esta hora: {{answer}}",
+      "yourAnswer": "Tu respuesta",
+      "needsCheckIn": "Haz check-in aquí para responder.",
+      "questions": {
+        "crowd": "Gente",
+        "queue": "Cola para entrar",
+        "music_like": "¿Gusta la música?",
+        "music_genre": "Qué suena"
+      },
+      "answers": {
+        "crowd": {
+          "empty": "Vacío",
+          "normal": "Normal",
+          "busy": "Lleno",
+          "packed": "A tope"
+        },
+        "queue": {
+          "none": "Sin cola",
+          "short": "Poca cola",
+          "long": "Mucha cola"
+        },
+        "music_like": {
+          "yes": "Me gusta",
+          "no": "No me gusta"
+        },
+        "music_genre": {
+          "reggaeton": "Reguetón",
+          "latin": "Latina",
+          "commercial": "Comercial",
+          "pop": "Pop",
+          "techno": "Techno",
+          "house": "House",
+          "electronic": "Electrónica",
+          "hiphop": "Hip hop",
+          "rock": "Rock",
+          "indie": "Indie",
+          "other": "Otra"
+        }
+      },
+      "errors": {
+        "no_check_in": "Necesitas un check-in activo aquí para responder.",
+        "own_venue": "Gestionas este local: no puedes votar en él.",
+        "generic": "No se ha podido guardar. Inténtalo de nuevo."
+      }
     }
   },
   "matching": {
@@ -1442,7 +1496,18 @@
       "saved": "Aviso publicado",
       "failed": "No se pudo publicar. Comprueba el patrocinio y la política de alcohol."
     },
-    "billingError": "No se ha podido abrir el pago. Comprueba la disponibilidad del patrocinio o una suscripción existente y vuelve a intentarlo."
+    "billingError": "No se ha podido abrir el pago. Comprueba la disponibilidad del patrocinio o una suscripción existente y vuelve a intentarlo.",
+    "music": {
+      "title": "Música y ambiente",
+      "body": "Elige hasta 3 estilos y el line-up de esta noche. En la ficha aparece como «El local dice», junto a lo que vota la gente con check-in.",
+      "genres": "Estilos (máx. 3)",
+      "lineup": "Line-up de esta noche",
+      "lineupHint": "Se borra solo al cambiar de noche. Máx. 120 caracteres.",
+      "save": "Guardar música",
+      "saved": "Guardado.",
+      "error": "No se ha podido guardar. Inténtalo de nuevo.",
+      "summary": "Lo que dice la gente ahora"
+    }
   },
   "admin": {
     "title": "Admin",
@@ -1614,6 +1679,7 @@
         "sponsored_cards_enabled": "Tarjetas patrocinadas de locales en el swipe (Bloque 11).",
         "travel_mode_enabled": "Modo viaje (Bloque 11).",
         "email_login_enabled": "Entrar con código por email tras el alta (requiere SMTP propio en Supabase Auth).",
+        "live_status_enabled": "«Cómo está ahora»: gente, cola y música votadas con check-in y música declarada por el local (R2).",
         "flash_alcohol_allowed": "Activar solo tras revisar la normativa autonómica aplicable."
       }
     },
@@ -1981,7 +2047,8 @@
             "create": "Con la edad verificada puedes crear hasta 2 eventos al día en lugares públicos.",
             "confirm": "Los eventos de usuarios salen como «No confirmado» hasta que 3 personas confirman que existen; los de locales salen como «Oficial».",
             "vibe": "Vibe Check: con check-in en un sitio puedes votar cómo está el ambiente esta noche.",
-            "lost": "Objetos perdidos: publica o responde avisos del local durante 48 horas."
+            "lost": "Objetos perdidos: publica o responde avisos del local durante 48 horas.",
+            "live": "Cómo está ahora: con check-in responde de un toque si hay mucha gente, cola o qué música suena; ves el resumen anónimo de los últimos 90 minutos y lo que declara el local."
           }
         },
         "free": {
@@ -2040,7 +2107,8 @@
           "items": {
             "profile": "Edita tu ficha: descripción, horario y rango de precio.",
             "events": "Publica eventos oficiales: salen como «Oficial» sin esperar confirmaciones.",
-            "stats": "Estadísticas básicas: check-ins de la semana y cuánta gente va esta noche, siempre agregadas y anónimas."
+            "stats": "Estadísticas básicas: check-ins de la semana y cuánta gente va esta noche, siempre agregadas y anónimas.",
+            "music": "Música y ambiente: declara hasta 3 estilos y el line-up de la noche; la ficha lo muestra junto a lo que vota la gente con check-in (anónimo, desde 3 votos). Los gestores no votan en su propio local."
           }
         },
         "sponsor": {

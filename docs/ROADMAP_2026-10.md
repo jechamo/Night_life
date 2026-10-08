@@ -8,8 +8,8 @@
 | Bloque | Estado                  | Contenido                                                                         |
 | ------ | ----------------------- | --------------------------------------------------------------------------------- |
 | R0     | ✅ Hecho                | Red de regresión E2E, revisión de compras, SBOM y migraciones alineadas           |
-| R1     | ✅ Hecho (pendiente OK) | Entrar con código por email (flag) y guías públicas                               |
-| R2     | Pendiente               | «Cómo está ahora» (gente, cola, música, ambiente) y música declarada por el local |
+| R1     | ✅ Hecho                | Entrar con código por email (flag) y guías públicas                               |
+| R2     | ✅ Hecho (pendiente OK) | «Cómo está ahora» (gente, cola, música, ambiente) y música declarada por el local |
 | R3     | Pendiente               | Partners y contratos, ventajas de local como entitlements, invitaciones, equipo   |
 | R4     | Pendiente               | Fotos del local, estado en directo, ficha enriquecida e informe de resultados     |
 | R5     | Pendiente               | Reservas sin pago y lista de invitados con QR                                     |

@@ -2,6 +2,16 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Roadmap R2 — «Cómo está ahora»
+
+`PlaceDetails` pinta `LiveStatusSection` solo con `live_status_enabled`. Flujo: UI →
+`useLiveStatus/useReportLiveStatus` (`use-places`, clave `['places', id, 'live-status']`,
+refresco cada 2 min) → `PlacesService.liveStatus/reportLiveStatus` → adaptador Supabase
+(RPC `place_live_status`, `report_place_status`) o simulador. El panel del local usa
+`MusicCard` → `useSetVenueMusic` → `VenuePanelService.setMusic` (`venue_set_music`). El
+modelo (`places/model/live-status.ts`) replica las listas cerradas del servidor y
+`parseLiveStatus` descarta cualquier valor desconocido.
+
 ## Roadmap R1 — email y guías
 
 `/login` elige método según `email_login_enabled`: `EmailLoginStep` (código por email,

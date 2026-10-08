@@ -1,5 +1,41 @@
 # Progreso — Nightlife Connect
 
+## Roadmap 2026-10 · R2 — «Cómo está ahora» — 08/10/2026
+
+Plan: [R2_PLAN.md](./R2_PLAN.md). Todo aditivo y detrás de `live_status_enabled` (apagado);
+el Vibe Check existente no cambia.
+
+- **Ficha del sitio:** sección «Cómo está ahora» encima del Vibe Check. Con check-in activo,
+  respuestas de un toque: gente (vacío/normal/lleno/a tope), cola (sin/poca/mucha), ¿gusta
+  la música? y qué suena (11 estilos). Todos ven totales anónimos de los últimos 90 min a
+  partir de 3 votos («Aún pocos votos» si no), «El local dice / La gente dice» y
+  «Normalmente a esta hora…» (mismo día y hora, 8 semanas, desde 5 votos).
+- **Panel del local:** tarjeta «Música y ambiente» (hasta 3 estilos y line-up de esta
+  noche, que caduca solo) con el mismo resumen. Los gestores no votan en su local.
+- **Servidor:** migración `20261008103324_live_status` (tabla privada `place_reports`,
+  columnas `venues.tonight_lineup/lineup_night`, RPC `place_live_status`,
+  `report_place_status`, `venue_set_music`, exportación RGPD y retención de 60 días).
+- Guías públicas: un punto nuevo en cada guía, visible solo con el flag encendido. La ficha
+  traduce los estilos conocidos («techno» → «Techno»); el resto se muestra igual que antes.
+
+**Hecho cuando**
+
+- ✅ Flag apagado: ficha (solo Vibe Check), panel y guías idénticos (unitarias + E2E).
+- ✅ Flag encendido: votar, cambiar voto, umbral de 3, «El local dice / La gente dice»,
+  «Normalmente…» y panel del local (unitarias + E2E admin enciende → check-in → voto;
+  local guarda estilos y line-up).
+- ✅ SQL por rol 27/27 (anónimo, flag apagado, sin check-in, con check-in, gestor, cuenta
+  de prueba, tester, caducidad, histórico, exportación y retención) · RLS 36/36 · 16 flags
+  · flag en `off` · sin restos de pruebas.
+- ✅ `npm run check` 447/447 (+11) · E2E 48/48 ×3 (+6 nuevas) · build · `npm audit` 0.
+- ✅ Advisors: 0 errores; `place_reports` añade 1 INFO intencionado (RLS sin políticas en
+  `private`: solo accesible por funciones). Historial 62 = repositorio.
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r2-live-status` o, en local, Admin › Feature flags ›
+`live_status_enabled` = on → Descubre › un local › «Estoy Aquí» (simular) → responder;
+Perfil › Panel de locales › Bar Cobalto › «Música y ambiente».
+
 ## Roadmap 2026-10 · R1 — Entrar por email y guías públicas — 08/10/2026
 
 Plan: [R1_PLAN.md](./R1_PLAN.md). Todo aditivo; con el flag apagado la app es idéntica.

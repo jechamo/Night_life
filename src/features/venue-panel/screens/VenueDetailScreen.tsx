@@ -18,6 +18,7 @@ import {
 } from '../hooks/use-venue-panel'
 import type { ManagedVenue, SponsorshipTier } from '../services/venue-panel-service'
 import { FlashAlertForm } from '../components/FlashAlerts'
+import { MusicCard } from '../components/MusicCard'
 import { ProSubscriptionCard } from '../components/ProSubscriptionCard'
 import { useStartVenuePurchase } from '@/features/premium/hooks/use-premium'
 import { formatPrice, VENUE_PRICES } from '@/features/premium/model/catalog'
@@ -336,6 +337,7 @@ export function VenueDetailScreen() {
   const { placeId = '' } = useParams()
   const { data: venues, isPending } = useMyVenues()
   const venue = venues?.find((v) => v.placeId === placeId && v.claimStatus === 'approved')
+  const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
   if (isPending) return null
   if (!venue) return <Navigate to="/venue" replace />
   return (
@@ -348,6 +350,11 @@ export function VenueDetailScreen() {
       <Section title={t('venuePanel.edit.title')}>
         <EditForm venue={venue} />
       </Section>
+      {liveStatus && (
+        <Section title={t('venuePanel.music.title')}>
+          <MusicCard placeId={venue.placeId} />
+        </Section>
+      )}
       <Section title={t('venuePanel.event.sectionTitle')}>
         <OfficialEventForm placeId={venue.placeId} />
       </Section>

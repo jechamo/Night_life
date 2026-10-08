@@ -722,6 +722,60 @@
         "quota": "Test map: today’s free map limit has been reached.",
         "unavailable": "Test map: the real map is not available right now."
       }
+    },
+    "live": {
+      "title": "How it is now",
+      "subtitle": "Last {{minutes}} min · anonymous, only totals are shown",
+      "loading": "Loading…",
+      "fewVotes": "Not enough votes yet",
+      "share": "{{answer}} · {{percent}}%",
+      "venueSays": "The venue says: {{genres}}",
+      "lineup": "Tonight: {{lineup}}",
+      "peopleSays": "People say: {{answer}} ({{percent}}%)",
+      "usually": "Usually at this time: {{answer}}",
+      "yourAnswer": "Your answer",
+      "needsCheckIn": "Check in here to answer.",
+      "questions": {
+        "crowd": "Crowd",
+        "queue": "Queue to get in",
+        "music_like": "Do people like the music?",
+        "music_genre": "What is playing"
+      },
+      "answers": {
+        "crowd": {
+          "empty": "Empty",
+          "normal": "Normal",
+          "busy": "Busy",
+          "packed": "Packed"
+        },
+        "queue": {
+          "none": "No queue",
+          "short": "Short queue",
+          "long": "Long queue"
+        },
+        "music_like": {
+          "yes": "I like it",
+          "no": "I don't like it"
+        },
+        "music_genre": {
+          "reggaeton": "Reggaeton",
+          "latin": "Latin",
+          "commercial": "Commercial",
+          "pop": "Pop",
+          "techno": "Techno",
+          "house": "House",
+          "electronic": "Electronic",
+          "hiphop": "Hip hop",
+          "rock": "Rock",
+          "indie": "Indie",
+          "other": "Other"
+        }
+      },
+      "errors": {
+        "no_check_in": "You need an active check-in here to answer.",
+        "own_venue": "You manage this venue, so you cannot vote here.",
+        "generic": "Could not save. Please try again."
+      }
     }
   },
   "matching": {
@@ -1442,7 +1496,18 @@
       "saved": "Alert published",
       "failed": "Could not publish. Check the sponsorship and alcohol policy."
     },
-    "billingError": "Unable to open payment. Check sponsorship availability or an existing subscription and try again."
+    "billingError": "Unable to open payment. Check sponsorship availability or an existing subscription and try again.",
+    "music": {
+      "title": "Music and atmosphere",
+      "body": "Choose up to 3 styles and tonight's line-up. The venue page shows it as \"The venue says\", next to what checked-in people vote.",
+      "genres": "Styles (max. 3)",
+      "lineup": "Tonight's line-up",
+      "lineupHint": "Cleared automatically when the night changes. Max. 120 characters.",
+      "save": "Save music",
+      "saved": "Saved.",
+      "error": "Could not save. Please try again.",
+      "summary": "What people say now"
+    }
   },
   "admin": {
     "title": "Admin",
@@ -1614,6 +1679,7 @@
         "sponsored_cards_enabled": "Sponsored venue cards in the swipe (Block 11).",
         "travel_mode_enabled": "Travel mode (Block 11).",
         "email_login_enabled": "Sign in with an email code after sign-up (needs custom SMTP in Supabase Auth).",
+        "live_status_enabled": "\"How it is now\": crowd, queue and music voted with check-in, plus music declared by the venue (R2).",
         "flash_alcohol_allowed": "Enable only after reviewing the applicable regional regulations."
       }
     },
@@ -1981,7 +2047,8 @@
             "create": "With your age verified you can create up to 2 events a day in public places.",
             "confirm": "Events by users show as \"Unconfirmed\" until 3 people confirm they exist; events by venues show as \"Official\".",
             "vibe": "Vibe Check: once checked in at a place you can vote on tonight's atmosphere.",
-            "lost": "Lost & found: post or answer notices for the venue for 48 hours."
+            "lost": "Lost & found: post or answer notices for the venue for 48 hours.",
+            "live": "How it is now: with a check-in, tap to say how busy it is, the queue or what music is playing; you see the anonymous summary of the last 90 minutes and what the venue declares."
           }
         },
         "free": {
@@ -2040,7 +2107,8 @@
           "items": {
             "profile": "Edit your page: description, opening hours and price range.",
             "events": "Publish official events: they show as \"Official\" without waiting for confirmations.",
-            "stats": "Basic stats: check-ins this week and how many people are going tonight, always aggregated and anonymous."
+            "stats": "Basic stats: check-ins this week and how many people are going tonight, always aggregated and anonymous.",
+            "music": "Music and atmosphere: declare up to 3 styles and tonight's line-up; the venue page shows it next to what checked-in people vote (anonymous, from 3 votes). Managers cannot vote at their own venue."
           }
         },
         "sponsor": {

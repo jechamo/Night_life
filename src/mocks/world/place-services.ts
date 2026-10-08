@@ -12,7 +12,7 @@ import { isEvent, type Place } from '@/features/places/model/types'
 import type { LostFoundError, PlacesService } from '@/features/places/services/places-service'
 import { err, ok, type Result } from '@/shared/lib/result'
 import type { MockStore } from '../mock-store'
-import { emit, placeById, type WorldState } from './world-state'
+import { emit, liveStatusOf, placeById, type WorldState } from './world-state'
 
 type Wait = () => Promise<void>
 const VISIBLE_EVENT = new Set(['unconfirmed', 'confirmed', 'official'])
@@ -60,6 +60,17 @@ export function createMockPlacesService(
           return { ...p, vibes }
         }),
       )
+    },
+    async liveStatus(placeId) {
+      await wait()
+      return liveStatusOf(state, placeId)
+    },
+    async reportLiveStatus(placeId, question, answer) {
+      await wait()
+      if (state.attendance.checkIn?.placeId !== placeId) return err('no_check_in')
+      if (state.managedVenueIds.has(placeId)) return err('own_venue')
+      state.myLive.set(placeId, { ...(state.myLive.get(placeId) ?? {}), [question]: answer })
+      return ok(liveStatusOf(state, placeId))
     },
     async confirmEvent(placeId) {
       await wait()

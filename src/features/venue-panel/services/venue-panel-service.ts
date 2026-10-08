@@ -1,3 +1,4 @@
+import type { LiveStatus, MusicGenre } from '@/features/places/model/live-status'
 import type { Result } from '@/shared/lib/result'
 
 export type SponsorshipTier = 'featured' | 'featured_plus' | 'top'
@@ -65,6 +66,8 @@ export interface VenuePanelService {
     from: string,
     to: string,
   ): Promise<ManagedVenue>
+  /** Roadmap R2: styles (max 3) and tonight's line-up declared by the venue. */
+  setMusic(placeId: string, genres: MusicGenre[], lineup: string): Promise<LiveStatus>
   createOfficialEvent(
     placeId: string,
     input: { title: string; startsAt: string; endsAt: string; description: string },

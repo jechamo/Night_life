@@ -59,6 +59,7 @@ const USER_GUIDE = [
       'guide.user.sections.events.items.confirm',
       'guide.user.sections.events.items.vibe',
       'guide.user.sections.events.items.lost',
+      'guide.user.sections.events.items.live',
     ],
   },
   {
@@ -114,6 +115,7 @@ const VENUE_GUIDE = [
       'guide.venues.sections.free.items.profile',
       'guide.venues.sections.free.items.events',
       'guide.venues.sections.free.items.stats',
+      'guide.venues.sections.free.items.music',
     ],
   },
   {
@@ -155,6 +157,12 @@ const VENUE_GUIDE = [
   },
 ] as const
 
+/** Items that describe features still behind their flag (shown only once it is on). */
+const LIVE_STATUS_ITEMS: readonly string[] = [
+  'guide.user.sections.events.items.live',
+  'guide.venues.sections.free.items.music',
+]
+
 function GuideSection({ title, items }: { title: string; items: string[] }) {
   return (
     <section className="mt-8">
@@ -176,6 +184,7 @@ function GuideSection({ title, items }: { title: string; items: string[] }) {
 export function UserGuideScreen() {
   const { t } = useTranslation()
   const emailLogin = useFeatureFlag('email_login_enabled') === 'on'
+  const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
   return (
     <>
       <h1 className="mt-8 text-3xl font-semibold">{t('guide.user.title')}</h1>
@@ -184,12 +193,14 @@ export function UserGuideScreen() {
         <GuideSection
           key={section.title}
           title={t(section.title)}
-          items={section.items.map((item) =>
-            // Sign-in copy follows the email sign-in flag (roadmap R1).
-            item === 'guide.user.sections.account.items.login' && emailLogin
-              ? t('guide.user.sections.account.items.loginEmail')
-              : t(item),
-          )}
+          items={section.items
+            .filter((item) => liveStatus || !LIVE_STATUS_ITEMS.includes(item))
+            .map((item) =>
+              // Sign-in copy follows the email sign-in flag (roadmap R1).
+              item === 'guide.user.sections.account.items.login' && emailLogin
+                ? t('guide.user.sections.account.items.loginEmail')
+                : t(item),
+            )}
         />
       ))}
       <nav className="mt-10 grid gap-2 text-sm">
@@ -206,6 +217,7 @@ export function UserGuideScreen() {
 
 export function VenueGuideScreen() {
   const { t } = useTranslation()
+  const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
   return (
     <>
       <h1 className="mt-8 text-3xl font-semibold">{t('guide.venues.title')}</h1>
@@ -214,7 +226,9 @@ export function VenueGuideScreen() {
         <GuideSection
           key={section.title}
           title={t(section.title)}
-          items={section.items.map((item) => t(item))}
+          items={section.items
+            .filter((item) => liveStatus || !LIVE_STATUS_ITEMS.includes(item))
+            .map((item) => t(item))}
         />
       ))}
       <nav className="mt-10 grid gap-2 text-sm">

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { parseLiveStatus } from '@/features/places/model/live-status'
 import type { VenuePanelService } from '@/features/venue-panel/services/venue-panel-service'
 import type { ModerationService } from '@/features/moderation/services/moderation-service'
 import { err, ok } from '@/shared/lib/result'
@@ -114,6 +115,11 @@ export function createVenuePanelService(db: Db): VenuePanelService {
         must(
           await db.rpc('venue_sponsorship', { p_venue: id, p_tier: tier, p_from: from, p_to: to }),
         ),
+      )
+    },
+    async setMusic(id, genres, lineup) {
+      return parseLiveStatus(
+        must(await db.rpc('venue_set_music', { p_venue: id, p_genres: genres, p_lineup: lineup })),
       )
     },
     async createOfficialEvent(id, input) {

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { must } from './errors'
 import { parseOpeningHours } from '@/features/places/model/cities'
+import { parseLiveStatus } from '@/features/places/model/live-status'
 import {
   VIBES,
   type EventOrigin,
@@ -279,6 +280,27 @@ export function createPlacesService(db: Db): PlacesService {
       const { error } = await db.rpc('vote_vibe', { p_place_id: placeId, p_vibe: vibe })
       if (error) return hint(error).includes('no_check_in') ? err('no_check_in') : fail(error)
       return ok(await findPlace(placeId))
+    },
+
+    async liveStatus(placeId) {
+      const { data, error } = await db.rpc('place_live_status', { p_place: placeId })
+      if (error) fail(error)
+      return parseLiveStatus(data)
+    },
+
+    async reportLiveStatus(placeId, question, answer) {
+      const { data, error } = await db.rpc('report_place_status', {
+        p_place: placeId,
+        p_dimension: question,
+        p_value: answer,
+      })
+      if (error) {
+        const text = hint(error)
+        if (text.includes('no_check_in')) return err('no_check_in')
+        if (text.includes('own_venue')) return err('own_venue')
+        return fail(error)
+      }
+      return ok(parseLiveStatus(data))
     },
 
     async confirmEvent(placeId) {

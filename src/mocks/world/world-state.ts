@@ -5,6 +5,12 @@ import type { MatchingProfile, Candidate } from '@/features/matching/model/peopl
 import type { Match } from '@/features/matching/services/matching-service'
 import type { LostFoundPost } from '@/features/places/services/places-service'
 import type { Place, Vibe } from '@/features/places/model/types'
+import {
+  LIVE_QUESTION_KEYS,
+  type LiveQuestion,
+  type LiveStatus,
+  type MusicGenre,
+} from '@/features/places/model/live-status'
 import type { RealtimeEvent } from '@/shared/realtime/realtime'
 import { createMockMe, createMockPeople, type MockPerson } from './people.mock'
 import { createMockPlaces, MOCK_CENTER } from './places.mock'
@@ -25,6 +31,13 @@ export interface WorldState {
   matches: Match[]
   messages: ChatMessage[]
   myVibes: Map<string, Vibe>
+  /** Roadmap R2: other people's answers (seed) and mine, per place. */
+  liveVotes: Map<string, Partial<Record<LiveQuestion, Record<string, number>>>>
+  myLive: Map<string, Partial<Record<LiveQuestion, string>>>
+  declaredMusic: Map<string, { genres: MusicGenre[]; lineup: string | null }>
+  usuallyCrowd: Map<string, LiveStatus['usually']>
+  /** Venues the simulated user manages (cannot vote on them). */
+  managedVenueIds: Set<string>
   confirmedByMe: Set<string>
   eventsCreatedToday: number
   lostFound: LostFoundPost[]
@@ -52,6 +65,25 @@ export function createWorldState(): WorldState {
     matches: [],
     messages: [],
     myVibes: new Map(),
+    liveVotes: new Map<string, Partial<Record<LiveQuestion, Record<string, number>>>>([
+      [
+        'v-aurora',
+        {
+          crowd: { busy: 4, packed: 6 },
+          queue: { short: 5, long: 2 },
+          music_like: { yes: 7, no: 1 },
+          music_genre: { reggaeton: 5, commercial: 3 },
+        },
+      ],
+      ['v-cobalto', { crowd: { normal: 2 } }],
+    ]),
+    myLive: new Map(),
+    declaredMusic: new Map<string, { genres: MusicGenre[]; lineup: string | null }>([
+      ['v-aurora', { genres: ['reggaeton', 'commercial'], lineup: null }],
+      ['v-cobalto', { genres: ['indie'], lineup: null }],
+    ]),
+    usuallyCrowd: new Map<string, LiveStatus['usually']>([['v-aurora', 'packed']]),
+    managedVenueIds: new Set(['v-cobalto']),
     confirmedByMe: new Set(),
     eventsCreatedToday: 0,
     lostFound: [
@@ -164,4 +196,27 @@ export function contextFor(state: WorldState, person: MockPerson): Candidate['co
 
 export function emit(state: WorldState, event: RealtimeEvent) {
   state.listeners.forEach((listener) => listener(event))
+}
+
+/** Same rules as `private.place_live_status`: aggregates only, shown from 3 answers. */
+export function liveStatusOf(state: WorldState, placeId: string): LiveStatus {
+  const seed = state.liveVotes.get(placeId) ?? {}
+  const mine = state.myLive.get(placeId) ?? {}
+  const tallies = {} as LiveStatus['tallies']
+  for (const question of LIVE_QUESTION_KEYS) {
+    const counts: Record<string, number> = { ...(seed[question] ?? {}) }
+    const answer = mine[question]
+    if (answer) counts[answer] = (counts[answer] ?? 0) + 1
+    const total = Object.values(counts).reduce((sum, n) => sum + n, 0)
+    tallies[question] = { total, counts: total >= 3 ? counts : null }
+  }
+  const isVenue = !placeById(state, placeId)?.event
+  return {
+    windowMinutes: 90,
+    minVotes: 3,
+    tallies,
+    mine: { ...mine },
+    declared: isVenue ? (state.declaredMusic.get(placeId) ?? { genres: [], lineup: null }) : null,
+    usually: state.usuallyCrowd.get(placeId) ?? null,
+  }
 }

@@ -7,7 +7,7 @@ import type {
 } from '@/features/venue-panel/services/venue-panel-service'
 import { err, ok } from '@/shared/lib/result'
 import type { MockStore } from '../mock-store'
-import type { WorldState } from '../world/world-state'
+import { liveStatusOf, type WorldState } from '../world/world-state'
 import { audit, type MockConfig } from './config'
 
 type Wait = () => Promise<void>
@@ -42,6 +42,14 @@ export function createMockVenuePanelService(
   return {
     myVenues: () => Promise.resolve(venues),
     createFlashAlert: () => Promise.resolve(),
+    async setMusic(placeId, genres, lineup) {
+      await wait()
+      world.declaredMusic.set(placeId, { genres: [...genres], lineup: lineup.trim() || null })
+      world.places = world.places.map((p) =>
+        p.id === placeId ? { ...p, music: [...new Set(genres)].sort() } : p,
+      )
+      return liveStatusOf(world, placeId)
+    },
     flashAlerts: () => Promise.resolve([]),
     async claim(placeId, evidence) {
       await wait()

@@ -1,5 +1,7 @@
 import { useSessionMutation } from '@/shared/session/use-session-mutation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { liveStatusKey } from '@/features/places/hooks/use-places'
+import type { MusicGenre } from '@/features/places/model/live-status'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type {
   ManagedVenue,
@@ -109,5 +111,19 @@ export function useCreateOfficialEvent() {
       input: Parameters<VenuePanelService['createOfficialEvent']>[1]
     }) => venuePanel.createOfficialEvent(placeId, input),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['places'] }),
+  })
+}
+
+/** Roadmap R2: the venue declares up to 3 music styles and tonight's line-up. */
+export function useSetVenueMusic(placeId: string) {
+  const { venuePanel } = useServices()
+  const queryClient = useQueryClient()
+  return useSessionMutation({
+    mutationFn: ({ genres, lineup }: { genres: MusicGenre[]; lineup: string }) =>
+      venuePanel.setMusic(placeId, genres, lineup),
+    onSuccess: (status) => {
+      queryClient.setQueryData(liveStatusKey(placeId), status)
+      void queryClient.invalidateQueries({ queryKey: ['places'] })
+    },
   })
 }
