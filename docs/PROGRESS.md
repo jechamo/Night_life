@@ -1,5 +1,51 @@
 # Progreso — Nightlife Connect
 
+## Roadmap 2026-10 · Bloque 0 — Red de regresión E2E — 08/10/2026
+
+Plan aprobado por el propietario: [ROADMAP_2026-10.md](./ROADMAP_2026-10.md) (login por
+email tras el alta, guías públicas, «Cómo está ahora», contratos de locales, fotos,
+reservas sin pago). Este bloque no cambia funcionalidad: crea la red de seguridad que
+exige el propietario antes de tocar nada.
+
+- Línea base previa al cambio: `npm run check` 53 ficheros / 418 pruebas en verde.
+- `@playwright/test@1.63.0` (lista permitida PRD 3.5, solo desarrollo; publicado hace
+  más de un mes). `playwright.config.ts` arranca Vite con las variables de Supabase
+  vacías: la suite usa siempre el backend simulado de `src/mocks` y nunca el proyecto
+  compartido, aunque exista `.env.local`.
+- `e2e/`: 18 recorridos × 2 dispositivos (Pixel 7 y escritorio) = 36 pruebas. Textos
+  leídos de `es.json` (un cambio de redacción no rompe la suite) y cero errores de
+  consola o JS al final de cada recorrido.
+  - Alta completa (firma sin casillas premarcadas, OTP, consentimientos apagados,
+    perfil con 2 fotos) y bloqueo de menores.
+  - Inicio → ficha → favorito; Descubre (mapa, búsqueda, lista); puerta de edad.
+  - Check-in lejos del local (aviso de 150 m + simulación de pruebas) y Vibe Check;
+    swipe con match en tiempo real; enviar mensaje en un chat.
+  - Cerrar sesión, rutas privadas protegidas, login con código erróneo y correcto;
+    Premium hasta el simulador de compra; temas persistentes; idioma.
+  - Reclamar local (prueba mínima de 10 caracteres), ficha del gestor y patrocinio;
+    admin con segundo factor (código erróneo y correcto) y aprobación de un claim.
+  - Web legal sin login, contenido ilegal, borrado de cuenta, ES/EN y página 404.
+- Estabilidad: 3 pasadas completas seguidas, 108/108. Se corrigió una carrera de la
+  propia prueba (segunda foto antes de procesar la primera).
+- CI: nuevo job `E2E regression` (instala Chromium y ejecuta `npm run test:e2e`).
+  `npm run check` sigue igual de rápido; la suite E2E se lanza con `npm run test:e2e`.
+
+**Hecho cuando**
+
+- ✅ Suite E2E de los recorridos críticos en móvil y escritorio, en verde y estable.
+- ✅ Aislada del backend real (variables Supabase vacías en el servidor de pruebas).
+- ✅ `npm run check` 418/418, tipos (incluye `tsconfig.e2e.json`), lint y formato.
+- ✅ `npm run build` correcto; `npm audit`: 0 vulnerabilidades.
+- ✅ Job de CI añadido. ❌ Aún sin ejecución en GitHub: el workflow solo se dispara
+  en `main`, `develop`, `codex/**` y PR; se verá al abrir el PR.
+- ❌ SBOM no regenerado: `npm sbom` falla igual en la base (ESBOMPROBLEMS por las
+  dependencias wasm opcionales de Tailwind). Ver `SBOM.md`.
+- Sin migraciones, Edge Functions ni cambios de red de la app: no aplica Advisors.
+
+**Cómo probarlo:** `npm ci && npm run test:e2e` (en entornos con Chromium preinstalado:
+`PW_CHROMIUM_PATH=/ruta/chrome npm run test:e2e`). Informe HTML en CI con
+`playwright-report/`.
+
 ## Inicio visual previo al bloque 11 — 05/10/2026
 
 - Implementado `/home` como entrada de login, alta y PWA. Se conservan enlaces

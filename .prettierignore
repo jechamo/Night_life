@@ -7,3 +7,6 @@ src/styles/themes.generated.css
 docs/PRD.md
 docs/PRD/
 .tmp
+test-results
+playwright-report
+blob-report

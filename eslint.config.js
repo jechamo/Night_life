@@ -113,7 +113,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['**/*.test.{ts,tsx}', 'src/test/**/*.{ts,tsx}'],
+    files: ['**/*.test.{ts,tsx}', 'src/test/**/*.{ts,tsx}', 'e2e/**/*.ts'],
     rules: {
       'no-restricted-properties': 'off',
       'no-restricted-globals': 'off',
@@ -121,7 +121,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['*.config.{js,ts}', 'scripts/**/*.{js,ts}'],
+    files: ['*.config.{js,ts}', 'scripts/**/*.{js,ts}', 'e2e/**/*.ts'],
     languageOptions: { globals: globals.node },
   },
   {

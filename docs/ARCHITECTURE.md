@@ -70,6 +70,7 @@ src/
   styles/         Tailwind, fuentes autoalojadas, tokens generados
   assets/fonts/   woff2 variables (OFL) + licencias
 scripts/          generador de tokens de tema
+e2e/              regresión de navegador con Playwright sobre el backend simulado
 supabase/         migraciones versionadas, Edge Functions (Deno) y tests de RLS
 docs/             PRD, progreso, arquitectura, API, seguridad, ADR
 ```

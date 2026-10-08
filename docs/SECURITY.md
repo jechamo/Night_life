@@ -2,6 +2,22 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Roadmap 2026-10 · Bloque 0 (red de regresión E2E) — 08/10/2026
+
+- Solo herramientas de desarrollo: `@playwright/test@1.63.0` (+ `playwright`,
+  `playwright-core`), Apache-2.0, lista permitida PRD 3.5. No entra en el bundle ni en
+  la PWA; `npm audit`: 0 vulnerabilidades (incluye desarrollo).
+- Aislamiento: el servidor de pruebas fuerza `VITE_SUPABASE_URL` y la clave publicable
+  vacías, así que ninguna prueba crea usuarios, OTP, compras o claims en el proyecto
+  compartido. Sin secretos ni datos personales en `e2e/`; fotos de prueba = icono público.
+- Las pruebas fijan controles existentes como regresión: casillas no premarcadas,
+  consentimientos apagados por defecto, bloqueo de menores, puerta de edad para
+  perfiles, rutas privadas tras cerrar sesión, código OTP erróneo rechazado, segundo
+  factor del admin, nota obligatoria al decidir un claim y web legal sin login.
+- CI: el job nuevo reutiliza las acciones fijadas por SHA y `npm ci --ignore-scripts`;
+  el navegador se instala explícitamente con `playwright install --with-deps chromium`.
+- Sin migraciones, RLS, Edge Functions ni cambios de CSP/red en la app.
+
 ## Inicio previo al bloque 11 — 05/10/2026
 
 - Migración aditiva `20261005173548_home_dashboard`: favoritos con RLS de dueño,

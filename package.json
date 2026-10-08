@@ -23,6 +23,7 @@
     "test:network:9": "node --use-system-ca scripts/block9-network.mjs",
     "test:network:10": "node --use-system-ca scripts/block10-network.mjs",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "tokens": "node scripts/generate-theme-css.ts",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test"
   },
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
