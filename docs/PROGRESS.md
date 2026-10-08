@@ -1,5 +1,14 @@
 # Progreso — Nightlife Connect
 
+## Flags del roadmap encendidos en producción de pruebas — 08/10/2026
+
+Con OK del propietario (fase de pruebas: 3 perfiles, todos tester/admin; pagos en `test`,
+verificación en `sandbox`) se encienden `email_login_enabled`, `live_status_enabled`,
+`venue_partners_enabled`, `venue_showcase_enabled` y `venue_bookings_enabled`. Cambio
+registrado en `admin_audit_log` (`flag.update`). Se apagan igual desde Admin › Feature flags
+sin perder datos. Antes del primer usuario real: revisar las Condiciones para Locales
+(R3) y que la moderación de fotos (R4) tenga responsable.
+
 ## Roadmap 2026-10 · R5 — Reservas sin pago y lista de invitados con QR — 08/10/2026
 
 Plan: [R5_PLAN.md](./R5_PLAN.md). Todo aditivo y detrás de `venue_bookings_enabled`
