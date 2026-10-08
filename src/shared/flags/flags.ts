@@ -24,6 +24,14 @@ export const FLAG_SCHEMAS = {
   store_payments_enabled: onOff,
   sponsored_cards_enabled: onOff,
   travel_mode_enabled: onOff,
+  // Roadmap 2026-10 R1: returning users sign in with an email code instead of SMS.
+  email_login_enabled: onOff,
+  // Roadmap 2026-10 R2: «Cómo está ahora» (crowd, queue and music voted with check-in).
+  live_status_enabled: onOff,
+  // Roadmap 2026-10 R3: partner companies, contracts, invitations and venue teams.
+  venue_partners_enabled: onOff,
+  venue_showcase_enabled: onOff,
+  venue_bookings_enabled: onOff,
 } as const
 
 export type FlagKey = keyof typeof FLAG_SCHEMAS
@@ -45,6 +53,11 @@ export const SAFE_FLAG_DEFAULTS: Readonly<FeatureFlags> = {
   store_payments_enabled: 'off',
   sponsored_cards_enabled: 'off',
   travel_mode_enabled: 'off',
+  email_login_enabled: 'off',
+  live_status_enabled: 'off',
+  venue_partners_enabled: 'off',
+  venue_showcase_enabled: 'off',
+  venue_bookings_enabled: 'off',
 }
 
 /** Initial values from PRD 6.13 (what the admin seeds in `app_settings`). */
@@ -63,6 +76,11 @@ export const INITIAL_FLAG_VALUES: Readonly<FeatureFlags> = {
   store_payments_enabled: 'off',
   sponsored_cards_enabled: 'off',
   travel_mode_enabled: 'off',
+  email_login_enabled: 'off',
+  live_status_enabled: 'off',
+  venue_partners_enabled: 'off',
+  venue_showcase_enabled: 'off',
+  venue_bookings_enabled: 'off',
 }
 
 /**

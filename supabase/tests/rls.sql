@@ -62,7 +62,7 @@ end $$;
 -- ── anon ─────────────────────────────────────────────────────────────────────
 set local role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
-insert into _results select 'anon reads flags', count(*) = 14 from public.app_settings where kind = 'flag';
+insert into _results select 'anon reads flags', count(*) = 19 from public.app_settings where kind = 'flag';
 insert into _results select 'anon reads published legal docs', count(*) > 0 from public.legal_documents;
 insert into _results select 'anon cannot see inactive premium terms', count(*) = 0 from public.legal_documents where slug = 'premium';
 do $$
@@ -124,6 +124,30 @@ begin
     insert into _results values ('user cannot change flags', true);
   end;
   begin
+    perform public.admin_set_flag('email_login_enabled', 'on');
+    insert into _results values ('user cannot turn on email sign-in', false);
+  exception when insufficient_privilege then
+    insert into _results values ('user cannot turn on email sign-in', true);
+  end;
+  begin
+    perform public.admin_set_flag('live_status_enabled', 'on');
+    insert into _results values ('user cannot turn on live status', false);
+  exception when insufficient_privilege then
+    insert into _results values ('user cannot turn on live status', true);
+  end;
+  begin
+    perform public.admin_set_flag('venue_showcase_enabled', 'on');
+    insert into _results values ('user cannot turn on the venue showcase', false);
+  exception when insufficient_privilege then
+    insert into _results values ('user cannot turn on the venue showcase', true);
+  end;
+  begin
+    perform public.admin_set_flag('venue_bookings_enabled', 'on');
+    insert into _results values ('user cannot turn on bookings', false);
+  exception when insufficient_privilege then
+    insert into _results values ('user cannot turn on bookings', true);
+  end;
+  begin
     perform public.purge_test_data();
     insert into _results values ('user cannot purge test data', false);
   exception when insufficient_privilege then
@@ -163,6 +187,8 @@ select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-0000000
 select public.admin_set_flag('premium_enabled', 'off');
 insert into _results select 'admin with MFA changes flags', value = 'off' from public.app_settings where key = 'premium_enabled';
 insert into _results select 'flag change is audited', count(*) = 1 from public.admin_audit_log where action = 'flag.update';
+select public.admin_set_flag('email_login_enabled', 'on');
+insert into _results select 'admin with MFA turns on email sign-in', value = 'on' from public.app_settings where key = 'email_login_enabled';
 do $$
 begin
   begin

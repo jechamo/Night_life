@@ -1,5 +1,6 @@
-import { Check } from 'lucide-react'
+import { Check, Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 import { cn } from '@/shared/lib/cn'
 import { Badge } from '@/shared/ui/badge'
 import { formatPrice, type Product } from '../model/catalog'
@@ -15,6 +16,8 @@ export function ProductCard({
   onSelect: () => void
 }) {
   const { t, i18n } = useTranslation()
+  // Never sell a benefit that is not live yet: travel mode ships with Block 11.
+  const travelMode = useFeatureFlag('travel_mode_enabled') === 'on'
   return (
     <button
       type="button"
@@ -51,12 +54,19 @@ export function ProductCard({
       )}
       {product.entitlements.length > 0 && (
         <ul className="mt-3 grid gap-1 text-sm">
-          {product.entitlements.map((key) => (
-            <li key={key} className="flex items-center gap-2">
-              <Check className="size-4 text-success" aria-hidden />
-              {t(`premium.benefits.${key}`)}
-            </li>
-          ))}
+          {product.entitlements.map((key) =>
+            key === 'travel_mode' && !travelMode ? (
+              <li key={key} className="flex items-center gap-2 text-muted-foreground">
+                <Clock className="size-4" aria-hidden />
+                {t('premium.benefitSoon', { benefit: t(`premium.benefits.${key}`) })}
+              </li>
+            ) : (
+              <li key={key} className="flex items-center gap-2">
+                <Check className="size-4 text-success" aria-hidden />
+                {t(`premium.benefits.${key}`)}
+              </li>
+            ),
+          )}
           {product.credits?.map((credit) => (
             <li key={credit.kind} className="flex items-center gap-2">
               <Check className="size-4 text-success" aria-hidden />

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useConsents } from '@/features/consents/hooks/use-consents'
 import { usePlatform } from '@/platform'
 import { useServices } from '@/shared/services/ServicesProvider'
+import type { LiveQuestion, LiveStatus } from '../model/live-status'
 import type { LatLng, Place, Vibe } from '../model/types'
 import type { CreateEventInput, EventReportReason, MapAccess } from '../services/places-service'
 
@@ -11,6 +12,7 @@ export const placesKey = ['places'] as const
 /** Every cached list of places, whatever area it was loaded for. */
 export const placesListKey = ['places', 'list'] as const
 export const lostFoundKey = (placeId: string) => ['places', placeId, 'lost-found'] as const
+export const liveStatusKey = (placeId: string) => ['places', placeId, 'live-status'] as const
 
 /** ~2 km grid: small pans reuse the cached list instead of searching again. */
 const AREA_STEP = 0.02
@@ -137,6 +139,30 @@ export function useVoteVibe(placeId: string) {
       replace(place)
       queryClient.setQueryData(['places', placeId, 'my-vibe'], vibe)
     },
+  })
+}
+
+/** Roadmap R2 «Cómo está ahora»: aggregated answers of the last 90 minutes. */
+export function useLiveStatus(placeId: string, enabled: boolean) {
+  const { places } = useServices()
+  return useQuery({
+    queryKey: liveStatusKey(placeId),
+    queryFn: () => places.liveStatus(placeId),
+    enabled,
+    refetchInterval: 120000,
+  })
+}
+
+export function useReportLiveStatus(placeId: string) {
+  const { places } = useServices()
+  const queryClient = useQueryClient()
+  return useSessionMutation({
+    mutationFn: async ({ question, answer }: { question: LiveQuestion; answer: string }) => {
+      const result = await places.reportLiveStatus(placeId, question, answer)
+      if (!result.ok) throw new Error(result.error)
+      return result.value
+    },
+    onSuccess: (status: LiveStatus) => queryClient.setQueryData(liveStatusKey(placeId), status),
   })
 }
 

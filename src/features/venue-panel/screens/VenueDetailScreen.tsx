@@ -18,6 +18,15 @@ import {
 } from '../hooks/use-venue-panel'
 import type { ManagedVenue, SponsorshipTier } from '../services/venue-panel-service'
 import { FlashAlertForm } from '../components/FlashAlerts'
+import { MusicCard } from '../components/MusicCard'
+import { ExtrasCard, LiveNoticeCard, PhotosCard, ReportCard } from '../components/ShowcaseCards'
+import {
+  BookingSettingsCard,
+  GuestlistCard,
+  ReservationRequestsCard,
+} from '@/features/bookings/components/BookingCards'
+import { PlanCard, TeamCard } from '../components/PartnerCards'
+import { useVenuePartnerState } from '../hooks/use-venue-panel'
 import { ProSubscriptionCard } from '../components/ProSubscriptionCard'
 import { useStartVenuePurchase } from '@/features/premium/hooks/use-premium'
 import { formatPrice, VENUE_PRICES } from '@/features/premium/model/catalog'
@@ -336,24 +345,79 @@ export function VenueDetailScreen() {
   const { placeId = '' } = useParams()
   const { data: venues, isPending } = useMyVenues()
   const venue = venues?.find((v) => v.placeId === placeId && v.claimStatus === 'approved')
+  const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
+  const partners = useFeatureFlag('venue_partners_enabled') === 'on'
+  const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
+  const bookings = useFeatureFlag('venue_bookings_enabled') === 'on'
+  const { data: partnerState } = useVenuePartnerState(placeId, partners && !!venue)
   if (isPending) return null
   if (!venue) return <Navigate to="/venue" replace />
   return (
     <>
       <ScreenHeader title={venue.name} backTo="/venue" />
+      {partners && (
+        <Section title={t('venuePanel.partners.sectionPlan')}>
+          <PlanCard placeId={venue.placeId} />
+        </Section>
+      )}
       <Section title={t('venuePanel.stats.title')}>
         <StatsCard placeId={venue.placeId} />
         <ProSubscriptionCard placeId={venue.placeId} />
       </Section>
+      {bookings && (
+        <Section title={t('bookings.venue.listTitle')}>
+          <GuestlistCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {bookings && (
+        <Section title={t('bookings.venue.requestsTitle')}>
+          <ReservationRequestsCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {showcase && (
+        <Section title={t('venuePanel.showcase.report.title')}>
+          <ReportCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {showcase && (
+        <Section title={t('venuePanel.showcase.live.title')}>
+          <LiveNoticeCard placeId={venue.placeId} />
+        </Section>
+      )}
       <Section title={t('venuePanel.edit.title')}>
         <EditForm venue={venue} />
       </Section>
+      {showcase && (
+        <Section title={t('venuePanel.showcase.photos.title')}>
+          <PhotosCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {showcase && (
+        <Section title={t('venuePanel.showcase.extras.title')}>
+          <ExtrasCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {liveStatus && (
+        <Section title={t('venuePanel.music.title')}>
+          <MusicCard placeId={venue.placeId} />
+        </Section>
+      )}
+      {bookings && (
+        <Section title={t('bookings.venue.settingsTitle')}>
+          <BookingSettingsCard placeId={venue.placeId} />
+        </Section>
+      )}
       <Section title={t('venuePanel.event.sectionTitle')}>
         <OfficialEventForm placeId={venue.placeId} />
       </Section>
       <Section title={t('venuePanel.sponsor.title')}>
         <SponsorshipForm venue={venue} />
       </Section>
+      {partners && partnerState?.role === 'owner' && (
+        <Section title={t('venuePanel.partners.sectionTeam')}>
+          <TeamCard placeId={venue.placeId} />
+        </Section>
+      )}
       <div className="h-8" />
       {venue.sponsorship?.status === 'active' && venue.sponsorship.tier === 'top' && (
         <Section title={t('venuePanel.flash.title')}>

@@ -35,3 +35,5 @@ Este repositorio sustituye al "Knowledge" de Lovable (ADR 0002).
 ## Comandos
 
 - `npm run dev` · `npm run build` · `npm run check` (tsc + eslint + prettier + vitest) · `npm run tokens`
+- `npm run test:e2e`: regresión de navegador (Playwright, backend simulado). Debe estar en verde
+  antes y después de cada bloque (roadmap 2026-10).

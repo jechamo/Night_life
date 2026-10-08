@@ -2,6 +2,61 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Roadmap R5 — reservas y lista de invitados
+
+Feature `features/bookings`: modelo (`model/bookings.ts`, zod), hooks (`use-bookings`),
+`PlaceBookingSection` (en `PlaceDetails`), `MyBookingsScreen` (`/reservas`) y
+`BookingCards` (ajustes, solicitudes, lista y puerta) en `VenueDetailScreen`. Los puertos
+se amplían sin servicio nuevo: `PlacesService.bookingOptions/requestReservation/
+cancelReservation/joinGuestlist/leaveGuestlist/myBookings` y `VenuePanelService.
+saveBookingSettings/reservations/decideReservation/guestlist/saveGuestlist/closeGuestlist/
+checkInGuest` → `supabase/bookings.ts` o `mocks/backoffice/bookings.ts`. El QR se dibuja con
+`shared/qr` (codificador propio) y `shared/ui/qr-code.tsx`; la lectura en la puerta usa
+`CameraService.canDetectQr/detectQr` (`BarcodeDetector` en web; plugin de cámara en nativo).
+
+## Roadmap R4 — escaparate del local
+
+Modelo en `places/model/showcase.ts` (zod; listas cerradas como en el servidor). Ficha:
+`ShowcaseSection` (en `PlaceDetails`) y `PlaceCover` → `use-showcase` (`useVenueShowcase`,
+`useVenueCover`, `useTrackPlaceView`) → `PlacesService.showcase/covers/trackView`. Panel:
+`ShowcaseCards` (`PhotosCard`, `LiveNoticeCard`, `ExtrasCard`, `ReportCard`) →
+`use-showcase-panel` (la subida pasa por `usePlatform().camera` e `images.sanitize`) →
+`VenuePanelService.photos/uploadPhoto/removePhoto/setCoverPhoto/saveExtras/setNotice/
+clearNotice/report`. Admin: `AdminVenuePhotosScreen` → `useAdminVenuePhotos/
+useReviewVenuePhoto` → `AdminService.venuePhotos/reviewVenuePhoto`. El adaptador
+`supabase/showcase.ts` firma las rutas privadas (15 min); el simulador
+(`mocks/backoffice/showcase.ts`) guarda las fotos en memoria.
+
+## Roadmap R3 — partners y contratos
+
+Modelo en `venue-panel/model/partners.ts` (zod). Admin: `AdminPartnersScreen` → hooks de
+`use-admin` → `AdminService.partners/savePartner/linkPartnerVenue/createContract/
+contractAction/inviteVenueOwner/...` → `admin.ts` (RPC `admin_*`). Local: `PlanCard`,
+`TeamCard`, `RedeemInviteScreen` → `use-venue-panel` → `VenuePanelService.partnerState/
+team/inviteStaff/previewInvite/redeemInvite/...` → `business.ts`. El enlace público
+`/invitacion/:code` guarda el código con `usePendingInvite` (preferencias de `usePlatform`) y
+`usePostAuthPath` lo retoma tras el alta o el login. En el servidor, `venue_entitlements` es
+el registro de ventajas que no vienen de Stripe; los niveles de patrocinio crean además una
+fila `sponsorships` enlazada para que mapa, Inicio, swipe y Flash sigan igual.
+
+## Roadmap R2 — «Cómo está ahora»
+
+`PlaceDetails` pinta `LiveStatusSection` solo con `live_status_enabled`. Flujo: UI →
+`useLiveStatus/useReportLiveStatus` (`use-places`, clave `['places', id, 'live-status']`,
+refresco cada 2 min) → `PlacesService.liveStatus/reportLiveStatus` → adaptador Supabase
+(RPC `place_live_status`, `report_place_status`) o simulador. El panel del local usa
+`MusicCard` → `useSetVenueMusic` → `VenuePanelService.setMusic` (`venue_set_music`). El
+modelo (`places/model/live-status.ts`) replica las listas cerradas del servidor y
+`parseLiveStatus` descarta cualquier valor desconocido.
+
+## Roadmap R1 — email y guías
+
+`/login` elige método según `email_login_enabled`: `EmailLoginStep` (código por email,
+`OnboardingService.requestEmailOtp/verifyEmailOtp`) o el `PhoneStep` existente. Ajustes ›
+Cuenta usa `getAccountEmail/changeEmail` mediante `use-account-email`. Las guías
+(`/guia`, `/guia/locales`) reutilizan `PublicLayout`; sus claves i18n están tipadas una a
+una para que falte una traducción sea un error de compilación.
+
 ## Inicio sin mapa — previo al bloque 11
 
 `/home` recibe agregados mediante UI → hooks → `DashboardService` → adaptador
@@ -70,6 +125,7 @@ src/
   styles/         Tailwind, fuentes autoalojadas, tokens generados
   assets/fonts/   woff2 variables (OFL) + licencias
 scripts/          generador de tokens de tema
+e2e/              regresión de navegador con Playwright sobre el backend simulado
 supabase/         migraciones versionadas, Edge Functions (Deno) y tests de RLS
 docs/             PRD, progreso, arquitectura, API, seguridad, ADR
 ```

@@ -43,6 +43,26 @@ const AdminTestToolsScreen = lazy(() =>
     default: module.AdminTestToolsScreen,
   })),
 )
+const AdminVenuePhotosScreen = lazy(() =>
+  import('@/features/admin/screens/AdminVenuePhotosScreen').then((module) => ({
+    default: module.AdminVenuePhotosScreen,
+  })),
+)
+const AdminPartnersScreen = lazy(() =>
+  import('@/features/admin/screens/AdminPartnersScreen').then((module) => ({
+    default: module.AdminPartnersScreen,
+  })),
+)
+const InviteLandingScreen = lazy(() =>
+  import('@/features/venue-panel/screens/InviteLandingScreen').then((module) => ({
+    default: module.InviteLandingScreen,
+  })),
+)
+const RedeemInviteScreen = lazy(() =>
+  import('@/features/venue-panel/screens/RedeemInviteScreen').then((module) => ({
+    default: module.RedeemInviteScreen,
+  })),
+)
 const AdminVenuesScreen = lazy(() =>
   import('@/features/admin/screens/AdminVenuesScreen').then((module) => ({
     default: module.AdminVenuesScreen,
@@ -118,6 +138,16 @@ const LegalDocumentScreen = lazy(() =>
     default: module.LegalDocumentScreen,
   })),
 )
+const UserGuideScreen = lazy(() =>
+  import('@/features/public/screens/GuideScreen').then((module) => ({
+    default: module.UserGuideScreen,
+  })),
+)
+const VenueGuideScreen = lazy(() =>
+  import('@/features/public/screens/GuideScreen').then((module) => ({
+    default: module.VenueGuideScreen,
+  })),
+)
 const LegalIndexScreen = lazy(() =>
   import('@/features/public/screens/LegalIndexScreen').then((module) => ({
     default: module.LegalIndexScreen,
@@ -129,6 +159,11 @@ const SosScreen = lazy(() =>
 const VenueDetailScreen = lazy(() =>
   import('@/features/venue-panel/screens/VenueDetailScreen').then((module) => ({
     default: module.VenueDetailScreen,
+  })),
+)
+const MyBookingsScreen = lazy(() =>
+  import('@/features/bookings/screens/MyBookingsScreen').then((module) => ({
+    default: module.MyBookingsScreen,
   })),
 )
 const VenuePanelScreen = lazy(() =>
@@ -290,6 +325,23 @@ export const routes: RouteObject[] = [
       { path: ':slug', element: screen(LegalDocumentScreen) },
     ],
   },
+  // Public guides for people and venues (roadmap R1): no login, same public frame.
+  {
+    path: 'guia',
+    element: <PublicLayout />,
+    errorElement: <RouteErrorScreen />,
+    children: [
+      { index: true, element: screen(UserGuideScreen) },
+      { path: 'locales', element: screen(VenueGuideScreen) },
+    ],
+  },
+  // Venue invitation links (roadmap R3): public, nothing is redeemed before signing in.
+  {
+    path: 'invitacion/:code',
+    element: <PublicLayout />,
+    errorElement: <RouteErrorScreen />,
+    children: [{ index: true, element: screen(InviteLandingScreen) }],
+  },
   { path: 'suspended', element: screen(SuspendedScreen), errorElement: <RouteErrorScreen /> },
   {
     path: 'suspended/moderation',
@@ -311,6 +363,8 @@ export const routes: RouteObject[] = [
       { path: 'payments', element: screen(AdminPaymentsScreen) },
       { path: 'test-tools', element: screen(AdminTestToolsScreen) },
       { path: 'venues', element: screen(AdminVenuesScreen) },
+      { path: 'partners', element: screen(AdminPartnersScreen) },
+      { path: 'venue-photos', element: screen(AdminVenuePhotosScreen) },
       { path: 'settings', element: screen(AdminSettingsScreen) },
     ],
   },
@@ -364,7 +418,9 @@ export const routes: RouteObject[] = [
       { path: 'premium/return', element: screen(PurchaseReturnScreen) },
       { path: 'premium/subscription', element: screen(MySubscriptionScreen) },
       { path: 'premium/redeem', element: screen(RedeemScreen) },
+      { path: 'reservas', element: screen(MyBookingsScreen) },
       { path: 'venue', element: screen(VenuePanelScreen) },
+      { path: 'venue/invitacion', element: screen(RedeemInviteScreen) },
       { path: 'venue/:placeId', element: screen(VenueDetailScreen) },
       { path: 'dev/kit', element: screen(DesignKitScreen) },
     ],

@@ -22,3 +22,8 @@ node_modules/.tmp
 .vercel
 .tmp/
 supabase/.temp/
+
+# Playwright (e2e/)
+test-results/
+playwright-report/
+blob-report/

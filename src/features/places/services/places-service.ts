@@ -1,4 +1,15 @@
 import type { Result } from '@/shared/lib/result'
+import type { LiveQuestion, LiveStatus } from '../model/live-status'
+import type { VenueShowcase } from '../model/showcase'
+import type {
+  BookingOptions,
+  GuestEntry,
+  GuestlistError,
+  MyBookings,
+  Reservation,
+  ReservationError,
+  ReservationKind,
+} from '@/features/bookings/model/bookings'
 import type { LatLng, Place, Vibe } from '../model/types'
 
 export interface LostFoundReply {
@@ -52,6 +63,29 @@ export interface PlacesService {
   reserveMapLoad(): Promise<MapAccess>
   myVibe(placeId: string): Promise<Vibe | null>
   voteVibe(placeId: string, vibe: Vibe): Promise<Result<Place, 'no_check_in'>>
+  /** Roadmap R2 «Cómo está ahora» (flag `live_status_enabled`, checked by the server). */
+  liveStatus(placeId: string): Promise<LiveStatus>
+  reportLiveStatus(
+    placeId: string,
+    question: LiveQuestion,
+    answer: string,
+  ): Promise<Result<LiveStatus, 'no_check_in' | 'own_venue'>>
+  /** Roadmap R4 escaparate (flag `venue_showcase_enabled`, checked by the server). */
+  showcase(placeId: string): Promise<VenueShowcase>
+  /** Approved cover per venue id, as short-lived URLs. */
+  covers(): Promise<Record<string, string>>
+  /** One counted view per person, venue and night (aggregated for the venue's report). */
+  trackView(placeId: string): Promise<void>
+  // Roadmap R5 bookings (flag `venue_bookings_enabled`, checked by the server).
+  bookingOptions(placeId: string): Promise<BookingOptions>
+  requestReservation(
+    placeId: string,
+    input: { arriveAt: string; party: number; kind: ReservationKind },
+  ): Promise<Result<Reservation, ReservationError>>
+  cancelReservation(reservationId: string): Promise<Reservation>
+  joinGuestlist(listId: string): Promise<Result<GuestEntry, GuestlistError>>
+  leaveGuestlist(entryId: string): Promise<GuestEntry>
+  myBookings(): Promise<MyBookings>
   confirmEvent(placeId: string): Promise<Result<Place, 'already_confirmed' | 'not_unconfirmed'>>
   reportEvent(placeId: string, reason: EventReportReason): Promise<void>
   createEvent(input: CreateEventInput): Promise<Result<Place, CreateEventError>>

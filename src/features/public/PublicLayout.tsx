@@ -35,6 +35,8 @@ export function PublicLayout() {
           className="mx-auto flex max-w-3xl flex-wrap gap-x-4 gap-y-2 py-6 text-sm text-muted-foreground"
         >
           <Link to="/legal">{t('publicWeb.index')}</Link>
+          <Link to="/guia">{t('guide.nav.user')}</Link>
+          <Link to="/guia/locales">{t('guide.nav.venues')}</Link>
           <Link to="/legal/legal_notice">{t('publicWeb.docs.legal_notice')}</Link>
           <Link to="/legal/privacy">{t('publicWeb.docs.privacy')}</Link>
           <Link to="/legal/delete-account">{t('publicWeb.deleteAccount.title')}</Link>

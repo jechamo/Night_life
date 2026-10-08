@@ -1,4 +1,6 @@
 import {
+  CalendarCheck,
+  BookOpen,
   Crown,
   Database,
   FileText,
@@ -156,6 +158,20 @@ export function ProfileScreen() {
       </Section>
       <Section title={t('profileMenu.about')}>
         <GlassCard className="divide-y divide-border p-0">
+          <FeatureGate flag="venue_bookings_enabled" is="on">
+            <ListRow
+              to="/reservas"
+              icon={CalendarCheck}
+              label={t('bookings.mine.title')}
+              hint={t('bookings.mine.hint')}
+            />
+          </FeatureGate>
+          <ListRow
+            to="/guia"
+            icon={BookOpen}
+            label={t('guide.nav.user')}
+            hint={t('guide.nav.userHint')}
+          />
           <ListRow
             to="/legal"
             icon={FileText}

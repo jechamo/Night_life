@@ -16,6 +16,11 @@ import { PlaceCover } from './PlaceCover'
 import { VibeCheck } from './VibeCheck'
 import { WhoIsThere } from './WhoIsThere'
 import { FavoriteButton } from './FavoriteButton'
+import { LiveStatusSection, useAnswerLabel } from './LiveStatusSection'
+import { isAnswer } from '../model/live-status'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
+import { ShowcaseSection } from './ShowcaseSection'
+import { PlaceBookingSection } from '@/features/bookings/components/PlaceBookingSection'
 
 /** "Lun 18:00–06:00" lines, Monday first, in the user's language. */
 function openingLines(periods: readonly OpeningPeriod[], language: string): string[] {
@@ -58,6 +63,10 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
   const detail = usePlaceDetail(place.id, !isEvent(place))
   const [showLostFound, setShowLostFound] = useState(false)
   const checkedInHere = attendance?.checkIn?.placeId === place.id
+  const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
+  const showcase = useFeatureFlag('venue_showcase_enabled') === 'on' && !isEvent(place)
+  const bookings = useFeatureFlag('venue_bookings_enabled') === 'on' && !isEvent(place)
+  const answerLabel = useAnswerLabel()
   const hours = place.openingHours?.length
     ? openingLines(place.openingHours, i18n.language)
     : place.hours
@@ -92,6 +101,7 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
       </div>
       <WhoIsThere stats={place.stats} />
       {!isEvent(place) && <FlashAlerts placeId={place.id} />}
+      {showcase && <ShowcaseSection placeId={place.id} name={place.name} />}
       {place.description && <p className="text-sm">{place.description}</p>}
       <dl className="grid gap-2 text-sm">
         {hours.length > 0 && (
@@ -136,7 +146,9 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
         )}
         {place.music && place.music.length > 0 && (
           <Detail icon={Music} label={t('places.details.music')}>
-            {place.music.join(' · ')}
+            {place.music
+              .map((m) => (isAnswer('music_genre', m) ? answerLabel('music_genre', m) : m))
+              .join(' · ')}
           </Detail>
         )}
         {place.dressCode && (
@@ -152,6 +164,8 @@ export function PlaceDetails({ place, origin }: { place: Place; origin: LatLng }
       </dl>
       {isEvent(place) && <EventActions place={place} event={place.event} />}
       <PlaceActions place={place} onToggleLostFound={() => setShowLostFound((v) => !v)} />
+      {bookings && <PlaceBookingSection placeId={place.id} />}
+      {liveStatus && <LiveStatusSection placeId={place.id} checkedInHere={checkedInHere} />}
       <VibeCheck place={place} checkedInHere={checkedInHere} />
       {showLostFound && <LostFoundPanel placeId={place.id} />}
       {place.source === 'osm' && (

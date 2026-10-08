@@ -2,6 +2,7 @@ import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LANGUAGES, type Language } from '@/i18n'
 import { useLanguage } from '@/i18n/use-language'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 import { useMotionPreferences } from '@/shared/motion/MotionPreferencesProvider'
 import { useTheme } from '@/shared/theme/ThemeProvider'
 import { GlassCard } from '@/shared/ui/card'
@@ -9,6 +10,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { SegmentedControl } from '@/shared/ui/segmented-control'
 import { Switch } from '@/shared/ui/switch'
+import { AccountEmailSection } from './components/AccountEmailSection'
 
 export function SettingsScreen() {
   const { t } = useTranslation()
@@ -18,6 +20,7 @@ export function SettingsScreen() {
   const { language, setLanguage } = useLanguage()
   const switchId = useId()
   const descriptionId = useId()
+  const emailLogin = useFeatureFlag('email_login_enabled') === 'on'
 
   return (
     <>
@@ -54,6 +57,7 @@ export function SettingsScreen() {
           options={LANGUAGES.map((lng) => ({ value: lng, label: t(`settings.language.${lng}`) }))}
         />
       </Section>
+      {emailLogin && <AccountEmailSection />}
     </>
   )
 }

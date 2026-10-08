@@ -1,10 +1,20 @@
 import { z } from 'zod'
+import { parseLiveStatus } from '@/features/places/model/live-status'
+import {
+  invitationSchema,
+  invitePreviewSchema,
+  normalizeInviteCode,
+  venuePartnerStateSchema,
+  venueTeamSchema,
+} from '@/features/venue-panel/model/partners'
 import type { VenuePanelService } from '@/features/venue-panel/services/venue-panel-service'
 import type { ModerationService } from '@/features/moderation/services/moderation-service'
 import { err, ok } from '@/shared/lib/result'
 import type { Db } from './client'
-import { must } from './errors'
+import { errorMessage, must } from './errors'
 import { withRealAccountStatus } from './privacy'
+import { createShowcasePanel } from './showcase'
+import { createBookingPanel } from './bookings'
 
 export const managedVenueSchema = z.object({
   placeId: z.string(),
@@ -65,8 +75,25 @@ export function createModerationService(db: Db, base: ModerationService): Modera
     },
   }
 }
+/** Throws unexpected errors; returns the first known server refusal found in the message. */
+export function refusal<E extends string>(error: unknown, known: readonly E[]): E {
+  if (!error) throw new Error('no_error')
+  const text = errorMessage(error).toLowerCase()
+  const match = known.find((code) => text.includes(code))
+  if (match) return match
+  throw error instanceof Error ? error : new Error(errorMessage(error) || 'db_error')
+}
+
+/** For RPCs that return nothing: only errors matter. */
+export function done(result: { error: unknown }): void {
+  if (result.error)
+    throw result.error instanceof Error ? result.error : new Error(errorMessage(result.error))
+}
+
 export function createVenuePanelService(db: Db): VenuePanelService {
   return {
+    ...createShowcasePanel(db),
+    ...createBookingPanel(db),
     async billingState(id) {
       return z
         .object({
@@ -79,6 +106,7 @@ export function createVenuePanelService(db: Db): VenuePanelService {
               canManage: z.boolean().optional(),
             })
             .nullable(),
+          proSource: z.enum(['stripe', 'contract']).nullable().optional().catch(null),
         })
         .parse(must(await db.rpc('venue_billing_state', { p_venue: id })))
     },
@@ -86,7 +114,9 @@ export function createVenuePanelService(db: Db): VenuePanelService {
       return z.array(managedVenueSchema).parse(must(await db.rpc('managed_venues')))
     },
     async claim(id, evidence) {
-      const r = must(await db.rpc('venue_claim', { p_venue: id, p_evidence: evidence }))
+      const result = await db.rpc('venue_claim', { p_venue: id, p_evidence: evidence })
+      if (result.error) return err(refusal(result.error, ['terms_required'] as const))
+      const r = must(result)
       return r && typeof r === 'object' && !Array.isArray(r) && r.error
         ? err('already_claimed')
         : ok(managedVenueSchema.parse(r))
@@ -116,6 +146,11 @@ export function createVenuePanelService(db: Db): VenuePanelService {
         ),
       )
     },
+    async setMusic(id, genres, lineup) {
+      return parseLiveStatus(
+        must(await db.rpc('venue_set_music', { p_venue: id, p_genres: genres, p_lineup: lineup })),
+      )
+    },
     async createOfficialEvent(id, input) {
       must(await db.rpc('venue_official_event', { p_venue: id, p: { ...input } }))
     },
@@ -128,6 +163,43 @@ export function createVenuePanelService(db: Db): VenuePanelService {
           z.object({ id: z.string(), title: z.string(), body: z.string(), endsAt: z.string() }),
         )
         .parse(must(await db.rpc('visible_flash_alerts', { p_venue: id })))
+    },
+    async partnerState(id) {
+      return venuePartnerStateSchema.parse(
+        must(await db.rpc('venue_partner_state', { p_venue: id })),
+      )
+    },
+    async team(id) {
+      return venueTeamSchema.parse(must(await db.rpc('venue_team', { p_venue: id })))
+    },
+    async inviteStaff(id) {
+      const result = await db.rpc('venue_invite_staff', { p_venue: id })
+      if (result.error) return err(refusal(result.error, ['team_limit'] as const))
+      return ok(invitationSchema.parse(must(result)))
+    },
+    async cancelInvite(id, inviteId) {
+      done(await db.rpc('venue_invite_cancel', { p_venue: id, p_invite: inviteId }))
+    },
+    async removeManager(id, userId) {
+      done(await db.rpc('venue_remove_manager', { p_venue: id, p_user: userId }))
+    },
+    async previewInvite(code) {
+      const result = await db.rpc('venue_invite_preview', { p_code: normalizeInviteCode(code) })
+      if (result.error) return err(refusal(result.error, ['invalid_code'] as const))
+      return ok(invitePreviewSchema.parse(must(result)))
+    },
+    async redeemInvite(code, acceptTerms) {
+      const result = await db.rpc('venue_invite_redeem', {
+        p_code: normalizeInviteCode(code),
+        p_accept_terms: acceptTerms,
+      })
+      if (result.error)
+        return err(
+          refusal(result.error, ['invalid_code', 'already_manager', 'terms_required'] as const),
+        )
+      return ok(
+        z.object({ placeId: z.string(), role: z.enum(['owner', 'staff']) }).parse(must(result)),
+      )
     },
   }
 }

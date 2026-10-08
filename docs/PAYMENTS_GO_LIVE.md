@@ -67,6 +67,42 @@ este procedimiento web no habilita Stripe dentro de un binario nativo.
 5. Registrar motivo, alcance y resultado sin secretos. Reabrir solo tras corregir,
    comprobar idempotencia y obtener la aprobación de operación que corresponda.
 
+## Verificación TEST — 08/10/2026
+
+Hecha por MCP de Supabase (solo lectura) y con la suite SQL de pagos (45/45 y 72/72).
+
+| Producto          | Código                  | Precio TEST en Stripe       | Pagado con tarjeta 4242                          |
+| ----------------- | ----------------------- | --------------------------- | ------------------------------------------------ |
+| Pase VIP mensual  | `vip_monthly`           | ✅                          | ✅ 04/10 (pago, 9 ventajas, créditos, reembolso) |
+| Pase mensual      | `pass_monthly`          | ✅ (Bloque 9)               | ❌ nunca probado                                 |
+| Pase trimestral   | `pass_quarterly`        | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+| Pase anual        | `pass_annual`           | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+| Pase de una noche | `one_night`             | ✅ (Bloque 9)               | ❌ nunca probado                                 |
+| Chispa ×1         | `sparks_1`              | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+| Chispas ×5        | `sparks_5`              | ✅ (Bloque 9)               | ❌ nunca probado                                 |
+| Chispas ×15       | `sparks_15`             | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+| Foco              | `spotlight_1`           | ✅ (Bloque 9)               | ❌ nunca probado                                 |
+| Mensaje directo   | `paid_dm_1`             | ✅ (Bloque 9)               | ❌ nunca probado                                 |
+| Destacado         | `sponsor_featured`      | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+| Destacado Plus    | `sponsor_featured_plus` | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+| Top               | `sponsor_top`           | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+| Estadísticas Pro  | `venue_pro_monthly`     | ✅ (checkout abierto 05/10) | ❌ caducó sin pagar                              |
+
+«Existe en Stripe» se deduce de que `create-checkout-session` comprueba precio activo,
+importe, moneda y periodo antes de abrir la sesión. No hay que crear productos nuevos.
+
+**Para hacer desde el panel de Stripe (TEST):**
+
+1. Webhook → `…/functions/v1/stripe-webhook` con los eventos
+   `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+   `customer.subscription.created|updated|deleted|trial_will_end`, `invoice.paid`,
+   `invoice.payment_failed` y `charge.refunded`.
+2. Los 14 precios de la tabla siguen activos.
+3. Ronda de compras con cuenta tester y 4242 en producción (la vuelta del pago está
+   fijada a la URL de producción): cada producto pendiente, y luego cancelar una
+   suscripción, reembolsar un pago único y reembolsar un patrocinio. Tras cada paso se
+   verifica en BBDD: pedido `paid`, evento del webhook y ventaja/crédito/patrocinio/Pro.
+
 ## Checklist pendiente
 
 - ❌ Cuenta, catálogo, webhook/Portal live y cobro real autorizado.

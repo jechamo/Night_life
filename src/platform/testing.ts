@@ -24,6 +24,8 @@ export function createFakePlatform(overrides: Partial<Platform> = {}): Platform 
     camera: {
       pickPhoto: () => Promise.resolve(err('unsupported')),
       openLiveStream: () => Promise.resolve(err('unsupported')),
+      canDetectQr: () => false,
+      detectQr: () => Promise.resolve(null),
     },
     haptics: {
       isSupported: false,

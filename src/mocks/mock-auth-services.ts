@@ -18,9 +18,14 @@ const RESEND_AFTER_SECONDS = 30
 
 type Wait = () => Promise<void>
 
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export function createMockOnboardingService(store: MockStore, wait: Wait): OnboardingService {
   let sends = 0
   let wrongAttempts = 0
+  // The account email lives in memory only (personal data never reaches the mock store).
+  // The simulator treats the confirmation link as clicked: a saved email is confirmed.
+  let accountEmail: string | null = null
   return {
     testOtpCode: MOCK_OTP_CODE,
     getStatus: async () => ((await store.read()).onboarded ? 'completed' : 'pending'),
@@ -40,9 +45,37 @@ export function createMockOnboardingService(store: MockStore, wait: Wait): Onboa
       wrongAttempts = 0
       return ok(undefined)
     },
-    async complete() {
+    async complete(data) {
       await wait()
+      if (data.email) accountEmail = data.email.toLowerCase()
       await store.update((s) => ({ ...s, onboarded: true }))
+      return ok(undefined)
+    },
+    async requestEmailOtp(email) {
+      await wait()
+      if (!EMAIL.test(email)) return err('invalid_email')
+      // Same answer with or without an account, like the real adapter.
+      return ok({ resendAfterSeconds: RESEND_AFTER_SECONDS })
+    },
+    async verifyEmailOtp(email, code) {
+      await wait()
+      if (wrongAttempts >= MAX_WRONG_ATTEMPTS) return err('too_many_attempts')
+      if (code !== MOCK_OTP_CODE || email.toLowerCase() !== accountEmail) {
+        wrongAttempts += 1
+        return err(wrongAttempts >= MAX_WRONG_ATTEMPTS ? 'too_many_attempts' : 'wrong_code')
+      }
+      wrongAttempts = 0
+      await store.update((s) => ({ ...s, onboarded: true }))
+      return ok(undefined)
+    },
+    async getAccountEmail() {
+      await wait()
+      return { email: accountEmail, confirmed: accountEmail !== null, pendingEmail: null }
+    },
+    async changeEmail(email) {
+      await wait()
+      if (!EMAIL.test(email)) return err('invalid_email')
+      accountEmail = email.toLowerCase()
       return ok(undefined)
     },
     async reset() {

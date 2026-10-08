@@ -120,6 +120,24 @@
       "label": "Idioma",
       "es": "Español",
       "en": "English"
+    },
+    "account": {
+      "title": "Cuenta",
+      "email": "Email",
+      "none": "Todavía no has añadido un email.",
+      "verified": "Verificado",
+      "unverified": "Sin confirmar: abre el enlace que te enviamos.",
+      "pending": "Pendiente de confirmar: {{email}}",
+      "hint": "Con un email verificado puedes entrar con un código por email, sin SMS.",
+      "newEmail": "Nuevo email",
+      "save": "Guardar email",
+      "sent": "Te hemos enviado un enlace a {{email}} para confirmarlo.",
+      "errors": {
+        "invalid_email": "Revisa el email.",
+        "in_use": "Ese email ya está en otra cuenta.",
+        "rate_limited": "Demasiados intentos. Espera unos minutos.",
+        "network": "No se ha podido guardar. Inténtalo de nuevo."
+      }
     }
   },
   "venueTypes": {
@@ -267,7 +285,8 @@
         "wrong_code": "El código no es correcto.",
         "expired": "El código ha caducado. Pide otro.",
         "too_many_attempts": "Demasiados intentos. Pide un código nuevo más tarde."
-      }
+      },
+      "emailLoginHint": "Te recomendamos añadirlo: te servirá para entrar con un código por email, sin SMS. Confírmalo con el enlace que te enviaremos."
     },
     "consents": {
       "title": "Tu privacidad, tus reglas",
@@ -392,7 +411,16 @@
       "noAccountTitle": "Este número no tiene una cuenta terminada",
       "noAccountBody": "Puedes completar el alta o entrar con otro número.",
       "noAccountComplete": "Completar el alta",
-      "noAccountOtherNumber": "Usar otro número"
+      "noAccountOtherNumber": "Usar otro número",
+      "emailTitle": "Entrar con email",
+      "emailBody": "Te enviamos un código al email que verificaste en tu cuenta. Sin SMS.",
+      "emailLabel": "Email",
+      "emailSend": "Enviar código",
+      "emailSentTo": "Si {{email}} es el email verificado de una cuenta, te hemos enviado un código de 6 dígitos.",
+      "emailNotArrived": "¿No llega? Revisa la carpeta de spam o entra con SMS.",
+      "changeEmail": "Usar otro email",
+      "useSms": "Entrar con SMS",
+      "useEmail": "Entrar con email (sin SMS)"
     }
   },
   "verification": {
@@ -694,6 +722,90 @@
         "quota": "Mapa de prueba: se ha alcanzado el límite gratuito de mapas por hoy.",
         "unavailable": "Mapa de prueba: el mapa real no está disponible ahora mismo."
       }
+    },
+    "live": {
+      "title": "Cómo está ahora",
+      "subtitle": "Últimos {{minutes}} min · anónimo, solo se muestran totales",
+      "loading": "Cargando…",
+      "fewVotes": "Aún pocos votos",
+      "share": "{{answer}} · {{percent}} %",
+      "venueSays": "El local dice: {{genres}}",
+      "lineup": "Esta noche: {{lineup}}",
+      "peopleSays": "La gente dice: {{answer}} ({{percent}} %)",
+      "usually": "Normalmente a esta hora: {{answer}}",
+      "yourAnswer": "Tu respuesta",
+      "needsCheckIn": "Haz check-in aquí para responder.",
+      "questions": {
+        "crowd": "Gente",
+        "queue": "Cola para entrar",
+        "music_like": "¿Gusta la música?",
+        "music_genre": "Qué suena"
+      },
+      "answers": {
+        "crowd": {
+          "empty": "Vacío",
+          "normal": "Normal",
+          "busy": "Lleno",
+          "packed": "A tope"
+        },
+        "queue": {
+          "none": "Sin cola",
+          "short": "Poca cola",
+          "long": "Mucha cola"
+        },
+        "music_like": {
+          "yes": "Me gusta",
+          "no": "No me gusta"
+        },
+        "music_genre": {
+          "reggaeton": "Reguetón",
+          "latin": "Latina",
+          "commercial": "Comercial",
+          "pop": "Pop",
+          "techno": "Techno",
+          "house": "House",
+          "electronic": "Electrónica",
+          "hiphop": "Hip hop",
+          "rock": "Rock",
+          "indie": "Indie",
+          "other": "Otra"
+        }
+      },
+      "errors": {
+        "no_check_in": "Necesitas un check-in activo aquí para responder.",
+        "own_venue": "Gestionas este local: no puedes votar en él.",
+        "generic": "No se ha podido guardar. Inténtalo de nuevo."
+      }
+    },
+    "showcase": {
+      "title": "Lo dice el local",
+      "hint": "Lo publica el propio local.",
+      "photos": "Fotos del local",
+      "photoAlt": "Foto {{n}} de {{name}}",
+      "door": {
+        "no_queue": "Sin cola",
+        "short_queue": "Poca cola",
+        "long_queue": "Cola larga",
+        "almost_full": "Casi lleno",
+        "full": "Completo"
+      },
+      "offer": {
+        "free_entry": "Entrada gratis hasta las {{time}}",
+        "happy_hour": "Happy hour hasta las {{time}}"
+      },
+      "detailsLabel": "Detalles del local",
+      "dress": {
+        "none": "Sin dress code",
+        "casual": "Dress code: informal",
+        "smart": "Dress code: arreglado",
+        "elegant": "Dress code: elegante"
+      },
+      "minAge": "Desde {{age}} años",
+      "entryFree": "Entrada gratis",
+      "entry": "Entrada: {{price}} €",
+      "drink": "Copa: {{price}} €",
+      "terrace": "Terraza",
+      "accessible": "Accesible"
     }
   },
   "matching": {
@@ -979,6 +1091,7 @@
     "oneTime": "pago único",
     "vatIncluded": "IVA incluido",
     "mostComplete": "El más completo",
+    "benefitSoon": "{{benefit}} (próximamente, sin coste extra)",
     "benefits": {
       "unlimited_likes": "Likes ilimitados",
       "see_likes": "Ver quién te ha dado like",
@@ -1356,7 +1469,8 @@
       "active": "Estadísticas Pro activas",
       "inactive": "Suscripción sin acceso activo",
       "manage": "Gestionar suscripción Pro",
-      "payerOnly": "La suscripción la gestiona la cuenta que la contrató."
+      "payerOnly": "La suscripción la gestiona la cuenta que la contrató.",
+      "contract": "Incluido en tu contrato."
     },
     "edit": {
       "title": "Ficha",
@@ -1413,7 +1527,177 @@
       "saved": "Aviso publicado",
       "failed": "No se pudo publicar. Comprueba el patrocinio y la política de alcohol."
     },
-    "billingError": "No se ha podido abrir el pago. Comprueba la disponibilidad del patrocinio o una suscripción existente y vuelve a intentarlo."
+    "billingError": "No se ha podido abrir el pago. Comprueba la disponibilidad del patrocinio o una suscripción existente y vuelve a intentarlo.",
+    "music": {
+      "title": "Música y ambiente",
+      "body": "Elige hasta 3 estilos y el line-up de esta noche. En la ficha aparece como «El local dice», junto a lo que vota la gente con check-in.",
+      "genres": "Estilos (máx. 3)",
+      "lineup": "Line-up de esta noche",
+      "lineupHint": "Se borra solo al cambiar de noche. Máx. 120 caracteres.",
+      "save": "Guardar música",
+      "saved": "Guardado.",
+      "error": "No se ha podido guardar. Inténtalo de nuevo.",
+      "summary": "Lo que dice la gente ahora"
+    },
+    "partners": {
+      "plan": {
+        "title": "Tu plan",
+        "account": "Empresa: {{name}}",
+        "contract": "Contrato {{reference}} · del {{from}} al {{to}}",
+        "noContract": "Sin contrato. Puedes contratar patrocinio o Estadísticas Pro más abajo.",
+        "benefitsTitle": "Ventajas activas",
+        "noBenefits": "Ninguna ventaja de pago activa. Las funciones gratis siguen disponibles.",
+        "benefit": "{{benefit}} · {{source}} · hasta el {{until}}",
+        "benefits": {
+          "sponsor_featured": "Destacado",
+          "sponsor_featured_plus": "Destacado Plus",
+          "sponsor_top": "Top",
+          "pro_stats": "Estadísticas Pro"
+        },
+        "sources": {
+          "contract": "incluido en tu contrato",
+          "stripe": "pagado con tarjeta",
+          "invoice": "activado por factura"
+        },
+        "yourRole": "Tu papel: {{role}}",
+        "termsAccepted": "Has aceptado las Condiciones para Locales v{{version}}.",
+        "termsPending": "Aún no has aceptado las Condiciones para Locales v{{version}}.",
+        "termsAccept": "Leer y aceptar",
+        "termsRead": "Leer las Condiciones para Locales",
+        "termsConfirm": "Aceptar"
+      },
+      "roles": {
+        "owner": "Titular",
+        "staff": "Encargado"
+      },
+      "team": {
+        "title": "Equipo",
+        "body": "Los encargados pueden editar la ficha, los eventos y la música, y contratar. Solo el titular invita o quita encargados.",
+        "invite": "Invitar encargado",
+        "created": "Invitación creada. Compártela solo con esa persona: sirve una vez y caduca el {{date}}.",
+        "code": "Código: {{code}}",
+        "copy": "Copiar enlace",
+        "copied": "Enlace copiado",
+        "pending": "Invitaciones pendientes",
+        "pendingItem": "Encargado · caduca el {{date}}",
+        "cancel": "Anular",
+        "remove": "Quitar",
+        "me": "(tú)",
+        "limit": "Has llegado al máximo de invitaciones pendientes (5) o de miembros (10).",
+        "error": "No se ha podido completar. Inténtalo de nuevo."
+      },
+      "haveCode": "Tengo un código de invitación",
+      "invite": {
+        "title": "Invitación de local",
+        "body": "Escribe el código que te hemos enviado para gestionar tu local sin tener que reclamarlo.",
+        "codeLabel": "Código de invitación",
+        "check": "Comprobar código",
+        "venue": "{{venue}} · {{city}}",
+        "account": "Empresa: {{name}}",
+        "role": "Entrarás como: {{role}}",
+        "acceptTerms": "He leído y acepto las Condiciones para Locales v{{version}}",
+        "readTerms": "Leer las condiciones",
+        "redeem": "Aceptar y unirme",
+        "alreadyManager": "Ya gestionas este local.",
+        "disabled": "Las invitaciones de locales todavía no están disponibles.",
+        "errors": {
+          "invalid_code": "El código no es válido, ha caducado o ya se ha usado.",
+          "already_manager": "Ya gestionas este local.",
+          "terms_required": "Tienes que aceptar las Condiciones para Locales.",
+          "generic": "No se ha podido completar. Inténtalo de nuevo."
+        }
+      },
+      "landing": {
+        "title": "Te han invitado a gestionar un local",
+        "body": "Crea tu cuenta en Nightlife Connect o entra con la tuya. Después aceptarás la invitación y las Condiciones para Locales.",
+        "code": "Código de invitación: {{code}}",
+        "signup": "Crear cuenta",
+        "login": "Ya tengo cuenta",
+        "continue": "Continuar",
+        "invalid": "Este enlace de invitación no es válido. Pide uno nuevo a quien te lo envió."
+      },
+      "claimTerms": "He leído y acepto las Condiciones para Locales",
+      "claimTermsRequired": "Acepta las Condiciones para Locales para enviar la solicitud.",
+      "sectionPlan": "Plan y ventajas",
+      "sectionTeam": "Equipo"
+    },
+    "showcase": {
+      "photos": {
+        "title": "Fotos",
+        "body": "Sube fotos de tu local. Se recomprimen en tu dispositivo sin datos de ubicación y Nightlife las revisa antes de publicarlas.",
+        "limit": "{{used}} de {{limit}} fotos",
+        "planHint": "Con un patrocinio o Estadísticas Pro puedes tener hasta 10 fotos.",
+        "add": "Añadir foto",
+        "empty": "Aún no hay fotos.",
+        "alt": "Foto del local ({{status}})",
+        "status": {
+          "pending": "Pendiente de revisión",
+          "approved": "Publicada",
+          "rejected": "Rechazada"
+        },
+        "reason": "Motivo: {{reason}}",
+        "hidden": "Oculta: supera el límite de tu plan.",
+        "cover": "Portada",
+        "makeCover": "Usar como portada",
+        "remove": "Borrar",
+        "errors": {
+          "photo_limit": "Has llegado al límite de fotos de tu plan.",
+          "unsupported_type": "Formato no admitido. Usa JPG, PNG o WebP.",
+          "too_large": "La foto es demasiado grande.",
+          "decode_failed": "No se pudo leer la foto.",
+          "generic": "No se pudo subir la foto. Inténtalo de nuevo."
+        }
+      },
+      "live": {
+        "title": "En directo",
+        "body": "Cuenta cómo está tu local ahora. Se muestra como «Lo dice el local»: la puerta caduca a los 90 minutos y las ofertas a la hora que elijas (máximo 8 horas).",
+        "door": "Puerta ahora",
+        "offers": "Ofertas de esta noche",
+        "freeEntry": "Entrada gratis hasta",
+        "happyHour": "Happy hour hasta",
+        "publish": "Publicar",
+        "clear": "Quitar",
+        "active": "Publicado hasta las {{time}}",
+        "invalidTime": "Elige una hora dentro de las próximas 8 horas."
+      },
+      "extras": {
+        "title": "Ficha del local",
+        "body": "Datos que verá la gente en tu ficha. Deja vacío lo que no quieras indicar.",
+        "dressCode": "Dress code",
+        "unset": "Sin indicar",
+        "minAge": "Edad mínima",
+        "entry": "Precio de entrada (€)",
+        "entryHint": "0 = entrada gratis.",
+        "drink": "Precio de una copa (€)",
+        "terrace": "Tiene terraza",
+        "accessible": "Accesible en silla de ruedas",
+        "save": "Guardar ficha",
+        "saved": "Ficha guardada.",
+        "invalidPrice": "Precio no válido."
+      },
+      "report": {
+        "title": "Resultados",
+        "body": "Últimos 30 días, siempre en conjunto. Por debajo de 5 personas se muestra «menos de 5».",
+        "views": "Vistas de la ficha",
+        "going": "Dijeron «Voy»",
+        "checkIns": "Check-ins",
+        "conversion": "De «Voy» a check-in",
+        "lessThan": "Menos de 5",
+        "sponsorships": "Patrocinios",
+        "sponsorshipRow": "{{tier}} · {{from}} → {{to}}",
+        "during": "Durante: {{views}} vistas · {{checkIns}} check-ins",
+        "before": "Mismos días antes: {{views}} vistas · {{checkIns}} check-ins",
+        "change": "Vistas {{value}} % frente a antes",
+        "flashes": "Flash Alerts",
+        "flashRow": "{{title}} · {{date}}",
+        "flashResult": "Check-ins durante la alerta y 3 h después: {{now}} · misma franja la semana anterior: {{before}}",
+        "none": "Sin patrocinios ni Flash en los últimos 90 días.",
+        "proTitle": "Evolución por noche (Estadísticas Pro)",
+        "previous": "30 días anteriores: {{views}} vistas · {{checkIns}} check-ins",
+        "night": "{{date}}: {{views}} vistas · {{checkIns}} check-ins",
+        "proUpsell": "Con Estadísticas Pro ves la evolución por noche y la comparación con los 30 días anteriores."
+      }
+    }
   },
   "admin": {
     "title": "Admin",
@@ -1437,7 +1721,9 @@
       "audit": "Auditoría",
       "users": "Usuarios",
       "venues": "Locales",
-      "escalations": "Riesgo grave"
+      "escalations": "Riesgo grave",
+      "partners": "Partners",
+      "venuePhotos": "Fotos de locales"
     },
     "mfa": {
       "title": "Segundo factor",
@@ -1584,7 +1870,12 @@
         "store_payments_enabled": "Compras en App Store / Google Play (Bloque 11).",
         "sponsored_cards_enabled": "Tarjetas patrocinadas de locales en el swipe (Bloque 11).",
         "travel_mode_enabled": "Modo viaje (Bloque 11).",
-        "flash_alcohol_allowed": "Activar solo tras revisar la normativa autonómica aplicable."
+        "email_login_enabled": "Entrar con código por email tras el alta (requiere SMTP propio en Supabase Auth).",
+        "live_status_enabled": "«Cómo está ahora»: gente, cola y música votadas con check-in y música declarada por el local (R2).",
+        "venue_partners_enabled": "Partners y contratos: invitaciones a locales, Condiciones para Locales, plan y equipo (R3).",
+        "venue_showcase_enabled": "Escaparate del local: fotos moderadas, «Lo dice el local», ficha enriquecida e informe de resultados (R4).",
+        "flash_alcohol_allowed": "Activar solo tras revisar la normativa autonómica aplicable.",
+        "venue_bookings_enabled": "Reservas sin pago y lista de invitados con QR (R5)."
       }
     },
     "payments": {
@@ -1848,6 +2139,108 @@
         "save": "Guardar token",
         "clear": "Quitar token"
       }
+    },
+    "partners": {
+      "title": "Partners y contratos",
+      "body": "Empresas que trabajan con nosotros, sus locales, contratos e invitaciones de acceso.",
+      "new": "Nueva empresa",
+      "edit": "Editar",
+      "fields": {
+        "legalName": "Razón social",
+        "taxId": "CIF/NIF",
+        "contactName": "Persona de contacto",
+        "billingEmail": "Email de facturación",
+        "contactPhone": "Teléfono (opcional)",
+        "notes": "Notas internas (opcional)",
+        "isTest": "Empresa de prueba (datos de test)"
+      },
+      "save": "Guardar empresa",
+      "saved": "Guardado.",
+      "empty": "Aún no hay empresas.",
+      "testBadge": "Prueba",
+      "ended": "Baja",
+      "errors": {
+        "invalid": "Revisa los datos: CIF/NIF español válido, email y nombres.",
+        "duplicate_tax_id": "Ya existe una empresa con ese CIF/NIF.",
+        "linked_elsewhere": "Ese local ya pertenece a otra empresa.",
+        "already_sponsored": "Ese local ya tiene un patrocinio activo en esas fechas.",
+        "duplicate_reference": "Ya existe un contrato con esa referencia.",
+        "invalid_state": "No se puede hacer en el estado actual del contrato.",
+        "generic": "No se ha podido completar. Inténtalo de nuevo."
+      },
+      "venues": {
+        "title": "Locales",
+        "search": "Buscar un local para vincular",
+        "link": "Vincular",
+        "unlink": "Desvincular",
+        "none": "Sin locales vinculados.",
+        "managers": "Gestores",
+        "noManagers": "Sin gestores todavía.",
+        "remove": "Quitar",
+        "invite": "Invitar al titular",
+        "invitations": "Invitaciones",
+        "revoke": "Anular"
+      },
+      "invitation": {
+        "title": "Invitación creada",
+        "body": "Copia ahora el código o el enlace: no se volverá a mostrar. Sirve una vez y caduca el {{date}}.",
+        "code": "Código: {{code}}",
+        "copy": "Copiar enlace",
+        "copied": "Enlace copiado"
+      },
+      "invitationStatus": {
+        "pending": "Pendiente",
+        "used": "Usada",
+        "revoked": "Anulada",
+        "expired": "Caducada"
+      },
+      "contracts": {
+        "title": "Contratos",
+        "new": "Nuevo contrato",
+        "reference": "Referencia del contrato",
+        "tier": "Patrocinio incluido",
+        "pro": "Incluye Estadísticas Pro",
+        "startsOn": "Inicio",
+        "endsOn": "Fin",
+        "create": "Crear contrato (borrador)",
+        "activate": "Activar",
+        "end": "Terminar",
+        "none": "Sin contratos.",
+        "tiers": {
+          "none": "Sin patrocinio",
+          "featured": "Destacado",
+          "featured_plus": "Destacado Plus",
+          "top": "Top"
+        },
+        "status": {
+          "draft": "Borrador",
+          "active": "Activo",
+          "ended": "Terminado"
+        },
+        "summary": "{{tier}}{{pro}} · del {{from}} al {{to}} · condiciones v{{version}}",
+        "proSuffix": " + Estadísticas Pro",
+        "note": "El contrato firmado (PDF) se guarda fuera de la app. Al activarlo, las ventajas se aplican a todos los locales vinculados y terminan solas en la fecha de fin. Los patrocinios por contrato no ocupan los 3 huecos por ciudad."
+      }
+    },
+    "venuePhotos": {
+      "title": "Fotos de locales",
+      "body": "Revisa las fotos que suben los locales. Solo se ven en la app las aprobadas.",
+      "filter": "Estado",
+      "status": {
+        "pending": "Pendientes",
+        "approved": "Aprobadas",
+        "rejected": "Rechazadas"
+      },
+      "empty": "No hay fotos en este estado.",
+      "alt": "Foto de {{venue}}",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "withdraw": "Retirar",
+      "reasonLabel": "Motivo (lo verá el local)",
+      "reasonHint": "Entre 3 y 200 caracteres.",
+      "cover": "Portada",
+      "test": "Prueba",
+      "reason": "Motivo: {{reason}}"
     }
   },
   "anthem": {
@@ -1889,5 +2282,291 @@
     "place": "Tu próximo sitio",
     "placeUnavailable": "Este local ya no está disponible.",
     "viewMap": "Ver en el mapa"
+  },
+  "guide": {
+    "nav": {
+      "user": "Guía de la app",
+      "userHint": "Todo lo que puedes hacer, paso a paso",
+      "venues": "Guía para locales",
+      "venuesHint": "Qué ofrece la app a tu negocio",
+      "title": "Guías",
+      "howItWorks": "Cómo funciona"
+    },
+    "user": {
+      "title": "Guía de Nightlife Connect",
+      "lead": "Mira dónde hay ambiente ahora, conoce gente antes y durante la noche y sal con más seguridad. Así funciona.",
+      "sections": {
+        "discover": {
+          "title": "Descubre la noche",
+          "items": {
+            "map": "Mapa en directo con locales y eventos de tu ciudad, y cuánta gente hay en cada uno.",
+            "stats": "En cada sitio ves personas, edad media y porcentaje en verde. Siempre son datos agregados y anónimos: con menos de 5 personas solo verás «Menos de 5».",
+            "search": "Buscador y todos los filtros gratis: tipo de local, abierto ahora, precio, distancia y más.",
+            "place": "La ficha de cada local muestra horario, precio, dirección, el Vibe Check y objetos perdidos. Guárdalo en favoritos para volver.",
+            "venueSays": "«Lo dice el local»: algunos locales publican sus fotos (revisadas por Nightlife), cómo está la puerta, ofertas de la noche, dress code y precios. Siempre se indica que lo dice el propio local.",
+            "bookings": "Reservas y lista de invitados: en los locales que lo ofrecen puedes pedir mesa (sin pago; el local acepta o rechaza) o apuntarte a la lista de la noche y entrar con tu QR. Necesitas la edad verificada; el local solo ve tu nombre de perfil."
+          }
+        },
+        "tonight": {
+          "title": "Esta Noche",
+          "items": {
+            "going": "«Esta Noche Voy»: di a qué sitio vas para conocer antes a quien también va.",
+            "here": "«Estoy Aquí»: haz check-in cuando estés a menos de 150 m del local. Caduca solo en unas horas.",
+            "swipe": "Ve perfiles de la gente que está en tu mismo sitio o va a ir; primero, quien está contigo ahora."
+          }
+        },
+        "dating": {
+          "title": "Ligar y chatear",
+          "items": {
+            "match": "Si los dos os dais like hay match y se abre el chat en tiempo real.",
+            "light": "Semáforo: verde, abierto a ligar; amarillo, solo amistad; rojo, no apareces en los perfiles.",
+            "discreet": "Modo discreto: cuentas en las estadísticas pero no apareces en las listas de quién va o quién está.",
+            "control": "Puedes eliminar un match, bloquear o reportar a cualquiera en cualquier momento."
+          }
+        },
+        "verification": {
+          "title": "Verificaciones",
+          "items": {
+            "phone": "Tu teléfono se verifica con un SMS al darte de alta. Una cuenta por teléfono.",
+            "age": "Para ver perfiles, dar like, chatear, marcar que vas, hacer check-in visible o crear eventos tienes que verificar que eres mayor de edad. Explorar el mapa, eventos y estadísticas no lo necesita.",
+            "badges": "Foto verificada e identidad verificada son opcionales y te dan un distintivo. Solo guardamos el resultado, nunca tus documentos ni tus selfies."
+          }
+        },
+        "safety": {
+          "title": "Seguridad",
+          "items": {
+            "sos": "SOS: llama al 112 o avisa a hasta 3 contactos de confianza desde Perfil › SOS.",
+            "report": "Reporta perfiles, eventos o mensajes. Una persona revisa cada caso y puedes recurrir las decisiones.",
+            "rules": "Las Normas de la Comunidad se aplican a todo el mundo; las cuentas que las incumplen se suspenden."
+          }
+        },
+        "events": {
+          "title": "Eventos y ambiente",
+          "items": {
+            "create": "Con la edad verificada puedes crear hasta 2 eventos al día en lugares públicos.",
+            "confirm": "Los eventos de usuarios salen como «No confirmado» hasta que 3 personas confirman que existen; los de locales salen como «Oficial».",
+            "vibe": "Vibe Check: con check-in en un sitio puedes votar cómo está el ambiente esta noche.",
+            "lost": "Objetos perdidos: publica o responde avisos del local durante 48 horas.",
+            "live": "Cómo está ahora: con check-in responde de un toque si hay mucha gente, cola o qué música suena; ves el resumen anónimo de los últimos 90 minutos y lo que declara el local."
+          }
+        },
+        "free": {
+          "title": "Qué es gratis",
+          "items": {
+            "core": "Mapa, estadísticas, eventos, buscador y todos los filtros.",
+            "people": "Ver perfiles completos, chatear con tus matches y 5 likes al día.",
+            "trust": "Todas las verificaciones y todas las herramientas de seguridad.",
+            "themes": "Los 5 temas visuales básicos."
+          }
+        },
+        "premium": {
+          "title": "Opciones de pago (opcionales)",
+          "items": {
+            "pass": "Pase: likes ilimitados, deshacer el último swipe, temas extra y sin tarjetas patrocinadas. Mensual, trimestral o anual.",
+            "vip": "Pase VIP: todo el Pase más ver quién te ha dado like, prioridad, modo incógnito y Focos, Chispas y mensajes directos cada semana.",
+            "night": "Pase de una noche: las ventajas del Pase hasta las 06:00, sin suscripción.",
+            "extras": "Sueltos: Chispa (like destacado con aviso anónimo), Foco (30 minutos destacado en tu local o zona) y Mensaje directo (escribir antes del match, nunca a quien tiene el semáforo en rojo).",
+            "status": "Los pagos están en fase de pruebas. Lo básico y la seguridad son y seguirán siendo gratis."
+          }
+        },
+        "privacy": {
+          "title": "Tu privacidad",
+          "items": {
+            "location": "Nunca mostramos tu ubicación exacta a nadie.",
+            "consents": "Todos los permisos empiezan desactivados: tú decides qué activar y puedes cambiarlo en Perfil › Consentimientos.",
+            "data": "Descarga o borra tus datos cuando quieras desde Perfil › Privacidad y datos."
+          }
+        },
+        "account": {
+          "title": "Tu cuenta",
+          "items": {
+            "signup": "Alta en unos minutos: fecha de nacimiento, firma de los documentos, teléfono con SMS, permisos, perfil y tema.",
+            "login": "Para volver a entrar usa «Ya tengo cuenta». Pronto también podrás entrar con un código a tu email verificado, sin SMS.",
+            "loginEmail": "Para volver a entrar usa «Ya tengo cuenta»: con un código a tu email verificado (sin SMS) o con SMS. Añade tu email en Perfil › Ajustes › Cuenta.",
+            "delete": "Puedes cerrar sesión o borrar tu cuenta cuando quieras."
+          }
+        }
+      }
+    },
+    "venues": {
+      "title": "Guía para locales",
+      "lead": "Nightlife Connect pone tu local delante de la gente que está decidiendo dónde salir esta noche. Esto es lo que puedes hacer.",
+      "sections": {
+        "access": {
+          "title": "Cómo empezar",
+          "items": {
+            "claim": "Date de alta en la app y entra en Perfil › Panel de locales › Reclamar un local.",
+            "evidence": "Indica cómo acreditas que lo gestionas (por ejemplo, CIF, factura a nombre del local o email del dominio).",
+            "review": "Una persona del equipo revisa cada solicitud. Cuando se aprueba, gestionas la ficha desde tu panel.",
+            "help": "¿Prefieres que te ayudemos? Escríbenos desde Contacto.",
+            "invite": "Si firmas un acuerdo con nosotros, te enviamos una invitación: entras con tu cuenta, aceptas las Condiciones para Locales y gestionas el local sin reclamarlo."
+          }
+        },
+        "free": {
+          "title": "Gratis para todos los locales",
+          "items": {
+            "profile": "Edita tu ficha: descripción, horario y rango de precio.",
+            "events": "Publica eventos oficiales: salen como «Oficial» sin esperar confirmaciones.",
+            "stats": "Estadísticas básicas: check-ins de la semana y cuánta gente va esta noche, siempre agregadas y anónimas.",
+            "music": "Música y ambiente: declara hasta 3 estilos y el line-up de la noche; la ficha lo muestra junto a lo que vota la gente con check-in (anónimo, desde 3 votos). Los gestores no votan en su propio local.",
+            "team": "Equipo: el titular puede invitar a encargados y quitarlos; todos ven el plan y las ventajas activas del local.",
+            "photos": "Fotos: gratis hasta 3 (portada incluida) y hasta 10 con un patrocinio o Estadísticas Pro. Se publican tras revisarlas y se suben sin datos de ubicación.",
+            "live": "En directo: indica si hay cola o está lleno (dura 90 minutos) y ofertas como «entrada gratis hasta» o «happy hour hasta». Aparece como «Lo dice el local».",
+            "details": "Ficha enriquecida: dress code, edad mínima, precio de entrada y de copa, terraza y accesibilidad.",
+            "report": "Resultados: vistas de tu ficha, «Voy» y check-ins de los últimos 30 días y el efecto de tus patrocinios y Flash. Siempre agregado (menos de 5 personas no se muestra). Con Estadísticas Pro, evolución por noche.",
+            "bookings": "Reservas y listas (gratis): acepta o rechaza solicitudes de mesa y abre una lista para la noche con plazas y hora límite. En la puerta valida cada QR o código una sola vez. Solo ves el nombre de perfil, las personas y la hora."
+          }
+        },
+        "sponsor": {
+          "title": "Patrocinio (30 días)",
+          "items": {
+            "featured": "Destacado: tu pin destacado en el mapa de tu zona y tarjeta de tu local entre los perfiles.",
+            "plus": "Destacado Plus: además, primeras posiciones en las listas que cumplan los filtros de cada persona.",
+            "top": "Top: además, Flash Alerts para avisar de una promoción durante una hora.",
+            "limits": "Hay plazas limitadas por ciudad. Se contrata desde tu panel."
+          }
+        },
+        "pro": {
+          "title": "Estadísticas Pro",
+          "items": {
+            "detail": "Afluencia por hora, edad media, semáforo y comparación con los locales de tu zona.",
+            "privacy": "Siempre datos agregados: los grupos pequeños nunca se muestran.",
+            "billing": "Suscripción mensual por local que puedes cancelar cuando quieras."
+          }
+        },
+        "flash": {
+          "title": "Flash Alerts",
+          "items": {
+            "what": "Avisos dentro de la app que duran una hora, para locales con patrocinio Top.",
+            "audience": "Solo los ven personas con la edad verificada que han aceptado recibir promociones.",
+            "alcohol": "Las promociones de alcohol están desactivadas hasta revisar la normativa de cada comunidad."
+          }
+        },
+        "rules": {
+          "title": "Reglas que protegen a todos",
+          "items": {
+            "label": "Lo patrocinado siempre lleva la etiqueta «Patrocinado».",
+            "data": "Pagar nunca cambia los datos: las personas, la edad media y el ambiente son reales.",
+            "filters": "Un local patrocinado solo aparece si cumple los filtros de quien busca, y los huecos son limitados."
+          }
+        },
+        "status": {
+          "title": "Precios",
+          "items": {
+            "now": "Los pagos están en fase de pruebas. Verás los precios en tu panel cuando se activen."
+          }
+        }
+      }
+    },
+    "links": {
+      "terms": "Condiciones para locales y organizadores",
+      "ranking": "Clasificación y patrocinados",
+      "contact": "Contacto",
+      "openApp": "Abrir la app",
+      "otherUser": "¿Tienes un local? Mira la guía para locales",
+      "otherVenue": "¿Buscas cómo usar la app? Mira la guía de la app"
+    }
+  },
+  "bookings": {
+    "place": {
+      "title": "Reservas y lista de invitados",
+      "reserveTitle": "Reservar mesa",
+      "hint": "Sin pago. El local acepta o rechaza tu solicitud y lo verás en Mis reservas.",
+      "date": "Día",
+      "time": "Hora de llegada",
+      "party": "Personas",
+      "kind": "Tipo",
+      "submit": "Solicitar reserva",
+      "sent": "Solicitud enviada. Verás la respuesta del local en Mis reservas.",
+      "ageRequired": "Para reservar o apuntarte a una lista necesitas la edad verificada.",
+      "verify": "Verificar edad",
+      "ownVenue": "Es tu local: gestiona las reservas desde tu panel.",
+      "myReservation": "Tu reserva: {{date}} · {{party}} personas · {{status}}",
+      "guestlistTitle": "Lista de invitados",
+      "guestlistUntil": "Válida hasta las {{time}}",
+      "join": "Apuntarme",
+      "joined": "Estás en la lista. Tu QR está en Mis reservas.",
+      "full": "La lista está completa.",
+      "seeMine": "Ver mis reservas"
+    },
+    "kinds": {
+      "table": "Mesa",
+      "bottle": "Mesa con botella"
+    },
+    "status": {
+      "requested": "Pendiente",
+      "accepted": "Aceptada",
+      "rejected": "Rechazada",
+      "cancelled": "Cancelada",
+      "expired": "Sin respuesta"
+    },
+    "guestStatus": {
+      "confirmed": "Confirmada",
+      "cancelled": "Cancelada",
+      "checked_in": "Usada"
+    },
+    "errors": {
+      "not_available": "Este local no acepta reservas ahora mismo.",
+      "own_venue": "Es tu local: gestiona las reservas desde tu panel.",
+      "booking_limit": "Ya tienes 3 reservas activas.",
+      "already_booked": "Ya tienes una reserva en este local esa noche.",
+      "age_required": "Para reservar necesitas la edad verificada.",
+      "invalid": "Revisa el día, la hora y las personas (desde 30 minutos hasta 14 días vista).",
+      "list_full": "La lista está completa.",
+      "generic": "No se pudo completar. Inténtalo de nuevo."
+    },
+    "mine": {
+      "title": "Mis reservas",
+      "hint": "Reservas de mesa y listas de invitados",
+      "lead": "Lo que has pedido a los locales y tus entradas de lista.",
+      "empty": "Aún no tienes reservas ni listas.",
+      "reservations": "Reservas",
+      "entries": "Listas de invitados",
+      "party": "{{count}} personas · {{kind}}",
+      "reason": "Motivo: {{reason}}",
+      "cancel": "Cancelar reserva",
+      "qrLabel": "Código QR de tu entrada en {{place}}",
+      "code": "Código: {{code}}",
+      "showAtDoor": "Enséñalo en la puerta antes de las {{time}}.",
+      "used": "Entrada usada.",
+      "leave": "Salir de la lista"
+    },
+    "venue": {
+      "settingsTitle": "Reservas y lista de invitados",
+      "settingsBody": "Gratis. Tú decides si aceptas solicitudes de mesa y si abres listas. Solo verás el nombre de perfil, las personas y la hora; nada de teléfonos.",
+      "acceptReservations": "Aceptar solicitudes de reserva",
+      "acceptGuestlists": "Abrir listas de invitados",
+      "maxParty": "Máximo de personas por reserva",
+      "save": "Guardar",
+      "saved": "Guardado.",
+      "requestsTitle": "Solicitudes de reserva",
+      "noRequests": "No hay solicitudes.",
+      "requestRow": "{{name}} · {{party}} personas · {{kind}}",
+      "accept": "Aceptar",
+      "reject": "Rechazar",
+      "reasonLabel": "Motivo (opcional, lo verá la persona)",
+      "listTitle": "Lista de esta noche",
+      "listName": "Título",
+      "listNameHint": "Por ejemplo: Entrada gratis antes de la 1:30",
+      "listUntil": "Válida hasta",
+      "capacity": "Plazas",
+      "createList": "Abrir lista",
+      "updateList": "Actualizar lista",
+      "closeList": "Cerrar lista",
+      "closed": "Lista cerrada",
+      "counts": "{{taken}} de {{capacity}} apuntados · {{used}} han entrado",
+      "enableFirst": "Activa «Abrir listas de invitados» para crear una.",
+      "invalidTime": "Elige una hora dentro de las próximas 12 horas.",
+      "doorTitle": "Puerta",
+      "codeLabel": "Código de la entrada",
+      "check": "Validar",
+      "scan": "Escanear QR",
+      "stopScan": "Dejar de escanear",
+      "scanUnsupported": "Este dispositivo no puede escanear: teclea el código.",
+      "cameraError": "No se pudo abrir la cámara: teclea el código.",
+      "ok": "{{name}} puede entrar.",
+      "alreadyUsed": "{{name}}: esta entrada ya se usó a las {{time}}.",
+      "invalidCode": "Código no válido para la lista de esta noche."
+    }
   }
 }

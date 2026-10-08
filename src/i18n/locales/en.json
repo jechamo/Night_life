@@ -120,6 +120,24 @@
       "label": "Language",
       "es": "Español",
       "en": "English"
+    },
+    "account": {
+      "title": "Account",
+      "email": "Email",
+      "none": "You have not added an email yet.",
+      "verified": "Verified",
+      "unverified": "Not confirmed: open the link we sent you.",
+      "pending": "Waiting for confirmation: {{email}}",
+      "hint": "With a verified email you can sign in with an email code, no SMS.",
+      "newEmail": "New email",
+      "save": "Save email",
+      "sent": "We have sent a link to {{email}} to confirm it.",
+      "errors": {
+        "invalid_email": "Check the email.",
+        "in_use": "That email is already used by another account.",
+        "rate_limited": "Too many attempts. Wait a few minutes.",
+        "network": "Could not save it. Try again."
+      }
     }
   },
   "venueTypes": {
@@ -267,7 +285,8 @@
         "wrong_code": "That code is not correct.",
         "expired": "The code has expired. Request a new one.",
         "too_many_attempts": "Too many attempts. Request a new code later."
-      }
+      },
+      "emailLoginHint": "We recommend adding it: you can then sign in with an email code, no SMS. Confirm it with the link we will send you."
     },
     "consents": {
       "title": "Your privacy, your rules",
@@ -392,7 +411,16 @@
       "noAccountTitle": "This number has no completed account",
       "noAccountBody": "You can finish signing up or sign in with another number.",
       "noAccountComplete": "Finish signing up",
-      "noAccountOtherNumber": "Use another number"
+      "noAccountOtherNumber": "Use another number",
+      "emailTitle": "Sign in with email",
+      "emailBody": "We send a code to the email you verified on your account. No SMS.",
+      "emailLabel": "Email",
+      "emailSend": "Send code",
+      "emailSentTo": "If {{email}} is the verified email of an account, we have sent it a 6-digit code.",
+      "emailNotArrived": "Not arriving? Check your spam folder or sign in with SMS.",
+      "changeEmail": "Use another email",
+      "useSms": "Sign in with SMS",
+      "useEmail": "Sign in with email (no SMS)"
     }
   },
   "verification": {
@@ -694,6 +722,90 @@
         "quota": "Test map: today’s free map limit has been reached.",
         "unavailable": "Test map: the real map is not available right now."
       }
+    },
+    "live": {
+      "title": "How it is now",
+      "subtitle": "Last {{minutes}} min · anonymous, only totals are shown",
+      "loading": "Loading…",
+      "fewVotes": "Not enough votes yet",
+      "share": "{{answer}} · {{percent}}%",
+      "venueSays": "The venue says: {{genres}}",
+      "lineup": "Tonight: {{lineup}}",
+      "peopleSays": "People say: {{answer}} ({{percent}}%)",
+      "usually": "Usually at this time: {{answer}}",
+      "yourAnswer": "Your answer",
+      "needsCheckIn": "Check in here to answer.",
+      "questions": {
+        "crowd": "Crowd",
+        "queue": "Queue to get in",
+        "music_like": "Do people like the music?",
+        "music_genre": "What is playing"
+      },
+      "answers": {
+        "crowd": {
+          "empty": "Empty",
+          "normal": "Normal",
+          "busy": "Busy",
+          "packed": "Packed"
+        },
+        "queue": {
+          "none": "No queue",
+          "short": "Short queue",
+          "long": "Long queue"
+        },
+        "music_like": {
+          "yes": "I like it",
+          "no": "I don't like it"
+        },
+        "music_genre": {
+          "reggaeton": "Reggaeton",
+          "latin": "Latin",
+          "commercial": "Commercial",
+          "pop": "Pop",
+          "techno": "Techno",
+          "house": "House",
+          "electronic": "Electronic",
+          "hiphop": "Hip hop",
+          "rock": "Rock",
+          "indie": "Indie",
+          "other": "Other"
+        }
+      },
+      "errors": {
+        "no_check_in": "You need an active check-in here to answer.",
+        "own_venue": "You manage this venue, so you cannot vote here.",
+        "generic": "Could not save. Please try again."
+      }
+    },
+    "showcase": {
+      "title": "The venue says",
+      "hint": "Posted by the venue itself.",
+      "photos": "Venue photos",
+      "photoAlt": "Photo {{n}} of {{name}}",
+      "door": {
+        "no_queue": "No queue",
+        "short_queue": "Short queue",
+        "long_queue": "Long queue",
+        "almost_full": "Almost full",
+        "full": "Full"
+      },
+      "offer": {
+        "free_entry": "Free entry until {{time}}",
+        "happy_hour": "Happy hour until {{time}}"
+      },
+      "detailsLabel": "Venue details",
+      "dress": {
+        "none": "No dress code",
+        "casual": "Dress code: casual",
+        "smart": "Dress code: smart",
+        "elegant": "Dress code: elegant"
+      },
+      "minAge": "Ages {{age}}+",
+      "entryFree": "Free entry",
+      "entry": "Entry: €{{price}}",
+      "drink": "Drink: €{{price}}",
+      "terrace": "Terrace",
+      "accessible": "Accessible"
     }
   },
   "matching": {
@@ -979,6 +1091,7 @@
     "oneTime": "one-time payment",
     "vatIncluded": "VAT included",
     "mostComplete": "Most complete",
+    "benefitSoon": "{{benefit}} (coming soon, at no extra cost)",
     "benefits": {
       "unlimited_likes": "Unlimited likes",
       "see_likes": "See who liked you",
@@ -1356,7 +1469,8 @@
       "active": "Pro Statistics active",
       "inactive": "Subscription without active access",
       "manage": "Manage Pro subscription",
-      "payerOnly": "The subscription is managed by the account that purchased it."
+      "payerOnly": "The subscription is managed by the account that purchased it.",
+      "contract": "Included in your contract."
     },
     "edit": {
       "title": "Page",
@@ -1413,7 +1527,177 @@
       "saved": "Alert published",
       "failed": "Could not publish. Check the sponsorship and alcohol policy."
     },
-    "billingError": "Unable to open payment. Check sponsorship availability or an existing subscription and try again."
+    "billingError": "Unable to open payment. Check sponsorship availability or an existing subscription and try again.",
+    "music": {
+      "title": "Music and atmosphere",
+      "body": "Choose up to 3 styles and tonight's line-up. The venue page shows it as \"The venue says\", next to what checked-in people vote.",
+      "genres": "Styles (max. 3)",
+      "lineup": "Tonight's line-up",
+      "lineupHint": "Cleared automatically when the night changes. Max. 120 characters.",
+      "save": "Save music",
+      "saved": "Saved.",
+      "error": "Could not save. Please try again.",
+      "summary": "What people say now"
+    },
+    "partners": {
+      "plan": {
+        "title": "Your plan",
+        "account": "Company: {{name}}",
+        "contract": "Contract {{reference}} · from {{from}} to {{to}}",
+        "noContract": "No contract. You can buy a sponsorship or Pro stats below.",
+        "benefitsTitle": "Active advantages",
+        "noBenefits": "No paid advantage is active. Free features are still available.",
+        "benefit": "{{benefit}} · {{source}} · until {{until}}",
+        "benefits": {
+          "sponsor_featured": "Featured",
+          "sponsor_featured_plus": "Featured Plus",
+          "sponsor_top": "Top",
+          "pro_stats": "Pro stats"
+        },
+        "sources": {
+          "contract": "included in your contract",
+          "stripe": "paid by card",
+          "invoice": "activated by invoice"
+        },
+        "yourRole": "Your role: {{role}}",
+        "termsAccepted": "You accepted the venue terms v{{version}}.",
+        "termsPending": "You have not accepted the venue terms v{{version}} yet.",
+        "termsAccept": "Read and accept",
+        "termsRead": "Read the venue terms",
+        "termsConfirm": "Accept"
+      },
+      "roles": {
+        "owner": "Owner",
+        "staff": "Manager"
+      },
+      "team": {
+        "title": "Team",
+        "body": "Managers can edit the venue page, events and music, and buy plans. Only the owner invites or removes managers.",
+        "invite": "Invite a manager",
+        "created": "Invitation created. Share it only with that person: it works once and expires on {{date}}.",
+        "code": "Code: {{code}}",
+        "copy": "Copy link",
+        "copied": "Link copied",
+        "pending": "Pending invitations",
+        "pendingItem": "Manager · expires on {{date}}",
+        "cancel": "Cancel",
+        "remove": "Remove",
+        "me": "(you)",
+        "limit": "You reached the limit of pending invitations (5) or members (10).",
+        "error": "Could not complete. Please try again."
+      },
+      "haveCode": "I have an invitation code",
+      "invite": {
+        "title": "Venue invitation",
+        "body": "Enter the code we sent you to manage your venue without claiming it.",
+        "codeLabel": "Invitation code",
+        "check": "Check code",
+        "venue": "{{venue}} · {{city}}",
+        "account": "Company: {{name}}",
+        "role": "You will join as: {{role}}",
+        "acceptTerms": "I have read and accept the venue terms v{{version}}",
+        "readTerms": "Read the terms",
+        "redeem": "Accept and join",
+        "alreadyManager": "You already manage this venue.",
+        "disabled": "Venue invitations are not available yet.",
+        "errors": {
+          "invalid_code": "The code is not valid, has expired or was already used.",
+          "already_manager": "You already manage this venue.",
+          "terms_required": "You must accept the venue terms.",
+          "generic": "Could not complete. Please try again."
+        }
+      },
+      "landing": {
+        "title": "You have been invited to manage a venue",
+        "body": "Create your Nightlife Connect account or sign in. Then you will accept the invitation and the venue terms.",
+        "code": "Invitation code: {{code}}",
+        "signup": "Create account",
+        "login": "I already have an account",
+        "continue": "Continue",
+        "invalid": "This invitation link is not valid. Ask whoever sent it for a new one."
+      },
+      "claimTerms": "I have read and accept the venue terms",
+      "claimTermsRequired": "Accept the venue terms to send the request.",
+      "sectionPlan": "Plan and advantages",
+      "sectionTeam": "Team"
+    },
+    "showcase": {
+      "photos": {
+        "title": "Photos",
+        "body": "Upload photos of your venue. They are re-encoded on your device without location data and Nightlife reviews them before they go live.",
+        "limit": "{{used}} of {{limit}} photos",
+        "planHint": "With a sponsorship or Pro stats you can have up to 10 photos.",
+        "add": "Add photo",
+        "empty": "No photos yet.",
+        "alt": "Venue photo ({{status}})",
+        "status": {
+          "pending": "Pending review",
+          "approved": "Published",
+          "rejected": "Rejected"
+        },
+        "reason": "Reason: {{reason}}",
+        "hidden": "Hidden: over your plan's limit.",
+        "cover": "Cover",
+        "makeCover": "Use as cover",
+        "remove": "Delete",
+        "errors": {
+          "photo_limit": "You have reached your plan's photo limit.",
+          "unsupported_type": "Unsupported format. Use JPG, PNG or WebP.",
+          "too_large": "The photo is too large.",
+          "decode_failed": "The photo could not be read.",
+          "generic": "The photo could not be uploaded. Please try again."
+        }
+      },
+      "live": {
+        "title": "Live",
+        "body": "Tell people how your venue is right now. It shows as «The venue says»: the door status expires after 90 minutes and offers at the time you choose (8 hours at most).",
+        "door": "Door right now",
+        "offers": "Tonight's offers",
+        "freeEntry": "Free entry until",
+        "happyHour": "Happy hour until",
+        "publish": "Publish",
+        "clear": "Remove",
+        "active": "Published until {{time}}",
+        "invalidTime": "Choose a time within the next 8 hours."
+      },
+      "extras": {
+        "title": "Venue details",
+        "body": "Details people will see on your page. Leave empty anything you do not want to state.",
+        "dressCode": "Dress code",
+        "unset": "Not stated",
+        "minAge": "Minimum age",
+        "entry": "Entry price (€)",
+        "entryHint": "0 = free entry.",
+        "drink": "Price of a drink (€)",
+        "terrace": "Has a terrace",
+        "accessible": "Wheelchair accessible",
+        "save": "Save details",
+        "saved": "Details saved.",
+        "invalidPrice": "Invalid price."
+      },
+      "report": {
+        "title": "Results",
+        "body": "Last 30 days, always aggregated. Below 5 people it shows «fewer than 5».",
+        "views": "Page views",
+        "going": "Said «I'm going»",
+        "checkIns": "Check-ins",
+        "conversion": "From «I'm going» to check-in",
+        "lessThan": "Fewer than 5",
+        "sponsorships": "Sponsorships",
+        "sponsorshipRow": "{{tier}} · {{from}} → {{to}}",
+        "during": "During: {{views}} views · {{checkIns}} check-ins",
+        "before": "Same days before: {{views}} views · {{checkIns}} check-ins",
+        "change": "Views {{value}} % vs before",
+        "flashes": "Flash Alerts",
+        "flashRow": "{{title}} · {{date}}",
+        "flashResult": "Check-ins during the alert and 3 h after: {{now}} · same slot the week before: {{before}}",
+        "none": "No sponsorships or Flash in the last 90 days.",
+        "proTitle": "Night by night (Pro stats)",
+        "previous": "Previous 30 days: {{views}} views · {{checkIns}} check-ins",
+        "night": "{{date}}: {{views}} views · {{checkIns}} check-ins",
+        "proUpsell": "With Pro stats you see night-by-night trends and the comparison with the previous 30 days."
+      }
+    }
   },
   "admin": {
     "title": "Admin",
@@ -1437,7 +1721,9 @@
       "audit": "Audit",
       "users": "Users",
       "venues": "Venues",
-      "escalations": "Severe risk"
+      "escalations": "Severe risk",
+      "partners": "Partners",
+      "venuePhotos": "Venue photos"
     },
     "mfa": {
       "title": "Second factor",
@@ -1584,7 +1870,12 @@
         "store_payments_enabled": "App Store / Google Play purchases (Block 11).",
         "sponsored_cards_enabled": "Sponsored venue cards in the swipe (Block 11).",
         "travel_mode_enabled": "Travel mode (Block 11).",
-        "flash_alcohol_allowed": "Enable only after reviewing the applicable regional regulations."
+        "email_login_enabled": "Sign in with an email code after sign-up (needs custom SMTP in Supabase Auth).",
+        "live_status_enabled": "\"How it is now\": crowd, queue and music voted with check-in, plus music declared by the venue (R2).",
+        "venue_partners_enabled": "Partners and contracts: venue invitations, venue terms, plan and team (R3).",
+        "venue_showcase_enabled": "Venue showcase: moderated photos, «The venue says», extra details and results report (R4).",
+        "flash_alcohol_allowed": "Enable only after reviewing the applicable regional regulations.",
+        "venue_bookings_enabled": "Reservations without payment and guest lists with QR (R5)."
       }
     },
     "payments": {
@@ -1848,6 +2139,108 @@
         "save": "Save token",
         "clear": "Remove token"
       }
+    },
+    "partners": {
+      "title": "Partners and contracts",
+      "body": "Companies working with us, their venues, contracts and access invitations.",
+      "new": "New company",
+      "edit": "Edit",
+      "fields": {
+        "legalName": "Legal name",
+        "taxId": "Tax ID (CIF/NIF)",
+        "contactName": "Contact person",
+        "billingEmail": "Billing email",
+        "contactPhone": "Phone (optional)",
+        "notes": "Internal notes (optional)",
+        "isTest": "Test company (test data)"
+      },
+      "save": "Save company",
+      "saved": "Saved.",
+      "empty": "No companies yet.",
+      "testBadge": "Test",
+      "ended": "Ended",
+      "errors": {
+        "invalid": "Check the data: valid Spanish tax ID, email and names.",
+        "duplicate_tax_id": "A company with that tax ID already exists.",
+        "linked_elsewhere": "That venue already belongs to another company.",
+        "already_sponsored": "That venue already has an active sponsorship on those dates.",
+        "duplicate_reference": "A contract with that reference already exists.",
+        "invalid_state": "Not possible in the current contract state.",
+        "generic": "Could not complete. Please try again."
+      },
+      "venues": {
+        "title": "Venues",
+        "search": "Search a venue to link",
+        "link": "Link",
+        "unlink": "Unlink",
+        "none": "No linked venues.",
+        "managers": "Managers",
+        "noManagers": "No managers yet.",
+        "remove": "Remove",
+        "invite": "Invite the owner",
+        "invitations": "Invitations",
+        "revoke": "Cancel"
+      },
+      "invitation": {
+        "title": "Invitation created",
+        "body": "Copy the code or the link now: it will not be shown again. It works once and expires on {{date}}.",
+        "code": "Code: {{code}}",
+        "copy": "Copy link",
+        "copied": "Link copied"
+      },
+      "invitationStatus": {
+        "pending": "Pending",
+        "used": "Used",
+        "revoked": "Cancelled",
+        "expired": "Expired"
+      },
+      "contracts": {
+        "title": "Contracts",
+        "new": "New contract",
+        "reference": "Contract reference",
+        "tier": "Included sponsorship",
+        "pro": "Includes Pro stats",
+        "startsOn": "Start",
+        "endsOn": "End",
+        "create": "Create contract (draft)",
+        "activate": "Activate",
+        "end": "End",
+        "none": "No contracts.",
+        "tiers": {
+          "none": "No sponsorship",
+          "featured": "Featured",
+          "featured_plus": "Featured Plus",
+          "top": "Top"
+        },
+        "status": {
+          "draft": "Draft",
+          "active": "Active",
+          "ended": "Ended"
+        },
+        "summary": "{{tier}}{{pro}} · from {{from}} to {{to}} · terms v{{version}}",
+        "proSuffix": " + Pro stats",
+        "note": "The signed contract (PDF) is kept outside the app. When activated, the advantages apply to every linked venue and end by themselves on the end date. Contract sponsorships do not use the 3 slots per city."
+      }
+    },
+    "venuePhotos": {
+      "title": "Venue photos",
+      "body": "Review the photos venues upload. Only approved ones are shown in the app.",
+      "filter": "Status",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "empty": "No photos with this status.",
+      "alt": "Photo of {{venue}}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "withdraw": "Withdraw",
+      "reasonLabel": "Reason (the venue will see it)",
+      "reasonHint": "Between 3 and 200 characters.",
+      "cover": "Cover",
+      "test": "Test",
+      "reason": "Reason: {{reason}}"
     }
   },
   "anthem": {
@@ -1889,5 +2282,291 @@
     "place": "Your next place",
     "placeUnavailable": "This place is no longer available.",
     "viewMap": "View on the map"
+  },
+  "guide": {
+    "nav": {
+      "user": "App guide",
+      "userHint": "Everything you can do, step by step",
+      "venues": "Guide for venues",
+      "venuesHint": "What the app offers your business",
+      "title": "Guides",
+      "howItWorks": "How it works"
+    },
+    "user": {
+      "title": "Nightlife Connect guide",
+      "lead": "See where the vibe is right now, meet people before and during the night and go out more safely. This is how it works.",
+      "sections": {
+        "discover": {
+          "title": "Discover the night",
+          "items": {
+            "map": "Live map with the venues and events in your city and how many people are at each one.",
+            "stats": "At each place you see people, average age and share in green. It is always aggregated and anonymous: with fewer than 5 people you only see \"Fewer than 5\".",
+            "search": "Search and every filter for free: venue type, open now, price, distance and more.",
+            "place": "Each venue page shows opening hours, price, address, the Vibe Check and lost & found. Save it to your favourites to come back.",
+            "venueSays": "«The venue says»: some venues publish their photos (reviewed by Nightlife), how the door is, tonight's offers, dress code and prices. It is always marked as coming from the venue itself.",
+            "bookings": "Bookings and guest lists: at venues that offer them you can request a table (no payment; the venue accepts or declines) or join tonight's list and get in with your QR. You need a verified age; the venue only sees your profile name."
+          }
+        },
+        "tonight": {
+          "title": "Tonight",
+          "items": {
+            "going": "\"Going Tonight\": say where you are going to meet people who are going too.",
+            "here": "\"I'm Here\": check in when you are less than 150 m from the venue. It expires by itself after a few hours.",
+            "swipe": "See profiles of people at the same place or going there; first, whoever is with you right now."
+          }
+        },
+        "dating": {
+          "title": "Dating and chat",
+          "items": {
+            "match": "If you both like each other it's a match and a real-time chat opens.",
+            "light": "Traffic light: green, open to dating; yellow, friendship only; red, you don't appear in profiles.",
+            "discreet": "Discreet mode: you count in the stats but don't appear in the lists of who is going or who is there.",
+            "control": "You can remove a match, block or report anyone at any time."
+          }
+        },
+        "verification": {
+          "title": "Verifications",
+          "items": {
+            "phone": "Your phone is verified with an SMS when you sign up. One account per phone.",
+            "age": "To see profiles, like, chat, mark that you are going, check in visibly or create events you need to verify you are an adult. Exploring the map, events and stats does not need it.",
+            "badges": "Verified photo and verified identity are optional and give you a badge. We only keep the result, never your documents or selfies."
+          }
+        },
+        "safety": {
+          "title": "Safety",
+          "items": {
+            "sos": "SOS: call 112 or alert up to 3 trusted contacts from Profile › SOS.",
+            "report": "Report profiles, events or messages. A person reviews every case and you can appeal decisions.",
+            "rules": "The Community Guidelines apply to everyone; accounts that break them are suspended."
+          }
+        },
+        "events": {
+          "title": "Events and atmosphere",
+          "items": {
+            "create": "With your age verified you can create up to 2 events a day in public places.",
+            "confirm": "Events by users show as \"Unconfirmed\" until 3 people confirm they exist; events by venues show as \"Official\".",
+            "vibe": "Vibe Check: once checked in at a place you can vote on tonight's atmosphere.",
+            "lost": "Lost & found: post or answer notices for the venue for 48 hours.",
+            "live": "How it is now: with a check-in, tap to say how busy it is, the queue or what music is playing; you see the anonymous summary of the last 90 minutes and what the venue declares."
+          }
+        },
+        "free": {
+          "title": "What is free",
+          "items": {
+            "core": "Map, stats, events, search and every filter.",
+            "people": "Full profiles, chatting with your matches and 5 likes a day.",
+            "trust": "Every verification and every safety tool.",
+            "themes": "The 5 basic visual themes."
+          }
+        },
+        "premium": {
+          "title": "Paid options (optional)",
+          "items": {
+            "pass": "Pass: unlimited likes, undo the last swipe, extra themes and no sponsored cards. Monthly, quarterly or yearly.",
+            "vip": "VIP Pass: everything in the Pass plus who liked you, priority, incognito mode and weekly Spotlights, Sparks and direct messages.",
+            "night": "One-night Pass: the Pass benefits until 06:00, no subscription.",
+            "extras": "One-offs: Spark (highlighted like with an anonymous notice), Spotlight (30 minutes featured at your venue or area) and Direct message (write before matching, never to someone on red).",
+            "status": "Payments are in a testing phase. The basics and safety are and will stay free."
+          }
+        },
+        "privacy": {
+          "title": "Your privacy",
+          "items": {
+            "location": "We never show your exact location to anyone.",
+            "consents": "Every permission starts off: you decide what to turn on and can change it in Profile › Consents.",
+            "data": "Download or delete your data whenever you want from Profile › Privacy and data."
+          }
+        },
+        "account": {
+          "title": "Your account",
+          "items": {
+            "signup": "Sign up in a few minutes: date of birth, signing the documents, phone with SMS, permissions, profile and theme.",
+            "login": "To come back use \"I already have an account\". Soon you will also be able to sign in with a code to your verified email, no SMS.",
+            "loginEmail": "To come back use \"I already have an account\": with a code to your verified email (no SMS) or with SMS. Add your email in Profile › Settings › Account.",
+            "delete": "You can sign out or delete your account whenever you want."
+          }
+        }
+      }
+    },
+    "venues": {
+      "title": "Guide for venues",
+      "lead": "Nightlife Connect puts your venue in front of people deciding where to go out tonight. This is what you can do.",
+      "sections": {
+        "access": {
+          "title": "Getting started",
+          "items": {
+            "claim": "Sign up in the app and go to Profile › Venue panel › Claim a venue.",
+            "evidence": "Tell us how you prove you manage it (for example, tax ID, an invoice in the venue's name or an email on its domain).",
+            "review": "A person on the team reviews every request. Once approved, you manage the page from your panel.",
+            "help": "Would you rather we help you? Write to us from Contact.",
+            "invite": "If you sign an agreement with us, we send you an invitation: you sign in, accept the venue terms and manage the venue without claiming it."
+          }
+        },
+        "free": {
+          "title": "Free for every venue",
+          "items": {
+            "profile": "Edit your page: description, opening hours and price range.",
+            "events": "Publish official events: they show as \"Official\" without waiting for confirmations.",
+            "stats": "Basic stats: check-ins this week and how many people are going tonight, always aggregated and anonymous.",
+            "music": "Music and atmosphere: declare up to 3 styles and tonight's line-up; the venue page shows it next to what checked-in people vote (anonymous, from 3 votes). Managers cannot vote at their own venue.",
+            "team": "Team: the owner can invite and remove managers; everyone sees the plan and the active advantages of the venue.",
+            "photos": "Photos: up to 3 for free (cover included) and up to 10 with a sponsorship or Pro stats. They go live after review and are uploaded without location data.",
+            "live": "Live: say whether there is a queue or it is full (lasts 90 minutes) and offers like «free entry until» or «happy hour until». It shows as «The venue says».",
+            "details": "Extra details: dress code, minimum age, entry and drink prices, terrace and accessibility.",
+            "report": "Results: your page views, «I'm going» and check-ins over the last 30 days and the effect of your sponsorships and Flash. Always aggregated (fewer than 5 people is never shown). With Pro stats, night-by-night trends.",
+            "bookings": "Bookings and lists (free): accept or decline table requests and open a list for the night with places and a time limit. At the door each QR or code works once. You only see the profile name, party size and time."
+          }
+        },
+        "sponsor": {
+          "title": "Sponsorship (30 days)",
+          "items": {
+            "featured": "Featured: your pin highlighted on the map of your area and a card for your venue among the profiles.",
+            "plus": "Featured Plus: also, top positions in the lists that match each person's filters.",
+            "top": "Top: also, Flash Alerts to announce a promotion for one hour.",
+            "limits": "Places are limited per city. Book it from your panel."
+          }
+        },
+        "pro": {
+          "title": "Pro stats",
+          "items": {
+            "detail": "Footfall by hour, average age, traffic light and comparison with venues in your area.",
+            "privacy": "Always aggregated data: small groups are never shown.",
+            "billing": "Monthly subscription per venue that you can cancel whenever you want."
+          }
+        },
+        "flash": {
+          "title": "Flash Alerts",
+          "items": {
+            "what": "In-app notices that last one hour, for venues with a Top sponsorship.",
+            "audience": "Only age-verified people who agreed to receive promotions see them.",
+            "alcohol": "Alcohol promotions are off until the rules of each region have been reviewed."
+          }
+        },
+        "rules": {
+          "title": "Rules that protect everyone",
+          "items": {
+            "label": "Sponsored content always carries the \"Sponsored\" label.",
+            "data": "Paying never changes the data: people, average age and atmosphere are real.",
+            "filters": "A sponsored venue only appears if it matches the searcher's filters, and slots are limited."
+          }
+        },
+        "status": {
+          "title": "Prices",
+          "items": {
+            "now": "Payments are in a testing phase. You will see prices in your panel once they are live."
+          }
+        }
+      }
+    },
+    "links": {
+      "terms": "Terms for venues and organisers",
+      "ranking": "Ranking and sponsored content",
+      "contact": "Contact",
+      "openApp": "Open the app",
+      "otherUser": "Do you run a venue? See the guide for venues",
+      "otherVenue": "Looking for how to use the app? See the app guide"
+    }
+  },
+  "bookings": {
+    "place": {
+      "title": "Reservations and guest list",
+      "reserveTitle": "Book a table",
+      "hint": "No payment. The venue accepts or declines your request and you will see it in My bookings.",
+      "date": "Day",
+      "time": "Arrival time",
+      "party": "People",
+      "kind": "Type",
+      "submit": "Request booking",
+      "sent": "Request sent. You will see the venue's answer in My bookings.",
+      "ageRequired": "To book or join a list you need a verified age.",
+      "verify": "Verify age",
+      "ownVenue": "This is your venue: manage bookings from your panel.",
+      "myReservation": "Your booking: {{date}} · {{party}} people · {{status}}",
+      "guestlistTitle": "Guest list",
+      "guestlistUntil": "Valid until {{time}}",
+      "join": "Join the list",
+      "joined": "You are on the list. Your QR is in My bookings.",
+      "full": "The list is full.",
+      "seeMine": "See my bookings"
+    },
+    "kinds": {
+      "table": "Table",
+      "bottle": "Table with bottle"
+    },
+    "status": {
+      "requested": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Declined",
+      "cancelled": "Cancelled",
+      "expired": "No answer"
+    },
+    "guestStatus": {
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "checked_in": "Used"
+    },
+    "errors": {
+      "not_available": "This venue is not taking bookings right now.",
+      "own_venue": "This is your venue: manage bookings from your panel.",
+      "booking_limit": "You already have 3 active bookings.",
+      "already_booked": "You already have a booking at this venue that night.",
+      "age_required": "You need a verified age to book.",
+      "invalid": "Check the day, time and party size (from 30 minutes up to 14 days ahead).",
+      "list_full": "The list is full.",
+      "generic": "Could not complete. Please try again."
+    },
+    "mine": {
+      "title": "My bookings",
+      "hint": "Table bookings and guest lists",
+      "lead": "What you asked venues for and your guest list entries.",
+      "empty": "No bookings or lists yet.",
+      "reservations": "Bookings",
+      "entries": "Guest lists",
+      "party": "{{count}} people · {{kind}}",
+      "reason": "Reason: {{reason}}",
+      "cancel": "Cancel booking",
+      "qrLabel": "QR code of your entry at {{place}}",
+      "code": "Code: {{code}}",
+      "showAtDoor": "Show it at the door before {{time}}.",
+      "used": "Entry used.",
+      "leave": "Leave the list"
+    },
+    "venue": {
+      "settingsTitle": "Reservations and guest list",
+      "settingsBody": "Free. You decide whether to take table requests and open lists. You only see the profile name, party size and time; never phone numbers.",
+      "acceptReservations": "Take booking requests",
+      "acceptGuestlists": "Open guest lists",
+      "maxParty": "Maximum people per booking",
+      "save": "Save",
+      "saved": "Saved.",
+      "requestsTitle": "Booking requests",
+      "noRequests": "No requests.",
+      "requestRow": "{{name}} · {{party}} people · {{kind}}",
+      "accept": "Accept",
+      "reject": "Decline",
+      "reasonLabel": "Reason (optional, the person will see it)",
+      "listTitle": "Tonight's list",
+      "listName": "Title",
+      "listNameHint": "For example: Free entry before 1:30",
+      "listUntil": "Valid until",
+      "capacity": "Places",
+      "createList": "Open list",
+      "updateList": "Update list",
+      "closeList": "Close list",
+      "closed": "List closed",
+      "counts": "{{taken}} of {{capacity}} joined · {{used}} came in",
+      "enableFirst": "Turn on «Open guest lists» to create one.",
+      "invalidTime": "Choose a time within the next 12 hours.",
+      "doorTitle": "Door",
+      "codeLabel": "Entry code",
+      "check": "Check",
+      "scan": "Scan QR",
+      "stopScan": "Stop scanning",
+      "scanUnsupported": "This device cannot scan: type the code.",
+      "cameraError": "The camera could not be opened: type the code.",
+      "ok": "{{name}} can come in.",
+      "alreadyUsed": "{{name}}: this entry was already used at {{time}}.",
+      "invalidCode": "Code not valid for tonight's list."
+    }
   }
 }

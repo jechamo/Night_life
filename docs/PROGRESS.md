@@ -1,5 +1,287 @@
 # Progreso — Nightlife Connect
 
+## Flags del roadmap encendidos en producción de pruebas — 08/10/2026
+
+Con OK del propietario (fase de pruebas: 3 perfiles, todos tester/admin; pagos en `test`,
+verificación en `sandbox`) se encienden `email_login_enabled`, `live_status_enabled`,
+`venue_partners_enabled`, `venue_showcase_enabled` y `venue_bookings_enabled`. Cambio
+registrado en `admin_audit_log` (`flag.update`). Se apagan igual desde Admin › Feature flags
+sin perder datos. Antes del primer usuario real: revisar las Condiciones para Locales
+(R3) y que la moderación de fotos (R4) tenga responsable.
+
+## Roadmap 2026-10 · R5 — Reservas sin pago y lista de invitados con QR — 08/10/2026
+
+Plan: [R5_PLAN.md](./R5_PLAN.md). Todo aditivo y detrás de `venue_bookings_enabled`
+(apagado): ficha, perfil, panel y guías no cambian con el flag apagado. Sin dinero ni TPV.
+
+- **Persona (edad verificada):** en la ficha, «Reservar mesa» (día, hora, personas, mesa o
+  mesa con botella; de 30 min a 14 días vista; máx. 3 activas y 1 por local y noche) y
+  «Lista de invitados» de esta noche (apuntarse / salir). «Mis reservas» (`/reservas`, desde
+  Perfil): estado y motivo del local, cancelar, y cada entrada con su QR y código
+  `NL-XXXXX-XXXXX`.
+- **Local (gratis, lo activa cada uno):** ajustes (reservas, listas, máximo de personas),
+  solicitudes (aceptar / rechazar con motivo opcional; ve solo el nombre de perfil, personas
+  y hora), lista de esta noche (título, hora límite, plazas, cerrar) y **puerta**: escanea
+  el QR con la cámara si el dispositivo lo permite (`BarcodeDetector` vía `src/platform`) o
+  teclea el código; cada entrada vale una vez.
+- **QR propio** (`src/shared/qr`, ISO/IEC 18004, sin librerías): 240 matrices idénticas bit a
+  bit a una implementación de referencia (python-qrcode, solo para comprobar en desarrollo);
+  6 de ellas quedan como prueba unitaria.
+- **Servidor:** migraciones `20261008195217_venue_bookings_schema`, `…195312_people`,
+  `…195402_venue`, aplicadas por MCP (sin `DELETE`: la retención desvincula a la persona a
+  los 90 días con `update`). El código de la puerta se deriva con HMAC del id y no se guarda.
+  La exportación RGPD incluye reservas y entradas (sin código). Cron diario
+  `nl_venue_bookings_maintenance` (3:53).
+- **Simulador:** Sala Aurora acepta reservas y tiene lista abierta; el panel crea dos
+  invitados de demostración con códigos fijos para probar la puerta (`NL-A1B2C-3D4E5`).
+
+**Hecho cuando**
+
+- ✅ Flag apagado: ficha, perfil, panel, `/reservas` y guías sin cambios (unitarias + E2E).
+- ✅ Flag encendido: reservar → el local acepta/rechaza → la persona lo ve; apuntarse →
+  QR + código → la puerta lo valida una vez (unitarias 20 nuevas + E2E r5 4/4).
+- ✅ SQL: bookings 49/49 (anónimo, sin edad verificada, usuario, gestor, gestor de otro
+  local; flag apagado; límites; códigos; caducidad; exportación; auditoría) · RLS 38/38
+  (19 flags) · sin restos · historial 76 = repositorio.
+- ✅ `npm run check` 502/502 · build · `npm audit` 0 · E2E completas 60/60 ×3.
+- ✅ Advisors: 0 errores; 4 INFO nuevos intencionados (tablas `private` sin acceso directo).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r5-bookings` o, en local, Admin › Feature flags ›
+`venue_bookings_enabled` = on → Descubrir › Sala Aurora › «Apuntarme» → Perfil › Mis
+reservas (QR) → Panel de locales › Bar Cobalto › activar → aceptar la solicitud de Lucía →
+abrir lista → Puerta › `NL-A1B2C-3D4E5`.
+
+## Roadmap 2026-10 · R4 — Escaparate del local — 08/10/2026
+
+Plan: [R4_PLAN.md](./R4_PLAN.md). Todo aditivo y detrás de `venue_showcase_enabled`
+(apagado): ficha, panel, portadas, admin y guías no cambian con el flag apagado.
+
+- **Fotos del local:** bucket privado `venue-photos` (5 MB; WebP/JPEG/PNG), subida desde el
+  panel con `usePlatform().images` (recomprime y quita EXIF/GPS), todas pendientes hasta que
+  el admin las aprueba (Admin › Fotos de locales, rechazo con motivo). Gratis 3 y 10 con
+  patrocinio o Estadísticas Pro (comprados o por contrato); al terminar el plan las de más
+  se ocultan, no se borran. La portada aprobada sustituye a la ilustración en listas, mapa y
+  ficha; sin portada, la de siempre. URLs firmadas de 15 minutos.
+- **«Lo dice el local»:** puerta (sin cola, poca, larga, casi lleno, completo; 90 min) y
+  ofertas «entrada gratis hasta» / «happy hour hasta» (máx. 8 h), siempre etiquetado.
+- **Ficha enriquecida:** dress code, edad mínima, precio de entrada y de copa, terraza y
+  accesible (solo en la ficha; el buscador no cambia).
+- **Resultados:** vistas de la ficha (una por persona, local y noche; las del propio gestor
+  no cuentan), «Voy», check-ins y paso de «Voy» a check-in en 30 días, y resultado de cada
+  patrocinio (mismos días antes) y Flash (misma franja la semana anterior). Siempre con
+  umbral de 5. Con Estadísticas Pro: evolución por noche y 30 días anteriores.
+- **Servidor:** migraciones `20261008174514_venue_showcase_schema`, `…175719_storage`,
+  `…184836_photos`, `…184900_page`, `…184936_report` (aplicadas por MCP) y
+  `…193000_cleanup` (borrar una foto y limpieza diaria, cron `nl_venue_showcase_maintenance`
+  a las 3:41). La parte 5 contiene `DELETE` y Supabase la cancela sin confirmación: la
+  ejecutó el propietario en el SQL Editor; código verificado (md5 igual al repo) y
+  registrada en el historial. Quitar un aviso no borra filas: lo caduca.
+
+**Hecho cuando**
+
+- ✅ Flag apagado: panel, ficha, admin y guías idénticos (unitarias + E2E).
+- ✅ Flag encendido: subir → pendiente → aprobar → foto y portada en la ficha; límite 3/10;
+  rechazo con motivo; avisos y ficha enriquecida; informe con umbral y detalle Pro
+  (unitarias 20 nuevas + E2E r4 4/4).
+- ✅ SQL: showcase 61/61 (anónimo, usuario, gestor, gestor de otro local, admin aal1/aal2,
+  flag apagado, Storage, límites, umbrales, auditoría) · showcase-cleanup 9/9 · RLS 37/37
+  (18 flags) · sin restos · historial 73 = repositorio.
+- ✅ `npm run check` 482/482 · build · `npm audit` 0 · E2E completas 56/56 ×3.
+- ✅ Advisors: 0 errores; 5 INFO nuevos intencionados (tablas `private` sin acceso directo).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r4-showcase` o, en local, Admin › Feature flags ›
+`venue_showcase_enabled` = on → Perfil › Panel de locales › Bar Cobalto › Fotos › «Añadir
+foto» → Admin › Fotos de locales › Aprobar → Descubrir › Bar Cobalto.
+
+## Roadmap 2026-10 · R3 — Partners y contratos — 08/10/2026
+
+Plan: [R3_PLAN.md](./R3_PLAN.md). Todo aditivo y detrás de `venue_partners_enabled`
+(apagado). Claim, patrocinio por Stripe/factura y Pro por Stripe no cambian.
+
+- **Admin › Partners:** empresas (CIF/NIF validado), locales vinculados, contratos con nivel
+  de patrocinio y/o Estadísticas Pro y fechas, gestores e invitaciones de titular.
+- **Invitaciones de un solo uso** (7 días, solo se guarda su HMAC). Enlace público
+  `/invitacion/<código>` que continúa tras el alta o el login; canje en `/venue/invitacion`
+  aceptando las Condiciones para Locales.
+- **Panel del local:** «Plan y ventajas» (origen de cada ventaja: contrato, tarjeta o factura)
+  y «Equipo» (solo titular). Pro de contrato: «Incluido en tu contrato».
+- **Servidor:** migraciones `20261008141727_venue_partners_schema`, `…141802_helpers`,
+  `…141836_slots` (aplicadas por MCP) y `…142000_admin`, `…142100_venue` (aplicadas por el
+  propietario en el SQL Editor por el límite de tamaño de las aprobaciones; código
+  verificado función a función y registradas en el historial). Los patrocinios de
+  contrato no ocupan huecos por ciudad; swipe patrocinado ordenado por cercanía.
+
+**Hecho cuando**
+
+- ✅ Flag apagado: sin cambios (447 unitarias previas + E2E previas en verde).
+- ✅ Flag encendido: recorrido completo admin → invitación → local (unitarias + E2E r3 4/4).
+- ✅ SQL: partners 37/37 · RLS 36/36 (17 flags) · block9 72/72 · premium-completion 45/45 ·
+  flag en `off` · sin restos · historial 67 = repositorio.
+- ✅ `npm run check` 462/462 (+15) · build · `npm audit` 0 · tipos regenerados.
+- ⚠️ E2E 52/52 en 11 pasadas seguidas; en la primera tanda (3 pasadas, con otra carga en la
+  máquina) hubo 1 fallo en 2 de ellas que no se pudo identificar ni reproducir. Vigilar.
+- ✅ Advisors: 0 errores; 5 INFO nuevos intencionados (tablas `private` sin acceso directo).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+- ⚠️ Revisar con asesoría las Condiciones para Locales (la v1.0 solo habla de reclamar gratis)
+  antes del primer contrato real.
+
+**Cómo probarlo:** `npm run test:e2e -- r3-partners` o, en local, Admin › Feature flags ›
+`venue_partners_enabled` = on → Admin › Partners → empresa + local + contrato → activar →
+«Invitar al titular» → Perfil › Panel de locales › «Tengo un código».
+
+## Roadmap 2026-10 · R2 — «Cómo está ahora» — 08/10/2026
+
+Plan: [R2_PLAN.md](./R2_PLAN.md). Todo aditivo y detrás de `live_status_enabled` (apagado);
+el Vibe Check existente no cambia.
+
+- **Ficha del sitio:** sección «Cómo está ahora» encima del Vibe Check. Con check-in activo,
+  respuestas de un toque: gente (vacío/normal/lleno/a tope), cola (sin/poca/mucha), ¿gusta
+  la música? y qué suena (11 estilos). Todos ven totales anónimos de los últimos 90 min a
+  partir de 3 votos («Aún pocos votos» si no), «El local dice / La gente dice» y
+  «Normalmente a esta hora…» (mismo día y hora, 8 semanas, desde 5 votos).
+- **Panel del local:** tarjeta «Música y ambiente» (hasta 3 estilos y line-up de esta
+  noche, que caduca solo) con el mismo resumen. Los gestores no votan en su local.
+- **Servidor:** migración `20261008103324_live_status` (tabla privada `place_reports`,
+  columnas `venues.tonight_lineup/lineup_night`, RPC `place_live_status`,
+  `report_place_status`, `venue_set_music`, exportación RGPD y retención de 60 días).
+- Guías públicas: un punto nuevo en cada guía, visible solo con el flag encendido. La ficha
+  traduce los estilos conocidos («techno» → «Techno»); el resto se muestra igual que antes.
+
+**Hecho cuando**
+
+- ✅ Flag apagado: ficha (solo Vibe Check), panel y guías idénticos (unitarias + E2E).
+- ✅ Flag encendido: votar, cambiar voto, umbral de 3, «El local dice / La gente dice»,
+  «Normalmente…» y panel del local (unitarias + E2E admin enciende → check-in → voto;
+  local guarda estilos y line-up).
+- ✅ SQL por rol 27/27 (anónimo, flag apagado, sin check-in, con check-in, gestor, cuenta
+  de prueba, tester, caducidad, histórico, exportación y retención) · RLS 36/36 · 16 flags
+  · flag en `off` · sin restos de pruebas.
+- ✅ `npm run check` 447/447 (+11) · E2E 48/48 ×3 (+6 nuevas) · build · `npm audit` 0.
+- ✅ Advisors: 0 errores; `place_reports` añade 1 INFO intencionado (RLS sin políticas en
+  `private`: solo accesible por funciones). Historial 62 = repositorio.
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r2-live-status` o, en local, Admin › Feature flags ›
+`live_status_enabled` = on → Descubre › un local › «Estoy Aquí» (simular) → responder;
+Perfil › Panel de locales › Bar Cobalto › «Música y ambiente».
+
+## Roadmap 2026-10 · R1 — Entrar por email y guías públicas — 08/10/2026
+
+Plan: [R1_PLAN.md](./R1_PLAN.md). Todo aditivo; con el flag apagado la app es idéntica.
+
+- **Entrar con código por email** detrás de `email_login_enabled` (migración
+  `20261008093138_email_login_flag`, apagado). `/login` ofrece email primero y SMS a un
+  toque; nunca se crean cuentas por email y la respuesta es igual exista o no la cuenta.
+  Ajustes › Cuenta para añadir/cambiar el email; el paso de email del alta explica su uso.
+- **Guías públicas sin login:** `/guia` (usuarios) y `/guia/locales` (locales), ES/EN,
+  enlazadas desde Bienvenida («Cómo funciona»), índice legal, pie público, Perfil y
+  Panel de locales. Sin precios: los pagos siguen en pruebas.
+- Configuración pendiente del propietario en Supabase Auth: [AUTH_EMAIL.md](./AUTH_EMAIL.md).
+- Estabilidad: la E2E de alta esperaba a los documentos legales solo implícitamente; su
+  lista crece encima de las casillas al cargar y un clic se perdió 1 vez en 126. Ahora
+  espera a los tres documentos (8/8 y 126/126 después).
+
+**Hecho cuando**
+
+- ✅ Flag apagado: login solo SMS (unitaria + E2E); el resto de E2E sin cambios.
+- ✅ Flag encendido: login por email de punta a punta con el simulador (unitarias + E2E
+  admin enciende → usuario añade email → cierra sesión → entra con código).
+- ✅ Email desconocido: misma respuesta y nunca entra; email mal escrito se rechaza.
+- ✅ Guías accesibles sin sesión, enlazadas, ES/EN con las mismas claves.
+- ✅ `npm run check` 436/436 (+16) · E2E 126/126 (3 pasadas) · build · `npm audit` 0.
+- ✅ Supabase: RLS 35/35 (2 pruebas nuevas del flag) · 15 flags · flag en `off` ·
+  Advisors sin errores nuevos · historial 61 = repositorio.
+- ❌ Envío real de emails: depende de configurar SMTP y la plantilla (AUTH_EMAIL.md).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r1-email-guides` o, en local, Admin › Feature
+flags › `email_login_enabled` = on → Perfil › Ajustes › Cuenta → cerrar sesión → entrar
+con email (código simulado 123456). Las guías: `/guia` y `/guia/locales`.
+
+## Historial de migraciones alineado — 08/10/2026 (OK del propietario)
+
+- Seis ficheros del 05/10 renombrados a su versión remota (mismo contenido, md5).
+- Registradas sin re-ejecutar `home_dashboard` y las cuatro del Bloque 5 aplicadas en el
+  SQL Editor; antes se comprobó que todos sus objetos existen.
+- Nueva migración aditiva `20261008092243_likes_seen_sender_idx` (FK sin índice).
+- ✅ Historial remoto = repositorio: 60/60 versiones, mismo hash. Advisors de seguridad
+  sin cambios (sin errores); rendimiento solo INFO de índices sin uso.
+
+Revisión pedida por el propietario («que no falte nada: OWASP, configuración, BBDD,
+compras antiguas y nuevas»). Sin migraciones ni despliegues de Edge Functions.
+
+- **Fallo corregido en el Bloque 0:** las E2E usaban el puerto 4173 (el de
+  `npm run preview`) y reutilizaban un servidor abierto: podían acabar contra la BBDD
+  real. Ahora usan el puerto 4399, siempre un servidor nuevo, y una guardia
+  (`e2e/support.ts`) aborta y hace fallar cualquier petición fuera de la app local
+  (comprobado con una prueba que llama a Supabase y falla como debe).
+- **Modo viaje:** el Pase lo anunciaba como ventaja, pero llega en el Bloque 11
+  (`travel_mode_enabled=off`). Ahora se muestra «Modo viaje (próximamente, sin coste
+  extra)» mientras el flag esté apagado; 2 pruebas unitarias + E2E.
+- **SBOM** regenerado (627 componentes) y corregido el comando en `SBOM.md`.
+- **Pruebas SQL contra Supabase (MCP, transacción que siempre se deshace):**
+  RLS 33/33 · pagos/patrocinio/Pro/créditos 45/45 · facturación y operaciones 72/72 ·
+  matching 62/62 · verificación 54/54 · lugares 19/19 · cuotas 19/19 · OSM 13/13 ·
+  privacidad 4/4. Comprobado después: cero datos de prueba y ajustes intactos.
+  ❌ `block10.sql` no se ejecutó: la herramienta pide aprobación manual (inserta en
+  `storage.objects` y borra contadores dentro de la transacción).
+- **Advisors:** seguridad sin errores (1 WARN conocido de contraseñas filtradas, sin
+  contraseñas en la app; 18 INFO de tablas `private` sin políticas, intencionado).
+  Rendimiento solo INFO: 17 índices sin uso y 1 FK sin índice en
+  `private.likes_seen.sender_id` (anotado para la próxima migración).
+- **Compras Stripe (TEST):** ver `PAYMENTS_GO_LIVE.md` § «Verificación 08/10/2026».
+  14 productos con precio TEST que existe en Stripe; solo el Pase VIP probado de punta
+  a punta con tarjeta; 13 pendientes de una ronda de compras manual.
+- **Pendientes del propietario:** auditoría de red (dominio Supabase bloqueado en este entorno), Vercel MCP (403 en el
+  equipo `chaplications-projects`), eventos del webhook en el panel de Stripe.
+- ✅ `npm run check` 420/420 · build · `npm audit` 0 · E2E 108/108 (3 pasadas).
+
+Plan aprobado por el propietario: [ROADMAP_2026-10.md](./ROADMAP_2026-10.md) (login por
+email tras el alta, guías públicas, «Cómo está ahora», contratos de locales, fotos,
+reservas sin pago). Este bloque no cambia funcionalidad: crea la red de seguridad que
+exige el propietario antes de tocar nada.
+
+- Línea base previa al cambio: `npm run check` 53 ficheros / 418 pruebas en verde.
+- `@playwright/test@1.63.0` (lista permitida PRD 3.5, solo desarrollo; publicado hace
+  más de un mes). `playwright.config.ts` arranca Vite con las variables de Supabase
+  vacías: la suite usa siempre el backend simulado de `src/mocks` y nunca el proyecto
+  compartido, aunque exista `.env.local`.
+- `e2e/`: 18 recorridos × 2 dispositivos (Pixel 7 y escritorio) = 36 pruebas. Textos
+  leídos de `es.json` (un cambio de redacción no rompe la suite) y cero errores de
+  consola o JS al final de cada recorrido.
+  - Alta completa (firma sin casillas premarcadas, OTP, consentimientos apagados,
+    perfil con 2 fotos) y bloqueo de menores.
+  - Inicio → ficha → favorito; Descubre (mapa, búsqueda, lista); puerta de edad.
+  - Check-in lejos del local (aviso de 150 m + simulación de pruebas) y Vibe Check;
+    swipe con match en tiempo real; enviar mensaje en un chat.
+  - Cerrar sesión, rutas privadas protegidas, login con código erróneo y correcto;
+    Premium hasta el simulador de compra; temas persistentes; idioma.
+  - Reclamar local (prueba mínima de 10 caracteres), ficha del gestor y patrocinio;
+    admin con segundo factor (código erróneo y correcto) y aprobación de un claim.
+  - Web legal sin login, contenido ilegal, borrado de cuenta, ES/EN y página 404.
+- Estabilidad: 3 pasadas completas seguidas, 108/108. Se corrigió una carrera de la
+  propia prueba (segunda foto antes de procesar la primera).
+- CI: nuevo job `E2E regression` (instala Chromium y ejecuta `npm run test:e2e`).
+  `npm run check` sigue igual de rápido; la suite E2E se lanza con `npm run test:e2e`.
+
+**Hecho cuando**
+
+- ✅ Suite E2E de los recorridos críticos en móvil y escritorio, en verde y estable.
+- ✅ Aislada del backend real (variables Supabase vacías en el servidor de pruebas).
+- ✅ `npm run check` 418/418, tipos (incluye `tsconfig.e2e.json`), lint y formato.
+- ✅ `npm run build` correcto; `npm audit`: 0 vulnerabilidades.
+- ✅ Job de CI añadido. ❌ Aún sin ejecución en GitHub: el workflow solo se dispara
+  en `main`, `develop`, `codex/**` y PR; se verá al abrir el PR.
+- ❌ SBOM no regenerado: `npm sbom` falla igual en la base (ESBOMPROBLEMS por las
+  dependencias wasm opcionales de Tailwind). Ver `SBOM.md`.
+- Sin migraciones, Edge Functions ni cambios de red de la app: no aplica Advisors.
+
+**Cómo probarlo:** `npm ci && npm run test:e2e` (en entornos con Chromium preinstalado:
+`PW_CHROMIUM_PATH=/ruta/chrome npm run test:e2e`). Informe HTML en CI con
+`playwright-report/`.
+
 ## Inicio visual previo al bloque 11 — 05/10/2026
 
 - Implementado `/home` como entrada de login, alta y PWA. Se conservan enlaces

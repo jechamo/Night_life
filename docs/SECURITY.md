@@ -2,6 +2,130 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## R5 — Reservas sin pago y lista de invitados con QR — 08/10/2026
+
+- A01/API1/API5: tablas `private.venue_booking_settings/reservations/guestlists/
+guestlist_entries` con RLS y sin grants; RPC `security definer` con envoltorios
+  `invoker` solo para `authenticated`; cada persona solo ve y cancela lo suyo; cada local
+  solo ve y decide lo suyo (probado con gestor de otro local).
+- A04: flag en servidor; edad verificada obligatoria para reservar o apuntarse; un gestor no
+  reserva en su propio local; límites (3 activas, 1 por local y noche, 30 min-14 días,
+  aforo de la lista, 20 acciones/h por persona e IP, 120 validaciones/h en la puerta).
+- Códigos de puerta: 40 bits derivados con HMAC (Vault) del id de la entrada; nunca se
+  guardan; solo valen para la lista de esa noche de ese local y una sola vez; los
+  intentos están limitados y las validaciones y decisiones quedan auditadas.
+- Privacidad (decisión del propietario): el local solo ve el nombre de perfil, personas y
+  hora; sin teléfono ni contacto. Exportación RGPD con reservas y entradas; a los 90 días
+  se desvincula a la persona (solo quedan totales). QR generado en el dispositivo sin
+  terceros; la cámara de la puerta pasa por `src/platform` y no guarda imágenes.
+- Pruebas: bookings 49/49, RLS 38/38; Advisors sin errores.
+
+## R4 — Escaparate del local — 08/10/2026
+
+- A01/API1/API5: tablas `private.venue_photos/details/notices/view_marks/daily_views` con RLS
+  y sin grants; solo RPC `security definer` con envoltorios `invoker` para `authenticated`;
+  gestionar fotos, ficha, avisos e informe exige ser gestor de ese local; moderar exige
+  admin + `aal2` y queda auditado.
+- Storage (PRD 6.15 D): bucket privado, 5 MB, solo imágenes; ruta estricta
+  `<venue>/<uuid>.(webp|jpg|png)`; subir solo gestores del local con el flag y hasta 2× el
+  límite de su plan (las subidas abandonadas no llenan el bucket); leer solo fotos
+  aprobadas y visibles por plan (usuarios registrados), o gestor/admin; sin `update`;
+  borrar solo cuando ninguna fila apunta al objeto. URLs firmadas de 15 min. Las fotos se
+  recodifican en el dispositivo sin EXIF/GPS.
+- A04/integridad: flag comprobado en servidor; todo lo que publica el local va etiquetado
+  «Lo dice el local»; avisos con caducidad (90 min / máx. 8 h); límites de uso
+  (`case_limit`/`place_limit`); valores cerrados validados en servidor.
+- Privacidad (PRD 4.3): vistas contadas con una marca HMAC (sin id de persona) que se borra
+  a los 2 días; solo se guardan contadores diarios (400 días); el informe nunca baja de 5
+  personas; las vistas del propio gestor y de cuentas de prueba no cuentan.
+- Borrado de fotos solo por gestores del local (fila primero, luego el objeto) y limpieza
+  diaria solo desde cron (sin permiso para clientes).
+- Pruebas: showcase 61/61, showcase-cleanup 9/9, RLS 37/37; Advisors sin errores.
+
+## R3 — Partners y contratos — 08/10/2026
+
+- A01/API1/API5: empresas, contratos, ventajas e invitaciones en tablas `private` con RLS y
+  sin grants; solo RPC `security definer` con envoltorios `invoker`; admin exige rol + `aal2`;
+  el plan del local solo lo leen sus gestores; el equipo solo lo gestiona el titular (no
+  puede quitarse a sí mismo; solo quita encargados).
+- A02/A07: códigos de invitación de 48 bits aleatorios (`gen_random_bytes`), un solo uso,
+  caducan a los 7 días, revocables; en la base solo se guarda `hmac_hex` (Vault). Límite de
+  20 intentos/hora por persona e IP (`case_limit`). El código pendiente en el dispositivo
+  caduca a los 7 días y se borra al canjearlo.
+- A04: flag comprobado en servidor; aceptar las Condiciones para Locales es obligatorio
+  para canjear (y para reclamar con el flag encendido) y queda en `consent_records`.
+- Integridad comercial: los patrocinios de contrato se marcan con su ventaja y terminan con
+  el contrato (manual o cron diario); no ocupan huecos de ciudad (decisión del propietario);
+  el límite de 3 sigue para Stripe y factura. Todas las acciones quedan auditadas.
+- RGPD: datos de contacto de empresas solo para admin; sin PDF ni documentos en la app.
+- Pruebas: partners 37/37, RLS 36/36, block9 72/72, premium-completion 45/45; Advisors sin
+  errores.
+
+## R2 — «Cómo está ahora» — 08/10/2026
+
+- A01/API1: votos en `private.place_reports` sin permisos de cliente (RLS activo, sin
+  grants); solo RPC `security definer` en `private` con envoltorios `invoker` en `public`,
+  ejecutables solo por `authenticated`. Respuestas agregadas, nunca quién votó.
+- A04 anti-manipulación: flag comprobado en servidor; cuenta completa no baneada; voto solo
+  con check-in activo en ese sitio; un voto por persona, pregunta y noche (cambiarlo no
+  suma); gestores no votan en su local; valores de lista cerrada; límites de uso por
+  persona (60 votos, 600 lecturas, 30 cambios de música); umbral de 3 votos.
+- Datos de prueba: votos de cuentas `is_test` solo cuentan para testers/admin.
+- RGPD: los votos salen en la exportación de datos; retención 60 días (cron diario);
+  borrado en cascada con la cuenta, el local o el evento.
+- Line-up: texto ≤120 caracteres, recortado, mostrado como texto (React escapa); caduca al
+  cambiar de noche. Acciones del gestor auditadas (`venue.music`).
+- Pruebas: SQL 27/27, RLS 36/36 (usuario no puede encender el flag), Advisors sin errores.
+
+## R1 — Entrar por email y guías — 08/10/2026
+
+- A07 (autenticación): código por email con `shouldCreateUser: false`; el alta sigue
+  exigiendo teléfono, firma y comprobación de bans. Sin enumeración de cuentas: misma
+  respuesta y mismo error de código con o sin cuenta. Límites de Supabase Auth.
+- Cuentas creadas solo con email por la API no pueden completar el alta (teléfono
+  confirmado obligatorio) ni usar RPC (`require_registered`: completa, no baneada ni
+  suspendida). El flag solo lo cambia un admin con `aal2` (RLS 35/35, 2 pruebas nuevas).
+- A04: flag apagado por defecto y valor seguro `off` en cliente; sin flag, cero cambios.
+- Guías públicas: solo textos traducidos, sin datos personales ni llamadas a red.
+- Pendiente: SMTP propio y plantilla con `{{ .Token }}` (`docs/AUTH_EMAIL.md`).
+
+## Historial de migraciones — 08/10/2026
+
+- Historial remoto y repositorio coinciden (60 versiones). Un `db push` ya no
+  reaplicaría SQL existente. Solo se insertaron filas en el historial y un índice aditivo.
+- Advisors tras el cambio: seguridad igual (0 errores, 1 WARN conocido, 18 INFO
+  intencionados); la FK sin índice de `private.likes_seen` queda resuelta.
+
+## Revisión 08/10/2026 (Bloque 0 y compras)
+
+- A05/A08: corregido el riesgo de que las E2E reutilizaran `npm run preview` (Supabase
+  real) en el puerto 4173. Puerto propio 4399, sin reutilización y guardia de red que
+  aborta y suspende la prueba ante cualquier origen distinto de la app local.
+- Transparencia comercial: «Modo viaje» deja de anunciarse como ventaja activa
+  mientras `travel_mode_enabled` esté apagado.
+- BBDD comprobada por MCP con las suites de RLS/RPC del repo (321 pruebas en verde;
+  `block10.sql` pendiente de aprobación manual). Advisors sin errores.
+- Stripe: Edge Functions desplegadas idénticas al repo (firma, pedido, cliente,
+  importe/periodo y modo verificados en servidor). Sin claves ni precios LIVE.
+- Pendiente: auditoría de red HTTP y revisión de eventos del webhook en el panel de
+  Stripe.
+
+## Roadmap 2026-10 · Bloque 0 (red de regresión E2E) — 08/10/2026
+
+- Solo herramientas de desarrollo: `@playwright/test@1.63.0` (+ `playwright`,
+  `playwright-core`), Apache-2.0, lista permitida PRD 3.5. No entra en el bundle ni en
+  la PWA; `npm audit`: 0 vulnerabilidades (incluye desarrollo).
+- Aislamiento: el servidor de pruebas fuerza `VITE_SUPABASE_URL` y la clave publicable
+  vacías, así que ninguna prueba crea usuarios, OTP, compras o claims en el proyecto
+  compartido. Sin secretos ni datos personales en `e2e/`; fotos de prueba = icono público.
+- Las pruebas fijan controles existentes como regresión: casillas no premarcadas,
+  consentimientos apagados por defecto, bloqueo de menores, puerta de edad para
+  perfiles, rutas privadas tras cerrar sesión, código OTP erróneo rechazado, segundo
+  factor del admin, nota obligatoria al decidir un claim y web legal sin login.
+- CI: el job nuevo reutiliza las acciones fijadas por SHA y `npm ci --ignore-scripts`;
+  el navegador se instala explícitamente con `playwright install --with-deps chromium`.
+- Sin migraciones, RLS, Edge Functions ni cambios de CSP/red en la app.
+
 ## Inicio previo al bloque 11 — 05/10/2026
 
 - Migración aditiva `20261005173548_home_dashboard`: favoritos con RLS de dueño,
