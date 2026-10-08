@@ -8,6 +8,7 @@ import { useMotionTokens } from '@/shared/motion/MotionPreferencesProvider'
 import { useTheme } from '@/shared/theme/ThemeProvider'
 import { Button, ButtonLink } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
+import { usePostAuthPath } from '@/features/venue-panel/hooks/use-pending-invite'
 import { useCompleteOnboarding, useOnboardingStatus } from '../hooks/use-onboarding-status'
 import { initialOnboardingState, onboardingReducer } from '../model/onboarding-machine'
 import { BirthdateStep } from '../steps/BirthdateStep'
@@ -25,6 +26,7 @@ import { ThemeStep } from '../steps/ThemeStep'
 export function OnboardingScreen() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const postAuthPath = usePostAuthPath()
   const tokens = useMotionTokens()
   const { themeId } = useTheme()
   const status = useOnboardingStatus()
@@ -92,7 +94,7 @@ export function OnboardingScreen() {
                 onSuccess: (result) => {
                   if (!result.ok) return
                   dispatch({ type: 'THEME_CHOSEN', themeId })
-                  void navigate('/home', { replace: true })
+                  void postAuthPath().then((path) => navigate(path, { replace: true }))
                 },
               },
             )

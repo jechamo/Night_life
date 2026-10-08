@@ -1,5 +1,12 @@
 import type { LiveStatus, MusicGenre } from '@/features/places/model/live-status'
 import type { Result } from '@/shared/lib/result'
+import type {
+  Invitation,
+  InvitePreview,
+  ManagerRole,
+  VenuePartnerState,
+  VenueTeam,
+} from '../model/partners'
 
 export type SponsorshipTier = 'featured' | 'featured_plus' | 'top'
 
@@ -39,6 +46,8 @@ export interface VenuePanelService {
       currentPeriodEnd: string
       canManage?: boolean
     } | null
+    /** Roadmap R3: Pro bought through Stripe or included in a contract. */
+    proSource?: 'stripe' | 'contract' | null
   }>
   myVenues(): Promise<ManagedVenue[]>
   createFlashAlert(
@@ -54,7 +63,11 @@ export interface VenuePanelService {
   flashAlerts(
     placeId: string,
   ): Promise<{ id: string; title: string; body: string; endsAt: string }[]>
-  claim(placeId: string, evidence: string): Promise<Result<ManagedVenue, 'already_claimed'>>
+  /** With `venue_partners_enabled`, the server also requires the current venue terms. */
+  claim(
+    placeId: string,
+    evidence: string,
+  ): Promise<Result<ManagedVenue, 'already_claimed' | 'terms_required'>>
   update(
     placeId: string,
     patch: Partial<Pick<ManagedVenue, 'description' | 'hours' | 'price'>>,
@@ -72,4 +85,20 @@ export interface VenuePanelService {
     placeId: string,
     input: { title: string; startsAt: string; endsAt: string; description: string },
   ): Promise<void>
+  // Roadmap R3 (flag `venue_partners_enabled`, checked by the server).
+  partnerState(placeId: string): Promise<VenuePartnerState>
+  team(placeId: string): Promise<VenueTeam>
+  inviteStaff(placeId: string): Promise<Result<Invitation, 'team_limit'>>
+  cancelInvite(placeId: string, inviteId: string): Promise<void>
+  removeManager(placeId: string, userId: string): Promise<void>
+  previewInvite(code: string): Promise<Result<InvitePreview, 'invalid_code'>>
+  redeemInvite(
+    code: string,
+    acceptTerms: boolean,
+  ): Promise<
+    Result<
+      { placeId: string; role: ManagerRole },
+      'invalid_code' | 'already_manager' | 'terms_required'
+    >
+  >
 }

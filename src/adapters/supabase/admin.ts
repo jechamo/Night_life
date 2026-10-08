@@ -5,6 +5,9 @@ import { VENUE_TYPES } from '@/shared/domain/venue-types'
 import { ROLES, type Role } from '@/shared/session/roles'
 import { invokeFunction, type Db } from './client'
 import type { Json } from './database.types'
+import { invitationSchema, partnerAccountSchema } from '@/features/venue-panel/model/partners'
+import { err, ok } from '@/shared/lib/result'
+import { done, refusal } from './business'
 import { must } from './errors'
 
 const count = z.number().int().nonnegative()
@@ -340,6 +343,65 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
     async setMapToken(token) {
       const { error } = await db.rpc('admin_set_map_token', { p_token: token })
       if (error) throw error
+    },
+
+    async partners() {
+      return z.array(partnerAccountSchema).parse(must(await db.rpc('admin_partners')))
+    },
+    async savePartner(input) {
+      const result = await db.rpc('admin_partner_save', { p: { ...input } })
+      if (result.error)
+        return err(
+          refusal(result.error, ['duplicate_tax_id', 'invalid partner'] as const) ===
+            'duplicate_tax_id'
+            ? 'duplicate_tax_id'
+            : 'invalid',
+        )
+      return ok(must(result))
+    },
+    async linkPartnerVenue(accountId, venueId, link) {
+      const result = await db.rpc('admin_partner_link', {
+        p_account: accountId,
+        p_venue: venueId,
+        p_link: link,
+      })
+      if (result.error)
+        return err(refusal(result.error, ['linked_elsewhere', 'already_sponsored'] as const))
+      return ok(undefined)
+    },
+    async createContract(input) {
+      const result = await db.rpc('admin_contract_save', { p: { ...input } })
+      if (result.error)
+        return err(
+          refusal(result.error, ['duplicate_reference', 'invalid contract'] as const) ===
+            'duplicate_reference'
+            ? 'duplicate_reference'
+            : 'invalid',
+        )
+      return ok(must(result))
+    },
+    async contractAction(contractId, action) {
+      const result = await db.rpc('admin_contract_action', {
+        p_contract: contractId,
+        p_action: action,
+      })
+      if (result.error)
+        return err(
+          refusal(result.error, ['already_sponsored', 'invalid state'] as const) ===
+            'already_sponsored'
+            ? 'already_sponsored'
+            : 'invalid_state',
+        )
+      return ok(undefined)
+    },
+    async inviteVenueOwner(venueId) {
+      return invitationSchema.parse(must(await db.rpc('admin_venue_invite', { p_venue: venueId })))
+    },
+    async revokeInvitation(inviteId) {
+      done(await db.rpc('admin_invite_revoke', { p_invite: inviteId }))
+    },
+    async removeManager(venueId, userId) {
+      done(await db.rpc('admin_remove_manager', { p_venue: venueId, p_user: userId }))
     },
 
     async venues(query) {

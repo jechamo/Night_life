@@ -107,6 +107,7 @@ const VENUE_GUIDE = [
       'guide.venues.sections.access.items.evidence',
       'guide.venues.sections.access.items.review',
       'guide.venues.sections.access.items.help',
+      'guide.venues.sections.access.items.invite',
     ],
   },
   {
@@ -116,6 +117,7 @@ const VENUE_GUIDE = [
       'guide.venues.sections.free.items.events',
       'guide.venues.sections.free.items.stats',
       'guide.venues.sections.free.items.music',
+      'guide.venues.sections.free.items.team',
     ],
   },
   {
@@ -161,6 +163,10 @@ const VENUE_GUIDE = [
 const LIVE_STATUS_ITEMS: readonly string[] = [
   'guide.user.sections.events.items.live',
   'guide.venues.sections.free.items.music',
+]
+const PARTNER_ITEMS: readonly string[] = [
+  'guide.venues.sections.access.items.invite',
+  'guide.venues.sections.free.items.team',
 ]
 
 function GuideSection({ title, items }: { title: string; items: string[] }) {
@@ -218,6 +224,7 @@ export function UserGuideScreen() {
 export function VenueGuideScreen() {
   const { t } = useTranslation()
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
+  const partners = useFeatureFlag('venue_partners_enabled') === 'on'
   return (
     <>
       <h1 className="mt-8 text-3xl font-semibold">{t('guide.venues.title')}</h1>
@@ -228,6 +235,7 @@ export function VenueGuideScreen() {
           title={t(section.title)}
           items={section.items
             .filter((item) => liveStatus || !LIVE_STATUS_ITEMS.includes(item))
+            .filter((item) => partners || !PARTNER_ITEMS.includes(item))
             .map((item) => t(item))}
         />
       ))}

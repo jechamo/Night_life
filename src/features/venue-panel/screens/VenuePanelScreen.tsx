@@ -1,7 +1,9 @@
-import { BookOpen, Building2, Store } from 'lucide-react'
+import { BookOpen, Building2, KeyRound, Store } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLegalDocuments, useSignDocuments } from '@/features/legal/hooks/use-legal-documents'
 import { usePlaces } from '@/features/places/hooks/use-places'
+import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 import { isEvent } from '@/features/places/model/types'
 import { hasRole } from '@/shared/session/roles'
 import { useRoles } from '@/shared/session/use-roles'
@@ -13,12 +15,20 @@ import { ListRow } from '@/shared/ui/list-row'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { TextAreaField, TextField } from '@/shared/ui/text-field'
+import { VenueTermsCheckbox } from '../components/VenueTermsCheckbox'
 import { useClaimVenue, useMyVenues } from '../hooks/use-venue-panel'
+
+const VENUE_TERMS = ['venues'] as const
 
 function ClaimForm() {
   const { t } = useTranslation()
   const { data: places = [] } = usePlaces()
   const claim = useClaimVenue()
+  // Roadmap R3: with partners on, the venue terms are accepted before claiming.
+  const partners = useFeatureFlag('venue_partners_enabled') === 'on'
+  const { data: terms } = useLegalDocuments(partners ? VENUE_TERMS : [])
+  const sign = useSignDocuments()
+  const [accepted, setAccepted] = useState(false)
   const [query, setQuery] = useState('')
   const [placeId, setPlaceId] = useState<string | undefined>()
   const [evidence, setEvidence] = useState('')
@@ -59,15 +69,31 @@ function ClaimForm() {
         maxLength={500}
         onChange={(e) => setEvidence(e.target.value)}
       />
+      {partners && <VenueTermsCheckbox checked={accepted} onCheckedChange={setAccepted} />}
       {error && (
         <p role="alert" className="text-sm text-danger">
-          {t('venuePanel.claim.already')}
+          {t(
+            error === 'terms_required'
+              ? 'venuePanel.partners.claimTermsRequired'
+              : 'venuePanel.claim.already',
+          )}
         </p>
       )}
       <Button
         block
-        disabled={!placeId || evidence.trim().length < 10 || claim.isPending}
-        onClick={() => placeId && claim.mutate({ placeId, evidence: evidence.trim() })}
+        disabled={
+          !placeId ||
+          evidence.trim().length < 10 ||
+          claim.isPending ||
+          sign.isPending ||
+          (partners && (!accepted || !terms?.length))
+        }
+        onClick={() => {
+          if (!placeId) return
+          const send = () => claim.mutate({ placeId, evidence: evidence.trim() })
+          if (partners && terms?.length) sign.mutate(terms, { onSuccess: send })
+          else send()
+        }}
       >
         {t('venuePanel.claim.submit')}
       </Button>
@@ -78,6 +104,7 @@ function ClaimForm() {
 /** Free venue panel (PRD 6.10): my venues + claim a new one (reviewed by a person). */
 export function VenuePanelScreen() {
   const { t } = useTranslation()
+  const partners = useFeatureFlag('venue_partners_enabled') === 'on'
   const roles = useRoles()
   const { data: venues = [] } = useMyVenues()
   const manager = hasRole(roles, 'venue_manager')
@@ -96,6 +123,13 @@ export function VenuePanelScreen() {
             label={t('guide.nav.venues')}
             hint={t('guide.nav.venuesHint')}
           />
+          {partners && (
+            <ListRow
+              to="/venue/invitacion"
+              icon={KeyRound}
+              label={t('venuePanel.partners.haveCode')}
+            />
+          )}
         </GlassCard>
       </Section>
       {manager && (

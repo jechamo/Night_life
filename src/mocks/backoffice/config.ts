@@ -7,6 +7,7 @@ import type { PremiumState } from '@/features/premium/services/premium-service'
 import type { Entitlement } from '@/shared/entitlements/entitlements'
 import type { FeatureFlags } from '@/shared/flags/flags'
 import type { Role } from '@/shared/session/roles'
+import { createMockPartnerState, type MockPartnerState } from './partners'
 
 /**
  * Mutable simulated back-office (Blocks 1-4): flags, roles, entitlements, settings and
@@ -40,6 +41,8 @@ export interface MockConfig {
   decisions: ModerationDecision[]
   suspended: boolean
   mfaOk: boolean
+  /** Roadmap R3: companies, contracts, invitations and venue teams. */
+  partners: MockPartnerState
 }
 
 const ago = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString()
@@ -230,6 +233,7 @@ export function createMockConfig(
     ],
     suspended: false,
     mfaOk: false,
+    partners: createMockPartnerState(),
   }
 }
 

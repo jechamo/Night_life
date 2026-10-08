@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 import { LayeredInfoBox } from '@/features/legal/components/LayeredInfoBox'
 import { Illustration } from '@/shared/images/Illustration'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
+import { usePostAuthPath } from '@/features/venue-panel/hooks/use-pending-invite'
 import { useServices } from '@/shared/services/ServicesProvider'
 import { useSignOut } from '@/shared/session/use-sign-out'
 import { Button } from '@/shared/ui/button'
@@ -44,6 +45,7 @@ export function PhoneStep({
   const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const postAuthPath = usePostAuthPath()
   const { onboarding } = useServices()
   const signOut = useSignOut()
   const login = mode === 'login'
@@ -93,7 +95,7 @@ export function PhoneStep({
       const status = await onboarding.getStatus()
       if (status === 'completed') {
         await queryClient.invalidateQueries()
-        return void navigate('/home', { replace: true })
+        return void navigate(await postAuthPath(), { replace: true })
       }
       setPhase(login ? 'no_account' : 'email')
     } catch {

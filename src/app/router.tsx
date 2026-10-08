@@ -43,6 +43,21 @@ const AdminTestToolsScreen = lazy(() =>
     default: module.AdminTestToolsScreen,
   })),
 )
+const AdminPartnersScreen = lazy(() =>
+  import('@/features/admin/screens/AdminPartnersScreen').then((module) => ({
+    default: module.AdminPartnersScreen,
+  })),
+)
+const InviteLandingScreen = lazy(() =>
+  import('@/features/venue-panel/screens/InviteLandingScreen').then((module) => ({
+    default: module.InviteLandingScreen,
+  })),
+)
+const RedeemInviteScreen = lazy(() =>
+  import('@/features/venue-panel/screens/RedeemInviteScreen').then((module) => ({
+    default: module.RedeemInviteScreen,
+  })),
+)
 const AdminVenuesScreen = lazy(() =>
   import('@/features/admin/screens/AdminVenuesScreen').then((module) => ({
     default: module.AdminVenuesScreen,
@@ -310,6 +325,13 @@ export const routes: RouteObject[] = [
       { path: 'locales', element: screen(VenueGuideScreen) },
     ],
   },
+  // Venue invitation links (roadmap R3): public, nothing is redeemed before signing in.
+  {
+    path: 'invitacion/:code',
+    element: <PublicLayout />,
+    errorElement: <RouteErrorScreen />,
+    children: [{ index: true, element: screen(InviteLandingScreen) }],
+  },
   { path: 'suspended', element: screen(SuspendedScreen), errorElement: <RouteErrorScreen /> },
   {
     path: 'suspended/moderation',
@@ -331,6 +353,7 @@ export const routes: RouteObject[] = [
       { path: 'payments', element: screen(AdminPaymentsScreen) },
       { path: 'test-tools', element: screen(AdminTestToolsScreen) },
       { path: 'venues', element: screen(AdminVenuesScreen) },
+      { path: 'partners', element: screen(AdminPartnersScreen) },
       { path: 'settings', element: screen(AdminSettingsScreen) },
     ],
   },
@@ -385,6 +408,7 @@ export const routes: RouteObject[] = [
       { path: 'premium/subscription', element: screen(MySubscriptionScreen) },
       { path: 'premium/redeem', element: screen(RedeemScreen) },
       { path: 'venue', element: screen(VenuePanelScreen) },
+      { path: 'venue/invitacion', element: screen(RedeemInviteScreen) },
       { path: 'venue/:placeId', element: screen(VenueDetailScreen) },
       { path: 'dev/kit', element: screen(DesignKitScreen) },
     ],

@@ -4,6 +4,13 @@ import type { Role } from '@/shared/session/roles'
 import type { ProviderQuota, ProviderQuotaChange } from '../model/provider-quota'
 import type { CatalogueRow } from '../model/venue-csv'
 import type { AdminVenue, VenueInput } from '../model/venue'
+import type {
+  ContractInput,
+  Invitation,
+  PartnerAccount,
+  PartnerInput,
+} from '@/features/venue-panel/model/partners'
+import type { Result } from '@/shared/lib/result'
 
 export interface AdminDashboard {
   users: number
@@ -121,6 +128,22 @@ export interface AdminService {
   fillTestVenue(id: string, count: number): Promise<number>
   importTestEvents(city: string, count: number): Promise<number>
   setSimulatedRoles(roles: readonly Role[]): Promise<void>
+  /** Roadmap R3: partner companies, offline contracts, invitations and venue managers. */
+  partners(): Promise<PartnerAccount[]>
+  savePartner(input: PartnerInput): Promise<Result<string, 'duplicate_tax_id' | 'invalid'>>
+  linkPartnerVenue(
+    accountId: string,
+    venueId: string,
+    link: boolean,
+  ): Promise<Result<void, 'linked_elsewhere' | 'already_sponsored'>>
+  createContract(input: ContractInput): Promise<Result<string, 'duplicate_reference' | 'invalid'>>
+  contractAction(
+    contractId: string,
+    action: 'activate' | 'end',
+  ): Promise<Result<void, 'already_sponsored' | 'invalid_state'>>
+  inviteVenueOwner(venueId: string): Promise<Invitation>
+  revokeInvitation(inviteId: string): Promise<void>
+  removeManager(venueId: string, userId: string): Promise<void>
   /** `mock` = simulated back-office (roles can be simulated); `live` = Supabase. */
   readonly mode: 'mock' | 'live'
   /** Second factor (TOTP, PRD 6.12 E): enrolment and the level of this session. */

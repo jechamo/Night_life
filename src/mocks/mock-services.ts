@@ -81,7 +81,7 @@ export function createMockServices(options: MockServiceOptions = {}): AppService
     dashboard: createMockDashboardService(world, store),
     premium,
     admin: createMockAdminService(config, world, store, premium, wait),
-    venuePanel: createMockVenuePanelService(world, config, wait),
+    venuePanel: createMockVenuePanelService(world, config, wait, store),
     privacy: createMockPrivacyService(world, store, config, wait),
     moderation: createMockModerationService(config, wait),
     safety: createMockSafetyService(wait),

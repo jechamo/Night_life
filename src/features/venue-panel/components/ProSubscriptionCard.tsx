@@ -21,8 +21,10 @@ export function ProSubscriptionCard({ placeId }: { placeId: string }) {
         {t('premium.vatIncluded')}
       </p>
       <p className="text-xs text-muted-foreground">{t('venuePanel.pro.billingTerms')}</p>
-      {data?.subscription &&
-      ['active', 'cancel_at_period_end', 'past_due'].includes(data.subscription.status) ? (
+      {data?.proSource === 'contract' ? (
+        <p role="status">{t('venuePanel.pro.contract')}</p>
+      ) : data?.subscription &&
+        ['active', 'cancel_at_period_end', 'past_due'].includes(data.subscription.status) ? (
         <>
           <p role="status">{t(data.pro ? 'venuePanel.pro.active' : 'venuePanel.pro.inactive')}</p>
           <Button

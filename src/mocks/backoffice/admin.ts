@@ -6,7 +6,10 @@ import { isEvent, type Place } from '@/features/places/model/types'
 import type { PremiumService } from '@/features/premium/services/premium-service'
 import type { MockStore } from '../mock-store'
 import { contextFor, emit, type WorldState } from '../world/world-state'
+import { isTaxId, normalizeTaxId } from '@/features/venue-panel/model/partners'
+import { err, ok } from '@/shared/lib/result'
 import { audit, type MockConfig } from './config'
+import { createInvitation, invitationStatus } from './partners'
 
 type Wait = () => Promise<void>
 
@@ -249,6 +252,155 @@ export function createMockAdminService(
       return count
     },
     importTestEvents: () => Promise.reject(new Error('provider_not_available')),
+    async partners() {
+      await wait()
+      const p = config.partners
+      return p.accounts.map((account) => ({
+        ...account,
+        venues: Object.entries(p.links)
+          .filter(([, accountId]) => accountId === account.id)
+          .flatMap(([venueId]) => {
+            const place = world.places.find((x) => x.id === venueId)
+            return place
+              ? [
+                  {
+                    id: venueId,
+                    name: place.name,
+                    city: place.city ?? null,
+                    managers: [...(p.managers[venueId] ?? [])],
+                    invitations: p.invitations
+                      .filter((i) => i.venueId === venueId)
+                      .map((i) => ({
+                        id: i.id,
+                        role: i.role,
+                        expiresAt: i.expiresAt,
+                        status: invitationStatus(i),
+                      })),
+                  },
+                ]
+              : []
+          }),
+        contracts: p.contracts
+          .filter((c) => c.accountId === account.id)
+          .map(({ accountId: _accountId, ...c }) => c),
+      }))
+    },
+    async savePartner(input) {
+      await wait()
+      const p = config.partners
+      const taxId = normalizeTaxId(input.taxId)
+      if (
+        !isTaxId(taxId) ||
+        input.legalName.trim().length < 2 ||
+        input.contactName.trim().length < 2 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.billingEmail.trim())
+      )
+        return err('invalid')
+      if (p.accounts.some((a) => a.taxId === taxId && a.id !== input.id))
+        return err('duplicate_tax_id')
+      const fields = {
+        legalName: input.legalName.trim(),
+        taxId,
+        contactName: input.contactName.trim(),
+        billingEmail: input.billingEmail.trim().toLowerCase(),
+        contactPhone: input.contactPhone.trim() || null,
+        notes: input.notes.trim() || null,
+      }
+      if (input.id) {
+        p.accounts = p.accounts.map((a) =>
+          a.id === input.id ? { ...a, ...fields, status: input.status ?? a.status } : a,
+        )
+        audit(config, 'partner.update', input.id)
+        return ok(input.id)
+      }
+      const id = `acc-${crypto.randomUUID()}`
+      p.accounts.push({
+        id,
+        ...fields,
+        status: 'active',
+        isTest: input.isTest,
+        createdAt: new Date().toISOString(),
+      })
+      audit(config, 'partner.create', id)
+      return ok(id)
+    },
+    async linkPartnerVenue(accountId, venueId, link) {
+      await wait()
+      const p = config.partners
+      if (link) {
+        if (p.links[venueId] && p.links[venueId] !== accountId) return err('linked_elsewhere')
+        p.links[venueId] = accountId
+      } else if (p.links[venueId] === accountId) {
+        delete p.links[venueId]
+      }
+      audit(config, link ? 'partner.link' : 'partner.unlink', `${accountId}:${venueId}`)
+      return ok(undefined)
+    },
+    async createContract(input) {
+      await wait()
+      const p = config.partners
+      if (
+        input.reference.trim().length < 3 ||
+        (input.tier === 'none' && !input.pro) ||
+        !input.startsOn ||
+        !input.endsOn ||
+        input.endsOn < input.startsOn
+      )
+        return err('invalid')
+      if (p.contracts.some((c) => c.reference === input.reference.trim()))
+        return err('duplicate_reference')
+      const id = `ct-${crypto.randomUUID()}`
+      p.contracts.unshift({
+        id,
+        accountId: input.accountId,
+        reference: input.reference.trim(),
+        tier: input.tier,
+        pro: input.pro,
+        startsOn: input.startsOn,
+        endsOn: input.endsOn,
+        termsVersion: '1.0',
+        status: 'draft',
+      })
+      audit(config, 'contract.create', id)
+      return ok(id)
+    },
+    async contractAction(contractId, action) {
+      await wait()
+      const contract = config.partners.contracts.find((c) => c.id === contractId)
+      if (
+        !contract ||
+        (action === 'activate' && contract.status !== 'draft') ||
+        (action === 'end' && contract.status === 'ended')
+      )
+        return err('invalid_state')
+      contract.status = action === 'activate' ? 'active' : 'ended'
+      audit(config, `contract.${action}`, contract.reference)
+      return ok(undefined)
+    },
+    async inviteVenueOwner(venueId) {
+      await wait()
+      const {
+        venueId: _venueId,
+        accountId: _accountId,
+        usedAt: _u,
+        revokedAt: _r,
+        ...invitation
+      } = createInvitation(config.partners, venueId, 'owner')
+      audit(config, 'invite.create', venueId)
+      return invitation
+    },
+    async revokeInvitation(inviteId) {
+      await wait()
+      const invitation = config.partners.invitations.find((i) => i.id === inviteId)
+      if (invitation && !invitation.usedAt) invitation.revokedAt = new Date().toISOString()
+      audit(config, 'invite.revoke', inviteId)
+    },
+    async removeManager(venueId, userId) {
+      await wait()
+      const p = config.partners
+      p.managers[venueId] = (p.managers[venueId] ?? []).filter((m) => m.userId !== userId)
+      audit(config, 'venue.manager_remove', `${venueId}:${userId}`)
+    },
     async createPromoCode({ productCode, days, maxUses }) {
       await wait()
       const block = () =>

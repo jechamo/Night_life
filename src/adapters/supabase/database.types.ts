@@ -2058,6 +2058,23 @@ export type Database = {
       }
       admin_create_venue: { Args: { p: Json }; Returns: string }
       admin_dashboard: { Args: never; Returns: Json }
+      admin_contract_action: {
+        Args: { p_action: string; p_contract: string }
+        Returns: undefined
+      }
+      admin_contract_save: { Args: { p: Json }; Returns: string }
+      admin_invite_revoke: { Args: { p_invite: string }; Returns: undefined }
+      admin_partner_link: {
+        Args: { p_account: string; p_link: boolean; p_venue: string }
+        Returns: undefined
+      }
+      admin_partner_save: { Args: { p: Json }; Returns: string }
+      admin_partners: { Args: never; Returns: Json }
+      admin_remove_manager: {
+        Args: { p_user: string; p_venue: string }
+        Returns: undefined
+      }
+      admin_venue_invite: { Args: { p_venue: string }; Returns: Json }
       admin_delete_venue: { Args: { p_venue: string }; Returns: undefined }
       admin_entitlement: {
         Args: { p_days?: number; p_key: string; p_user: string }
@@ -2390,6 +2407,21 @@ export type Database = {
         Args: { p: Json; p_venue: string }
         Returns: string
       }
+      venue_invite_cancel: {
+        Args: { p_invite: string; p_venue: string }
+        Returns: undefined
+      }
+      venue_invite_preview: { Args: { p_code: string }; Returns: Json }
+      venue_invite_redeem: {
+        Args: { p_accept_terms: boolean; p_code: string }
+        Returns: Json
+      }
+      venue_invite_staff: { Args: { p_venue: string }; Returns: Json }
+      venue_partner_state: { Args: { p_venue: string }; Returns: Json }
+      venue_remove_manager: {
+        Args: { p_user: string; p_venue: string }
+        Returns: undefined
+      }
       venue_set_music: {
         Args: { p_genres: string[]; p_lineup: string; p_venue: string }
         Returns: Json
@@ -2399,6 +2431,7 @@ export type Database = {
         Returns: Json
       }
       venue_stats: { Args: { p_venue: string }; Returns: Json }
+      venue_team: { Args: { p_venue: string }; Returns: Json }
       verification_snapshot: { Args: never; Returns: Json }
       visible_flash_alerts: { Args: { p_venue: string }; Returns: Json }
       visible_sponsors: { Args: never; Returns: Json }

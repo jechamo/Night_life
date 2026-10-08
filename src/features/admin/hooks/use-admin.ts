@@ -6,6 +6,7 @@ import type { ProviderQuotaChange } from '../model/provider-quota'
 import type { CatalogueRow } from '../model/venue-csv'
 import type { VenueInput } from '../model/venue'
 import type { AdminSection, AdminService, AdminSetting, TestTool } from '../services/admin-service'
+import type { ContractInput, PartnerInput } from '@/features/venue-panel/model/partners'
 
 const adminKey = ['admin'] as const
 export const mfaKey = ['admin', 'mfa'] as const
@@ -146,3 +147,36 @@ export const useImportTestEvents = () =>
 
 export const useSetSimulatedRoles = () =>
   useAdminMutation((admin, roles: readonly Role[]) => admin.setSimulatedRoles(roles))
+
+// Roadmap R3: partners, contracts, invitations and venue managers.
+export function useAdminPartners() {
+  const { admin } = useServices()
+  return useQuery({ queryKey: [...adminKey, 'partners'], queryFn: () => admin.partners() })
+}
+
+export const useSavePartner = () =>
+  useAdminMutation((admin, input: PartnerInput) => admin.savePartner(input))
+
+export const useLinkPartnerVenue = () =>
+  useAdminMutation((admin, a: { accountId: string; venueId: string; link: boolean }) =>
+    admin.linkPartnerVenue(a.accountId, a.venueId, a.link),
+  )
+
+export const useCreateContract = () =>
+  useAdminMutation((admin, input: ContractInput) => admin.createContract(input))
+
+export const useContractAction = () =>
+  useAdminMutation((admin, a: { id: string; action: 'activate' | 'end' }) =>
+    admin.contractAction(a.id, a.action),
+  )
+
+export const useInviteVenueOwner = () =>
+  useAdminMutation((admin, venueId: string) => admin.inviteVenueOwner(venueId))
+
+export const useRevokeInvitation = () =>
+  useAdminMutation((admin, id: string) => admin.revokeInvitation(id))
+
+export const useRemoveVenueManager = () =>
+  useAdminMutation((admin, a: { venueId: string; userId: string }) =>
+    admin.removeManager(a.venueId, a.userId),
+  )

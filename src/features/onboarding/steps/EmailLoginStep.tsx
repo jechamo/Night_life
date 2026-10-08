@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Illustration } from '@/shared/images/Illustration'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
+import { usePostAuthPath } from '@/features/venue-panel/hooks/use-pending-invite'
 import { useServices } from '@/shared/services/ServicesProvider'
 import { Button } from '@/shared/ui/button'
 import { TextField } from '@/shared/ui/text-field'
@@ -31,6 +32,7 @@ export function EmailLoginStep({
   const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const postAuthPath = usePostAuthPath()
   const { onboarding } = useServices()
   const testTools = useFeatureFlag('test_tools_enabled') === 'on'
   const [phase, setPhase] = useState<Phase>('enter')
@@ -69,7 +71,7 @@ export function EmailLoginStep({
       if (!result.ok) return setError(result.error)
       if ((await onboarding.getStatus()) === 'completed') {
         await queryClient.invalidateQueries()
-        return void navigate('/home', { replace: true })
+        return void navigate(await postAuthPath(), { replace: true })
       }
       setPhase('no_account')
     } catch {

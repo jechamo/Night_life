@@ -8,7 +8,16 @@ import type {
 import { err, ok } from '@/shared/lib/result'
 import type { MockStore } from '../mock-store'
 import { liveStatusOf, type WorldState } from '../world/world-state'
+import { normalizeInviteCode } from '@/features/venue-panel/model/partners'
+import { MOCK_LEGAL_VERSION } from '../legal-documents.mock'
 import { audit, type MockConfig } from './config'
+import {
+  activeContract,
+  contractBenefits,
+  createInvitation,
+  invitationStatus,
+  ME,
+} from './partners'
 
 type Wait = () => Promise<void>
 
@@ -16,7 +25,35 @@ export function createMockVenuePanelService(
   world: WorldState,
   config: MockConfig,
   wait: Wait,
+  store?: MockStore,
 ): VenuePanelService {
+  const partners = config.partners
+  const requirePartners = () => {
+    if (config.flags.venue_partners_enabled !== 'on') throw new Error('disabled')
+  }
+  const termsAccepted = async () =>
+    !!store && (await store.read()).signed.some((d) => d.slug === 'venues')
+  const myRole = (placeId: string) =>
+    partners.managers[placeId]?.find((m) => m.userId === ME)?.role ?? null
+  const requireOwner = (placeId: string) => {
+    requirePartners()
+    if (myRole(placeId) !== 'owner') throw new Error('forbidden')
+  }
+  /** Contract sponsorships show up like any active sponsorship (as on the server). */
+  const withContract = (venue: ManagedVenue): ManagedVenue => {
+    const contract = activeContract(partners, venue.placeId)
+    return contract && contract.tier !== 'none'
+      ? {
+          ...venue,
+          sponsorship: {
+            tier: contract.tier,
+            status: 'active',
+            from: contract.startsOn,
+            to: contract.endsOn,
+          },
+        }
+      : venue
+  }
   const venueFrom = (
     placeId: string,
     claimStatus: ManagedVenue['claimStatus'],
@@ -40,7 +77,7 @@ export function createMockVenuePanelService(
     return venues.find((v) => v.placeId === placeId)!
   }
   return {
-    myVenues: () => Promise.resolve(venues),
+    myVenues: () => Promise.resolve(venues.map(withContract)),
     createFlashAlert: () => Promise.resolve(),
     async setMusic(placeId, genres, lineup) {
       await wait()
@@ -53,6 +90,8 @@ export function createMockVenuePanelService(
     flashAlerts: () => Promise.resolve([]),
     async claim(placeId, evidence) {
       await wait()
+      if (config.flags.venue_partners_enabled === 'on' && !(await termsAccepted()))
+        return err('terms_required')
       if (venues.some((v) => v.placeId === placeId)) return err('already_claimed')
       const venue = venueFrom(placeId, 'pending')
       if (!venue) return err('already_claimed')
@@ -131,6 +170,129 @@ export function createMockVenuePanelService(
           description: input.description,
         },
       })
+    },
+    async partnerState(placeId) {
+      await wait()
+      requirePartners()
+      const accountId = partners.links[placeId]
+      const account = partners.accounts.find((a) => a.id === accountId)
+      const contract = activeContract(partners, placeId)
+      const venue = venues.find((v) => v.placeId === placeId)
+      const fromContract = contractBenefits(partners, placeId)
+      const invoice =
+        venue?.sponsorship?.status === 'active' && !fromContract.some((b) => b.key !== 'pro_stats')
+          ? [
+              {
+                key: `sponsor_${venue.sponsorship.tier}` as const,
+                source: 'invoice' as const,
+                from: venue.sponsorship.from,
+                until: venue.sponsorship.to,
+              },
+            ]
+          : []
+      return {
+        role: myRole(placeId),
+        account: account ? { legalName: account.legalName } : null,
+        contract: contract
+          ? {
+              reference: contract.reference,
+              tier: contract.tier,
+              pro: contract.pro,
+              startsOn: contract.startsOn,
+              endsOn: contract.endsOn,
+            }
+          : null,
+        benefits: [...fromContract, ...invoice],
+        termsCurrent: MOCK_LEGAL_VERSION,
+        termsAccepted: await termsAccepted(),
+      }
+    },
+    async team(placeId) {
+      await wait()
+      requireOwner(placeId)
+      return {
+        members: (partners.managers[placeId] ?? []).map((m) => ({ ...m, me: m.userId === ME })),
+        invitations: partners.invitations
+          .filter((i) => i.venueId === placeId && invitationStatus(i) === 'pending')
+          .map(({ id, role, expiresAt }) => ({ id, role, expiresAt })),
+      }
+    },
+    async inviteStaff(placeId) {
+      await wait()
+      requireOwner(placeId)
+      const pending = partners.invitations.filter(
+        (i) => i.venueId === placeId && invitationStatus(i) === 'pending',
+      )
+      if (pending.length >= 5) return err('team_limit')
+      const { id, code, expiresAt, role } = createInvitation(partners, placeId, 'staff')
+      audit(config, 'invite.staff', placeId)
+      return ok({ id, code, expiresAt, role })
+    },
+    async cancelInvite(placeId, inviteId) {
+      await wait()
+      requireOwner(placeId)
+      const invitation = partners.invitations.find(
+        (i) => i.id === inviteId && i.venueId === placeId && i.role === 'staff',
+      )
+      if (!invitation) throw new Error('not found')
+      invitation.revokedAt = new Date().toISOString()
+    },
+    async removeManager(placeId, userId) {
+      await wait()
+      requireOwner(placeId)
+      if (userId === ME) throw new Error('forbidden')
+      partners.managers[placeId] = (partners.managers[placeId] ?? []).filter(
+        (m) => !(m.userId === userId && m.role === 'staff'),
+      )
+    },
+    async previewInvite(code) {
+      await wait()
+      requirePartners()
+      const invitation = partners.invitations.find(
+        (i) => i.code === normalizeInviteCode(code) && invitationStatus(i) === 'pending',
+      )
+      const place = invitation && world.places.find((p) => p.id === invitation.venueId)
+      if (!invitation || !place) return err('invalid_code')
+      return ok({
+        venueName: place.name,
+        city: place.city ?? null,
+        role: invitation.role,
+        accountName:
+          partners.accounts.find((a) => a.id === invitation.accountId)?.legalName ?? null,
+        alreadyManager: myRole(invitation.venueId) !== null,
+        termsVersion: MOCK_LEGAL_VERSION,
+      })
+    },
+    async redeemInvite(code, acceptTerms) {
+      await wait()
+      requirePartners()
+      const invitation = partners.invitations.find(
+        (i) => i.code === normalizeInviteCode(code) && invitationStatus(i) === 'pending',
+      )
+      if (!invitation) return err('invalid_code')
+      const placeId = invitation.venueId
+      if (myRole(placeId) !== null) return err('already_manager')
+      if (!acceptTerms) return err('terms_required')
+      invitation.usedAt = new Date().toISOString()
+      partners.managers[placeId] = [
+        ...(partners.managers[placeId] ?? []),
+        { userId: ME, name: 'Tú', role: invitation.role, since: invitation.usedAt },
+      ]
+      await store?.update((s) => ({
+        ...s,
+        signed: [
+          ...s.signed.filter((d) => d.slug !== 'venues'),
+          { slug: 'venues', version: MOCK_LEGAL_VERSION, signedAt: invitation.usedAt! },
+        ],
+      }))
+      if (!venues.some((v) => v.placeId === placeId)) {
+        const venue = venueFrom(placeId, 'approved')
+        if (venue) venues = [...venues, venue]
+      } else
+        venues = venues.map((v) => (v.placeId === placeId ? { ...v, claimStatus: 'approved' } : v))
+      if (!config.roles.includes('venue_manager')) config.roles.push('venue_manager')
+      audit(config, 'invite.redeem', placeId)
+      return ok({ placeId, role: invitation.role })
     },
   }
 }

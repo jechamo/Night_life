@@ -1439,7 +1439,8 @@
       "active": "Estadísticas Pro activas",
       "inactive": "Suscripción sin acceso activo",
       "manage": "Gestionar suscripción Pro",
-      "payerOnly": "La suscripción la gestiona la cuenta que la contrató."
+      "payerOnly": "La suscripción la gestiona la cuenta que la contrató.",
+      "contract": "Incluido en tu contrato."
     },
     "edit": {
       "title": "Ficha",
@@ -1507,6 +1508,88 @@
       "saved": "Guardado.",
       "error": "No se ha podido guardar. Inténtalo de nuevo.",
       "summary": "Lo que dice la gente ahora"
+    },
+    "partners": {
+      "plan": {
+        "title": "Tu plan",
+        "account": "Empresa: {{name}}",
+        "contract": "Contrato {{reference}} · del {{from}} al {{to}}",
+        "noContract": "Sin contrato. Puedes contratar patrocinio o Estadísticas Pro más abajo.",
+        "benefitsTitle": "Ventajas activas",
+        "noBenefits": "Ninguna ventaja de pago activa. Las funciones gratis siguen disponibles.",
+        "benefit": "{{benefit}} · {{source}} · hasta el {{until}}",
+        "benefits": {
+          "sponsor_featured": "Destacado",
+          "sponsor_featured_plus": "Destacado Plus",
+          "sponsor_top": "Top",
+          "pro_stats": "Estadísticas Pro"
+        },
+        "sources": {
+          "contract": "incluido en tu contrato",
+          "stripe": "pagado con tarjeta",
+          "invoice": "activado por factura"
+        },
+        "yourRole": "Tu papel: {{role}}",
+        "termsAccepted": "Has aceptado las Condiciones para Locales v{{version}}.",
+        "termsPending": "Aún no has aceptado las Condiciones para Locales v{{version}}.",
+        "termsAccept": "Leer y aceptar",
+        "termsRead": "Leer las Condiciones para Locales",
+        "termsConfirm": "Aceptar"
+      },
+      "roles": {
+        "owner": "Titular",
+        "staff": "Encargado"
+      },
+      "team": {
+        "title": "Equipo",
+        "body": "Los encargados pueden editar la ficha, los eventos y la música, y contratar. Solo el titular invita o quita encargados.",
+        "invite": "Invitar encargado",
+        "created": "Invitación creada. Compártela solo con esa persona: sirve una vez y caduca el {{date}}.",
+        "code": "Código: {{code}}",
+        "copy": "Copiar enlace",
+        "copied": "Enlace copiado",
+        "pending": "Invitaciones pendientes",
+        "pendingItem": "Encargado · caduca el {{date}}",
+        "cancel": "Anular",
+        "remove": "Quitar",
+        "me": "(tú)",
+        "limit": "Has llegado al máximo de invitaciones pendientes (5) o de miembros (10).",
+        "error": "No se ha podido completar. Inténtalo de nuevo."
+      },
+      "haveCode": "Tengo un código de invitación",
+      "invite": {
+        "title": "Invitación de local",
+        "body": "Escribe el código que te hemos enviado para gestionar tu local sin tener que reclamarlo.",
+        "codeLabel": "Código de invitación",
+        "check": "Comprobar código",
+        "venue": "{{venue}} · {{city}}",
+        "account": "Empresa: {{name}}",
+        "role": "Entrarás como: {{role}}",
+        "acceptTerms": "He leído y acepto las Condiciones para Locales v{{version}}",
+        "readTerms": "Leer las condiciones",
+        "redeem": "Aceptar y unirme",
+        "alreadyManager": "Ya gestionas este local.",
+        "disabled": "Las invitaciones de locales todavía no están disponibles.",
+        "errors": {
+          "invalid_code": "El código no es válido, ha caducado o ya se ha usado.",
+          "already_manager": "Ya gestionas este local.",
+          "terms_required": "Tienes que aceptar las Condiciones para Locales.",
+          "generic": "No se ha podido completar. Inténtalo de nuevo."
+        }
+      },
+      "landing": {
+        "title": "Te han invitado a gestionar un local",
+        "body": "Crea tu cuenta en Nightlife Connect o entra con la tuya. Después aceptarás la invitación y las Condiciones para Locales.",
+        "code": "Código de invitación: {{code}}",
+        "signup": "Crear cuenta",
+        "login": "Ya tengo cuenta",
+        "continue": "Continuar",
+        "invalid": "Este enlace de invitación no es válido. Pide uno nuevo a quien te lo envió."
+      },
+      "claimTerms": "He leído y acepto las Condiciones para Locales",
+      "claimTermsRequired": "Acepta las Condiciones para Locales para enviar la solicitud.",
+      "sectionPlan": "Plan y ventajas",
+      "sectionTeam": "Equipo"
     }
   },
   "admin": {
@@ -1531,7 +1614,8 @@
       "audit": "Auditoría",
       "users": "Usuarios",
       "venues": "Locales",
-      "escalations": "Riesgo grave"
+      "escalations": "Riesgo grave",
+      "partners": "Partners"
     },
     "mfa": {
       "title": "Segundo factor",
@@ -1680,6 +1764,7 @@
         "travel_mode_enabled": "Modo viaje (Bloque 11).",
         "email_login_enabled": "Entrar con código por email tras el alta (requiere SMTP propio en Supabase Auth).",
         "live_status_enabled": "«Cómo está ahora»: gente, cola y música votadas con check-in y música declarada por el local (R2).",
+        "venue_partners_enabled": "Partners y contratos: invitaciones a locales, Condiciones para Locales, plan y equipo (R3).",
         "flash_alcohol_allowed": "Activar solo tras revisar la normativa autonómica aplicable."
       }
     },
@@ -1944,6 +2029,88 @@
         "save": "Guardar token",
         "clear": "Quitar token"
       }
+    },
+    "partners": {
+      "title": "Partners y contratos",
+      "body": "Empresas que trabajan con nosotros, sus locales, contratos e invitaciones de acceso.",
+      "new": "Nueva empresa",
+      "edit": "Editar",
+      "fields": {
+        "legalName": "Razón social",
+        "taxId": "CIF/NIF",
+        "contactName": "Persona de contacto",
+        "billingEmail": "Email de facturación",
+        "contactPhone": "Teléfono (opcional)",
+        "notes": "Notas internas (opcional)",
+        "isTest": "Empresa de prueba (datos de test)"
+      },
+      "save": "Guardar empresa",
+      "saved": "Guardado.",
+      "empty": "Aún no hay empresas.",
+      "testBadge": "Prueba",
+      "ended": "Baja",
+      "errors": {
+        "invalid": "Revisa los datos: CIF/NIF español válido, email y nombres.",
+        "duplicate_tax_id": "Ya existe una empresa con ese CIF/NIF.",
+        "linked_elsewhere": "Ese local ya pertenece a otra empresa.",
+        "already_sponsored": "Ese local ya tiene un patrocinio activo en esas fechas.",
+        "duplicate_reference": "Ya existe un contrato con esa referencia.",
+        "invalid_state": "No se puede hacer en el estado actual del contrato.",
+        "generic": "No se ha podido completar. Inténtalo de nuevo."
+      },
+      "venues": {
+        "title": "Locales",
+        "search": "Buscar un local para vincular",
+        "link": "Vincular",
+        "unlink": "Desvincular",
+        "none": "Sin locales vinculados.",
+        "managers": "Gestores",
+        "noManagers": "Sin gestores todavía.",
+        "remove": "Quitar",
+        "invite": "Invitar al titular",
+        "invitations": "Invitaciones",
+        "revoke": "Anular"
+      },
+      "invitation": {
+        "title": "Invitación creada",
+        "body": "Copia ahora el código o el enlace: no se volverá a mostrar. Sirve una vez y caduca el {{date}}.",
+        "code": "Código: {{code}}",
+        "copy": "Copiar enlace",
+        "copied": "Enlace copiado"
+      },
+      "invitationStatus": {
+        "pending": "Pendiente",
+        "used": "Usada",
+        "revoked": "Anulada",
+        "expired": "Caducada"
+      },
+      "contracts": {
+        "title": "Contratos",
+        "new": "Nuevo contrato",
+        "reference": "Referencia del contrato",
+        "tier": "Patrocinio incluido",
+        "pro": "Incluye Estadísticas Pro",
+        "startsOn": "Inicio",
+        "endsOn": "Fin",
+        "create": "Crear contrato (borrador)",
+        "activate": "Activar",
+        "end": "Terminar",
+        "none": "Sin contratos.",
+        "tiers": {
+          "none": "Sin patrocinio",
+          "featured": "Destacado",
+          "featured_plus": "Destacado Plus",
+          "top": "Top"
+        },
+        "status": {
+          "draft": "Borrador",
+          "active": "Activo",
+          "ended": "Terminado"
+        },
+        "summary": "{{tier}}{{pro}} · del {{from}} al {{to}} · condiciones v{{version}}",
+        "proSuffix": " + Estadísticas Pro",
+        "note": "El contrato firmado (PDF) se guarda fuera de la app. Al activarlo, las ventajas se aplican a todos los locales vinculados y terminan solas en la fecha de fin. Los patrocinios por contrato no ocupan los 3 huecos por ciudad."
+      }
     }
   },
   "anthem": {
@@ -2099,7 +2266,8 @@
             "claim": "Date de alta en la app y entra en Perfil › Panel de locales › Reclamar un local.",
             "evidence": "Indica cómo acreditas que lo gestionas (por ejemplo, CIF, factura a nombre del local o email del dominio).",
             "review": "Una persona del equipo revisa cada solicitud. Cuando se aprueba, gestionas la ficha desde tu panel.",
-            "help": "¿Prefieres que te ayudemos? Escríbenos desde Contacto."
+            "help": "¿Prefieres que te ayudemos? Escríbenos desde Contacto.",
+            "invite": "Si firmas un acuerdo con nosotros, te enviamos una invitación: entras con tu cuenta, aceptas las Condiciones para Locales y gestionas el local sin reclamarlo."
           }
         },
         "free": {
@@ -2108,7 +2276,8 @@
             "profile": "Edita tu ficha: descripción, horario y rango de precio.",
             "events": "Publica eventos oficiales: salen como «Oficial» sin esperar confirmaciones.",
             "stats": "Estadísticas básicas: check-ins de la semana y cuánta gente va esta noche, siempre agregadas y anónimas.",
-            "music": "Música y ambiente: declara hasta 3 estilos y el line-up de la noche; la ficha lo muestra junto a lo que vota la gente con check-in (anónimo, desde 3 votos). Los gestores no votan en su propio local."
+            "music": "Música y ambiente: declara hasta 3 estilos y el line-up de la noche; la ficha lo muestra junto a lo que vota la gente con check-in (anónimo, desde 3 votos). Los gestores no votan en su propio local.",
+            "team": "Equipo: el titular puede invitar a encargados y quitarlos; todos ven el plan y las ventajas activas del local."
           }
         },
         "sponsor": {

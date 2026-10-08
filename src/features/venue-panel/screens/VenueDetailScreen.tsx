@@ -19,6 +19,8 @@ import {
 import type { ManagedVenue, SponsorshipTier } from '../services/venue-panel-service'
 import { FlashAlertForm } from '../components/FlashAlerts'
 import { MusicCard } from '../components/MusicCard'
+import { PlanCard, TeamCard } from '../components/PartnerCards'
+import { useVenuePartnerState } from '../hooks/use-venue-panel'
 import { ProSubscriptionCard } from '../components/ProSubscriptionCard'
 import { useStartVenuePurchase } from '@/features/premium/hooks/use-premium'
 import { formatPrice, VENUE_PRICES } from '@/features/premium/model/catalog'
@@ -338,11 +340,18 @@ export function VenueDetailScreen() {
   const { data: venues, isPending } = useMyVenues()
   const venue = venues?.find((v) => v.placeId === placeId && v.claimStatus === 'approved')
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
+  const partners = useFeatureFlag('venue_partners_enabled') === 'on'
+  const { data: partnerState } = useVenuePartnerState(placeId, partners && !!venue)
   if (isPending) return null
   if (!venue) return <Navigate to="/venue" replace />
   return (
     <>
       <ScreenHeader title={venue.name} backTo="/venue" />
+      {partners && (
+        <Section title={t('venuePanel.partners.sectionPlan')}>
+          <PlanCard placeId={venue.placeId} />
+        </Section>
+      )}
       <Section title={t('venuePanel.stats.title')}>
         <StatsCard placeId={venue.placeId} />
         <ProSubscriptionCard placeId={venue.placeId} />
@@ -361,6 +370,11 @@ export function VenueDetailScreen() {
       <Section title={t('venuePanel.sponsor.title')}>
         <SponsorshipForm venue={venue} />
       </Section>
+      {partners && partnerState?.role === 'owner' && (
+        <Section title={t('venuePanel.partners.sectionTeam')}>
+          <TeamCard placeId={venue.placeId} />
+        </Section>
+      )}
       <div className="h-8" />
       {venue.sponsorship?.status === 'active' && venue.sponsorship.tier === 'top' && (
         <Section title={t('venuePanel.flash.title')}>

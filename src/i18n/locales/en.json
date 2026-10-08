@@ -1439,7 +1439,8 @@
       "active": "Pro Statistics active",
       "inactive": "Subscription without active access",
       "manage": "Manage Pro subscription",
-      "payerOnly": "The subscription is managed by the account that purchased it."
+      "payerOnly": "The subscription is managed by the account that purchased it.",
+      "contract": "Included in your contract."
     },
     "edit": {
       "title": "Page",
@@ -1507,6 +1508,88 @@
       "saved": "Saved.",
       "error": "Could not save. Please try again.",
       "summary": "What people say now"
+    },
+    "partners": {
+      "plan": {
+        "title": "Your plan",
+        "account": "Company: {{name}}",
+        "contract": "Contract {{reference}} · from {{from}} to {{to}}",
+        "noContract": "No contract. You can buy a sponsorship or Pro stats below.",
+        "benefitsTitle": "Active advantages",
+        "noBenefits": "No paid advantage is active. Free features are still available.",
+        "benefit": "{{benefit}} · {{source}} · until {{until}}",
+        "benefits": {
+          "sponsor_featured": "Featured",
+          "sponsor_featured_plus": "Featured Plus",
+          "sponsor_top": "Top",
+          "pro_stats": "Pro stats"
+        },
+        "sources": {
+          "contract": "included in your contract",
+          "stripe": "paid by card",
+          "invoice": "activated by invoice"
+        },
+        "yourRole": "Your role: {{role}}",
+        "termsAccepted": "You accepted the venue terms v{{version}}.",
+        "termsPending": "You have not accepted the venue terms v{{version}} yet.",
+        "termsAccept": "Read and accept",
+        "termsRead": "Read the venue terms",
+        "termsConfirm": "Accept"
+      },
+      "roles": {
+        "owner": "Owner",
+        "staff": "Manager"
+      },
+      "team": {
+        "title": "Team",
+        "body": "Managers can edit the venue page, events and music, and buy plans. Only the owner invites or removes managers.",
+        "invite": "Invite a manager",
+        "created": "Invitation created. Share it only with that person: it works once and expires on {{date}}.",
+        "code": "Code: {{code}}",
+        "copy": "Copy link",
+        "copied": "Link copied",
+        "pending": "Pending invitations",
+        "pendingItem": "Manager · expires on {{date}}",
+        "cancel": "Cancel",
+        "remove": "Remove",
+        "me": "(you)",
+        "limit": "You reached the limit of pending invitations (5) or members (10).",
+        "error": "Could not complete. Please try again."
+      },
+      "haveCode": "I have an invitation code",
+      "invite": {
+        "title": "Venue invitation",
+        "body": "Enter the code we sent you to manage your venue without claiming it.",
+        "codeLabel": "Invitation code",
+        "check": "Check code",
+        "venue": "{{venue}} · {{city}}",
+        "account": "Company: {{name}}",
+        "role": "You will join as: {{role}}",
+        "acceptTerms": "I have read and accept the venue terms v{{version}}",
+        "readTerms": "Read the terms",
+        "redeem": "Accept and join",
+        "alreadyManager": "You already manage this venue.",
+        "disabled": "Venue invitations are not available yet.",
+        "errors": {
+          "invalid_code": "The code is not valid, has expired or was already used.",
+          "already_manager": "You already manage this venue.",
+          "terms_required": "You must accept the venue terms.",
+          "generic": "Could not complete. Please try again."
+        }
+      },
+      "landing": {
+        "title": "You have been invited to manage a venue",
+        "body": "Create your Nightlife Connect account or sign in. Then you will accept the invitation and the venue terms.",
+        "code": "Invitation code: {{code}}",
+        "signup": "Create account",
+        "login": "I already have an account",
+        "continue": "Continue",
+        "invalid": "This invitation link is not valid. Ask whoever sent it for a new one."
+      },
+      "claimTerms": "I have read and accept the venue terms",
+      "claimTermsRequired": "Accept the venue terms to send the request.",
+      "sectionPlan": "Plan and advantages",
+      "sectionTeam": "Team"
     }
   },
   "admin": {
@@ -1531,7 +1614,8 @@
       "audit": "Audit",
       "users": "Users",
       "venues": "Venues",
-      "escalations": "Severe risk"
+      "escalations": "Severe risk",
+      "partners": "Partners"
     },
     "mfa": {
       "title": "Second factor",
@@ -1680,6 +1764,7 @@
         "travel_mode_enabled": "Travel mode (Block 11).",
         "email_login_enabled": "Sign in with an email code after sign-up (needs custom SMTP in Supabase Auth).",
         "live_status_enabled": "\"How it is now\": crowd, queue and music voted with check-in, plus music declared by the venue (R2).",
+        "venue_partners_enabled": "Partners and contracts: venue invitations, venue terms, plan and team (R3).",
         "flash_alcohol_allowed": "Enable only after reviewing the applicable regional regulations."
       }
     },
@@ -1944,6 +2029,88 @@
         "save": "Save token",
         "clear": "Remove token"
       }
+    },
+    "partners": {
+      "title": "Partners and contracts",
+      "body": "Companies working with us, their venues, contracts and access invitations.",
+      "new": "New company",
+      "edit": "Edit",
+      "fields": {
+        "legalName": "Legal name",
+        "taxId": "Tax ID (CIF/NIF)",
+        "contactName": "Contact person",
+        "billingEmail": "Billing email",
+        "contactPhone": "Phone (optional)",
+        "notes": "Internal notes (optional)",
+        "isTest": "Test company (test data)"
+      },
+      "save": "Save company",
+      "saved": "Saved.",
+      "empty": "No companies yet.",
+      "testBadge": "Test",
+      "ended": "Ended",
+      "errors": {
+        "invalid": "Check the data: valid Spanish tax ID, email and names.",
+        "duplicate_tax_id": "A company with that tax ID already exists.",
+        "linked_elsewhere": "That venue already belongs to another company.",
+        "already_sponsored": "That venue already has an active sponsorship on those dates.",
+        "duplicate_reference": "A contract with that reference already exists.",
+        "invalid_state": "Not possible in the current contract state.",
+        "generic": "Could not complete. Please try again."
+      },
+      "venues": {
+        "title": "Venues",
+        "search": "Search a venue to link",
+        "link": "Link",
+        "unlink": "Unlink",
+        "none": "No linked venues.",
+        "managers": "Managers",
+        "noManagers": "No managers yet.",
+        "remove": "Remove",
+        "invite": "Invite the owner",
+        "invitations": "Invitations",
+        "revoke": "Cancel"
+      },
+      "invitation": {
+        "title": "Invitation created",
+        "body": "Copy the code or the link now: it will not be shown again. It works once and expires on {{date}}.",
+        "code": "Code: {{code}}",
+        "copy": "Copy link",
+        "copied": "Link copied"
+      },
+      "invitationStatus": {
+        "pending": "Pending",
+        "used": "Used",
+        "revoked": "Cancelled",
+        "expired": "Expired"
+      },
+      "contracts": {
+        "title": "Contracts",
+        "new": "New contract",
+        "reference": "Contract reference",
+        "tier": "Included sponsorship",
+        "pro": "Includes Pro stats",
+        "startsOn": "Start",
+        "endsOn": "End",
+        "create": "Create contract (draft)",
+        "activate": "Activate",
+        "end": "End",
+        "none": "No contracts.",
+        "tiers": {
+          "none": "No sponsorship",
+          "featured": "Featured",
+          "featured_plus": "Featured Plus",
+          "top": "Top"
+        },
+        "status": {
+          "draft": "Draft",
+          "active": "Active",
+          "ended": "Ended"
+        },
+        "summary": "{{tier}}{{pro}} · from {{from}} to {{to}} · terms v{{version}}",
+        "proSuffix": " + Pro stats",
+        "note": "The signed contract (PDF) is kept outside the app. When activated, the advantages apply to every linked venue and end by themselves on the end date. Contract sponsorships do not use the 3 slots per city."
+      }
     }
   },
   "anthem": {
@@ -2099,7 +2266,8 @@
             "claim": "Sign up in the app and go to Profile › Venue panel › Claim a venue.",
             "evidence": "Tell us how you prove you manage it (for example, tax ID, an invoice in the venue's name or an email on its domain).",
             "review": "A person on the team reviews every request. Once approved, you manage the page from your panel.",
-            "help": "Would you rather we help you? Write to us from Contact."
+            "help": "Would you rather we help you? Write to us from Contact.",
+            "invite": "If you sign an agreement with us, we send you an invitation: you sign in, accept the venue terms and manage the venue without claiming it."
           }
         },
         "free": {
@@ -2108,7 +2276,8 @@
             "profile": "Edit your page: description, opening hours and price range.",
             "events": "Publish official events: they show as \"Official\" without waiting for confirmations.",
             "stats": "Basic stats: check-ins this week and how many people are going tonight, always aggregated and anonymous.",
-            "music": "Music and atmosphere: declare up to 3 styles and tonight's line-up; the venue page shows it next to what checked-in people vote (anonymous, from 3 votes). Managers cannot vote at their own venue."
+            "music": "Music and atmosphere: declare up to 3 styles and tonight's line-up; the venue page shows it next to what checked-in people vote (anonymous, from 3 votes). Managers cannot vote at their own venue.",
+            "team": "Team: the owner can invite and remove managers; everyone sees the plan and the active advantages of the venue."
           }
         },
         "sponsor": {
