@@ -20,11 +20,11 @@ Plan: [R4_PLAN.md](./R4_PLAN.md). Todo aditivo y detrás de `venue_showcase_enab
   patrocinio (mismos días antes) y Flash (misma franja la semana anterior). Siempre con
   umbral de 5. Con Estadísticas Pro: evolución por noche y 30 días anteriores.
 - **Servidor:** migraciones `20261008174514_venue_showcase_schema`, `…175719_storage`,
-  `…184836_photos`, `…184900_page`, `…184936_report`, aplicadas por MCP. La parte 5
-  (`PENDING_5_venue_showcase_cleanup.sql`: borrar una foto y limpieza diaria) contiene
-  `DELETE` y Supabase la cancela sin confirmación: **pendiente de ejecutar por el
-  propietario** en el SQL Editor; hasta entonces «Borrar foto» falla y no hay limpieza
-  diaria (no afecta con el flag apagado). Quitar un aviso ya no borra filas: lo caduca.
+  `…184836_photos`, `…184900_page`, `…184936_report` (aplicadas por MCP) y
+  `…193000_cleanup` (borrar una foto y limpieza diaria, cron `nl_venue_showcase_maintenance`
+  a las 3:41). La parte 5 contiene `DELETE` y Supabase la cancela sin confirmación: la
+  ejecutó el propietario en el SQL Editor; código verificado (md5 igual al repo) y
+  registrada en el historial. Quitar un aviso no borra filas: lo caduca.
 
 **Hecho cuando**
 
@@ -33,11 +33,10 @@ Plan: [R4_PLAN.md](./R4_PLAN.md). Todo aditivo y detrás de `venue_showcase_enab
   rechazo con motivo; avisos y ficha enriquecida; informe con umbral y detalle Pro
   (unitarias 20 nuevas + E2E r4 4/4).
 - ✅ SQL: showcase 61/61 (anónimo, usuario, gestor, gestor de otro local, admin aal1/aal2,
-  flag apagado, Storage, límites, umbrales, auditoría) · RLS 37/37 (18 flags) · sin restos ·
-  historial 72 = repositorio (+ parte 5 pendiente).
+  flag apagado, Storage, límites, umbrales, auditoría) · showcase-cleanup 9/9 · RLS 37/37
+  (18 flags) · sin restos · historial 73 = repositorio.
 - ✅ `npm run check` 482/482 · build · `npm audit` 0 · E2E completas 56/56 ×3.
 - ✅ Advisors: 0 errores; 5 INFO nuevos intencionados (tablas `private` sin acceso directo).
-- ❌ Parte 5 de la migración pendiente (ver arriba).
 - ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
 
 **Cómo probarlo:** `npm run test:e2e -- r4-showcase` o, en local, Admin › Feature flags ›

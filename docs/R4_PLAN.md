@@ -51,5 +51,5 @@ almost_full|full`, caduca a los 90 min), «entrada gratis hasta» y «happy hour
 - ✅ SQL por rol (`supabase/tests/showcase.sql`, 61/61): anónimo, usuario, gestor de otro
   local, gestor, admin aal1/aal2; flag apagado; límites; Storage; umbrales; auditoría.
 - ✅ RLS 37/37, Advisors sin errores, `npm audit` 0, docs.
-- ❌ Parte 5 (`PENDING_5_venue_showcase_cleanup.sql`, con `DELETE`): Supabase la cancela sin
-  confirmación; la ejecuta el propietario en el SQL Editor.
+- ✅ Parte 5 (`…193000_venue_showcase_cleanup`, con `DELETE`): ejecutada por el propietario en el
+  SQL Editor, verificada y registrada; `showcase-cleanup.sql` 9/9.

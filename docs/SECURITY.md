@@ -20,8 +20,9 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
 - Privacidad (PRD 4.3): vistas contadas con una marca HMAC (sin id de persona) que se borra
   a los 2 días; solo se guardan contadores diarios (400 días); el informe nunca baja de 5
   personas; las vistas del propio gestor y de cuentas de prueba no cuentan.
-- Pendiente: parte 5 (borrado de fotos y limpieza diaria) a ejecutar por el propietario.
-- Pruebas: showcase 61/61, RLS 37/37; Advisors sin errores.
+- Borrado de fotos solo por gestores del local (fila primero, luego el objeto) y limpieza
+  diaria solo desde cron (sin permiso para clientes).
+- Pruebas: showcase 61/61, showcase-cleanup 9/9, RLS 37/37; Advisors sin errores.
 
 ## R3 — Partners y contratos — 08/10/2026
 
