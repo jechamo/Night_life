@@ -12,7 +12,7 @@ function database(rpcResult: (name: string) => { data: unknown; error: unknown }
       error: null,
     }),
   )
-  const upload = vi.fn(() => Promise.resolve({ data: {}, error: null as unknown }))
+  const upload = vi.fn(() => Promise.resolve({ data: {}, error: null }))
   const remove = vi.fn(() => Promise.resolve({ data: [], error: null }))
   const from = vi.fn(() => ({ createSignedUrls, upload, remove }))
   return {
