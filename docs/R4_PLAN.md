@@ -24,7 +24,7 @@ Aprobado por el propietario el 08/10/2026. Todo aditivo y detrás de `venue_show
 - `private.venue_details` (dress code, edad mínima, precio de entrada y de copa, terraza,
   accesible).
 - `private.venue_notices` (lo dice el local): puerta (`no_queue|short_queue|long_queue|
-  almost_full|full`, caduca a los 90 min), «entrada gratis hasta» y «happy hour hasta»
+almost_full|full`, caduca a los 90 min), «entrada gratis hasta» y «happy hour hasta»
   (máx. 8 h). Siempre etiquetado «Lo dice el local».
 - Vistas de ficha: una por persona, local y noche (`private.venue_view_marks`, con HMAC y
   borrado a los 2 días) → contador diario `private.venue_daily_views` (400 días). No cuentan
