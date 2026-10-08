@@ -1791,16 +1791,22 @@ export type Database = {
       venue_managers: {
         Row: {
           created_at: string
+          invited_by: string | null
+          role: string
           user_id: string
           venue_id: string
         }
         Insert: {
           created_at?: string
+          invited_by?: string | null
+          role?: string
           user_id: string
           venue_id: string
         }
         Update: {
           created_at?: string
+          invited_by?: string | null
+          role?: string
           user_id?: string
           venue_id?: string
         }
@@ -2056,25 +2062,13 @@ export type Database = {
         }
         Returns: Json
       }
-      admin_create_venue: { Args: { p: Json }; Returns: string }
-      admin_dashboard: { Args: never; Returns: Json }
       admin_contract_action: {
         Args: { p_action: string; p_contract: string }
         Returns: undefined
       }
       admin_contract_save: { Args: { p: Json }; Returns: string }
-      admin_invite_revoke: { Args: { p_invite: string }; Returns: undefined }
-      admin_partner_link: {
-        Args: { p_account: string; p_link: boolean; p_venue: string }
-        Returns: undefined
-      }
-      admin_partner_save: { Args: { p: Json }; Returns: string }
-      admin_partners: { Args: never; Returns: Json }
-      admin_remove_manager: {
-        Args: { p_user: string; p_venue: string }
-        Returns: undefined
-      }
-      admin_venue_invite: { Args: { p_venue: string }; Returns: Json }
+      admin_create_venue: { Args: { p: Json }; Returns: string }
+      admin_dashboard: { Args: never; Returns: Json }
       admin_delete_venue: { Args: { p_venue: string }; Returns: undefined }
       admin_entitlement: {
         Args: { p_days?: number; p_key: string; p_user: string }
@@ -2085,6 +2079,7 @@ export type Database = {
         Args: { p_city: string; p_items: Json }
         Returns: Json
       }
+      admin_invite_revoke: { Args: { p_invite: string }; Returns: undefined }
       admin_list_users: {
         Args: { p_limit?: number; p_query?: string }
         Returns: {
@@ -2109,11 +2104,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      admin_partner_link: {
+        Args: { p_account: string; p_link: boolean; p_venue: string }
+        Returns: undefined
+      }
+      admin_partner_save: { Args: { p: Json }; Returns: string }
+      admin_partners: { Args: never; Returns: Json }
       admin_promo: {
         Args: { p_code: string; p_days: number; p_max: number }
         Returns: string
       }
       admin_provider_access: { Args: never; Returns: Json }
+      admin_remove_manager: {
+        Args: { p_user: string; p_venue: string }
+        Returns: undefined
+      }
       admin_resolve_verification: {
         Args: { p_approve: boolean; p_note?: string; p_session: string }
         Returns: undefined
@@ -2136,6 +2141,7 @@ export type Database = {
         Returns: undefined
       }
       admin_upsert_venue_from_google: { Args: { p: Json }; Returns: string }
+      admin_venue_invite: { Args: { p_venue: string }; Returns: Json }
       admin_verification_reviews: {
         Args: never
         Returns: {
@@ -2403,10 +2409,6 @@ export type Database = {
       }
       venue_edit: { Args: { p: Json; p_venue: string }; Returns: Json }
       venue_flash_alert: { Args: { p: Json; p_venue: string }; Returns: string }
-      venue_official_event: {
-        Args: { p: Json; p_venue: string }
-        Returns: string
-      }
       venue_invite_cancel: {
         Args: { p_invite: string; p_venue: string }
         Returns: undefined
@@ -2417,6 +2419,10 @@ export type Database = {
         Returns: Json
       }
       venue_invite_staff: { Args: { p_venue: string }; Returns: Json }
+      venue_official_event: {
+        Args: { p: Json; p_venue: string }
+        Returns: string
+      }
       venue_partner_state: { Args: { p_venue: string }; Returns: Json }
       venue_remove_manager: {
         Args: { p_user: string; p_venue: string }

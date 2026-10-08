@@ -1,5 +1,41 @@
 # Progreso — Nightlife Connect
 
+## Roadmap 2026-10 · R3 — Partners y contratos — 08/10/2026
+
+Plan: [R3_PLAN.md](./R3_PLAN.md). Todo aditivo y detrás de `venue_partners_enabled`
+(apagado). Claim, patrocinio por Stripe/factura y Pro por Stripe no cambian.
+
+- **Admin › Partners:** empresas (CIF/NIF validado), locales vinculados, contratos con nivel
+  de patrocinio y/o Estadísticas Pro y fechas, gestores e invitaciones de titular.
+- **Invitaciones de un solo uso** (7 días, solo se guarda su HMAC). Enlace público
+  `/invitacion/<código>` que continúa tras el alta o el login; canje en `/venue/invitacion`
+  aceptando las Condiciones para Locales.
+- **Panel del local:** «Plan y ventajas» (origen de cada ventaja: contrato, tarjeta o factura)
+  y «Equipo» (solo titular). Pro de contrato: «Incluido en tu contrato».
+- **Servidor:** migraciones `20261008141727_venue_partners_schema`, `…141802_helpers`,
+  `…141836_slots` (aplicadas por MCP) y `…142000_admin`, `…142100_venue` (aplicadas por el
+  propietario en el SQL Editor por el límite de tamaño de las aprobaciones; código
+  verificado función a función y registradas en el historial). Los patrocinios de
+  contrato no ocupan huecos por ciudad; swipe patrocinado ordenado por cercanía.
+
+**Hecho cuando**
+
+- ✅ Flag apagado: sin cambios (447 unitarias previas + E2E previas en verde).
+- ✅ Flag encendido: recorrido completo admin → invitación → local (unitarias + E2E r3 4/4).
+- ✅ SQL: partners 37/37 · RLS 36/36 (17 flags) · block9 72/72 · premium-completion 45/45 ·
+  flag en `off` · sin restos · historial 67 = repositorio.
+- ✅ `npm run check` 462/462 (+15) · build · `npm audit` 0 · tipos regenerados.
+- ⚠️ E2E 52/52 en 11 pasadas seguidas; en la primera tanda (3 pasadas, con otra carga en la
+  máquina) hubo 1 fallo en 2 de ellas que no se pudo identificar ni reproducir. Vigilar.
+- ✅ Advisors: 0 errores; 5 INFO nuevos intencionados (tablas `private` sin acceso directo).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+- ⚠️ Revisar con asesoría las Condiciones para Locales (la v1.0 solo habla de reclamar gratis)
+  antes del primer contrato real.
+
+**Cómo probarlo:** `npm run test:e2e -- r3-partners` o, en local, Admin › Feature flags ›
+`venue_partners_enabled` = on → Admin › Partners → empresa + local + contrato → activar →
+«Invitar al titular» → Perfil › Panel de locales › «Tengo un código».
+
 ## Roadmap 2026-10 · R2 — «Cómo está ahora» — 08/10/2026
 
 Plan: [R2_PLAN.md](./R2_PLAN.md). Todo aditivo y detrás de `live_status_enabled` (apagado);

@@ -2,6 +2,18 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Roadmap R3 — partners y contratos
+
+Modelo en `venue-panel/model/partners.ts` (zod). Admin: `AdminPartnersScreen` → hooks de
+`use-admin` → `AdminService.partners/savePartner/linkPartnerVenue/createContract/
+contractAction/inviteVenueOwner/...` → `admin.ts` (RPC `admin_*`). Local: `PlanCard`,
+`TeamCard`, `RedeemInviteScreen` → `use-venue-panel` → `VenuePanelService.partnerState/
+team/inviteStaff/previewInvite/redeemInvite/...` → `business.ts`. El enlace público
+`/invitacion/:code` guarda el código con `usePendingInvite` (preferencias de `usePlatform`) y
+`usePostAuthPath` lo retoma tras el alta o el login. En el servidor, `venue_entitlements` es
+el registro de ventajas que no vienen de Stripe; los niveles de patrocinio crean además una
+fila `sponsorships` enlazada para que mapa, Inicio, swipe y Flash sigan igual.
+
 ## Roadmap R2 — «Cómo está ahora»
 
 `PlaceDetails` pinta `LiveStatusSection` solo con `live_status_enabled`. Flujo: UI →

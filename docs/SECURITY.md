@@ -2,6 +2,25 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## R3 — Partners y contratos — 08/10/2026
+
+- A01/API1/API5: empresas, contratos, ventajas e invitaciones en tablas `private` con RLS y
+  sin grants; solo RPC `security definer` con envoltorios `invoker`; admin exige rol + `aal2`;
+  el plan del local solo lo leen sus gestores; el equipo solo lo gestiona el titular (no
+  puede quitarse a sí mismo; solo quita encargados).
+- A02/A07: códigos de invitación de 48 bits aleatorios (`gen_random_bytes`), un solo uso,
+  caducan a los 7 días, revocables; en la base solo se guarda `hmac_hex` (Vault). Límite de
+  20 intentos/hora por persona e IP (`case_limit`). El código pendiente en el dispositivo
+  caduca a los 7 días y se borra al canjearlo.
+- A04: flag comprobado en servidor; aceptar las Condiciones para Locales es obligatorio
+  para canjear (y para reclamar con el flag encendido) y queda en `consent_records`.
+- Integridad comercial: los patrocinios de contrato se marcan con su ventaja y terminan con
+  el contrato (manual o cron diario); no ocupan huecos de ciudad (decisión del propietario);
+  el límite de 3 sigue para Stripe y factura. Todas las acciones quedan auditadas.
+- RGPD: datos de contacto de empresas solo para admin; sin PDF ni documentos en la app.
+- Pruebas: partners 37/37, RLS 36/36, block9 72/72, premium-completion 45/45; Advisors sin
+  errores.
+
 ## R2 — «Cómo está ahora» — 08/10/2026
 
 - A01/API1: votos en `private.place_reports` sin permisos de cliente (RLS activo, sin
