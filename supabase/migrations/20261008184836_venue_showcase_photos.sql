@@ -1,4 +1,4 @@
--- Roadmap 2026-10 R4 (3a/4): venue-facing and public showcase RPCs (flag on).
+-- Roadmap 2026-10 R4 (3a/5): venue-facing photo RPCs (flag on).
 create function private.venue_photos_manage(p_venue uuid) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 begin
@@ -28,18 +28,6 @@ begin
  return private.venue_photos_manage(p_venue);
 end $$;
 
--- Removes the row and returns the path; the client then deletes the object.
-create function private.venue_photo_remove(p_venue uuid, p_photo uuid) returns text
-language plpgsql security definer set search_path = '' as $$
-declare v_path text;
-begin
- perform private.require_showcase(); perform private.require_venue_manager(p_venue);
- perform private.case_limit('venue-photo', 30);
- delete from private.venue_photos where id = p_photo and venue_id = p_venue returning path into v_path;
- if v_path is null then raise exception 'not found' using errcode = 'P0002'; end if;
- return v_path;
-end $$;
-
 create function private.venue_photo_set_cover(p_venue uuid, p_photo uuid) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 begin
@@ -54,6 +42,6 @@ begin
 end $$;
 
 revoke all on function private.venue_photos_manage(uuid), private.venue_photo_add(uuid, text),
- private.venue_photo_remove(uuid, uuid), private.venue_photo_set_cover(uuid, uuid) from public, anon;
+ private.venue_photo_set_cover(uuid, uuid) from public, anon;
 grant execute on function private.venue_photos_manage(uuid), private.venue_photo_add(uuid, text),
- private.venue_photo_remove(uuid, uuid), private.venue_photo_set_cover(uuid, uuid) to authenticated;
+ private.venue_photo_set_cover(uuid, uuid) to authenticated;

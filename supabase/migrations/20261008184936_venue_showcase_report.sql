@@ -1,4 +1,4 @@
--- Roadmap 2026-10 R4 (4/4): results report, admin moderation, maintenance and API wrappers.
+-- Roadmap 2026-10 R4 (4/5): results report, admin moderation and API wrappers.
 -- Below 5 people every figure is returned as 0 and shown as «menos de 5» (PRD 4.3).
 create function private.showcase_t(n bigint) returns integer
 language sql immutable set search_path = '' as $$ select case when n >= 5 then n::integer else 0 end $$;
@@ -84,18 +84,8 @@ begin
  perform private.audit(case when p_approve then 'venue_photo.approve' else 'venue_photo.reject' end, p_photo::text);
 end $$;
 
-create function private.venue_showcase_maintenance() returns void
-language plpgsql security definer set search_path = '' as $$
-begin
- delete from private.venue_view_marks where night_date < private.nightlife_night_date() - 2;
- delete from private.venue_daily_views where night_date < private.nightlife_night_date() - 400;
- delete from private.venue_notices where until < now() - interval '1 day';
-end $$;
-select cron.schedule('nl_venue_showcase_maintenance', '41 3 * * *', 'select private.venue_showcase_maintenance()');
-
 create function public.venue_photos_manage(p_venue uuid) returns jsonb language sql security invoker set search_path = '' as $$ select private.venue_photos_manage(p_venue) $$;
 create function public.venue_photo_add(p_venue uuid, p_path text) returns jsonb language sql security invoker set search_path = '' as $$ select private.venue_photo_add(p_venue, p_path) $$;
-create function public.venue_photo_remove(p_venue uuid, p_photo uuid) returns text language sql security invoker set search_path = '' as $$ select private.venue_photo_remove(p_venue, p_photo) $$;
 create function public.venue_photo_set_cover(p_venue uuid, p_photo uuid) returns jsonb language sql security invoker set search_path = '' as $$ select private.venue_photo_set_cover(p_venue, p_photo) $$;
 create function public.venue_details_save(p_venue uuid, p jsonb) returns jsonb language sql security invoker set search_path = '' as $$ select private.venue_details_save(p_venue, p) $$;
 create function public.venue_notice_set(p_venue uuid, p_kind text, p_value text, p_until timestamptz) returns jsonb language sql security invoker set search_path = '' as $$ select private.venue_notice_set(p_venue, p_kind, p_value, p_until) $$;
@@ -108,17 +98,17 @@ create function public.admin_venue_photos(p_status text) returns jsonb language 
 create function public.admin_venue_photo_review(p_photo uuid, p_approve boolean, p_reason text) returns void language sql security invoker set search_path = '' as $$ select private.admin_venue_photo_review(p_photo, p_approve, p_reason) $$;
 
 revoke all on function private.showcase_t(bigint), private.venue_nights(uuid, text, date, date),
- private.venue_period(uuid, date, date), private.venue_showcase_maintenance() from public, anon, authenticated;
+ private.venue_period(uuid, date, date) from public, anon, authenticated;
 revoke all on function private.venue_report(uuid), private.admin_venue_photos(text),
  private.admin_venue_photo_review(uuid, boolean, text), public.venue_photos_manage(uuid),
- public.venue_photo_add(uuid, text), public.venue_photo_remove(uuid, uuid), public.venue_photo_set_cover(uuid, uuid),
+ public.venue_photo_add(uuid, text), public.venue_photo_set_cover(uuid, uuid),
  public.venue_details_save(uuid, jsonb), public.venue_notice_set(uuid, text, text, timestamptz),
  public.venue_notice_clear(uuid, text), public.venue_showcase(uuid), public.venue_covers(), public.place_view(uuid),
  public.venue_report(uuid), public.admin_venue_photos(text), public.admin_venue_photo_review(uuid, boolean, text)
  from public, anon;
 grant execute on function private.venue_report(uuid), private.admin_venue_photos(text),
  private.admin_venue_photo_review(uuid, boolean, text), public.venue_photos_manage(uuid),
- public.venue_photo_add(uuid, text), public.venue_photo_remove(uuid, uuid), public.venue_photo_set_cover(uuid, uuid),
+ public.venue_photo_add(uuid, text), public.venue_photo_set_cover(uuid, uuid),
  public.venue_details_save(uuid, jsonb), public.venue_notice_set(uuid, text, text, timestamptz),
  public.venue_notice_clear(uuid, text), public.venue_showcase(uuid), public.venue_covers(), public.place_view(uuid),
  public.venue_report(uuid), public.admin_venue_photos(text), public.admin_venue_photo_review(uuid, boolean, text)

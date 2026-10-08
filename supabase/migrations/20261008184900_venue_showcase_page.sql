@@ -1,4 +1,4 @@
--- Roadmap 2026-10 R4 (3b/4): venue details, notices, public showcase and views (flag on).
+-- Roadmap 2026-10 R4 (3b/5): venue details, notices, public showcase and views (flag on).
 create function private.venue_details_json(p_venue uuid) returns jsonb
 language sql stable security definer set search_path = '' as $$
  select jsonb_build_object('dressCode', dress_code, 'minAge', min_age, 'entryPriceCents', entry_price_cents,
@@ -58,7 +58,8 @@ language plpgsql security definer set search_path = '' as $$
 begin
  perform private.require_showcase(); perform private.require_venue_manager(p_venue);
  perform private.case_limit('venue-notice', 60);
- delete from private.venue_notices where venue_id = p_venue and kind = p_kind;
+ -- Expired at once; the daily maintenance removes it later.
+ update private.venue_notices set until = least(until, now()) where venue_id = p_venue and kind = p_kind;
  return private.venue_notices_json(p_venue);
 end $$;
 
@@ -106,13 +107,9 @@ begin
  end if;
 end $$;
 
-revoke all on function private.venue_photos_manage(uuid), private.venue_photo_add(uuid, text),
- private.venue_photo_remove(uuid, uuid), private.venue_photo_set_cover(uuid, uuid),
- private.venue_details_json(uuid), private.venue_details_save(uuid, jsonb), private.venue_notices_json(uuid),
+revoke all on function private.venue_details_json(uuid), private.venue_details_save(uuid, jsonb), private.venue_notices_json(uuid),
  private.venue_notice_set(uuid, text, text, timestamptz), private.venue_notice_clear(uuid, text),
  private.venue_showcase(uuid), private.venue_covers(), private.place_view(uuid) from public, anon;
-grant execute on function private.venue_photos_manage(uuid), private.venue_photo_add(uuid, text),
- private.venue_photo_remove(uuid, uuid), private.venue_photo_set_cover(uuid, uuid),
- private.venue_details_save(uuid, jsonb), private.venue_notice_set(uuid, text, text, timestamptz),
+grant execute on function private.venue_details_save(uuid, jsonb), private.venue_notice_set(uuid, text, text, timestamptz),
  private.venue_notice_clear(uuid, text), private.venue_showcase(uuid), private.venue_covers(),
  private.place_view(uuid) to authenticated;
