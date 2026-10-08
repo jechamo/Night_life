@@ -6,6 +6,13 @@ encenderlo, el propietario configura Supabase Auth en el panel del proyecto
 
 ## 1. SMTP propio (obligatorio)
 
+Ojo: el Gmail ya configurado (ADR 0009) lo usan las **Edge Functions** de la app (PDF firmado,
+avisos de facturación) con sus propios secretos. Los emails de **Supabase Auth**
+(confirmaciones y códigos) salen por otra configuración, la de Auth. Supabase Auth ya ha
+enviado confirmaciones (4 envíos, 1 email confirmado hasta el 05/10), pero desde aquí no se
+puede ver si usa ese Gmail o el servidor de pruebas de Supabase. Compruébalo primero:
+si en SMTP Settings ya figura `smtp.gmail.com`, este paso está hecho.
+
 Authentication › Emails › SMTP Settings › Enable custom SMTP:
 
 - Host `smtp.gmail.com`, puerto `465` (SSL) o `587` (STARTTLS).
