@@ -18,6 +18,19 @@ describe('Paywall follows the flags (Block 4 "done when")', () => {
     expect(screen.queryByText('Próximamente')).not.toBeInTheDocument()
   })
 
+  it('travel mode is never sold as live while its flag is off', async () => {
+    renderApp('/premium', quiet)
+    const soon = await screen.findAllByText('Modo viaje (próximamente, sin coste extra)')
+    expect(soon.length).toBeGreaterThan(0)
+    expect(screen.queryByText('Modo viaje')).not.toBeInTheDocument()
+  })
+
+  it('travel mode is listed as a normal benefit once its flag is on', async () => {
+    renderApp('/premium', { ...quiet, services: { flags: { travel_mode_enabled: 'on' } } })
+    expect((await screen.findAllByText('Modo viaje')).length).toBeGreaterThan(0)
+    expect(screen.queryByText(/próximamente, sin coste extra/)).not.toBeInTheDocument()
+  })
+
   it('a normal user sees "Próximamente" and "Avísame" needs commercial consent', async () => {
     renderApp('/premium', { ...quiet, services: { roles: ['user'] } })
     expect(await screen.findByText('Próximamente')).toBeInTheDocument()

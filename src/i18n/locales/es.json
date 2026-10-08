@@ -979,6 +979,7 @@
     "oneTime": "pago único",
     "vatIncluded": "IVA incluido",
     "mostComplete": "El más completo",
+    "benefitSoon": "{{benefit}} (próximamente, sin coste extra)",
     "benefits": {
       "unlimited_likes": "Likes ilimitados",
       "see_likes": "Ver quién te ha dado like",

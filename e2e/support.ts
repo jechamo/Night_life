@@ -1,5 +1,30 @@
-import { expect, type Page } from '@playwright/test'
+import { test as base, expect, type Page } from '@playwright/test'
 import es from '../src/i18n/locales/es.json' with { type: 'json' }
+
+/**
+ * Every spec uses this `test`: the simulated app must never talk to anything but its own
+ * local server. Any other request (Supabase, Stripe, maps, analytics…) is aborted and
+ * fails the test, so the suite can never touch real data even if misconfigured.
+ */
+export const test = base.extend<{ localOnly: void }>({
+  localOnly: [
+    async ({ page, baseURL }, use) => {
+      const origin = new URL(baseURL!).origin
+      const escaped: string[] = []
+      await page.route(
+        (url) => url.origin !== origin && !['data:', 'blob:'].includes(url.protocol),
+        async (route) => {
+          escaped.push(route.request().url())
+          await route.abort('blockedbyclient')
+        },
+      )
+      await use()
+      expect(escaped, `Peticiones fuera de la app local:\n${escaped.join('\n')}`).toEqual([])
+    },
+    { auto: true },
+  ],
+})
+export { expect }
 
 /** Spanish copy straight from the locale file, so a reworded text never breaks a test. */
 export function t(key: string, values: Record<string, string | number> = {}): string {

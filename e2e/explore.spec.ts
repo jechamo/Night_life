@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test'
-import { signedIn, t, watchErrors } from './support'
+import { expect, signedIn, t, test, watchErrors } from './support'
 
 test.describe('Explorar la noche', () => {
   test.beforeEach(async ({ page }) => signedIn(page))

@@ -3,10 +3,13 @@ import { defineConfig, devices } from '@playwright/test'
 /**
  * Browser regression suite (roadmap 2026-10, block 0). It drives the real SPA on the
  * simulated backend (src/mocks): the Supabase variables are blanked so a local
- * .env.local can never point these tests at the shared project.
+ * .env.local can never point these tests at the shared project. A dedicated port and a
+ * fresh server per run mean an open `npm run preview` (real backend) is never reused,
+ * and e2e/support.ts aborts any request that leaves the local app.
  * PW_CHROMIUM_PATH lets sandboxes reuse a preinstalled Chromium.
  */
-const PORT = 4173
+export const E2E_PORT = 4399
+const PORT = E2E_PORT
 const executablePath = process.env.PW_CHROMIUM_PATH || undefined
 
 export default defineConfig({
@@ -37,7 +40,7 @@ export default defineConfig({
   webServer: {
     command: `npx vite --port ${PORT} --strictPort --host 127.0.0.1`,
     url: `http://127.0.0.1:${PORT}/welcome`,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
     env: { VITE_SUPABASE_URL: '', VITE_SUPABASE_PUBLISHABLE_KEY: '' },
   },

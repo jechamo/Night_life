@@ -979,6 +979,7 @@
     "oneTime": "one-time payment",
     "vatIncluded": "VAT included",
     "mostComplete": "Most complete",
+    "benefitSoon": "{{benefit}} (coming soon, at no extra cost)",
     "benefits": {
       "unlimited_likes": "Unlimited likes",
       "see_likes": "See who liked you",

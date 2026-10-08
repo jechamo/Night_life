@@ -1,6 +1,36 @@
 # Progreso — Nightlife Connect
 
-## Roadmap 2026-10 · Bloque 0 — Red de regresión E2E — 08/10/2026
+## Roadmap 2026-10 · Revisión del Bloque 0 y de compras Stripe — 08/10/2026
+
+Revisión pedida por el propietario («que no falte nada: OWASP, configuración, BBDD,
+compras antiguas y nuevas»). Sin migraciones ni despliegues de Edge Functions.
+
+- **Fallo corregido en el Bloque 0:** las E2E usaban el puerto 4173 (el de
+  `npm run preview`) y reutilizaban un servidor abierto: podían acabar contra la BBDD
+  real. Ahora usan el puerto 4399, siempre un servidor nuevo, y una guardia
+  (`e2e/support.ts`) aborta y hace fallar cualquier petición fuera de la app local
+  (comprobado con una prueba que llama a Supabase y falla como debe).
+- **Modo viaje:** el Pase lo anunciaba como ventaja, pero llega en el Bloque 11
+  (`travel_mode_enabled=off`). Ahora se muestra «Modo viaje (próximamente, sin coste
+  extra)» mientras el flag esté apagado; 2 pruebas unitarias + E2E.
+- **SBOM** regenerado (627 componentes) y corregido el comando en `SBOM.md`.
+- **Pruebas SQL contra Supabase (MCP, transacción que siempre se deshace):**
+  RLS 33/33 · pagos/patrocinio/Pro/créditos 45/45 · facturación y operaciones 72/72 ·
+  matching 62/62 · verificación 54/54 · lugares 19/19 · cuotas 19/19 · OSM 13/13 ·
+  privacidad 4/4. Comprobado después: cero datos de prueba y ajustes intactos.
+  ❌ `block10.sql` no se ejecutó: la herramienta pide aprobación manual (inserta en
+  `storage.objects` y borra contadores dentro de la transacción).
+- **Advisors:** seguridad sin errores (1 WARN conocido de contraseñas filtradas, sin
+  contraseñas en la app; 18 INFO de tablas `private` sin políticas, intencionado).
+  Rendimiento solo INFO: 17 índices sin uso y 1 FK sin índice en
+  `private.likes_seen.sender_id` (anotado para la próxima migración).
+- **Compras Stripe (TEST):** ver `PAYMENTS_GO_LIVE.md` § «Verificación 08/10/2026».
+  14 productos con precio TEST que existe en Stripe; solo el Pase VIP probado de punta
+  a punta con tarjeta; 13 pendientes de una ronda de compras manual.
+- **Pendientes del propietario:** alinear el historial de migraciones (pide OK),
+  auditoría de red (dominio Supabase bloqueado en este entorno), Vercel MCP (403 en el
+  equipo `chaplications-projects`), eventos del webhook en el panel de Stripe.
+- ✅ `npm run check` 420/420 · build · `npm audit` 0 · E2E 108/108 (3 pasadas).
 
 Plan aprobado por el propietario: [ROADMAP_2026-10.md](./ROADMAP_2026-10.md) (login por
 email tras el alta, guías públicas, «Cómo está ahora», contratos de locales, fotos,

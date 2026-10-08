@@ -2,6 +2,21 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Revisión 08/10/2026 (Bloque 0 y compras)
+
+- A05/A08: corregido el riesgo de que las E2E reutilizaran `npm run preview` (Supabase
+  real) en el puerto 4173. Puerto propio 4399, sin reutilización y guardia de red que
+  aborta y suspende la prueba ante cualquier origen distinto de la app local.
+- Transparencia comercial: «Modo viaje» deja de anunciarse como ventaja activa
+  mientras `travel_mode_enabled` esté apagado.
+- BBDD comprobada por MCP con las suites de RLS/RPC del repo (321 pruebas en verde;
+  `block10.sql` pendiente de aprobación manual). Advisors sin errores.
+- Stripe: Edge Functions desplegadas idénticas al repo (firma, pedido, cliente,
+  importe/periodo y modo verificados en servidor). Sin claves ni precios LIVE.
+- Pendiente: alinear el historial de migraciones remoto (versiones del 05/10 y
+  `home_dashboard` sin registrar), auditoría de red HTTP y revisión de eventos del
+  webhook en el panel de Stripe.
+
 ## Roadmap 2026-10 · Bloque 0 (red de regresión E2E) — 08/10/2026
 
 - Solo herramientas de desarrollo: `@playwright/test@1.63.0` (+ `playwright`,

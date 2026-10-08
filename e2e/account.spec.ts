@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test'
-import { MOCK_OTP, signedIn, t, watchErrors } from './support'
+import { MOCK_OTP, expect, signedIn, t, test, watchErrors } from './support'
 
 test.describe('Cuenta, Premium y ajustes', () => {
   test.beforeEach(async ({ page }) => signedIn(page))
@@ -32,6 +31,12 @@ test.describe('Cuenta, Premium y ajustes', () => {
     const errors = watchErrors(page)
     await page.goto('/premium')
     await expect(page.getByRole('heading', { name: t('premium.freeTitle') })).toBeVisible()
+    // Modo viaje aún no existe: nunca se anuncia como ventaja activa.
+    await expect(
+      page
+        .getByText(t('premium.benefitSoon', { benefit: t('premium.benefits.travel_mode') }))
+        .first(),
+    ).toBeVisible()
     await page.getByRole('button', { name: /^Pase Sal sin límites/ }).click()
     await page.getByRole('button', { name: t('premium.continue'), exact: true }).click()
     await expect(page).toHaveURL(/\/premium\/checkout\/pass_monthly$/)

@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test'
-import { t, watchErrors } from './support'
+import { expect, t, test, watchErrors } from './support'
 
 // Sin sesión: la web pública y legal debe funcionar siempre (PRD 5.1).
 test.describe('Web pública sin login', () => {

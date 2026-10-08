@@ -1,5 +1,4 @@
-import { expect, test } from '@playwright/test'
-import { MOCK_OTP, PHOTO, t, watchErrors } from './support'
+import { MOCK_OTP, PHOTO, expect, t, test, watchErrors } from './support'
 
 test.describe('Alta y acceso', () => {
   test('alta completa: bienvenida → firma → OTP → consentimientos → perfil → app', async ({
