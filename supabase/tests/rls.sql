@@ -62,7 +62,7 @@ end $$;
 -- ── anon ─────────────────────────────────────────────────────────────────────
 set local role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
-insert into _results select 'anon reads flags', count(*) = 18 from public.app_settings where kind = 'flag';
+insert into _results select 'anon reads flags', count(*) = 19 from public.app_settings where kind = 'flag';
 insert into _results select 'anon reads published legal docs', count(*) > 0 from public.legal_documents;
 insert into _results select 'anon cannot see inactive premium terms', count(*) = 0 from public.legal_documents where slug = 'premium';
 do $$
@@ -140,6 +140,12 @@ begin
     insert into _results values ('user cannot turn on the venue showcase', false);
   exception when insufficient_privilege then
     insert into _results values ('user cannot turn on the venue showcase', true);
+  end;
+  begin
+    perform public.admin_set_flag('venue_bookings_enabled', 'on');
+    insert into _results values ('user cannot turn on bookings', false);
+  exception when insufficient_privilege then
+    insert into _results values ('user cannot turn on bookings', true);
   end;
   begin
     perform public.purge_test_data();
