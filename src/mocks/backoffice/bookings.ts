@@ -44,12 +44,32 @@ export interface MockBookingsState {
   entries: MockEntry[]
 }
 
-export const createMockBookingsState = (): MockBookingsState => ({
-  settings: {},
-  reservations: [],
-  lists: [],
-  entries: [],
-})
+/**
+ * Demo data of the simulated backend (never real people): Sala Aurora takes bookings and has
+ * tonight's list open, so a person can try the whole flow; the venue's own demo guests have
+ * fixed codes so the door can be tried too.
+ */
+export const DEMO_VENUE = 'v-aurora'
+export const DEMO_GUEST_CODES: Record<string, string> = { Lucía: 'A1B2C3D4E5', Marco: '0F1E2D3C4B' }
+
+export function createMockBookingsState(): MockBookingsState {
+  return {
+    settings: { [DEMO_VENUE]: { reservations: true, guestlists: true, maxParty: 8 } },
+    reservations: [],
+    lists: [
+      {
+        id: 'gl-demo-aurora',
+        venueId: DEMO_VENUE,
+        night: tonight(),
+        title: 'Entrada gratis antes de la 1:30',
+        validUntil: new Date(Date.now() + 4 * 3_600_000).toISOString(),
+        capacity: 100,
+        status: 'open',
+      },
+    ],
+    entries: [],
+  }
+}
 
 type Wait = () => Promise<void>
 
@@ -383,7 +403,7 @@ export function createMockBookingPanel(
             userId: `demo-${name}`,
             name,
             status: 'confirmed',
-            code: randomCode(),
+            code: DEMO_GUEST_CODES[name] ?? randomCode(),
             checkedInAt: null,
           }),
         )
@@ -415,10 +435,4 @@ export function createMockBookingPanel(
       return ok({ result: 'ok', name: e.name, checkedInAt: e.checkedInAt })
     },
   }
-}
-
-/** For the simulated door: the code of a demo guest on tonight's list (tests/tools only). */
-export const demoGuestCode = (config: MockConfig, placeId: string, name: string) => {
-  const ids = new Set(config.bookings.lists.filter((l) => l.venueId === placeId).map((l) => l.id))
-  return config.bookings.entries.find((e) => ids.has(e.listId) && e.name === name)?.code ?? null
 }

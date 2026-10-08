@@ -46,7 +46,7 @@ export function useBookingFormat() {
 export function arrivalFrom(day: string, time: string): string | null {
   const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(day)
   const t = /^(\d{2}):(\d{2})$/.exec(time)
-  if (!d || !t) return null
+  if (!d || !t || Number(t[1]) > 23 || Number(t[2]) > 59) return null
   const at = new Date(Number(d[1]), Number(d[2]) - 1, Number(d[3]), Number(t[1]), Number(t[2]))
   if (Number(t[1]) < 6) at.setDate(at.getDate() + 1)
   return at.toISOString()
