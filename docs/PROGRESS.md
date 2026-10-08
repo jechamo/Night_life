@@ -1,5 +1,48 @@
 # Progreso — Nightlife Connect
 
+## Roadmap 2026-10 · R5 — Reservas sin pago y lista de invitados con QR — 08/10/2026
+
+Plan: [R5_PLAN.md](./R5_PLAN.md). Todo aditivo y detrás de `venue_bookings_enabled`
+(apagado): ficha, perfil, panel y guías no cambian con el flag apagado. Sin dinero ni TPV.
+
+- **Persona (edad verificada):** en la ficha, «Reservar mesa» (día, hora, personas, mesa o
+  mesa con botella; de 30 min a 14 días vista; máx. 3 activas y 1 por local y noche) y
+  «Lista de invitados» de esta noche (apuntarse / salir). «Mis reservas» (`/reservas`, desde
+  Perfil): estado y motivo del local, cancelar, y cada entrada con su QR y código
+  `NL-XXXXX-XXXXX`.
+- **Local (gratis, lo activa cada uno):** ajustes (reservas, listas, máximo de personas),
+  solicitudes (aceptar / rechazar con motivo opcional; ve solo el nombre de perfil, personas
+  y hora), lista de esta noche (título, hora límite, plazas, cerrar) y **puerta**: escanea
+  el QR con la cámara si el dispositivo lo permite (`BarcodeDetector` vía `src/platform`) o
+  teclea el código; cada entrada vale una vez.
+- **QR propio** (`src/shared/qr`, ISO/IEC 18004, sin librerías): 240 matrices idénticas bit a
+  bit a una implementación de referencia (python-qrcode, solo para comprobar en desarrollo);
+  6 de ellas quedan como prueba unitaria.
+- **Servidor:** migraciones `20261008195217_venue_bookings_schema`, `…195312_people`,
+  `…195402_venue`, aplicadas por MCP (sin `DELETE`: la retención desvincula a la persona a
+  los 90 días con `update`). El código de la puerta se deriva con HMAC del id y no se guarda.
+  La exportación RGPD incluye reservas y entradas (sin código). Cron diario
+  `nl_venue_bookings_maintenance` (3:53).
+- **Simulador:** Sala Aurora acepta reservas y tiene lista abierta; el panel crea dos
+  invitados de demostración con códigos fijos para probar la puerta (`NL-A1B2C-3D4E5`).
+
+**Hecho cuando**
+
+- ✅ Flag apagado: ficha, perfil, panel, `/reservas` y guías sin cambios (unitarias + E2E).
+- ✅ Flag encendido: reservar → el local acepta/rechaza → la persona lo ve; apuntarse →
+  QR + código → la puerta lo valida una vez (unitarias 20 nuevas + E2E r5 4/4).
+- ✅ SQL: bookings 49/49 (anónimo, sin edad verificada, usuario, gestor, gestor de otro
+  local; flag apagado; límites; códigos; caducidad; exportación; auditoría) · RLS 38/38
+  (19 flags) · sin restos · historial 76 = repositorio.
+- ✅ `npm run check` 502/502 · build · `npm audit` 0 · E2E completas 60/60 ×3.
+- ✅ Advisors: 0 errores; 4 INFO nuevos intencionados (tablas `private` sin acceso directo).
+- ❌ Auditoría de red HTTP: dominio Supabase bloqueado en este entorno (sin Edge nuevas).
+
+**Cómo probarlo:** `npm run test:e2e -- r5-bookings` o, en local, Admin › Feature flags ›
+`venue_bookings_enabled` = on → Descubrir › Sala Aurora › «Apuntarme» → Perfil › Mis
+reservas (QR) → Panel de locales › Bar Cobalto › activar → aceptar la solicitud de Lucía →
+abrir lista → Puerta › `NL-A1B2C-3D4E5`.
+
 ## Roadmap 2026-10 · R4 — Escaparate del local — 08/10/2026
 
 Plan: [R4_PLAN.md](./R4_PLAN.md). Todo aditivo y detrás de `venue_showcase_enabled`

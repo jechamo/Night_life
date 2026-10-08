@@ -42,10 +42,11 @@ checked_in`). El código de la entrada se deriva con HMAC del id (no se guarda e
 
 ## Hecho cuando
 
-- Flag apagado: ficha, panel, perfil y guías idénticos (unitarias + E2E).
-- Flag encendido: reservar → el local acepta/rechaza → la persona lo ve; apuntarse a la
+- ✅ Flag apagado: ficha, panel, perfil y guías idénticos (unitarias + E2E).
+- ✅ Flag encendido: reservar → el local acepta/rechaza → la persona lo ve; apuntarse a la
   lista → QR + código → el local lo valida una vez (unitarias + E2E).
-- QR: matrices comprobadas contra una implementación de referencia.
-- SQL por rol: anónimo, sin edad verificada, usuario, gestor de otro local, gestor; flag
-  apagado; límites; códigos inválidos y repetidos; caducidad; auditoría.
-- Suites previas, Advisors, `npm audit`, docs.
+- ✅ QR: 240 matrices idénticas a la implementación de referencia; 6 como prueba unitaria.
+- ✅ SQL por rol (`supabase/tests/bookings.sql`, 49/49): anónimo, sin edad verificada,
+  usuario, gestor de otro local, gestor; flag apagado; límites; códigos inválidos y
+  repetidos; caducidad; exportación; auditoría.
+- ✅ RLS 38/38, Advisors sin errores, `npm audit` 0, docs.

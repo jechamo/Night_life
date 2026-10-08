@@ -2,6 +2,18 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Roadmap R5 — reservas y lista de invitados
+
+Feature `features/bookings`: modelo (`model/bookings.ts`, zod), hooks (`use-bookings`),
+`PlaceBookingSection` (en `PlaceDetails`), `MyBookingsScreen` (`/reservas`) y
+`BookingCards` (ajustes, solicitudes, lista y puerta) en `VenueDetailScreen`. Los puertos
+se amplían sin servicio nuevo: `PlacesService.bookingOptions/requestReservation/
+cancelReservation/joinGuestlist/leaveGuestlist/myBookings` y `VenuePanelService.
+saveBookingSettings/reservations/decideReservation/guestlist/saveGuestlist/closeGuestlist/
+checkInGuest` → `supabase/bookings.ts` o `mocks/backoffice/bookings.ts`. El QR se dibuja con
+`shared/qr` (codificador propio) y `shared/ui/qr-code.tsx`; la lectura en la puerta usa
+`CameraService.canDetectQr/detectQr` (`BarcodeDetector` en web; plugin de cámara en nativo).
+
 ## Roadmap R4 — escaparate del local
 
 Modelo en `places/model/showcase.ts` (zod; listas cerradas como en el servidor). Ficha:

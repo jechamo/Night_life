@@ -2,6 +2,24 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## R5 — Reservas sin pago y lista de invitados con QR — 08/10/2026
+
+- A01/API1/API5: tablas `private.venue_booking_settings/reservations/guestlists/
+guestlist_entries` con RLS y sin grants; RPC `security definer` con envoltorios
+  `invoker` solo para `authenticated`; cada persona solo ve y cancela lo suyo; cada local
+  solo ve y decide lo suyo (probado con gestor de otro local).
+- A04: flag en servidor; edad verificada obligatoria para reservar o apuntarse; un gestor no
+  reserva en su propio local; límites (3 activas, 1 por local y noche, 30 min-14 días,
+  aforo de la lista, 20 acciones/h por persona e IP, 120 validaciones/h en la puerta).
+- Códigos de puerta: 40 bits derivados con HMAC (Vault) del id de la entrada; nunca se
+  guardan; solo valen para la lista de esa noche de ese local y una sola vez; los
+  intentos están limitados y las validaciones y decisiones quedan auditadas.
+- Privacidad (decisión del propietario): el local solo ve el nombre de perfil, personas y
+  hora; sin teléfono ni contacto. Exportación RGPD con reservas y entradas; a los 90 días
+  se desvincula a la persona (solo quedan totales). QR generado en el dispositivo sin
+  terceros; la cámara de la puerta pasa por `src/platform` y no guarda imágenes.
+- Pruebas: bookings 49/49, RLS 38/38; Advisors sin errores.
+
 ## R4 — Escaparate del local — 08/10/2026
 
 - A01/API1/API5: tablas `private.venue_photos/details/notices/view_marks/daily_views` con RLS
