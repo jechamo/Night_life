@@ -24,6 +24,13 @@ test.describe('Guías públicas', () => {
       .getByRole('link', { name: new RegExp(t('guide.nav.venues')) })
       .click()
     await expect(page).toHaveURL(/\/guia\/locales$/)
+
+    await page.goto('/welcome')
+    await page.getByRole('link', { name: t('guide.nav.forVenues') }).click()
+    await expect(page).toHaveURL(/\/guia\/locales$/)
+    await page.goto('/guia')
+    await page.getByRole('link', { name: t('guide.user.venueCallout.cta') }).click()
+    await expect(page).toHaveURL(/\/guia\/locales$/)
     errors.expectNone()
   })
 })

@@ -2290,7 +2290,8 @@
       "venues": "Guide for venues",
       "venuesHint": "What the app offers your business",
       "title": "Guides",
-      "howItWorks": "How it works"
+      "howItWorks": "How it works",
+      "forVenues": "For venues"
     },
     "user": {
       "title": "Nightlife Connect guide",
@@ -2386,6 +2387,16 @@
             "delete": "You can sign out or delete your account whenever you want."
           }
         }
+      },
+      "highlights": {
+        "map": "Live map",
+        "people": "Meet people",
+        "safe": "Go out safely"
+      },
+      "venueCallout": {
+        "title": "Do you run a venue?",
+        "body": "See what Nightlife Connect can do for your business.",
+        "cta": "See the guide for venues"
       }
     },
     "venues": {
@@ -2456,6 +2467,11 @@
             "now": "Payments are in a testing phase. You will see prices in your panel once they are live."
           }
         }
+      },
+      "highlights": {
+        "profile": "Free listing",
+        "stats": "Live data",
+        "visibility": "More visibility"
       }
     },
     "links": {
@@ -2465,7 +2481,8 @@
       "openApp": "Open the app",
       "otherUser": "Do you run a venue? See the guide for venues",
       "otherVenue": "Looking for how to use the app? See the app guide"
-    }
+    },
+    "contents": "In this guide"
   },
   "bookings": {
     "place": {

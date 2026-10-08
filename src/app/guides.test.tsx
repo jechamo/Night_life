@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { renderApp } from '@/test/render-app'
 
@@ -17,6 +17,19 @@ describe('roadmap R1: public guides', () => {
     expect(
       screen.getByRole('link', { name: '¿Tienes un local? Mira la guía para locales' }),
     ).toHaveAttribute('href', '/guia/locales')
+    // Venue callout at the top and a visual index that jumps to each section.
+    expect(screen.getByRole('link', { name: 'Ver la guía para locales' })).toHaveAttribute(
+      'href',
+      '/guia/locales',
+    )
+    const contents = screen.getByRole('navigation', { name: 'En esta guía' })
+    expect(within(contents).getByRole('link', { name: 'Seguridad' })).toHaveAttribute(
+      'href',
+      '#guide-safety',
+    )
+    expect(document.getElementById('guide-safety')).toContainElement(
+      screen.getByRole('heading', { name: 'Seguridad', level: 2 }),
+    )
   })
 
   it('the venue guide opens without an account and links the venue terms', async () => {
@@ -51,6 +64,10 @@ describe('roadmap R1: public guides', () => {
     expect(await screen.findByRole('link', { name: 'Cómo funciona' })).toHaveAttribute(
       'href',
       '/guia',
+    )
+    expect(screen.getByRole('link', { name: 'Para locales' })).toHaveAttribute(
+      'href',
+      '/guia/locales',
     )
     welcome.unmount()
   })

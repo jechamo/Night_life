@@ -124,9 +124,14 @@ export function WelcomeScreen() {
         <ButtonLink to="/login" variant="ghost" size="sm" block>
           {t('onboarding.login.cta')}
         </ButtonLink>
-        <ButtonLink to="/guia" variant="ghost" size="sm" block>
-          {t('guide.nav.howItWorks')}
-        </ButtonLink>
+        <div className="grid grid-cols-2 gap-3">
+          <ButtonLink to="/guia" variant="ghost" size="sm" block>
+            {t('guide.nav.howItWorks')}
+          </ButtonLink>
+          <ButtonLink to="/guia/locales" variant="ghost" size="sm" block>
+            {t('guide.nav.forVenues')}
+          </ButtonLink>
+        </div>
       </footer>
     </div>
   )

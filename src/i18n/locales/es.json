@@ -2290,7 +2290,8 @@
       "venues": "Guía para locales",
       "venuesHint": "Qué ofrece la app a tu negocio",
       "title": "Guías",
-      "howItWorks": "Cómo funciona"
+      "howItWorks": "Cómo funciona",
+      "forVenues": "Para locales"
     },
     "user": {
       "title": "Guía de Nightlife Connect",
@@ -2386,6 +2387,16 @@
             "delete": "Puedes cerrar sesión o borrar tu cuenta cuando quieras."
           }
         }
+      },
+      "highlights": {
+        "map": "Mapa en directo",
+        "people": "Conoce gente",
+        "safe": "Sal con seguridad"
+      },
+      "venueCallout": {
+        "title": "¿Tienes un local?",
+        "body": "Mira qué puede hacer Nightlife Connect por tu negocio.",
+        "cta": "Ver la guía para locales"
       }
     },
     "venues": {
@@ -2456,6 +2467,11 @@
             "now": "Los pagos están en fase de pruebas. Verás los precios en tu panel cuando se activen."
           }
         }
+      },
+      "highlights": {
+        "profile": "Ficha gratis",
+        "stats": "Datos en directo",
+        "visibility": "Más visibilidad"
       }
     },
     "links": {
@@ -2465,7 +2481,8 @@
       "openApp": "Abrir la app",
       "otherUser": "¿Tienes un local? Mira la guía para locales",
       "otherVenue": "¿Buscas cómo usar la app? Mira la guía de la app"
-    }
+    },
+    "contents": "En esta guía"
   },
   "bookings": {
     "place": {

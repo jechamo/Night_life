@@ -1,5 +1,22 @@
 # Progreso — Nightlife Connect
 
+## Guías públicas más visuales y acceso «Para locales» — 08/10/2026
+
+Petición del propietario: las guías se veían «sosas» y desde Bienvenida no se llegaba a la de
+locales. Solo interfaz y textos (ES/EN); sin dependencias, migraciones ni imágenes nuevas.
+
+- Bienvenida: botón «Para locales» (`/guia/locales`) junto a «Cómo funciona».
+- Guía de la app: cabecera con la imagen del tema, resumen en etiquetas, aviso arriba
+  «¿Tienes un local?» con botón a la guía para locales (el enlace del final se mantiene).
+- Ambas guías: índice visual por secciones (salta a cada una), icono por sección y portadas o
+  ilustraciones que ya estaban en la app (`VENUE_COVERS`, `EVENT_COVERS`, `SCENES`,
+  `ILLUSTRATIONS`); la de locales con la portada de discoteca. Imágenes decorativas
+  (`aria-hidden`, `alt=""`), carga diferida y sin animaciones nuevas (solo opacidad al pasar).
+- Los puntos de cada sección siguen filtrándose por sus flags, igual que antes.
+- Pruebas: unitarias de guías ampliadas (aviso, índice, botón de Bienvenida) y E2E
+  `r1-email-guides` (Bienvenida → «Para locales», aviso → guía de locales). `npm run check`
+  513/513, build, E2E 60/60; sin desbordamiento horizontal en 390 px.
+
 ## Flags del roadmap encendidos en producción de pruebas — 08/10/2026
 
 Con OK del propietario (fase de pruebas: 3 perfiles, todos tester/admin; pagos en `test`,
