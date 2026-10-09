@@ -34,8 +34,8 @@ devolvía el 100 % de cualquier compra en 14 días aunque se hubiera usado.
   unitarias (pago con casilla, hoja de desistimiento, guías, `nightEnd`).
 - Estado 09/10: migraciones `20261009070158_withdrawal_rules` y `20261009070218_withdrawal_legal_texts`
   aplicadas; `withdrawal.sql` 29/29 contra Supabase. Desplegadas `request-withdrawal`,
-  `billing-account` y `create-portal-session`. **Pendiente:** desplegar `create-checkout-session`
-  justo después de fusionar la PR (exige la casilla que solo envía la app nueva).
+  `billing-account` y `create-portal-session`; `create-checkout-session` (v9) desplegada tras
+  fusionar la PR jechamo/Night_life#6 en `main`, porque exige la casilla que solo envía la app nueva.
 - Migración `20261009085736_guestlist_night_window` aplicada por el propietario en el SQL Editor y
   registrada en el historial; `bookings.sql` 49/49. Advisors: sin errores (solo los INFO/WARN ya
   conocidos).
