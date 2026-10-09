@@ -7,11 +7,13 @@ import { GlassCard } from '@/shared/ui/card'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { useBillingPortal, usePremiumState, useSubscriptionActions } from '../hooks/use-premium'
-import { formatPrice, withdrawalOpen } from '../model/catalog'
+import { WithdrawalSheet, type WithdrawalTarget } from '../components/WithdrawalSheet'
+import { formatPrice, productByCode, withdrawalOpen } from '../model/catalog'
 
 /**
  * "Mi suscripción" (PRD 6.13): cancel in 2 taps (here + confirm in the same card), the
- * withdrawal button always visible during the 14 days, invoices and credits.
+ * withdrawal button always visible during the 14 days (the amount is shown before
+ * confirming), invoices and credits. Venue purchases are B2B: no withdrawal button.
  */
 export function MySubscriptionScreen() {
   const { t, i18n } = useTranslation()
@@ -22,6 +24,7 @@ export function MySubscriptionScreen() {
   const sub = state?.subscription
   // Captured once per visit: the one-night pass is re-checked by the server anyway.
   const [openedAt] = useState(() => Date.now())
+  const [withdrawing, setWithdrawing] = useState<WithdrawalTarget | null>(null)
   const date = (iso: string) => new Date(iso).toLocaleDateString(i18n.language)
   const canWithdraw = sub && sub.status !== 'withdrawn' && withdrawalOpen(sub.startedAt, new Date())
 
@@ -86,8 +89,7 @@ export function MySubscriptionScreen() {
               <Button
                 variant="danger"
                 block
-                disabled={withdraw.isPending}
-                onClick={() => withdraw.mutate()}
+                onClick={() => setWithdrawing({ productCode: sub.productCode })}
               >
                 {t('premium.mine.withdraw')}
               </Button>
@@ -145,12 +147,20 @@ export function MySubscriptionScreen() {
                 </span>
                 {invoice.status === 'paid' &&
                   invoice.orderId &&
+                  // Subscriptions are withdrawn from their card; venue purchases are B2B.
+                  ['credits', 'one_night'].includes(
+                    productByCode(invoice.productCode)?.kind ?? '',
+                  ) &&
                   withdrawalOpen(invoice.issuedAt, new Date()) && (
                     <Button
                       size="sm"
                       variant="danger"
-                      disabled={withdraw.isPending}
-                      onClick={() => withdraw.mutate(invoice.orderId!)}
+                      onClick={() =>
+                        setWithdrawing({
+                          orderId: invoice.orderId!,
+                          productCode: invoice.productCode,
+                        })
+                      }
                     >
                       {t('premium.mine.withdraw')}
                     </Button>
@@ -162,6 +172,11 @@ export function MySubscriptionScreen() {
           <p className="text-sm text-muted-foreground">{t('premium.mine.noInvoices')}</p>
         )}
       </Section>
+      <WithdrawalSheet
+        target={withdrawing}
+        onClose={() => setWithdrawing(null)}
+        withdraw={withdraw}
+      />
     </>
   )
 }

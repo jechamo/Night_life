@@ -2,6 +2,19 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Desistimiento y reembolsos — 09/10/2026
+
+- A04/A01: el importe a reembolsar lo decide solo la BBDD (`private.withdrawal_quote`, security
+  definer, por propietario del pedido); el cliente solo ve la cotización
+  (`public.withdrawal_quote`, `authenticated`, límite 60/h). Aplicar el desistimiento
+  (`billing_withdrawal_apply`) y guardar el consentimiento (`billing_record_consent`) son solo
+  de `service_role`. Sin funciones `security definer` en `public`.
+- Idempotencia: el pedido pasa a `refunded` una sola vez (bloqueo por pedido); la Edge Function
+  reutiliza un reembolso de Stripe existente con el mismo `order_id` antes de crear otro.
+- Abuso evitado: antes se podía gastar créditos o disfrutar 13 días y recuperar el 100 %.
+- Consentimiento expreso de inicio inmediato exigido en servidor (`consent_required`).
+- Pendiente del propietario: revisión jurídica de Condiciones de Premium 1.1 y Patrocinio 1.2.
+
 ## R5 — Reservas sin pago y lista de invitados con QR — 08/10/2026
 
 - A01/API1/API5: tablas `private.venue_booking_settings/reservations/guestlists/

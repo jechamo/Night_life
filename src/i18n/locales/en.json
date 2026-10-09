@@ -1019,7 +1019,7 @@
       "cancel": "Cancel subscription",
       "resume": "Turn renewal back on",
       "withdraw": "Withdraw and get a refund",
-      "withdrawHint": "You have 14 days from purchase to withdraw: you get your money back and lose the perks.",
+      "withdrawHint": "You have 14 days from purchase to withdraw. Before confirming you will see how much is refunded.",
       "none": "You don't have an active subscription.",
       "oneNight": "One-night pass active until {{time}}.",
       "credits": "Your credits",
@@ -1027,7 +1027,30 @@
       "refunded": "refunded",
       "noInvoices": "No invoices yet.",
       "portal": "Invoices and payment methods in Stripe",
-      "actionFailed": "The operation could not be completed. Please try again."
+      "actionFailed": "The operation could not be completed. Please try again.",
+      "withdrawal": {
+        "title": "Withdraw from {{product}}",
+        "loading": "Calculating the refund…",
+        "refund": "We will refund {{refund}} of {{amount}}.",
+        "basis": {
+          "full": "Full refund. The perks of this purchase end now.",
+          "unused": "You have not used the credits from this purchase: everything is refunded and they are removed from your balance.",
+          "prorated": "The part you have already enjoyed is deducted. The perks end now."
+        },
+        "confirm": "Confirm and request refund",
+        "back": "Back",
+        "reasons": {
+          "window_closed": "More than 14 days have passed since the purchase.",
+          "credits_used": "You have already used credits from this purchase, so it cannot be refunded.",
+          "used": "You have already enjoyed the whole period of this purchase.",
+          "ended": "This subscription has already ended.",
+          "business": "Venue purchases are business-to-business and have no right of withdrawal. For any issue, write to us from Contact.",
+          "already_refunded": "This purchase has already been refunded.",
+          "not_found": "This purchase cannot be refunded.",
+          "not_paid": "This purchase cannot be refunded.",
+          "not_eligible": "This purchase cannot be refunded."
+        }
+      }
     },
     "products": {
       "pass_monthly": {
@@ -1125,14 +1148,23 @@
       "cancel": "Cancel any time in two taps from My subscription; you keep the perks until the end of the period.",
       "oneNight": "One-time payment. Perks expire at 6 am.",
       "credits": "One-time payment. Credits don't expire.",
-      "withdrawal": "{{days}}-day right of withdrawal with a full refund from My subscription.",
       "provider": "Payment is handled by a secure gateway; we never see or store your card.",
       "secure": "Secure, encrypted payment",
       "subscribe": "Subscribe and pay",
       "pay": "Pay",
       "conditions": "Premium terms",
       "totalPeriod": "Total {{interval}}",
-      "renewalPeriod": "Automatically renews for {{price}} {{interval}}. Cancel before renewal."
+      "renewalPeriod": "Automatically renews for {{price}} {{interval}}. Cancel before renewal.",
+      "withdrawalRules": {
+        "subscription": "Withdrawal: {{days}} days from purchase, from My subscription. We refund the part of the period you have not enjoyed yet.",
+        "one_night": "Withdrawal: {{days}} days from purchase. We refund the part of the night you have not enjoyed yet; once the pass is over there is no refund.",
+        "credits": "Withdrawal: {{days}} days from purchase, only if you have not used any of the credits from this purchase."
+      },
+      "immediateStart": {
+        "subscription": "I want to start now. I understand that if I withdraw within 14 days, only the part I have not enjoyed will be refunded.",
+        "one_night": "I want to start now. I understand that if I withdraw, only the part of the night I have not enjoyed will be refunded.",
+        "credits": "I want the credits now. I understand that as soon as I use one, I lose the right of withdrawal for this purchase."
+      }
     },
     "errors": {
       "payments_disabled": "Payments aren't available right now.",
@@ -1493,7 +1525,7 @@
       "tiers": {
         "featured": {
           "name": "Featured",
-          "body": "Featured pin on your area's map."
+          "body": "Highlighted pin on the map of your area and a card for your venue among the profiles."
         },
         "featured_plus": {
           "name": "Featured Plus",
@@ -2363,11 +2395,20 @@
         "premium": {
           "title": "Paid options (optional)",
           "items": {
-            "pass": "Pass: unlimited likes, undo the last swipe, extra themes and no sponsored cards. Monthly, quarterly or yearly.",
-            "vip": "VIP Pass: everything in the Pass plus who liked you, priority, incognito mode and weekly Spotlights, Sparks and direct messages.",
-            "night": "One-night Pass: the Pass benefits until 06:00, no subscription.",
-            "extras": "One-offs: Spark (highlighted like with an anonymous notice), Spotlight (30 minutes featured at your venue or area) and Direct message (write before matching, never to someone on red).",
-            "status": "Payments are in a testing phase. The basics and safety are and will stay free."
+            "pass": "Pass ({{passMonthly}} a month, {{passQuarterly}} a quarter or {{passAnnual}} a year): unlimited likes, undo the last swipe, extra themes and no sponsored cards.",
+            "vip": "VIP Pass ({{vip}} a month): everything in the Pass plus who liked you, priority, incognito mode and, every week, 1 Spotlight, 3 Sparks and 2 Direct messages.",
+            "night": "One-night Pass ({{oneNight}}, one-off payment): the Pass benefits until 06:00 and 1 Spotlight.",
+            "extras": "One-offs (one-off payment; credits never expire): Spark, a highlighted like with an anonymous notice ({{spark1}}; 5 for {{spark5}}; 15 for {{spark15}}); Spotlight, 30 minutes featured at your venue or area ({{spotlight}}); and Direct message, to write before matching and never to someone on red ({{paidDm}}).",
+            "status": "These are testing-phase prices, VAT included: they may change before launch and nothing real is charged now. The basics and safety are and will stay free."
+          }
+        },
+        "payments": {
+          "title": "How you pay, cancel and withdraw",
+          "items": {
+            "buy": "Buy in Profile › Premium. Before paying you see the price with VAT and the terms; a secure gateway (Stripe) handles the payment and we never see your card.",
+            "renew": "Subscriptions renew automatically at the end of each period. Cancel any time in Profile › My subscription: you keep the perks until the end of the paid period.",
+            "withdraw": "Withdrawal: 14 days from purchase, in My subscription. For subscriptions and the One-night Pass we refund the part you have not enjoyed yet; credits are only refunded if you have not used any from that purchase. You see the amount before confirming.",
+            "promo": "Got a promo code? Redeem it in Premium › Redeem code."
           }
         },
         "privacy": {
@@ -2431,10 +2472,11 @@
         "sponsor": {
           "title": "Sponsorship (30 days)",
           "items": {
-            "featured": "Featured: your pin highlighted on the map of your area and a card for your venue among the profiles.",
-            "plus": "Featured Plus: also, top positions in the lists that match each person's filters.",
-            "top": "Top: also, Flash Alerts to announce a promotion for one hour.",
-            "limits": "Places are limited per city. Book it from your panel."
+            "featured": "Featured ({{featured}} for 30 days): your pin highlighted on the map of your area and a card for your venue among the profiles.",
+            "plus": "Featured Plus ({{featuredPlus}} for 30 days): also, top positions in the lists that match each person's filters.",
+            "top": "Top ({{top}} for 30 days): shown before Plus and adds Flash Alerts to announce a promotion for one hour.",
+            "limits": "There are 3 places per city. Book it from your panel: choose the level and start date and pay by card (one-off payment, no automatic renewal) or ask for an invoice and we activate it once paid.",
+            "contract": "With an agreement with Nightlife (contract), your sponsorship level and/or Pro stats are active during the contract dates, at a price agreed outside the app. You see it in your panel under «Plan and perks», and it does not take places in your city."
           }
         },
         "pro": {
@@ -2442,7 +2484,7 @@
           "items": {
             "detail": "Footfall by hour, average age, traffic light and comparison with venues in your area.",
             "privacy": "Always aggregated data: small groups are never shown.",
-            "billing": "Monthly subscription per venue that you can cancel whenever you want."
+            "billing": "Monthly subscription per venue ({{pro}} a month) that renews automatically. Cancel it from the billing portal and keep access until the end of the period; only the account that bought it manages it."
           }
         },
         "flash": {
@@ -2464,7 +2506,8 @@
         "status": {
           "title": "Prices",
           "items": {
-            "now": "Payments are in a testing phase. You will see prices in your panel once they are live."
+            "now": "These are testing-phase amounts: they may change before launch and nothing real is charged now.",
+            "refunds": "This is a business-to-business contract, so there is no consumer right of withdrawal. If something cannot be provided for reasons on our side, the part not provided is refunded; for any issue, write to us from Contact."
           }
         }
       },

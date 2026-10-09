@@ -118,8 +118,8 @@ const ES: Record<PublicSlug, Draft> = {
         body: 'Las suscripciones se renuevan cada mes hasta que canceles en dos toques desde Mi suscripción. Mantienes las ventajas hasta el final del periodo pagado.',
       },
       {
-        heading: 'Desistimiento',
-        body: 'Tienes 14 días desde la compra para desistir desde Mi suscripción, con reembolso completo. En las apps, las compras las gestiona la tienda (Apple o Google) según sus condiciones.',
+        heading: 'Inicio inmediato y desistimiento',
+        body: 'Tienes 14 días desde la compra para desistir desde Mi suscripción. Al pagar nos pides empezar ya y aceptas perder el desistimiento en lo que uses: los créditos (Chispas, Focos y Mensajes directos) solo se reembolsan si no has usado ninguno de esa compra, y en las suscripciones y el Pase de una noche se devuelve la parte que aún no has disfrutado. En las apps, las compras las gestiona la tienda (Apple o Google) según sus condiciones.',
       },
       {
         heading: 'Pagos',
@@ -281,8 +281,8 @@ const EN: Record<PublicSlug, Draft> = {
         body: 'Subscriptions renew every month until you cancel in two taps from My subscription. You keep the perks until the end of the paid period.',
       },
       {
-        heading: 'Withdrawal',
-        body: 'You have 14 days from purchase to withdraw from My subscription, with a full refund. In the apps, purchases are handled by the store (Apple or Google) under its terms.',
+        heading: 'Immediate start and withdrawal',
+        body: 'You have 14 days from purchase to withdraw from My subscription. When paying you ask us to start right away and accept losing the right of withdrawal for what you use: credits (Sparks, Spotlights and Direct messages) are only refunded if you have not used any from that purchase, and for subscriptions and the One-night pass we refund the part you have not enjoyed yet. In the apps, purchases are handled by the store (Apple or Google) under its terms.',
       },
       {
         heading: 'Payments',

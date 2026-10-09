@@ -66,12 +66,41 @@ export async function handleBillingAccount(req: Request, forcedAction?: string):
       if (input.orderId) query = query.eq('id', input.orderId)
       else if (sub) query = query.eq('provider_subscription_id', sub.provider_subscription_id)
       const { data: order, error } = await query.maybeSingle()
-      if (error || !order || order.simulated) throw new Error('gateway_error')
+      if (error || !order) throw new Error('gateway_error')
       if (order.status === 'refunded') return json(req, await rpc(auth.db, 'premium_state', {}))
-      if (!order.paid_at || Date.now() - Date.parse(order.paid_at) > 14 * 86400000)
-        return json(req, { error: 'window_closed' }, 409)
+      if (order.simulated)
+        return json(req, await rpc(auth.db, 'simulate_withdrawal', { p_order: order.id }))
+      // The database decides what can be refunded: unused credits in full, the part of a
+      // subscription or one-night pass not enjoyed yet, nothing for business purchases.
+      const quote = await rpc<{ eligible: boolean; reason?: string; refundCents?: number }>(
+        auth.db,
+        'withdrawal_quote',
+        { p_order: order.id },
+      )
+      if (!quote.eligible || !quote.refundCents)
+        return json(req, { error: quote.reason ?? 'not_eligible' }, 409)
       const mode = order.mode as PaymentMode
       const stripe = stripeClient(mode)
+      if (!order.provider_payment_intent_id) throw new Error('gateway_error')
+      // A refund created by an earlier attempt is reused: never refund the same order twice.
+      const previous = await stripe.refunds.list({
+        payment_intent: order.provider_payment_intent_id,
+        limit: 10,
+      })
+      const refund =
+        previous.data.find(
+          (r) =>
+            r.metadata?.order_id === order.id && !['failed', 'canceled'].includes(r.status ?? ''),
+        ) ??
+        (await stripe.refunds.create(
+          {
+            payment_intent: order.provider_payment_intent_id,
+            amount: quote.refundCents,
+            metadata: { app: 'nightlife_connect', order_id: order.id, reason: 'withdrawal' },
+          },
+          { idempotencyKey: `nightlife:withdraw:${order.id}:${quote.refundCents}` },
+        ))
+      if (!['succeeded', 'pending'].includes(refund.status ?? '')) throw new Error('gateway_error')
       if (order.provider_subscription_id) {
         const current = await stripe.subscriptions.retrieve(order.provider_subscription_id)
         if (current.status !== 'canceled')
@@ -81,22 +110,10 @@ export async function handleBillingAccount(req: Request, forcedAction?: string):
             { idempotencyKey: `nightlife:withdraw-cancel:${order.id}` },
           )
       }
-      if (!order.provider_payment_intent_id) throw new Error('gateway_error')
-      const refund = await stripe.refunds.create(
-        {
-          payment_intent: order.provider_payment_intent_id,
-          metadata: { app: 'nightlife_connect', order_id: order.id },
-        },
-        { idempotencyKey: `nightlife:withdraw:${order.id}` },
-      )
-      // Pending refunds wait for charge.refunded; never fabricate a successful refund.
-      if (refund.status !== 'succeeded') return json(req, { error: 'refund_pending' }, 202)
-      await applyEvent(service, {
-        eventId: `withdraw:${refund.id}`,
-        type: 'refund',
-        mode,
-        paymentIntentId: order.provider_payment_intent_id,
-        refundedAmount: refund.amount,
+      await rpc(service, 'billing_withdrawal_apply', {
+        p_order: order.id,
+        p_refunded: refund.amount,
+        p_ref: refund.id,
       })
     } else {
       if (!sub || sub.simulated) return json(req, { error: 'no_subscription' }, 409)

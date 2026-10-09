@@ -1,16 +1,19 @@
 import { ShieldCheck } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { Button, ButtonLink } from '@/shared/ui/button'
 import { GlassCard } from '@/shared/ui/card'
+import { CheckboxField } from '@/shared/ui/checkbox'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { useStartPurchase } from '../hooks/use-premium'
 import { formatPrice, priceBreakdown, productByCode, WITHDRAWAL_DAYS } from '../model/catalog'
 
 /**
  * Checkout with every legal detail before paying (PRD 6.13 point 5): price with VAT,
- * renewal, how to cancel and the right of withdrawal. Button: "Suscribirme y pagar".
+ * renewal, how to cancel and the right of withdrawal. Paying requires the express request
+ * to start now, accepting the loss of withdrawal for what is used (TRLGDCU arts. 103/108).
  */
 export function CheckoutScreen() {
   const { t, i18n } = useTranslation()
@@ -18,6 +21,7 @@ export function CheckoutScreen() {
   const product = productByCode(code)
   const paywall = usePaywallState()
   const start = useStartPurchase()
+  const [immediateStart, setImmediateStart] = useState(false)
   if (!product || paywall !== 'checkout') return <Navigate to="/premium" replace />
   const price = priceBreakdown(product)
   const money = (cents: number) => formatPrice(cents, i18n.language)
@@ -67,13 +71,18 @@ export function CheckoutScreen() {
                 : t('premium.checkout.credits')}
             </li>
           )}
-          <li>• {t('premium.checkout.withdrawal', { days: WITHDRAWAL_DAYS })}</li>
+          <li>
+            • {t(`premium.checkout.withdrawalRules.${product.kind}`, { days: WITHDRAWAL_DAYS })}
+          </li>
           <li>• {t('premium.checkout.provider')}</li>
         </ul>
         <p className="flex items-center gap-2 text-xs text-muted-foreground">
           <ShieldCheck className="size-4 text-success" aria-hidden />
           {t('premium.checkout.secure')}
         </p>
+        <CheckboxField checked={immediateStart} onCheckedChange={setImmediateStart}>
+          {t(`premium.checkout.immediateStart.${product.kind}`)}
+        </CheckboxField>
         {error && (
           <p role="alert" className="text-sm text-danger">
             {t(`premium.errors.${error}`)}
@@ -82,8 +91,8 @@ export function CheckoutScreen() {
         <Button
           block
           size="lg"
-          disabled={start.isPending}
-          onClick={() => start.mutate(product.code)}
+          disabled={start.isPending || !immediateStart}
+          onClick={() => start.mutate({ code: product.code, consent: { immediateStart: true } })}
         >
           {subscription ? t('premium.checkout.subscribe') : t('premium.checkout.pay')}
         </Button>

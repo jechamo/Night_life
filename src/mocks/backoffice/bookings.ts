@@ -5,9 +5,9 @@ import {
   type VenueGuestlist,
   BOOKING_MAX_DAYS_AHEAD,
   BOOKING_MIN_MINUTES_AHEAD,
-  GUESTLIST_MAX_HOURS,
   MAX_ACTIVE_RESERVATIONS,
   isActiveReservation,
+  nightEnd,
   normalizeGuestCode,
 } from '@/features/bookings/model/bookings'
 import type { PlacesService } from '@/features/places/services/places-service'
@@ -371,11 +371,7 @@ export function createMockBookingPanel(
       requireManager(placeId)
       if (!settingsOf(placeId).guestlists) return err('not_available')
       const until = Date.parse(input.validUntil)
-      if (
-        input.title.trim().length < 3 ||
-        until <= Date.now() ||
-        until > Date.now() + GUESTLIST_MAX_HOURS * 3_600_000
-      )
+      if (input.title.trim().length < 3 || until <= Date.now() || until > nightEnd().getTime())
         throw new Error('invalid list')
       const existing = state.lists.find((l) => l.venueId === placeId && l.night === tonight())
       if (existing)

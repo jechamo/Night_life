@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { arrivalFrom } from '../components/PlaceBookingSection'
 import {
+  nightEnd,
   formatGuestCode,
   guestQrPayload,
   isActiveReservation,
@@ -44,5 +45,12 @@ describe('roadmap R5: bookings model', () => {
     expect(
       isActiveReservation({ ...base, status: 'accepted', arriveAt: '2020-01-01T00:00:00Z' }),
     ).toBe(false)
+  })
+
+  it('a guest list can be prepared in the afternoon and closes before 06:00', () => {
+    const afternoon = new Date(2026, 9, 9, 14, 0)
+    expect(nightEnd(afternoon)).toEqual(new Date(2026, 9, 10, 6, 0))
+    // At 03:00 the night is still running: it ends at 06:00 the same morning.
+    expect(nightEnd(new Date(2026, 9, 10, 3, 0))).toEqual(new Date(2026, 9, 10, 6, 0))
   })
 })

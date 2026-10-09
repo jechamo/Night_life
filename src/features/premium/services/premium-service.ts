@@ -39,6 +39,32 @@ export type PurchaseRedirect =
   { type: 'external'; url: string } | { type: 'internal'; path: string }
 export type PurchaseError =
   'payments_disabled' | 'not_allowed' | 'already_subscribed' | 'gateway_error'
+/** Why a withdrawal is not possible (decided by the server, PRD 6.13). */
+export type WithdrawalError =
+  | 'window_closed'
+  | 'credits_used'
+  | 'used'
+  | 'ended'
+  | 'business'
+  | 'already_refunded'
+  | 'not_found'
+  | 'not_paid'
+  | 'not_eligible'
+export type WithdrawalQuote =
+  | {
+      eligible: true
+      orderId: string
+      productCode: ProductCode
+      amountCents: number
+      refundCents: number
+      /** full: no immediate start requested · unused: credits untouched · prorated: time left. */
+      basis: 'full' | 'unused' | 'prorated'
+    }
+  | { eligible: false; reason: WithdrawalError }
+/** Express request to start now, accepting the loss of withdrawal for what is used. */
+export interface ImmediateStartConsent {
+  immediateStart: true
+}
 export type RedeemError = 'invalid' | 'expired' | 'used' | 'rate_limited'
 export type PaidDmError = 'disabled' | 'no_credits' | 'red_light'
 
@@ -64,12 +90,17 @@ export interface PremiumService {
     venueId: string,
     from?: string,
   ): Promise<Result<PurchaseRedirect, PurchaseError>>
-  startPurchase(code: ProductCode): Promise<Result<PurchaseRedirect, PurchaseError>>
+  startPurchase(
+    code: ProductCode,
+    consent: ImmediateStartConsent,
+  ): Promise<Result<PurchaseRedirect, PurchaseError>>
   /** Explicit persisted simulator; separate from Stripe test-card checkout. */
   completeTestPurchase(code: ProductCode): Promise<PremiumState>
   cancel(): Promise<PremiumState>
   resume(): Promise<PremiumState>
-  withdraw(orderId?: string): Promise<Result<PremiumState, 'window_closed'>>
+  /** What a withdrawal would refund now; without an order, the current subscription. */
+  withdrawalQuote(orderId?: string): Promise<WithdrawalQuote>
+  withdraw(orderId?: string): Promise<Result<PremiumState, WithdrawalError>>
   redeem(code: string): Promise<Result<{ productCode: ProductCode; days: number }, RedeemError>>
   setNotifyMe(on: boolean): Promise<PremiumState>
   sendPaidDm(personId: string, text: string): Promise<Result<void, PaidDmError>>

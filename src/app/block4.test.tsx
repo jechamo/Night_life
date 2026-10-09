@@ -68,8 +68,14 @@ describe('Test purchase → entitlements → cancel and withdraw', () => {
     await user.click(await screen.findByRole('button', { name: 'Continuar' }))
 
     expect(await screen.findByText('IVA (21 %)')).toBeInTheDocument()
-    expect(screen.getByText(/Derecho de desistimiento de 14 días/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Suscribirme y pagar' }))
+    expect(
+      screen.getByText(/Se devuelve la parte del periodo que aún no has disfrutado/),
+    ).toBeInTheDocument()
+    // Paying needs the express request to start now (TRLGDCU arts. 103/108).
+    const pay = screen.getByRole('button', { name: 'Suscribirme y pagar' })
+    expect(pay).toBeDisabled()
+    await user.click(screen.getByRole('checkbox', { name: /Quiero empezar ya/ }))
+    await user.click(pay)
 
     await user.click(await screen.findByRole('button', { name: /Simular compra/ }))
     expect(await screen.findByText('Compra simulada')).toBeInTheDocument()
@@ -84,6 +90,11 @@ describe('Test purchase → entitlements → cancel and withdraw', () => {
     expect(screen.getByRole('button', { name: 'Reactivar renovación' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Desistir y pedir reembolso' }))
+    // The refund is shown before confirming: the part of the month not enjoyed yet.
+    const sheet = await screen.findByRole('dialog', { name: /Desistir de/ })
+    expect(await within(sheet).findByText(/^Te devolveremos .+ de .+\.$/)).toBeInTheDocument()
+    expect(within(sheet).getByText(/Se descuenta la parte que ya has disfrutado/)).toBeVisible()
+    await user.click(within(sheet).getByRole('button', { name: 'Confirmar y pedir reembolso' }))
     expect(await screen.findByText('Desistida')).toBeInTheDocument()
     expect(screen.getByText(/reembolsada/)).toBeInTheDocument()
     expect(screen.queryByText('Likes ilimitados')).not.toBeInTheDocument()

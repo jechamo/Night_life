@@ -27,8 +27,13 @@ Deno.serve(async (req) => {
       code?: unknown
       venueId?: unknown
       from?: unknown
+      immediateStart?: unknown
     }
     if (typeof input.code !== 'string') return json(req, { error: 'invalid_plan' }, 400)
+    // Consumers must ask to start now and accept losing withdrawal for what they use
+    // (TRLGDCU arts. 103 and 108). Venue purchases are business-to-business.
+    if (input.venueId === undefined && input.immediateStart !== true)
+      return json(req, { error: 'consent_required' }, 400)
     if (
       input.venueId !== undefined &&
       (typeof input.venueId !== 'string' || !/^[\da-f-]{36}$/i.test(input.venueId))
@@ -48,6 +53,8 @@ Deno.serve(async (req) => {
       : await rpc<Order>(auth.db, 'billing_start_order', { p_code: input.code })
     const stripe = stripeClient(order.mode)
     const service = serviceClient()
+    if (!input.venueId)
+      await rpc(service, 'billing_record_consent', { p_order: order.id, p_user: auth.user.id })
     let customer = await rpc<string | null>(service, 'billing_customer', {
       p_user: auth.user.id,
       p_mode: order.mode,

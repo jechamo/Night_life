@@ -6,7 +6,12 @@ import {
   PROMO_CODE_RE,
   withdrawalOpen,
 } from '@/features/premium/model/catalog'
-import type { PremiumService, PremiumState } from '@/features/premium/services/premium-service'
+import type {
+  Invoice,
+  PremiumService,
+  PremiumState,
+  WithdrawalQuote,
+} from '@/features/premium/services/premium-service'
 import type { EntitlementKey } from '@/shared/entitlements/entitlements'
 import { canPurchase } from '@/shared/flags/paywall'
 import { err, ok } from '@/shared/lib/result'
@@ -41,6 +46,48 @@ export function createMockPremiumService(
       createdAt: new Date().toISOString(),
       facts: ['test'],
     })
+
+  // Same rules as `private.withdrawal_quote`: unused credits in full, the time not enjoyed
+  // of a subscription or one-night pass, nothing for venue (business) purchases.
+  const findInvoice = (orderId?: string): Invoice | undefined => {
+    const sub = config.premium.subscription
+    return orderId
+      ? config.premium.invoices.find((i) => i.orderId === orderId)
+      : config.premium.invoices.find((i) => sub && i.productCode === sub.productCode)
+  }
+  const quote = (orderId?: string): WithdrawalQuote => {
+    const invoice = findInvoice(orderId)
+    if (!invoice?.orderId) return { eligible: false, reason: 'not_found' }
+    if (invoice.status === 'refunded') return { eligible: false, reason: 'already_refunded' }
+    const product = productByCode(invoice.productCode)
+    if (!product) return { eligible: false, reason: 'business' }
+    const now = new Date()
+    if (!withdrawalOpen(invoice.issuedAt, now)) return { eligible: false, reason: 'window_closed' }
+    const base = {
+      eligible: true as const,
+      orderId: invoice.orderId,
+      productCode: invoice.productCode,
+      amountCents: invoice.amountCents,
+    }
+    if (product.kind === 'credits') {
+      const used = (product.credits ?? []).some((c) => config.premium.credits[c.kind] < c.amount)
+      return used
+        ? { eligible: false, reason: 'credits_used' }
+        : { ...base, refundCents: invoice.amountCents, basis: 'unused' }
+    }
+    const sub = config.premium.subscription
+    if (product.kind === 'subscription' && (!sub || ['withdrawn', 'expired'].includes(sub.status)))
+      return { eligible: false, reason: 'ended' }
+    const until =
+      product.kind === 'subscription' ? sub?.currentPeriodEnd : config.premium.oneNightUntil
+    const end = until ? Date.parse(until) : 0
+    const start = Date.parse(invoice.issuedAt)
+    const refund = Math.floor(
+      (invoice.amountCents * (end - now.getTime())) / Math.max(1, end - start),
+    )
+    if (refund <= 0) return { eligible: false, reason: 'used' }
+    return { ...base, refundCents: Math.min(refund, invoice.amountCents), basis: 'prorated' }
+  }
 
   return {
     getState: () => Promise.resolve(state()),
@@ -89,6 +136,7 @@ export function createMockPremiumService(
       config.premium.invoices = [
         {
           id: `in_test_${Date.now()}`,
+          orderId: `order_test_${Date.now()}`,
           productCode: product.code,
           amountCents: product.priceCents,
           issuedAt: now.toISOString(),
@@ -120,14 +168,28 @@ export function createMockPremiumService(
         )
       return state()
     },
-    async withdraw() {
+    async withdrawalQuote(orderId) {
       await wait()
+      return quote(orderId)
+    },
+    async withdraw(orderId) {
+      await wait()
+      const q = quote(orderId)
+      if (!q.eligible) return err(q.reason)
+      const product = productByCode(q.productCode)
       const sub = config.premium.subscription
-      if (!sub || !withdrawalOpen(sub.startedAt, new Date())) return err('window_closed')
-      config.premium.subscription = transitionSubscription(sub, 'withdraw', new Date())
-      revoke('stripe')
-      config.premium.invoices = config.premium.invoices.map((inv, i) =>
-        i === 0 ? { ...inv, status: 'refunded' } : inv,
+      if (product?.kind === 'subscription' && sub)
+        config.premium.subscription = transitionSubscription(sub, 'withdraw', new Date())
+      if (product?.kind !== 'credits') revoke('stripe')
+      if (product?.kind === 'one_night') config.premium.oneNightUntil = null
+      // Only what is left is taken back: balances never go negative.
+      for (const credit of product?.credits ?? [])
+        config.premium.credits[credit.kind] -= Math.min(
+          credit.amount,
+          config.premium.credits[credit.kind],
+        )
+      config.premium.invoices = config.premium.invoices.map((inv) =>
+        inv.orderId === q.orderId ? { ...inv, status: 'refunded' } : inv,
       )
       logEvent('charge.refunded')
       return ok(state())
