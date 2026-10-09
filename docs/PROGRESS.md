@@ -35,8 +35,10 @@ devolvía el 100 % de cualquier compra en 14 días aunque se hubiera usado.
 - Estado 09/10: migraciones `20261009070158_withdrawal_rules` y `20261009070218_withdrawal_legal_texts`
   aplicadas; `withdrawal.sql` 29/29 contra Supabase. Desplegadas `request-withdrawal`,
   `billing-account` y `create-portal-session`. **Pendiente:** desplegar `create-checkout-session`
-  justo después de fusionar la PR (exige la casilla que solo envía la app nueva) y la migración
-  `PENDING_guestlist_night_window.sql`, denegada por el propietario: a la espera de su decisión.
+  justo después de fusionar la PR (exige la casilla que solo envía la app nueva).
+- Migración `20261009085736_guestlist_night_window` aplicada por el propietario en el SQL Editor y
+  registrada en el historial; `bookings.sql` 49/49. Advisors: sin errores (solo los INFO/WARN ya
+  conocidos).
 - Guías: el desistimiento se explica en una frase con enlace a las Condiciones de Premium.
 
 ## Guías públicas más visuales y acceso «Para locales» — 08/10/2026
