@@ -2407,7 +2407,7 @@
           "items": {
             "buy": "Se compra en Perfil › Premium. Antes de pagar ves el precio con IVA y las condiciones; paga una pasarela segura (Stripe) y nunca vemos tu tarjeta.",
             "renew": "Las suscripciones se renuevan solas al final de cada periodo. Cancela cuando quieras en Perfil › Mi suscripción: mantienes las ventajas hasta el final del periodo pagado.",
-            "withdraw": "Desistimiento: 14 días desde la compra, en Mi suscripción. En las suscripciones y el Pase de una noche se devuelve la parte que aún no has disfrutado; los créditos solo se reembolsan si no has usado ninguno de esa compra. Antes de confirmar ves el importe.",
+            "withdraw": "Puedes desistir en los 14 días siguientes a la compra desde Mi suscripción. Lo que ya has usado no se devuelve; verás el importe antes de confirmar. Más detalles en las Condiciones de Premium.",
             "promo": "¿Tienes un código promocional? Canjéalo en Premium › Canjear código."
           }
         },
@@ -2507,7 +2507,7 @@
           "title": "Precios",
           "items": {
             "now": "Son importes de la fase de pruebas: pueden cambiar antes del lanzamiento y ahora no se cobra nada real.",
-            "refunds": "Es una contratación entre empresas, así que no hay desistimiento de consumidores. Si algo no se puede prestar por causa nuestra, se reembolsa la parte no prestada; para cualquier incidencia, escríbenos desde Contacto."
+            "refunds": "Al ser una contratación entre empresas no hay desistimiento; para cualquier incidencia, escríbenos desde Contacto."
           }
         }
       },
@@ -2523,7 +2523,8 @@
       "contact": "Contacto",
       "openApp": "Abrir la app",
       "otherUser": "¿Tienes un local? Mira la guía para locales",
-      "otherVenue": "¿Buscas cómo usar la app? Mira la guía de la app"
+      "otherVenue": "¿Buscas cómo usar la app? Mira la guía de la app",
+      "premiumTerms": "Condiciones de Premium"
     },
     "contents": "En esta guía"
   },

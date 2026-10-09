@@ -533,6 +533,9 @@ export function UserGuideScreen() {
         />
       ))}
       <nav className="mt-10 grid gap-2 text-sm">
+        <Link className="text-primary underline" to="/legal/premium">
+          {t('guide.links.premiumTerms')}
+        </Link>
         <Link className="text-primary underline" to="/guia/locales">
           {t('guide.links.otherUser')}
         </Link>
