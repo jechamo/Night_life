@@ -10,7 +10,9 @@ describe('real billing adapter boundaries', () => {
           .mockResolvedValue({ data: { url: 'https://evil.example/checkout' }, error: null }),
       },
     } as unknown as Db
-    expect(await createPremiumService(db).startPurchase('vip_monthly')).toEqual({
+    expect(
+      await createPremiumService(db).startPurchase('vip_monthly', { immediateStart: true }),
+    ).toEqual({
       ok: false,
       error: 'gateway_error',
     })

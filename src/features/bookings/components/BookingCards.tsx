@@ -18,8 +18,8 @@ import {
 } from '../hooks/use-bookings'
 import {
   GUESTLIST_MAX_CAPACITY,
-  GUESTLIST_MAX_HOURS,
   REJECT_REASON_MAX,
+  nightEnd,
   normalizeGuestCode,
   type BookingSettings,
   type Reservation,
@@ -296,7 +296,7 @@ export function GuestlistCard({ placeId }: { placeId: string }) {
     const places = Number(capacity)
     if (
       !at ||
-      at.getTime() > Date.now() + GUESTLIST_MAX_HOURS * 3_600_000 ||
+      at.getTime() > nightEnd().getTime() ||
       !Number.isInteger(places) ||
       places < 1 ||
       places > GUESTLIST_MAX_CAPACITY

@@ -20,9 +20,21 @@ export type ReservationStatus = (typeof RESERVATION_STATUSES)[number]
 export const MAX_ACTIVE_RESERVATIONS = 3
 export const BOOKING_MIN_MINUTES_AHEAD = 30
 export const BOOKING_MAX_DAYS_AHEAD = 14
-export const GUESTLIST_MAX_HOURS = 12
+/** A night runs until 06:00 the next morning (same rule as `nightlife_night_date`). */
+export const NIGHT_ENDS_AT_HOUR = 6
 export const GUESTLIST_MAX_CAPACITY = 500
 export const REJECT_REASON_MAX = 200
+
+/**
+ * End of the current night: tonight's guest list must close before it. Before 06:00 the
+ * night is still yesterday's, so a list can be prepared in the afternoon until 01:30.
+ */
+export function nightEnd(now = new Date()): Date {
+  const end = new Date(now)
+  end.setHours(NIGHT_ENDS_AT_HOUR, 0, 0, 0)
+  if (end.getTime() <= now.getTime()) end.setDate(end.getDate() + 1)
+  return end
+}
 
 export const reservationSchema = z.object({
   id: z.string(),

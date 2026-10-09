@@ -1019,7 +1019,7 @@
       "cancel": "Cancelar suscripción",
       "resume": "Reactivar renovación",
       "withdraw": "Desistir y pedir reembolso",
-      "withdrawHint": "Tienes 14 días desde la compra para desistir: se te devuelve el importe y pierdes las ventajas.",
+      "withdrawHint": "Tienes 14 días desde la compra para desistir. Antes de confirmar verás cuánto se te devuelve.",
       "none": "No tienes ninguna suscripción activa.",
       "oneNight": "Pase de una noche activo hasta las {{time}}.",
       "credits": "Tus créditos",
@@ -1027,7 +1027,30 @@
       "refunded": "reembolsada",
       "noInvoices": "Aún no tienes facturas.",
       "portal": "Facturas y métodos de pago en Stripe",
-      "actionFailed": "No se ha completado la operación. Inténtalo de nuevo."
+      "actionFailed": "No se ha completado la operación. Inténtalo de nuevo.",
+      "withdrawal": {
+        "title": "Desistir de {{product}}",
+        "loading": "Calculando el reembolso…",
+        "refund": "Te devolveremos {{refund}} de {{amount}}.",
+        "basis": {
+          "full": "Reembolso completo. Las ventajas de esta compra terminan ahora.",
+          "unused": "No has usado los créditos de esta compra: se devuelve todo y se retiran de tu saldo.",
+          "prorated": "Se descuenta la parte que ya has disfrutado. Las ventajas terminan ahora."
+        },
+        "confirm": "Confirmar y pedir reembolso",
+        "back": "Volver",
+        "reasons": {
+          "window_closed": "Han pasado más de 14 días desde la compra.",
+          "credits_used": "Ya has usado créditos de esta compra, así que no se puede reembolsar.",
+          "used": "Ya has disfrutado todo el periodo de esta compra.",
+          "ended": "Esta suscripción ya ha terminado.",
+          "business": "Las compras de locales son entre empresas y no tienen desistimiento. Para cualquier incidencia, escríbenos desde Contacto.",
+          "already_refunded": "Esta compra ya está reembolsada.",
+          "not_found": "Esta compra no se puede reembolsar.",
+          "not_paid": "Esta compra no se puede reembolsar.",
+          "not_eligible": "Esta compra no se puede reembolsar."
+        }
+      }
     },
     "products": {
       "pass_monthly": {
@@ -1125,14 +1148,23 @@
       "cancel": "Cancela cuando quieras en dos toques desde Mi suscripción; mantienes las ventajas hasta el final del periodo.",
       "oneNight": "Pago único. Las ventajas caducan a las 06:00.",
       "credits": "Pago único. Los créditos no caducan.",
-      "withdrawal": "Derecho de desistimiento de {{days}} días con reembolso completo desde Mi suscripción.",
       "provider": "El pago lo procesa una pasarela segura; nunca vemos ni guardamos tu tarjeta.",
       "secure": "Pago seguro y cifrado",
       "subscribe": "Suscribirme y pagar",
       "pay": "Pagar",
       "conditions": "Condiciones de Premium",
       "totalPeriod": "Total {{interval}}",
-      "renewalPeriod": "Se renueva automáticamente por {{price}} {{interval}}. Puedes cancelar antes de la renovación."
+      "renewalPeriod": "Se renueva automáticamente por {{price}} {{interval}}. Puedes cancelar antes de la renovación.",
+      "withdrawalRules": {
+        "subscription": "Desistimiento: {{days}} días desde la compra, desde Mi suscripción. Se devuelve la parte del periodo que aún no has disfrutado.",
+        "one_night": "Desistimiento: {{days}} días desde la compra. Se devuelve la parte de la noche que aún no has disfrutado; terminado el pase no hay reembolso.",
+        "credits": "Desistimiento: {{days}} días desde la compra, solo si no has usado ninguno de los créditos de esta compra."
+      },
+      "immediateStart": {
+        "subscription": "Quiero empezar ya. Entiendo que, si desisto en los 14 días, solo se me devolverá la parte que no haya disfrutado.",
+        "one_night": "Quiero empezar ya. Entiendo que, si desisto, solo se me devolverá la parte de la noche que no haya disfrutado.",
+        "credits": "Quiero recibir los créditos ya. Entiendo que, en cuanto use alguno, pierdo el derecho de desistimiento de esta compra."
+      }
     },
     "errors": {
       "payments_disabled": "Los pagos no están disponibles ahora mismo.",
@@ -1493,7 +1525,7 @@
       "tiers": {
         "featured": {
           "name": "Destacado",
-          "body": "Pin destacado en el mapa de tu zona."
+          "body": "Pin destacado en el mapa de tu zona y tarjeta de tu local entre los perfiles."
         },
         "featured_plus": {
           "name": "Destacado Plus",
@@ -2363,11 +2395,20 @@
         "premium": {
           "title": "Opciones de pago (opcionales)",
           "items": {
-            "pass": "Pase: likes ilimitados, deshacer el último swipe, temas extra y sin tarjetas patrocinadas. Mensual, trimestral o anual.",
-            "vip": "Pase VIP: todo el Pase más ver quién te ha dado like, prioridad, modo incógnito y Focos, Chispas y mensajes directos cada semana.",
-            "night": "Pase de una noche: las ventajas del Pase hasta las 06:00, sin suscripción.",
-            "extras": "Sueltos: Chispa (like destacado con aviso anónimo), Foco (30 minutos destacado en tu local o zona) y Mensaje directo (escribir antes del match, nunca a quien tiene el semáforo en rojo).",
-            "status": "Los pagos están en fase de pruebas. Lo básico y la seguridad son y seguirán siendo gratis."
+            "pass": "Pase ({{passMonthly}} al mes, {{passQuarterly}} al trimestre o {{passAnnual}} al año): likes ilimitados, deshacer el último swipe, temas extra y sin tarjetas patrocinadas.",
+            "vip": "Pase VIP ({{vip}} al mes): todo el Pase más ver quién te ha dado like, prioridad, modo incógnito y, cada semana, 1 Foco, 3 Chispas y 2 Mensajes directos.",
+            "night": "Pase de una noche ({{oneNight}}, pago único): las ventajas del Pase hasta las 06:00 y 1 Foco.",
+            "extras": "Sueltos (pago único; los créditos no caducan): Chispa, un like destacado con aviso anónimo ({{spark1}}; 5 por {{spark5}}; 15 por {{spark15}}); Foco, 30 minutos destacado en tu local o zona ({{spotlight}}); y Mensaje directo, para escribir antes del match y nunca a quien tiene el semáforo en rojo ({{paidDm}}).",
+            "status": "Son precios de la fase de pruebas, con IVA: pueden cambiar antes del lanzamiento y ahora no se cobra nada real. Lo básico y la seguridad son y seguirán siendo gratis."
+          }
+        },
+        "payments": {
+          "title": "Cómo se paga, se cancela y se desiste",
+          "items": {
+            "buy": "Se compra en Perfil › Premium. Antes de pagar ves el precio con IVA y las condiciones; paga una pasarela segura (Stripe) y nunca vemos tu tarjeta.",
+            "renew": "Las suscripciones se renuevan solas al final de cada periodo. Cancela cuando quieras en Perfil › Mi suscripción: mantienes las ventajas hasta el final del periodo pagado.",
+            "withdraw": "Puedes desistir en los 14 días siguientes a la compra desde Mi suscripción. Lo que ya has usado no se devuelve; verás el importe antes de confirmar. Más detalles en las Condiciones de Premium.",
+            "promo": "¿Tienes un código promocional? Canjéalo en Premium › Canjear código."
           }
         },
         "privacy": {
@@ -2431,10 +2472,11 @@
         "sponsor": {
           "title": "Patrocinio (30 días)",
           "items": {
-            "featured": "Destacado: tu pin destacado en el mapa de tu zona y tarjeta de tu local entre los perfiles.",
-            "plus": "Destacado Plus: además, primeras posiciones en las listas que cumplan los filtros de cada persona.",
-            "top": "Top: además, Flash Alerts para avisar de una promoción durante una hora.",
-            "limits": "Hay plazas limitadas por ciudad. Se contrata desde tu panel."
+            "featured": "Destacado ({{featured}} por 30 días): tu pin destacado en el mapa de tu zona y la tarjeta de tu local entre los perfiles.",
+            "plus": "Destacado Plus ({{featuredPlus}} por 30 días): además, primeras posiciones en las listas que cumplan los filtros de cada persona.",
+            "top": "Top ({{top}} por 30 días): aparece antes que Plus y añade Flash Alerts para avisar de una promoción durante una hora.",
+            "limits": "Hay 3 plazas por ciudad. Se contrata desde tu panel: eliges nivel y fecha de inicio y pagas con tarjeta (pago único, sin renovación automática) o pides factura y lo activamos al recibir el pago.",
+            "contract": "Con un acuerdo con Nightlife (contrato), tu nivel de patrocinio y/o Estadísticas Pro se activan durante las fechas del contrato, con el precio pactado fuera de la app. Lo ves en tu panel, en «Plan y ventajas», y no ocupa plazas de tu ciudad."
           }
         },
         "pro": {
@@ -2442,7 +2484,7 @@
           "items": {
             "detail": "Afluencia por hora, edad media, semáforo y comparación con los locales de tu zona.",
             "privacy": "Siempre datos agregados: los grupos pequeños nunca se muestran.",
-            "billing": "Suscripción mensual por local que puedes cancelar cuando quieras."
+            "billing": "Suscripción mensual por local ({{pro}} al mes) que se renueva sola. Cancélala desde el portal de facturación y conservas el acceso hasta el final del periodo; solo la gestiona la cuenta que la contrató."
           }
         },
         "flash": {
@@ -2464,7 +2506,8 @@
         "status": {
           "title": "Precios",
           "items": {
-            "now": "Los pagos están en fase de pruebas. Verás los precios en tu panel cuando se activen."
+            "now": "Son importes de la fase de pruebas: pueden cambiar antes del lanzamiento y ahora no se cobra nada real.",
+            "refunds": "Al ser una contratación entre empresas no hay desistimiento; para cualquier incidencia, escríbenos desde Contacto."
           }
         }
       },
@@ -2480,7 +2523,8 @@
       "contact": "Contacto",
       "openApp": "Abrir la app",
       "otherUser": "¿Tienes un local? Mira la guía para locales",
-      "otherVenue": "¿Buscas cómo usar la app? Mira la guía de la app"
+      "otherVenue": "¿Buscas cómo usar la app? Mira la guía de la app",
+      "premiumTerms": "Condiciones de Premium"
     },
     "contents": "En esta guía"
   },

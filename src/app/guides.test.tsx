@@ -43,6 +43,28 @@ describe('roadmap R1: public guides', () => {
     ).toHaveAttribute('href', '/legal/venues')
   })
 
+  it('the guides explain prices, quantities and how to cancel or withdraw', async () => {
+    const user = renderApp('/guia', anonymous)
+    expect(
+      await screen.findByRole('heading', { name: 'Cómo se paga, se cancela y se desiste' }),
+    ).toBeInTheDocument()
+    // Prices come from the same catalogue as the checkout.
+    expect(screen.getByText(/^Pase \(9,99\s€ al mes/)).toBeInTheDocument()
+    expect(screen.getByText(/1 Foco, 3 Chispas y 2 Mensajes directos/)).toBeInTheDocument()
+    expect(screen.getByText(/Lo que ya has usado no se devuelve/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Condiciones de Premium' })).toHaveAttribute(
+      'href',
+      '/legal/premium',
+    )
+    user.unmount()
+    renderApp('/guia/locales', anonymous)
+    expect(await screen.findByText(/^Destacado \(29,00\s€ por 30 días\)/)).toBeInTheDocument()
+    expect(screen.getByText(/Hay 3 plazas por ciudad/)).toBeInTheDocument()
+    expect(screen.getByText(/entre empresas no hay desistimiento/)).toBeInTheDocument()
+    // Contracts are explained only with the partners flag on.
+    expect(screen.queryByText(/acuerdo con Nightlife \(contrato\)/)).toBeNull()
+  })
+
   it('the sign-in tip follows the email sign-in flag', async () => {
     renderApp('/guia', {
       ...anonymous,

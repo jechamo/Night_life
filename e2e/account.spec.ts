@@ -44,7 +44,13 @@ test.describe('Cuenta, Premium y ajustes', () => {
       'href',
       '/legal/premium',
     )
-    await page.getByRole('button', { name: t('premium.checkout.subscribe') }).click()
+    // Paying requires the express request to start now (TRLGDCU arts. 103/108).
+    const subscribe = page.getByRole('button', { name: t('premium.checkout.subscribe') })
+    await expect(subscribe).toBeDisabled()
+    await page
+      .getByRole('checkbox', { name: t('premium.checkout.immediateStart.subscription') })
+      .click()
+    await subscribe.click()
     await expect(page).toHaveURL(/\/premium\/test-checkout\/pass_monthly$/)
     await page.getByRole('button', { name: t('premium.testCheckout.pay') }).click()
     await expect(page).toHaveURL(/\/premium\/return/)

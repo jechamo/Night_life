@@ -4,6 +4,7 @@ import {
   CalendarDays,
   ChartColumn,
   Check,
+  CreditCard,
   Gift,
   Heart,
   KeyRound,
@@ -24,6 +25,12 @@ import {
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
+import {
+  formatPrice,
+  productByCode,
+  VENUE_PRICES,
+  type ProductCode,
+} from '@/features/premium/model/catalog'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
 import { cn } from '@/shared/lib/cn'
 import {
@@ -155,6 +162,17 @@ const USER_GUIDE = [
     ],
   },
   {
+    title: 'guide.user.sections.payments.title',
+    id: 'payments',
+    icon: CreditCard,
+    items: [
+      'guide.user.sections.payments.items.buy',
+      'guide.user.sections.payments.items.renew',
+      'guide.user.sections.payments.items.withdraw',
+      'guide.user.sections.payments.items.promo',
+    ],
+  },
+  {
     title: 'guide.user.sections.privacy.title',
     id: 'privacy',
     icon: Lock,
@@ -220,6 +238,7 @@ const VENUE_GUIDE = [
       'guide.venues.sections.sponsor.items.plus',
       'guide.venues.sections.sponsor.items.top',
       'guide.venues.sections.sponsor.items.limits',
+      'guide.venues.sections.sponsor.items.contract',
     ],
   },
   {
@@ -257,7 +276,7 @@ const VENUE_GUIDE = [
     title: 'guide.venues.sections.status.title',
     id: 'status',
     icon: Tag,
-    items: ['guide.venues.sections.status.items.now'],
+    items: ['guide.venues.sections.status.items.now', 'guide.venues.sections.status.items.refunds'],
   },
 ] as const satisfies readonly GuideSectionDef[]
 
@@ -279,8 +298,38 @@ const BOOKING_ITEMS: readonly string[] = [
 ]
 const PARTNER_ITEMS: readonly string[] = [
   'guide.venues.sections.access.items.invite',
+  'guide.venues.sections.sponsor.items.contract',
   'guide.venues.sections.free.items.team',
 ]
+
+/**
+ * Prices shown in the guides come from the same catalogue as the checkout, so they never
+ * drift; the copy says they are testing-phase prices.
+ */
+function useGuideText(): (key: string) => string {
+  const { t, i18n } = useTranslation()
+  const money = (cents: number) => formatPrice(cents, i18n.language)
+  const product = (code: ProductCode) => money(productByCode(code)?.priceCents ?? 0)
+  const prices = {
+    passMonthly: product('pass_monthly'),
+    passQuarterly: product('pass_quarterly'),
+    passAnnual: product('pass_annual'),
+    vip: product('vip_monthly'),
+    oneNight: product('one_night'),
+    spark1: product('sparks_1'),
+    spark5: product('sparks_5'),
+    spark15: product('sparks_15'),
+    spotlight: product('spotlight_1'),
+    paidDm: product('paid_dm_1'),
+    featured: money(VENUE_PRICES.featured),
+    featuredPlus: money(VENUE_PRICES.featured_plus),
+    top: money(VENUE_PRICES.top),
+    pro: money(VENUE_PRICES.pro),
+  }
+  // Guide keys are listed in constants above; extra variables are ignored by the others.
+  const translate = t as unknown as (key: string, options: Record<string, string>) => string
+  return (key) => translate(key, prices)
+}
 
 const COVER_SIZES = '(min-width: 768px) 736px, calc(100vw - 32px)'
 
@@ -437,6 +486,7 @@ export function UserGuideScreen() {
   const liveStatus = useFeatureFlag('live_status_enabled') === 'on'
   const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
   const bookings = useFeatureFlag('venue_bookings_enabled') === 'on'
+  const text = useGuideText()
   const sections = USER_GUIDE.map((section) => ({ ...section, title: t(section.title) }))
   return (
     <>
@@ -478,11 +528,14 @@ export function UserGuideScreen() {
               // Sign-in copy follows the email sign-in flag (roadmap R1).
               item === 'guide.user.sections.account.items.login' && emailLogin
                 ? t('guide.user.sections.account.items.loginEmail')
-                : t(item),
+                : text(item),
             )}
         />
       ))}
       <nav className="mt-10 grid gap-2 text-sm">
+        <Link className="text-primary underline" to="/legal/premium">
+          {t('guide.links.premiumTerms')}
+        </Link>
         <Link className="text-primary underline" to="/guia/locales">
           {t('guide.links.otherUser')}
         </Link>
@@ -500,6 +553,7 @@ export function VenueGuideScreen() {
   const partners = useFeatureFlag('venue_partners_enabled') === 'on'
   const showcase = useFeatureFlag('venue_showcase_enabled') === 'on'
   const bookings = useFeatureFlag('venue_bookings_enabled') === 'on'
+  const text = useGuideText()
   const sections = VENUE_GUIDE.map((section) => ({ ...section, title: t(section.title) }))
   return (
     <>
@@ -523,7 +577,7 @@ export function VenueGuideScreen() {
             .filter((item) => partners || !PARTNER_ITEMS.includes(item))
             .filter((item) => showcase || !SHOWCASE_ITEMS.includes(item))
             .filter((item) => bookings || !BOOKING_ITEMS.includes(item))
-            .map((item) => t(item))}
+            .map(text)}
         />
       ))}
       <nav className="mt-10 grid gap-2 text-sm">

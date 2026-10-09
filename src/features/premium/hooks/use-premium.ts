@@ -5,7 +5,11 @@ import { usePlatform } from '@/platform'
 import { entitlementsQueryKey } from '@/shared/entitlements/use-entitlement'
 import { useServices } from '@/shared/services/ServicesProvider'
 import type { ProductCode } from '../model/catalog'
-import type { PremiumState, VenueProductCode } from '../services/premium-service'
+import type {
+  ImmediateStartConsent,
+  PremiumState,
+  VenueProductCode,
+} from '../services/premium-service'
 
 export const premiumKey = ['premium', 'state'] as const
 
@@ -64,7 +68,8 @@ export function useStartPurchase() {
   const { browser } = usePlatform()
   const navigate = useNavigate()
   return useSessionMutation({
-    mutationFn: (code: ProductCode) => premium.startPurchase(code),
+    mutationFn: ({ code, consent }: { code: ProductCode; consent: ImmediateStartConsent }) =>
+      premium.startPurchase(code, consent),
     onSuccess: async (result) => {
       if (!result.ok) return
       if (result.value.type === 'internal') await navigate(result.value.path)
@@ -99,6 +104,21 @@ export function useCompleteTestPurchase() {
   return useSessionMutation({
     mutationFn: (code: ProductCode) => premium.completeTestPurchase(code),
     onSuccess: refresh,
+  })
+}
+
+/**
+ * What a withdrawal would refund right now (server-side rules). `target` null = closed;
+ * `{}` = the current subscription; `{ orderId }` = one purchase.
+ */
+export function useWithdrawalQuote(target: { orderId?: string } | null) {
+  const { premium } = useServices()
+  return useQuery({
+    queryKey: ['premium', 'withdrawal-quote', target?.orderId ?? 'subscription'],
+    enabled: target !== null,
+    staleTime: 0,
+    gcTime: 0,
+    queryFn: () => premium.withdrawalQuote(target?.orderId),
   })
 }
 

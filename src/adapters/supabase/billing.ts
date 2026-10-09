@@ -37,6 +37,33 @@ export const productCodeSchema = z.enum([
   'sponsor_top',
   'venue_pro_monthly',
 ])
+const withdrawalErrorSchema = z.enum([
+  'window_closed',
+  'credits_used',
+  'used',
+  'ended',
+  'business',
+  'already_refunded',
+  'not_found',
+  'not_paid',
+  'not_eligible',
+])
+const withdrawalQuoteSchema = z.union([
+  z.object({
+    eligible: z.literal(true),
+    orderId: z.string(),
+    productCode: productCodeSchema,
+    amountCents: z.number().int().nonnegative(),
+    refundCents: z.number().int().positive(),
+    basis: z.enum(['full', 'unused', 'prorated']),
+  }),
+  z.object({
+    eligible: z.literal(false),
+    // Unknown server reasons degrade to a generic refusal instead of breaking the screen.
+    reason: withdrawalErrorSchema.catch('not_eligible'),
+  }),
+])
+
 export const premiumStateSchema = z.object({
   subscription: z
     .object({
@@ -101,8 +128,10 @@ export function createPremiumService(db: Db): PremiumService {
         return err('gateway_error')
       return ok({ type: 'external', url: parsed.data.url })
     },
-    async startPurchase(code) {
-      const r = await db.functions.invoke('create-checkout-session', { body: { code } })
+    async startPurchase(code, consent) {
+      const r = await db.functions.invoke('create-checkout-session', {
+        body: { code, immediateStart: consent.immediateStart },
+      })
       if (r.error) return err('gateway_error')
       const parsed = z.object({ url: z.url() }).safeParse(r.data)
       if (!parsed.success || new URL(parsed.data.url).hostname !== 'checkout.stripe.com')
@@ -127,12 +156,16 @@ export function createPremiumService(db: Db): PremiumService {
     },
     cancel: () => manage('cancel'),
     resume: () => manage('resume'),
+    async withdrawalQuote(orderId) {
+      const value = must(await db.rpc('withdrawal_quote', orderId ? { p_order: orderId } : {}))
+      return withdrawalQuoteSchema.parse(value)
+    },
     async withdraw(orderId) {
       const r = await db.functions.invoke('request-withdrawal', { body: { orderId } })
       const context: unknown = (r.error as { context?: unknown } | null)?.context
       const value: unknown = context instanceof Response ? await context.json() : r.data
-      if (z.object({ error: z.literal('window_closed') }).safeParse(value).success)
-        return err('window_closed')
+      const refused = z.object({ error: withdrawalErrorSchema }).safeParse(value)
+      if (refused.success) return err(refused.data.error)
       if (r.error || (r.data as { error?: string })?.error) throw new Error('gateway_error')
       return ok(premiumStateSchema.parse(r.data))
     },

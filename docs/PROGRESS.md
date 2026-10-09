@@ -1,5 +1,46 @@
 # Progreso — Nightlife Connect
 
+## Desistimiento según la norma habitual, guías con precios y procesos — 09/10/2026
+
+Petición del propietario: «ojo con reembolsar si contrata Chispas y las usa»; norma: «lo que
+mejor sea legalmente y lo que se suela hacer». Hasta ahora «Desistir y pedir reembolso»
+devolvía el 100 % de cualquier compra en 14 días aunque se hubiera usado.
+
+- **Regla nueva (servidor, `private.withdrawal_quote`)** (TRLGDCU arts. 103 y 108):
+  - Créditos (Chispas, Focos, Mensajes directos): reembolso solo si no se ha usado ninguno de
+    esa compra; se retiran del saldo.
+  - Suscripciones y Pase de una noche: se devuelve la parte no disfrutada (prorrateo por tiempo).
+  - Compras de locales (patrocinio, Pro): B2B, sin desistimiento de consumidores.
+  - Pedidos sin consentimiento de inicio inmediato (anteriores): reembolso completo, como antes.
+  - El saldo de créditos nunca queda en negativo (antes sí).
+- **Pago:** casilla obligatoria «Quiero empezar ya…» por tipo de producto; la Edge Function
+  `create-checkout-session` la exige (`consent_required`) y la guarda en el pedido
+  (`purchase_orders.immediate_start_at`). El simulador de testers sigue las mismas reglas.
+- **Mi suscripción:** el botón abre una hoja con el importe exacto antes de confirmar, o el
+  motivo si no procede. Las facturas de locales ya no muestran el botón.
+- **Edge Function `request-withdrawal`:** reembolso parcial por el importe calculado, reutiliza
+  un reembolso previo del mismo pedido (nunca dos) y aplica el desistimiento en la BBDD.
+- **Textos legales:** Condiciones de Premium 1.1 (siguen inactivas hasta abrir pagos) y
+  Condiciones de Patrocinio 1.2 (cláusula B2B de reembolsos). Revisar con asesoría.
+- **Listas de invitados:** la hora límite valía «menos de 12 h»; un local que preparaba la lista
+  por la tarde «hasta la 1:30» era rechazado. Ahora vale cualquier hora antes de que acabe la
+  noche (06:00), en app, simulador y servidor (`private.nightlife_night_end`).
+- **Guías:** precios de la fase de pruebas leídos del mismo catálogo que el pago, cantidades
+  (VIP: 1 Foco, 3 Chispas y 2 Mensajes por semana; Pase de una noche con 1 Foco; packs de
+  Chispas), sección «Cómo se paga, se cancela y se desiste», proceso del patrocinio (3 plazas,
+  tarjeta o factura), Pro, contratos (con el flag de partners) y reembolsos B2B. «Destacado»
+  explica lo mismo en la guía, el panel y las condiciones.
+- Pruebas: `supabase/tests/withdrawal.sql` (nueva), `bookings.sql` (independiente de la hora),
+  unitarias (pago con casilla, hoja de desistimiento, guías, `nightEnd`).
+- Estado 09/10: migraciones `20261009070158_withdrawal_rules` y `20261009070218_withdrawal_legal_texts`
+  aplicadas; `withdrawal.sql` 29/29 contra Supabase. Desplegadas `request-withdrawal`,
+  `billing-account` y `create-portal-session`. **Pendiente:** desplegar `create-checkout-session`
+  justo después de fusionar la PR (exige la casilla que solo envía la app nueva).
+- Migración `20261009085736_guestlist_night_window` aplicada por el propietario en el SQL Editor y
+  registrada en el historial; `bookings.sql` 49/49. Advisors: sin errores (solo los INFO/WARN ya
+  conocidos).
+- Guías: el desistimiento se explica en una frase con enlace a las Condiciones de Premium.
+
 ## Guías públicas más visuales y acceso «Para locales» — 08/10/2026
 
 Petición del propietario: las guías se veían «sosas» y desde Bienvenida no se llegaba a la de

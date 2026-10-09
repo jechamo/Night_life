@@ -1299,6 +1299,7 @@ export type Database = {
           amount_cents: number
           created_at: string
           id: string
+          immediate_start_at: string | null
           mode: string
           paid_at: string | null
           plan_code: string
@@ -1307,6 +1308,7 @@ export type Database = {
           provider_session_id: string | null
           provider_subscription_id: string | null
           refunded_at: string | null
+          refunded_cents: number | null
           simulated: boolean
           sponsorship_from: string | null
           status: string
@@ -1317,6 +1319,7 @@ export type Database = {
           amount_cents: number
           created_at?: string
           id?: string
+          immediate_start_at?: string | null
           mode: string
           paid_at?: string | null
           plan_code: string
@@ -1325,6 +1328,7 @@ export type Database = {
           provider_session_id?: string | null
           provider_subscription_id?: string | null
           refunded_at?: string | null
+          refunded_cents?: number | null
           simulated?: boolean
           sponsorship_from?: string | null
           status?: string
@@ -1335,6 +1339,7 @@ export type Database = {
           amount_cents?: number
           created_at?: string
           id?: string
+          immediate_start_at?: string | null
           mode?: string
           paid_at?: string | null
           plan_code?: string
@@ -1343,6 +1348,7 @@ export type Database = {
           provider_session_id?: string | null
           provider_subscription_id?: string | null
           refunded_at?: string | null
+          refunded_cents?: number | null
           simulated?: boolean
           sponsorship_from?: string | null
           status?: string
@@ -2392,6 +2398,7 @@ export type Database = {
         Args: { p_action?: string; p_code: string }
         Returns: Json
       }
+      simulate_withdrawal: { Args: { p_order: string }; Returns: Json }
       simulate_verification_result: {
         Args: { p_level: string; p_outcome: string }
         Returns: Json
@@ -2493,6 +2500,7 @@ export type Database = {
       visible_sponsorships: { Args: never; Returns: Json }
       vote_vibe: { Args: { p_place_id: string; p_vibe: string }; Returns: Json }
       who_is_there: { Args: { p_place_id: string }; Returns: Json }
+      withdrawal_quote: { Args: { p_order?: string }; Returns: Json }
     }
     Enums: {
       app_role: 'user' | 'tester' | 'venue_manager' | 'admin'

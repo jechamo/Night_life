@@ -32,6 +32,9 @@ create function pg_temp.as_user(n int) returns void language sql as $$
  select set_config('request.jwt.claims', json_build_object('sub','00000000-0000-4000-8000-00000000d6'||lpad(n::text,2,'0'),
   'role','authenticated','aal','aal1')::text, true),
   set_config('request.headers', json_build_object('x-real-ip','10.6.0.'||n)::text, true) $$;
+-- A valid closing time at any hour of the day: up to 3 hours ahead, never past 06:00.
+create function pg_temp.list_until() returns timestamptz language sql as $$
+ select least(now()+interval '3 hours', private.nightlife_night_end()-interval '1 second') $$;
 create function pg_temp.v(n int) returns uuid language sql as $$ select ('00000000-0000-4000-8000-0000000d6e0'||n)::uuid $$;
 create function pg_temp.req(n int, hours int, party int default 4, kind text default 'table') returns text language sql as $$
  select pg_temp.err(format('select public.reservation_request(%L,%L,%s,%L)', pg_temp.v(n), now()+make_interval(hours=>hours), party, kind)) $$;
@@ -109,9 +112,9 @@ insert into _p select 'person cancels a request', exists(select 1 from jsonb_arr
 
 -- Guest list.
 select pg_temp.as_user(1);
-insert into _p select 'list title checked', pg_temp.err(format('select public.venue_guestlist_save(%L,%L,%L,2)',pg_temp.v(1),'ab',now()+interval '3 hours')) like '%invalid list%';
-insert into _p select 'list ends within 12 hours', pg_temp.err(format('select public.venue_guestlist_save(%L,%L,%L,2)',pg_temp.v(1),'Gratis antes de la 1:30',now()+interval '13 hours')) like '%invalid list%';
-select public.venue_guestlist_save(pg_temp.v(1), 'Gratis antes de la 1:30', now()+interval '3 hours', 2);
+insert into _p select 'list title checked', pg_temp.err(format('select public.venue_guestlist_save(%L,%L,%L,2)',pg_temp.v(1),'ab',pg_temp.list_until())) like '%invalid list%';
+insert into _p select 'list ends before the night is over', pg_temp.err(format('select public.venue_guestlist_save(%L,%L,%L,2)',pg_temp.v(1),'Gratis antes de la 1:30',private.nightlife_night_end()+interval '1 minute')) like '%invalid list%';
+select public.venue_guestlist_save(pg_temp.v(1), 'Gratis antes de la 1:30', pg_temp.list_until(), 2);
 select pg_temp.as_user(3);
 insert into _ctx select 'listId', public.venue_bookings(pg_temp.v(1))#>'{guestlist,id}';
 insert into _ctx select 'e3', public.guestlist_join((select (value#>>'{}')::uuid from _ctx where key='listId'));
