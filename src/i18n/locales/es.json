@@ -1786,6 +1786,7 @@
     },
     "dashboard": {
       "body": "Datos simulados del entorno de pruebas.",
+      "bodyLive": "Datos reales del proyecto.",
       "users": "Usuarios",
       "ageVerified": "Con edad verificada",
       "matchesToday": "Matches hoy",
@@ -2630,7 +2631,7 @@
       "closed": "Lista cerrada",
       "counts": "{{taken}} de {{capacity}} apuntados · {{used}} han entrado",
       "enableFirst": "Activa «Abrir listas de invitados» para crear una.",
-      "invalidTime": "Elige una hora dentro de las próximas 12 horas.",
+      "invalidTime": "Elige una hora antes de que acabe la noche (06:00).",
       "doorTitle": "Puerta",
       "codeLabel": "Código de la entrada",
       "check": "Validar",

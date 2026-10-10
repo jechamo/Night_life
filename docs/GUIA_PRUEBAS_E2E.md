@@ -106,9 +106,12 @@ algo «no funciona» cuando es una regla.
     local en Admin › Locales › «Nuevo local» con las coordenadas exactas de donde vais a estar
     (ciudad de la lista: Madrid, Barcelona, Valencia, Sevilla, Málaga, Bilbao, Ibiza, Zaragoza).
     En remoto, el botón «Simular que estoy aquí (pruebas)» evita la distancia.
-11. **Escáner QR de la puerta:** funciona con la cámara en **Chrome de Android** y en la **app
-    Android**; en **iPhone (Safari/PWA) no** (no existe `BarcodeDetector`): allí se teclea el
-    código `NL-XXXXX-XXXXX`.
+11. **Escáner QR de la puerta:** usa la función `BarcodeDetector` del navegador. La tienen
+    **Chrome y Edge en Android**; **en iPhone no**, porque Apple no la activa en Safari/WebKit y
+    todos los navegadores de iPhone (Chrome incluido) usan WebKit. La app nativa usa el mismo
+    lector del WebView: en iOS tampoco escanea y en Android depende del WebView del móvil (a
+    comprobar en DEV-06). Donde no hay lector, la app lo dice y se teclea el código
+    `NL-XXXXX-XXXXX`, que valida igual.
 12. **Una sesión por navegador.** Para usar varias cuentas en el mismo móvil/PC usad perfiles de
     navegador distintos o ventanas de incógnito. En iPhone, Safari y la PWA instalada tienen
     sesiones separadas.
@@ -118,16 +121,16 @@ algo «no funciona» cuando es una regla.
     agota, sale el «Mapa de prueba» con aviso; el admin puede ampliarlo en Admin ›
     Configuración › Proveedores (sin coste mientras siga dentro de las 50.000 gratis de Mapbox).
 
-### 0.3 Desajustes detectados durante el análisis (no bloquean, conviene saberlos)
+### 0.3 Desajustes detectados durante el análisis
 
-| #   | Dónde                                    | Qué pasa                                                                                                              |
-| --- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| D1  | Admin › Herramientas › «Roles simulados» | Con el backend real devuelve error (`setSimulatedRoles` rechaza siempre). Para cambiar roles: Admin › Usuarios        |
-| D2  | Panel › Lista de invitados               | El aviso de hora no válida dice «próximas 12 horas», pero la regla desde el 09/10 es «antes de las 06:00»             |
-| D3  | Admin › Dashboard                        | El subtítulo dice «Datos simulados del entorno de pruebas» aunque esté conectado a datos reales                       |
-| D4  | Email login                              | El flag está encendido; si SMTP propio no está configurado en Supabase Auth (ver `AUTH_EMAIL.md`), el código no llega |
-| D5  | Cambiar de teléfono                      | No existe en la app (el PRD pide reautenticación por OTP y aviso al usuario); hoy solo cabe crear otra cuenta         |
-| D6  | OAuth (Google/Apple)                     | No implementado; decisión pendiente (§6.5)                                                                            |
+| #   | Dónde                                    | Qué pasa                                                                                                                                          |
+| --- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | Admin › Herramientas › «Roles simulados» | **Descartado:** con datos reales la sección ya se oculta; para cambiar roles se usa Admin › Usuarios                                              |
+| D2  | Panel › Lista de invitados               | **Corregido (11/10, pendiente de publicar):** el aviso decía «próximas 12 horas»; ahora dice «antes de que acabe la noche (06:00)», como la regla |
+| D3  | Admin › Dashboard                        | **Corregido (11/10, pendiente de publicar):** con datos reales el subtítulo dice «Datos reales del proyecto»                                      |
+| D4  | Email login                              | El flag está encendido; si SMTP propio no está configurado en Supabase Auth (ver `AUTH_EMAIL.md`), el código no llega                             |
+| D5  | Cambiar de teléfono                      | No existe en la app (el PRD pide reautenticación por OTP y aviso al usuario); hoy solo cabe crear otra cuenta                                     |
+| D6  | OAuth (Google/Apple)                     | No implementado; decisión pendiente (§6.5)                                                                                                        |
 
 ---
 
@@ -908,7 +911,7 @@ iPhone para enseñar el QR.
 | RES-10 | A: Cancelar reserva                                                                                                  | «Cancelada»                                                                          |
 | RES-11 | Gestor intenta reservar en su propio local                                                                           | «Es tu local: gestiona las reservas desde tu panel»                                  |
 | RES-12 | Gestor: Lista de esta noche › título «Entrada gratis antes de la 1:30», válida hasta 01:30, 3 plazas › Abrir lista   | Lista abierta «0 de 3 apuntados · 0 han entrado»                                     |
-| RES-13 | Hora límite más allá de las 06:00                                                                                    | No se permite (texto del aviso: ver D2)                                              |
+| RES-13 | Hora límite más allá de las 06:00                                                                                    | «Elige una hora antes de que acabe la noche (06:00)»                                 |
 | RES-14 | A, C y D: Apuntarme                                                                                                  | «Estás en la lista. Tu QR está en Mis reservas»; contador 3 de 3                     |
 | RES-15 | E (o un 4.º) intenta apuntarse                                                                                       | «La lista está completa»                                                             |
 | RES-16 | A: Mis reservas › QR y código `NL-XXXXX-XXXXX`                                                                       | QR visible + «Enséñalo en la puerta antes de las 01:30»                              |
@@ -940,14 +943,14 @@ iPhone para enseñar el QR.
 
 ### 8.19 PWA, dispositivos y app Android (opcional)
 
-| ID     | Pasos                                                                                                 | Resultado esperado                                       |
-| ------ | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| DEV-01 | Instalar la PWA (Android: «Instalar app»; iPhone: Compartir › Añadir a inicio)                        | Abre a pantalla completa con zonas seguras correctas     |
-| DEV-02 | Modo avión con la app abierta y volver                                                                | Aviso sin conexión y recuperación con la sesión intacta  |
-| DEV-03 | Publicar una versión nueva (o esperar la siguiente) con la app abierta                                | Aviso de actualización y recarga sin perder sesión       |
-| DEV-04 | Girar el móvil, teclado abierto en el chat                                                            | Sin desbordes horizontales                               |
-| DEV-05 | APK debug Android (ver `docs/NATIVE.md`): Ajustes › Seguridad › Face ID/huella; salir > 30 s y volver | Pide huella; cerrar sesión desactiva el bloqueo          |
-| DEV-06 | App Android: escanear QR en la Puerta y abrir un enlace `com.nightlifeconnect.app://legal`            | Escanea con la cámara nativa; el enlace abre la pantalla |
+| ID     | Pasos                                                                                                 | Resultado esperado                                                                                                                       |
+| ------ | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| DEV-01 | Instalar la PWA (Android: «Instalar app»; iPhone: Compartir › Añadir a inicio)                        | Abre a pantalla completa con zonas seguras correctas                                                                                     |
+| DEV-02 | Modo avión con la app abierta y volver                                                                | Aviso sin conexión y recuperación con la sesión intacta                                                                                  |
+| DEV-03 | Publicar una versión nueva (o esperar la siguiente) con la app abierta                                | Aviso de actualización y recarga sin perder sesión                                                                                       |
+| DEV-04 | Girar el móvil, teclado abierto en el chat                                                            | Sin desbordes horizontales                                                                                                               |
+| DEV-05 | APK debug Android (ver `docs/NATIVE.md`): Ajustes › Seguridad › Face ID/huella; salir > 30 s y volver | Pide huella; cerrar sesión desactiva el bloqueo                                                                                          |
+| DEV-06 | App Android: Puerta › «Escanear QR»; abrir un enlace `com.nightlifeconnect.app://legal`               | Si el WebView del móvil tiene lector, escanea; si no, «Este dispositivo no puede escanear: teclea el código». El enlace abre la pantalla |
 
 ---
 

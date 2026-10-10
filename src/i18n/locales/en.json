@@ -1786,6 +1786,7 @@
     },
     "dashboard": {
       "body": "Simulated data from the test environment.",
+      "bodyLive": "Real project data.",
       "users": "Users",
       "ageVerified": "Age verified",
       "matchesToday": "Matches today",
@@ -2630,7 +2631,7 @@
       "closed": "List closed",
       "counts": "{{taken}} of {{capacity}} joined · {{used}} came in",
       "enableFirst": "Turn on «Open guest lists» to create one.",
-      "invalidTime": "Choose a time within the next 12 hours.",
+      "invalidTime": "Choose a time before the night ends (06:00).",
       "doorTitle": "Door",
       "codeLabel": "Entry code",
       "check": "Check",

@@ -12,6 +12,11 @@ de invitados, subtítulo del dashboard).
 Ampliado con la sección 6 «Acceso»: cuándo se pide SMS, código por email, biometría (solo app
 nativa, candado local de 30 s), TOTP del admin y estado de OAuth (no implementado), con 26 casos
 de prueba. Desajustes nuevos: D5 (no hay cambio de teléfono) y D6 (OAuth pendiente de decisión).
+11/10: D2 corregido (aviso de hora de la lista de invitados: «antes de que acabe la noche
+(06:00)») y D3 (subtítulo del dashboard según datos reales o simulados, con prueba unitaria). D1
+descartado: la sección de roles simulados ya solo se muestra con el backend simulado. QR en iPhone:
+Safari/WebKit no expone `BarcodeDetector`; se teclea el código hasta decidir un lector propio o el
+plugin oficial. `npm run check` 545/545 · E2E 60/60.
 
 ## Bloque 11a — App nativa con Capacitor y desbloqueo biométrico — 10/10/2026
 

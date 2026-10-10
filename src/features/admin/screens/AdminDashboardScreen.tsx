@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { formatPrice } from '@/features/premium/model/catalog'
+import { useServices } from '@/shared/services/ServicesProvider'
 import { GlassCard } from '@/shared/ui/card'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { useAdminDashboard } from '../hooks/use-admin'
@@ -9,6 +10,7 @@ import { useAdminDashboard } from '../hooks/use-admin'
 export function AdminDashboardScreen() {
   const { t, i18n } = useTranslation()
   const { data } = useAdminDashboard()
+  const { admin } = useServices()
   const cards = data
     ? ([
         ['users', String(data.users), null],
@@ -23,7 +25,10 @@ export function AdminDashboardScreen() {
     : []
   return (
     <>
-      <ScreenHeader title={t('admin.nav.dashboard')} description={t('admin.dashboard.body')} />
+      <ScreenHeader
+        title={t('admin.nav.dashboard')}
+        description={t(admin.mode === 'mock' ? 'admin.dashboard.body' : 'admin.dashboard.bodyLive')}
+      />
       <div className="px-safe mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         {cards.map(([key, value, to]) => {
           const content = (
