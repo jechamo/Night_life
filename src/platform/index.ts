@@ -11,6 +11,12 @@ export type { BiometricError } from './biometrics/biometrics'
 export type { Coordinates, GeolocationError } from './geolocation/geolocation'
 export type { CameraError, LiveCameraStream } from './camera/camera'
 export type { ShareOutcome } from './share/share'
+export type {
+  StoreBillingService,
+  StoreError,
+  StoreProduct,
+  StoreProductKind,
+} from './store-billing/store-billing'
 export type { ImageError } from './images/images'
 export { ACCEPTED_IMAGE_TYPES } from './images/images'
 export type { CheckoutGateway, PaymentError, PaymentProvider } from './payments/payment-provider'

@@ -2,8 +2,8 @@
 
 Estado tras el **Bloque 11a** (10/10/2026): contenedor Capacitor 8 con adaptadores
 nativos para todos los puertos de `src/platform`, proyectos `android/` e `ios/` versionados
-y desbloqueo biométrico opcional. Las compras en tiendas (RevenueCat Test Store) y el Modo
-viaje son el **Bloque 11b**. Firma, cuentas de desarrollador, fichas y publicación, el
+y desbloqueo biométrico opcional. **Bloque 11b** (10/10/2026): compras en la tienda de cada
+dispositivo con RevenueCat (hoy Test Store) y Modo viaje. Firma, cuentas de desarrollador, fichas y publicación, el
 Bloque 12. Referencias: PRD 3.3–3.5, Anexo B, [Capacitor](https://capacitorjs.com/docs).
 
 ## Identidad y compilación
@@ -90,8 +90,20 @@ al volver (el resultado llega por webhook). Solo se aceptan nuestro host y nuest
 `_shared/http.ts` admite además `https://localhost` (Android) y `capacitor://localhost`
 (iOS), exactos. Redesplegadas en 11a: `verification` (v11), `signed-documents` (v17),
 `delete-account` (v17) y `test-tools` (v15). Las de pagos (`billing-account`,
-`create-portal-session`, `request-withdrawal`, `create-checkout-session`) se redesplegarán
-con los cambios de tiendas del Bloque 11b.
+`create-portal-session`, `request-withdrawal`, `create-checkout-session`) siguen solo para la
+web: `create-checkout-session` no admite orígenes nativos, de modo que la app nunca abre
+Stripe. Nuevas en 11b: `store` (v2), `store-admin` (v1) y `revenuecat-webhook` (v1, sin CORS).
+
+## Compras en tiendas (Bloque 11b)
+
+- `@revenuecat/purchases-capacitor` 13.7.3; Android `launchMode="singleTop"` (requisito de
+  RevenueCat); iOS fijado en `Package.resolved`.
+- Flujo: `store` (`config`) → `configure`/`logIn` con el id de Supabase → `getProducts` →
+  `purchaseStoreProduct` → `store` (`sync`) → ventajas. Cancelar no cambia nada; «pendiente»
+  se avisa; «Restaurar compras» = `restorePurchases` + `sync`.
+- Gestión: `managementURL` solo si es de `apps.apple.com` o `play.google.com`.
+- Requiere `store_payments_enabled`, `payments_mode=test` y cuenta tester; productos creados
+  en Test Store ([STORE_CATALOG.md](./STORE_CATALOG.md)).
 
 ## Equipos con antivirus que inspecciona TLS
 
@@ -107,5 +119,8 @@ ignora en release). Nunca se sube al repositorio (`.gitignore`).
   «Seguridad de los datos», URL de borrado de cuenta.
 - ❌ App Links / Universal Links verificados; compilación y prueba en iPhone real.
 - ❌ Push remoto (APNs/FCM), VoiceOver/TalkBack y rendimiento en dispositivos reales.
-- ❌ Compras de tiendas reales (en 11b solo Test Store, nunca en una build de release).
+- ❌ Compras de tiendas reales (en 11b solo Test Store, nunca en una build de release):
+  productos en App Store Connect/Google Play, claves públicas live de RevenueCat y
+  `payments_mode=live` según [PAYMENTS_GO_LIVE.md](./PAYMENTS_GO_LIVE.md).
+- ✅ Compras Test Store, restauración y Modo viaje (Bloque 11b).
 - ✅ Contenedor, adaptadores nativos, permisos, CSP, almacenamiento seguro y biometría.

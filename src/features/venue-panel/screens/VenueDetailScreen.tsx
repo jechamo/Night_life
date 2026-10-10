@@ -28,7 +28,7 @@ import {
 import { PlanCard, TeamCard } from '../components/PartnerCards'
 import { useVenuePartnerState } from '../hooks/use-venue-panel'
 import { ProSubscriptionCard } from '../components/ProSubscriptionCard'
-import { useStartVenuePurchase } from '@/features/premium/hooks/use-premium'
+import { useVenueCheckout } from '@/features/premium/hooks/use-store'
 import { formatPrice, VENUE_PRICES } from '@/features/premium/model/catalog'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { useFeatureFlag } from '@/shared/flags/use-feature-flag'
@@ -236,7 +236,7 @@ function OfficialEventForm({ placeId }: { placeId: string }) {
 function SponsorshipForm({ venue }: { venue: ManagedVenue }) {
   const { t, i18n } = useTranslation()
   const request = useRequestSponsorship()
-  const checkout = useStartVenuePurchase()
+  const checkout = useVenueCheckout()
   const selfService = useFeatureFlag('sponsorship_self_service_enabled') === 'on'
   const canBuy = usePaywallState() === 'checkout'
   const today = new Date().toISOString().slice(0, 10)
@@ -314,17 +314,22 @@ function SponsorshipForm({ venue }: { venue: ManagedVenue }) {
       )}
       <Button
         block
-        disabled={selfService ? !canBuy || checkout.isPending : to < from || request.isPending}
+        disabled={selfService ? !canBuy || checkout.pending : to < from || request.isPending}
         onClick={() =>
           selfService
-            ? checkout.mutate({ code: `sponsor_${tier}`, venueId: venue.placeId, from })
+            ? checkout.pay({ code: `sponsor_${tier}`, venueId: venue.placeId, from })
             : request.mutate({ placeId: venue.placeId, tier, from, to })
         }
       >
         <Megaphone aria-hidden />
         {t(selfService ? 'premium.checkout.pay' : 'venuePanel.sponsor.submit')}
       </Button>
-      {(checkout.isError || (checkout.data && !checkout.data.ok)) && (
+      {checkout.outcome && (
+        <p role="status" className="text-sm text-live">
+          {t(`premium.store.${checkout.outcome}`)}
+        </p>
+      )}
+      {checkout.failed && (
         <p role="alert" className="text-danger">
           {t('venuePanel.billingError')}
         </p>

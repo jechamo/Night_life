@@ -46,6 +46,7 @@
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/share": "^8.0.3",
     "@hookform/resolvers": "^5.9.1",
+    "@revenuecat/purchases-capacitor": "^13.7.3",
     "@supabase/supabase-js": "^2.117.2",
     "@tanstack/react-query": "^5.104.1",
     "class-variance-authority": "^0.7.1",

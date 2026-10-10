@@ -15,6 +15,7 @@ import type { Platform } from './platform'
 import { createNativePreferences } from './preferences/preferences.native'
 import { createNativeSecureStorage } from './secure-storage/secure-storage.native'
 import { createNativeShare } from './share/share.native'
+import { createNativeStoreBilling } from './store-billing/store-billing.native'
 
 export interface NativePlatformOptions {
   /** Public HTTPS origin for provider return URLs and App/Universal Links. */
@@ -45,5 +46,6 @@ export function createNativePlatform({ appUrl }: NativePlatformOptions): Platfor
     browser: createNativeInAppBrowser(),
     files: createNativeFileDownload(),
     images: createWebImages(),
+    store: createNativeStoreBilling(),
   }
 }

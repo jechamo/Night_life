@@ -7,7 +7,9 @@ import { Button, ButtonLink } from '@/shared/ui/button'
 import { GlassCard } from '@/shared/ui/card'
 import { CheckboxField } from '@/shared/ui/checkbox'
 import { ScreenHeader } from '@/shared/ui/screen-header'
+import { StoreCheckout } from '../components/StoreCheckout'
 import { useStartPurchase } from '../hooks/use-premium'
+import { useStoreBilling } from '../hooks/use-store'
 import { formatPrice, priceBreakdown, productByCode, WITHDRAWAL_DAYS } from '../model/catalog'
 
 /**
@@ -21,8 +23,17 @@ export function CheckoutScreen() {
   const product = productByCode(code)
   const paywall = usePaywallState()
   const start = useStartPurchase()
+  const store = useStoreBilling()
   const [immediateStart, setImmediateStart] = useState(false)
   if (!product || paywall !== 'checkout') return <Navigate to="/premium" replace />
+  // Native app: the device's store sells it (Block 11b). The web keeps Stripe below.
+  if (store.enabled)
+    return (
+      <>
+        <ScreenHeader title={t('premium.checkout.title')} backTo="/premium" />
+        <StoreCheckout product={product} />
+      </>
+    )
   const price = priceBreakdown(product)
   const money = (cents: number) => formatPrice(cents, i18n.language)
   const subscription = product.kind === 'subscription'

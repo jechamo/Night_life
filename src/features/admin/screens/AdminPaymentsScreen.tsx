@@ -11,6 +11,7 @@ import { ListRow } from '@/shared/ui/list-row'
 import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { TextField } from '@/shared/ui/text-field'
+import { StoreCatalogCard } from '../components/StoreCatalogCard'
 import { useCreatePromoCode, useGrantEntitlement } from '../hooks/use-admin'
 
 const SUBSECTIONS = ['subscriptions', 'entitlements', 'promoCodes', 'paymentEvents'] as const
@@ -158,6 +159,7 @@ export function AdminPaymentsScreen() {
           </table>
         </div>
       </Section>
+      <StoreCatalogCard />
       <Section title={t('admin.payments.records')}>
         <GlassCard className="divide-y divide-border p-0">
           {SUBSECTIONS.map((s) => (

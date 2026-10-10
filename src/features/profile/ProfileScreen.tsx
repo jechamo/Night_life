@@ -34,6 +34,7 @@ import { Section } from '@/shared/ui/section'
 import { MyProfileCard } from './components/MyProfileCard'
 import { PreferencesSheet } from './components/PreferencesSheet'
 import { IncognitoControl } from '@/features/premium/components/IncognitoControl'
+import { TravelModeCard } from '@/features/matching/components/TravelModeCard'
 
 function ActionRow({
   icon: Icon,
@@ -103,6 +104,7 @@ export function ProfileScreen() {
           )}
         </GlassCard>
       </Section>
+      <TravelModeCard />
       <Section title={t('profileMenu.privacy')}>
         <GlassCard className="divide-y divide-border p-0">
           <ListRow

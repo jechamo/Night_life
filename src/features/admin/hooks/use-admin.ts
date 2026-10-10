@@ -97,6 +97,9 @@ export const useGrantEntitlement = () =>
 export const useRunTestTool = () =>
   useAdminMutation((admin, tool: TestTool) => admin.runTestTool(tool))
 
+/** Block 11b: checks the RevenueCat catalogue (audited server-side, admin with MFA). */
+export const useStoreCatalogCheck = () => useAdminMutation((admin) => admin.storeCatalog!())
+
 export function useProviderQuotas() {
   const { admin } = useServices()
   return useQuery({

@@ -2,6 +2,34 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 11b — compras en tiendas y Modo viaje — 10/10/2026 ✅ sin hallazgos críticos ni altos
+
+- Concesión (A01/A04, API6): la app nunca concede. `store` (`sync`) lee el cliente en la API
+  v2 de RevenueCat con la clave secreta (solo en Supabase) y aplica con `private.store_apply`
+  (solo `service_role`, idempotente por `rc:<id>`); el webhook verifica `Authorization` en
+  tiempo constante y solo dispara la reconciliación desde la API, así que un webhook
+  falsificado o repetido no concede nada. Solo modo test y solo testers; datos live
+  ignorados hasta el Bloque 12.
+- Identidad: el `appUserID` de RevenueCat es el id de Supabase devuelto por `store` (`config`)
+  tras `requireUser`; los ids anónimos se ignoran; máximo 5 clientes por webhook; ids no UUID
+  rechazados antes de llamar a la API. Cierre de sesión → `logOut` de RevenueCat.
+- Llamadas salientes (A10): solo `https://api.revenuecat.com/v2/projects/<proyecto>/`,
+  paginación limitada al mismo proyecto (se ignora un `next_page` a otro host),
+  `redirect: 'error'`; de la respuesta solo se guardan los campos necesarios (sin importes en
+  USD ni URL de gestión). La URL de gestión solo abre `apps.apple.com`/`play.google.com`.
+- Abuso: `store_sync_access` 60/h por persona y red; `travel_set` 20/h; `store-admin` exige
+  admin con MFA y queda auditado.
+- Pagos por plataforma: `create-checkout-session` no acepta orígenes nativos (Stripe solo en
+  web); `store`/`store-admin` aceptan solo los orígenes nativos y web exactos; ambas devuelven
+  401 sin sesión. Las compras de tienda no usan el desistimiento propio (lo gestiona la tienda).
+- Modo viaje: ciudad de una lista cerrada, 1–30 días, distinta de la propia; exige flag y
+  entitlement en cada lectura (`effective_city`), así que perder el Pase devuelve a la ciudad
+  propia sin tareas programadas. `private.travel_plans` sin acceso directo; se exporta.
+- Secretos: `REVENUECAT_SECRET` y `REVENUECAT_WEBHOOK_AUTH` solo en Supabase; la clave pública
+  del SDK (`REVENUECAT_SDK_TEST`) se entrega por `store` (`config`) a testers. Nada en el repo.
+- Dependencias: `@revenuecat/purchases-capacitor` 13.7.3 (MIT) en `vendor-native` (el bundle
+  web no lo carga); `npm audit` 0; SBOM 707. Advisors: 34 INFO por diseño y el WARN conocido.
+
 ## Bloque 11a — app nativa (Capacitor) — 10/10/2026 ✅ sin hallazgos críticos ni altos
 
 - Sesión (A02/A07): Supabase Auth en Keychain/Keystore (`@aparajita/capacitor-secure-storage`,

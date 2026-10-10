@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { useBillingPortal, useStartVenuePurchase } from '@/features/premium/hooks/use-premium'
+import { useBillingPortal } from '@/features/premium/hooks/use-premium'
+import { useVenueCheckout } from '@/features/premium/hooks/use-store'
 import { formatPrice, VENUE_PRICES } from '@/features/premium/model/catalog'
 import { usePaywallState } from '@/shared/flags/use-paywall-state'
 import { Button } from '@/shared/ui/button'
@@ -9,7 +10,7 @@ import { useVenueBilling } from '../hooks/use-venue-panel'
 export function ProSubscriptionCard({ placeId }: { placeId: string }) {
   const { t, i18n } = useTranslation()
   const { data } = useVenueBilling(placeId)
-  const start = useStartVenuePurchase()
+  const checkout = useVenueCheckout()
   const portal = useBillingPortal(placeId)
   const canBuy = usePaywallState() === 'checkout'
   return (
@@ -30,7 +31,8 @@ export function ProSubscriptionCard({ placeId }: { placeId: string }) {
           <Button
             variant="outline"
             disabled={portal.isPending || data.subscription.canManage === false}
-            onClick={() => portal.mutate()}
+            // In the native app the store manages what it sold (Block 11b).
+            onClick={() => (checkout.manage ? checkout.manage() : portal.mutate())}
           >
             {t('venuePanel.pro.manage')}
           </Button>
@@ -40,14 +42,19 @@ export function ProSubscriptionCard({ placeId }: { placeId: string }) {
         </>
       ) : (
         <Button
-          disabled={!canBuy || start.isPending}
-          onClick={() => start.mutate({ code: 'venue_pro_monthly', venueId: placeId })}
+          disabled={!canBuy || checkout.pending}
+          onClick={() => checkout.pay({ code: 'venue_pro_monthly', venueId: placeId })}
         >
           {t('premium.checkout.subscribe')}
         </Button>
       )}
       {!canBuy && <p className="text-sm text-muted-foreground">{t('premium.comingSoon.body')}</p>}
-      {(start.isError || portal.isError || (start.data && !start.data.ok)) && (
+      {checkout.outcome && (
+        <p role="status" className="text-sm text-live">
+          {t(`premium.store.${checkout.outcome}`)}
+        </p>
+      )}
+      {(checkout.failed || portal.isError) && (
         <p role="alert" className="text-danger">
           {t('venuePanel.billingError')}
         </p>

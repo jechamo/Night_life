@@ -11,6 +11,7 @@ import { createEntitlementService, createFlagSource, createSessionService } from
 import { createLegalService, startEmailOutbox } from './legal'
 import { createOnboardingService } from './onboarding'
 import { createPlacesService } from './places'
+import { createTravelMethods } from './travel'
 import { createDashboardService } from './dashboard'
 import { createPrivacyService } from './privacy'
 import { createConsentService, createProfileService, createSafetyService } from './profile'
@@ -34,7 +35,7 @@ export function createSupabaseServices(
       ...simulated,
       places: createPlacesService(db),
       attendance: createAttendanceService(db),
-      matching: createMatchingService(db),
+      matching: { ...createMatchingService(db), ...createTravelMethods(db) },
       chat: createChatService(db),
       realtime: createRealtimeService(db),
     },

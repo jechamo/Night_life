@@ -1059,6 +1059,7 @@
           "ended": "Esta suscripción ya ha terminado.",
           "business": "Las compras de locales son entre empresas y no tienen desistimiento. Para cualquier incidencia, escríbenos desde Contacto.",
           "already_refunded": "Esta compra ya está reembolsada.",
+          "store": "Esta compra la gestiona la tienda (App Store o Google Play): pide el reembolso desde la tienda.",
           "not_found": "Esta compra no se puede reembolsar.",
           "not_paid": "Esta compra no se puede reembolsar.",
           "not_eligible": "Esta compra no se puede reembolsar."
@@ -1223,6 +1224,40 @@
       "cta": "Mensaje directo"
     },
     "seePlans": "Ver Premium",
+    "store": {
+      "names": {
+        "app_store": "App Store",
+        "play_store": "Google Play",
+        "test_store": "la tienda de pruebas"
+      },
+      "buy": "Comprar en {{store}}",
+      "subscribe": "Suscribirme en {{store}}",
+      "storePrice": "Precio en la tienda: {{price}}",
+      "managedBy": "La compra la gestiona {{store}}: el cobro, la renovación, la cancelación y los reembolsos se hacen allí, con sus condiciones.",
+      "testing": "Fase de pruebas: no se cobra nada real.",
+      "restore": "Restaurar compras",
+      "restored": "Compras restauradas.",
+      "done": "Compra completada. Tus ventajas ya están activas.",
+      "pending": "El pago está pendiente de confirmar en la tienda. Las ventajas aparecerán cuando se confirme.",
+      "cancelled": "Compra cancelada. No se te ha cobrado nada.",
+      "loading": "Conectando con la tienda…",
+      "manage": "Gestionar en la tienda",
+      "managed": "Suscripción gestionada en {{store}}. Cancélala o pide un reembolso desde la tienda.",
+      "manageUnavailable": "Gestiónala desde los ajustes de suscripciones de tu tienda.",
+      "venueCheckout": "Pagar en {{store}}",
+      "errors": {
+        "unavailable": "Las compras en la tienda no están disponibles ahora mismo.",
+        "failed": "No se ha podido completar la compra. No se te ha cobrado nada.",
+        "store_disabled": "Las compras en la tienda no están activas para tu cuenta.",
+        "rate_limited": "Demasiados intentos. Espera unos minutos.",
+        "pending": "El pago está pendiente de confirmar en la tienda.",
+        "cancelled": "Compra cancelada.",
+        "already_subscribed": "Ya tienes una suscripción activa.",
+        "payments_disabled": "Los pagos no están activos.",
+        "not_allowed": "Tu cuenta no puede comprar ahora mismo.",
+        "gateway_error": "No se ha podido preparar la compra. Inténtalo de nuevo."
+      }
+    },
     "intervals": {
       "month": "/ mes",
       "quarter": "/ trimestre",
@@ -1936,6 +1971,21 @@
         "credits": "Créditos"
       },
       "records": "Registros",
+      "store": {
+        "title": "Catálogo de tiendas (RevenueCat)",
+        "body": "Comprueba que los productos de Test Store coinciden con el catálogo y que la clave tiene permisos. Los productos se crean en el panel de RevenueCat (docs/STORE_CATALOG.md).",
+        "check": "Comprobar catálogo",
+        "app": "App de pruebas: {{name}}",
+        "noApp": "No hay app Test Store en el proyecto.",
+        "sdkKey": "Clave pública del SDK",
+        "customers": "Permiso de lectura de clientes",
+        "ok": "Correcto",
+        "missing": "Falta",
+        "mismatch": "No coincide",
+        "denied": "Sin permiso",
+        "extra": "Productos que no están en el catálogo: {{list}}",
+        "failed": "No se ha podido consultar RevenueCat."
+      },
       "promoTitle": "Crear código promocional",
       "days": "Días",
       "maxUses": "Usos máximos",
@@ -2328,6 +2378,25 @@
     "place": "Tu próximo sitio",
     "placeUnavailable": "Este local ya no está disponible.",
     "viewMap": "Ver en el mapa"
+  },
+  "travel": {
+    "title": "Modo viaje",
+    "description": "Aparece y explora el swipe de otra ciudad antes de llegar. Tu ciudad real no se muestra a nadie.",
+    "city": "Ciudad de destino",
+    "days": "Duración",
+    "daysValue": "{{count}} días",
+    "activate": "Activar modo viaje",
+    "active": "De viaje en {{city}} hasta el {{date}}.",
+    "stop": "Volver a {{city}}",
+    "upsell": "Incluido en el Pase, el Pase VIP y el Pase de una noche.",
+    "seePremium": "Ver Premium",
+    "errors": {
+      "disabled": "El modo viaje no está disponible ahora mismo.",
+      "premium_required": "El modo viaje está incluido en el Pase.",
+      "invalid": "Elige una ciudad y una duración válidas.",
+      "same_city": "Elige una ciudad distinta de la tuya.",
+      "network": "No se ha podido guardar. Inténtalo de nuevo."
+    }
   },
   "guide": {
     "nav": {

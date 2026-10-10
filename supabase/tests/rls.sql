@@ -186,7 +186,7 @@ insert into _results select 'admin aal1 cannot read others profiles', count(*) =
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000000e","role":"authenticated","aal":"aal2"}', true);
 select public.admin_set_flag('premium_enabled', 'off');
 insert into _results select 'admin with MFA changes flags', value = 'off' from public.app_settings where key = 'premium_enabled';
-insert into _results select 'flag change is audited', count(*) = 1 from public.admin_audit_log where action = 'flag.update';
+insert into _results select 'flag change is audited', count(*) = 1 from public.admin_audit_log where action = 'flag.update' and created_at >= now();
 select public.admin_set_flag('email_login_enabled', 'on');
 insert into _results select 'admin with MFA turns on email sign-in', value = 'on' from public.app_settings where key = 'email_login_enabled';
 do $$

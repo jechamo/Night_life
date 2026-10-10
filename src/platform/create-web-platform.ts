@@ -13,6 +13,7 @@ import type { Platform } from './platform'
 import { createWebPreferences } from './preferences/preferences.web'
 import { createWebSecureStorage } from './secure-storage/secure-storage.web'
 import { createWebShare } from './share/share.web'
+import { createWebStoreBilling } from './store-billing/store-billing.web'
 import { createWebAppUpdates } from './app-updates.web'
 import { createWebAppState } from './app-state/app-state.web'
 
@@ -42,5 +43,6 @@ export function createWebPlatform({ appUrl }: WebPlatformOptions = {}): Platform
     browser: createWebInAppBrowser(),
     files: createWebFileDownload(),
     images: createWebImages(),
+    store: createWebStoreBilling(),
   }
 }

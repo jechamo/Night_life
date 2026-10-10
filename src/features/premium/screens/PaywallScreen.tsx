@@ -11,6 +11,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { Switch } from '@/shared/ui/switch'
 import { ProductCard } from '../components/ProductCard'
+import { RestorePurchasesButton } from '../components/RestorePurchasesButton'
 import { usePremiumState, useSubscriptionActions } from '../hooks/use-premium'
 import { CATALOG, type ProductCode } from '../model/catalog'
 
@@ -115,6 +116,7 @@ export function PaywallScreen() {
         <Button block variant="ghost" onClick={() => void navigate(-1)}>
           {t('premium.notNow')}
         </Button>
+        <RestorePurchasesButton />
         <div className="grid grid-cols-2 gap-3">
           <ButtonLink to="/premium/redeem" variant="outline" size="sm">
             <Gift aria-hidden />

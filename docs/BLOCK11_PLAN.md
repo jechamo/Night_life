@@ -95,3 +95,35 @@ roles, flag apagado), webhook con cabecera inválida → 401, `npm audit`, Advis
 compilación Android debug y compra/restauración Test Store en emulador.
 
 No se inicia el bloque 12 sin OK explícito del propietario.
+
+## Plan detallado del Bloque 11b — 10/10/2026
+
+OK del propietario el 10/10/2026. Clave v2 de RevenueCat con lectura y escritura; proyecto
+`proj1484f178`; `REVENUECAT_WEBHOOK_AUTH` creado en Supabase y webhook sandbox configurado.
+Tarifa vigente revisada (gratis hasta 2.500 $ de ingresos mensuales registrados; Test Store
+no genera ingresos). Al terminar: todo fusionado en `main` para copiar el repositorio.
+
+1. **Migración aditiva `store_billing`:** proveedor `test_store` (además de
+   `stripe/apple/google`) en suscripciones, eventos, facturas y entitlements;
+   `purchase_orders.provider` y `store_transaction_id` (único); `plans.store_product_test`
+   (identificador en Test Store = código del plan); `private.store_apply` (solo
+   `service_role`, idempotente) que traduce el estado de RevenueCat a pedidos, suscripciones,
+   ventajas, créditos, recibos y patrocinios; `public.store_start_venue_order` para reservar
+   el local antes de comprar; el desistimiento propio se niega a compras de tienda (lo
+   gestiona la tienda).
+2. **Edge Functions:** `store-config` (clave pública del SDK y mapa de productos, solo si
+   `store_payments_enabled`, modo test y tester), `store-sync` (lee el cliente en la API v2 y
+   aplica), `revenuecat-webhook` (cabecera `Authorization`, reconcilia desde la API) y
+   `store-admin` (admin con MFA: estado de la clave/catálogo y creación idempotente de los
+   productos que falten en Test Store). Nada se concede por el contenido del webhook.
+3. **App:** puerto `storeBilling` (web: no disponible; nativo:
+   `@revenuecat/purchases-capacitor`), compra y «Restaurar compras» en Premium, gestión en la
+   tienda en Mi suscripción, compras de locales con reserva previa, tarjeta de catálogo de
+   tiendas en Admin › Pagos. La web sigue con Stripe y muestra las suscripciones de tienda
+   como «gestionadas en la tienda».
+4. **Modo viaje:** `private.travel_plans`, ciudad efectiva validada en servidor (flag,
+   entitlement `travel_mode`, fechas ≤ 30 días) usada por el swipe y el Foco; tarjeta en Perfil.
+5. **Catálogo y guía:** `docs/STORE_CATALOG.md` con todos los productos de pago (consumo y
+   locales), identificadores test/live, tipo, duración y precio.
+6. **Pruebas y puerta:** SQL (`store.sql`, `travel.sql`), unitarias, E2E, Advisors, audit,
+   CORS/401 de las funciones nuevas y compra/restauración Test Store en el emulador.

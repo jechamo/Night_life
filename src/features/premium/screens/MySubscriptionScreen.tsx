@@ -8,6 +8,7 @@ import { ScreenHeader } from '@/shared/ui/screen-header'
 import { Section } from '@/shared/ui/section'
 import { useBillingPortal, usePremiumState, useSubscriptionActions } from '../hooks/use-premium'
 import { WithdrawalSheet, type WithdrawalTarget } from '../components/WithdrawalSheet'
+import { useStoreBilling } from '../hooks/use-store'
 import { formatPrice, productByCode, withdrawalOpen } from '../model/catalog'
 
 /**
@@ -21,12 +22,16 @@ export function MySubscriptionScreen() {
   const { cancel, resume, withdraw } = useSubscriptionActions()
   const portal = useBillingPortal()
   const unlimited = useEntitlement('unlimited_likes').granted
+  const store = useStoreBilling()
   const sub = state?.subscription
+  // Block 11b: App Store / Google Play / Test Store subscriptions are managed in the store.
+  const storeSub = !!sub && sub.provider !== 'stripe'
   // Captured once per visit: the one-night pass is re-checked by the server anyway.
   const [openedAt] = useState(() => Date.now())
   const [withdrawing, setWithdrawing] = useState<WithdrawalTarget | null>(null)
   const date = (iso: string) => new Date(iso).toLocaleDateString(i18n.language)
-  const canWithdraw = sub && sub.status !== 'withdrawn' && withdrawalOpen(sub.startedAt, new Date())
+  const canWithdraw =
+    sub && !storeSub && sub.status !== 'withdrawn' && withdrawalOpen(sub.startedAt, new Date())
 
   return (
     <>
@@ -37,7 +42,7 @@ export function MySubscriptionScreen() {
             {t('premium.mine.actionFailed')}
           </p>
         )}
-        {((sub && !sub.simulated) ||
+        {((sub && !sub.simulated && !storeSub) ||
           state?.invoices.some((i) => i.productCode === 'venue_pro_monthly')) && (
           <Button
             block
@@ -65,7 +70,31 @@ export function MySubscriptionScreen() {
                   ? t('premium.mine.renewsOn', { date: date(sub.currentPeriodEnd) })
                   : t('premium.mine.ended')}
             </p>
-            {sub.status === 'active' && (
+            {storeSub && (
+              <p className="text-sm text-muted-foreground">
+                {t('premium.store.managed', {
+                  store: t(
+                    `premium.store.names.${sub.provider === 'apple' ? 'app_store' : sub.provider === 'google' ? 'play_store' : 'test_store'}`,
+                  ),
+                })}
+              </p>
+            )}
+            {storeSub && store.enabled && (
+              <Button
+                variant="outline"
+                block
+                disabled={!store.ready || store.manage.isPending}
+                onClick={() => store.manage.mutate()}
+              >
+                {t('premium.store.manage')}
+              </Button>
+            )}
+            {storeSub && store.manage.data && !store.manage.data.ok && (
+              <p className="text-xs text-muted-foreground">
+                {t('premium.store.manageUnavailable')}
+              </p>
+            )}
+            {!storeSub && sub.status === 'active' && (
               <Button
                 variant="outline"
                 block
@@ -75,7 +104,7 @@ export function MySubscriptionScreen() {
                 {t('premium.mine.cancel')}
               </Button>
             )}
-            {sub.status === 'cancel_at_period_end' && (
+            {!storeSub && sub.status === 'cancel_at_period_end' && (
               <Button
                 variant="outline"
                 block
