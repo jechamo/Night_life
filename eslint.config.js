@@ -38,7 +38,10 @@ export default defineConfig(
   {
     ignores: [
       'dist',
+      'dist-native',
       'dev-dist',
+      'android',
+      'ios',
       'coverage',
       'node_modules',
       '.tmp',
@@ -81,6 +84,32 @@ export default defineConfig(
               group: ['@/platform/*/web', '@/platform/**/*.web'],
               message: 'Import platform services through usePlatform(), not web implementations.',
             },
+            {
+              group: [
+                '@/platform/native',
+                '@/platform/**/*.native',
+                '@capacitor/*',
+                '@aparajita/*',
+              ],
+              message: 'Native plugins live in src/platform; features use usePlatform().',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // Platform factory: the only module that loads the native entry (dynamic import).
+    files: ['src/app/create-platform.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@supabase/*', '@/platform/*/web', '@/platform/**/*.web'],
+              message: 'Wire services through createAppServices() and the platform factories.',
+            },
           ],
         },
       ],
@@ -104,7 +133,14 @@ export default defineConfig(
         {
           patterns: [
             {
-              group: ['@/platform/*/web', '@/platform/**/*.web'],
+              group: [
+                '@/platform/*/web',
+                '@/platform/**/*.web',
+                '@/platform/native',
+                '@/platform/**/*.native',
+                '@capacitor/*',
+                '@aparajita/*',
+              ],
               message: 'Import platform services through the Platform object.',
             },
           ],
@@ -123,6 +159,8 @@ export default defineConfig(
   {
     files: ['*.config.{js,ts}', 'scripts/**/*.{js,ts}', 'e2e/**/*.ts'],
     languageOptions: { globals: globals.node },
+    // Build tooling (e.g. capacitor.config.ts types from @capacitor/cli), not app code.
+    rules: { 'no-restricted-imports': 'off' },
   },
   {
     files: ['**/*.js'],

@@ -10,3 +10,6 @@ docs/PRD/
 test-results
 playwright-report
 blob-report
+dist-native
+android
+ios

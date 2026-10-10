@@ -14,6 +14,7 @@ import type { SecureStorageService } from './secure-storage/secure-storage'
 import type { ShareService } from './share/share'
 import type { PlatformRuntime } from './types'
 import type { AppUpdatesService } from './app-updates'
+import type { AppStateService } from './app-state/app-state'
 
 /**
  * Every device capability the app uses (PRD 3.3 point 1). Features receive this
@@ -23,6 +24,7 @@ import type { AppUpdatesService } from './app-updates'
 export interface Platform {
   runtime: PlatformRuntime
   appUpdates: AppUpdatesService
+  appState: AppStateService
   audio: AudioService
   geolocation: GeolocationService
   camera: CameraService

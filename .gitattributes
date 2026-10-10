@@ -1,1 +1,4 @@
 src/styles/themes.generated.css text eol=lf
+# Block 11: POSIX scripts of the native projects must keep LF (macOS/Linux builds).
+android/gradlew text eol=lf
+*.sh text eol=lf

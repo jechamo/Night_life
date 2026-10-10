@@ -12,6 +12,7 @@ node_modules/.tmp
 .env
 .env.*
 !.env.example
+!.env.native
 
 # editors / OS
 .DS_Store
@@ -27,3 +28,9 @@ supabase/.temp/
 test-results/
 playwright-report/
 blob-report/
+
+# Capacitor native bundle (npm run build:native) and native build outputs
+dist-native
+
+# Local-only Android debug overlay (e.g. antivirus TLS inspection CA). Never commit.
+android/app/src/debug/

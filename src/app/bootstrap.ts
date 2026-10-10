@@ -7,6 +7,8 @@ export interface InitialSettings {
   themeId: ThemeId
   reduceMotion: boolean
   language: Language
+  /** Block 11: the app starts locked behind Face ID / fingerprint (native only). */
+  biometricLock: boolean
 }
 
 /** Browser language as a first guess; only ES/EN are supported (PRD 3.4). */
@@ -19,14 +21,16 @@ function guessLanguage(): Language {
  * language paint immediately (async on purpose: native storage is async).
  */
 export async function loadInitialSettings(platform: Platform): Promise<InitialSettings> {
-  const [theme, reduceMotion, language] = await Promise.all([
+  const [theme, reduceMotion, language, biometricLock] = await Promise.all([
     platform.preferences.get(PREFERENCE_KEYS.theme),
     platform.preferences.get(PREFERENCE_KEYS.reduceMotion),
     platform.preferences.get(PREFERENCE_KEYS.language),
+    platform.preferences.get(PREFERENCE_KEYS.biometricLock),
   ])
   return {
     themeId: isThemeId(theme) ? theme : DEFAULT_THEME_ID,
     reduceMotion: reduceMotion === 'true',
     language: isLanguage(language) ? language : guessLanguage(),
+    biometricLock: biometricLock === 'on',
   }
 }

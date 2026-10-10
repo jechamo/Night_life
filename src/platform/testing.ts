@@ -6,15 +6,20 @@ import { createMemoryPreferences } from './preferences/preferences.memory'
 /** Deterministic platform for unit/component tests. Override any service per test. */
 export function createFakePlatform(overrides: Partial<Platform> = {}): Platform {
   const preferences = createMemoryPreferences()
-  const appState = { online: true, updateAvailable: false }
+  const updateState = { online: true, updateAvailable: false }
   return {
     runtime: 'web',
     appUpdates: {
-      getSnapshot: () => appState,
+      getSnapshot: () => updateState,
       subscribe: () => () => undefined,
       start: () => undefined,
       stop: () => undefined,
       applyUpdate: () => undefined,
+    },
+    appState: {
+      onActiveChange: () => () => undefined,
+      onBackButton: () => () => undefined,
+      exit: () => undefined,
     },
     audio: { playTestSample: () => Promise.resolve(ok(undefined)), stop: () => {} },
     geolocation: {

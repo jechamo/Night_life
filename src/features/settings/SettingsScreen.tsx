@@ -11,6 +11,7 @@ import { Section } from '@/shared/ui/section'
 import { SegmentedControl } from '@/shared/ui/segmented-control'
 import { Switch } from '@/shared/ui/switch'
 import { AccountEmailSection } from './components/AccountEmailSection'
+import { BiometricLockSection } from './components/BiometricLockSection'
 
 export function SettingsScreen() {
   const { t } = useTranslation()
@@ -57,6 +58,7 @@ export function SettingsScreen() {
           options={LANGUAGES.map((lng) => ({ value: lng, label: t(`settings.language.${lng}`) }))}
         />
       </Section>
+      <BiometricLockSection />
       {emailLogin && <AccountEmailSection />}
     </>
   )

@@ -3,7 +3,8 @@ import type { DeviceIdService } from './device-id'
 
 const KEY = 'device_id'
 
-export function createWebDeviceId(preferences: PreferencesService): DeviceIdService {
+/** Random per-install id kept in preferences; the same on web and native. */
+export function createInstallDeviceId(preferences: PreferencesService): DeviceIdService {
   let cached: Promise<string> | null = null
   return {
     getDeviceId() {

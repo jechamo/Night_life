@@ -2,6 +2,43 @@
 
 Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque.
 
+## Bloque 11a — app nativa (Capacitor) — 10/10/2026 ✅ sin hallazgos críticos ni altos
+
+- Sesión (A02/A07): Supabase Auth en Keychain/Keystore (`@aparajita/capacitor-secure-storage`,
+  `afterFirstUnlockThisDeviceOnly`, sin sincronizar con iCloud). Android `allowBackup=false` y
+  `data_extraction_rules` excluyen todo de la copia en la nube y del traspaso entre móviles.
+- Bloqueo biométrico local, opcional: activarlo exige autenticarse; se aplica al abrir y al
+  volver tras 30 s; si la biometría desaparece, falla cerrado (solo cerrar sesión). No
+  sustituye la sesión, el MFA de admin ni la reautenticación de acciones sensibles. Probado
+  con 8 pruebas de interfaz (incluida la carrera «pedir antes de saber si hay biometría»,
+  detectada y corregida).
+- Superficie web (A05): la shell carga un bundle local con la misma CSP de `vercel.json` en
+  `<meta>` (sin `frame-ancestors`, que no admite meta); sin service worker. Inspección del
+  WebView solo en debug (por defecto de Capacitor). `allowMixedContent=false`.
+- Enlaces (A01): `toAppUrl` solo acepta `https://` del host público y el esquema propio; sin
+  credenciales ni puertos. Los enlaces no llevan secretos (estado de retorno), así que un
+  esquema suplantado por otra app no obtiene datos; las rutas mantienen sus guards. App
+  Links/Universal Links verificados quedan para el Bloque 12.
+- Navegador externo: SFSafariViewController/Custom Tabs con la allowlist existente; aislado
+  del WebView.
+- Archivos (API4): exportaciones/PDF en caché privada con nombre saneado (sin `..`, separadores
+  ni dotfiles; prueba unitaria) y borrado siempre tras compartir.
+- Permisos mínimos: sin ubicación en segundo plano; eliminados `SCHEDULE_EXACT_ALARM`,
+  `RECEIVE_BOOT_COMPLETED` y `WAKE_LOCK` (comprobado con `aapt2 dump permissions`).
+- CORS Edge: se añaden exactamente `https://localhost` y `capacitor://localhost`
+  (pruebas de lookalikes: puertos, `http://`, subdominios, `ionic://`). CORS no es control de
+  acceso: las funciones siguen exigiendo JWT/firma. Redesplegadas 4 funciones sin otro cambio
+  (repositorio = desplegado, comprobado por fechas; la única diferencia previa era fijar
+  `supabase-js@2.117.2` en `verification`). Preflight: origen nativo permitido, desconocido no.
+- Dependencias: Capacitor oficial + 2 plugins MIT autorizados; `uuid` del CLI forzado a
+  ≥ 11.1.1; `npm audit` 0; SBOM 705 componentes. El bundle web no incluye plugins.
+- Advisors (10/10): 0 errores; 33 INFO conocidos (tablas `private` sin acceso directo) y el
+  WARN conocido de contraseñas filtradas (Auth). Sin migraciones en este bloque.
+- Entorno: el antivirus del equipo (Norton) inspecciona TLS; el overlay de debug que confía en
+  su raíz es local, solo `debug-overrides` y está en `.gitignore`.
+- Pendiente (Bloque 12): firma de release, App/Universal Links verificados, privacy manifest,
+  prueba en iPhone real.
+
 ## Desistimiento y reembolsos — 09/10/2026
 
 - A04/A01: el importe a reembolsar lo decide solo la BBDD (`private.withdrawal_quote`, security

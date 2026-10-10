@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Nightlife Connect</string>
+    <string name="title_activity_main">Nightlife Connect</string>
+    <string name="package_name">com.nightlifeconnect.app</string>
+    <string name="custom_url_scheme">com.nightlifeconnect.app</string>
+</resources>
