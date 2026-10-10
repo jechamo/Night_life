@@ -1,5 +1,25 @@
 # Progreso — Nightlife Connect
 
+## Informe funcional y guía de pruebas E2E en real — 10/10/2026
+
+Petición del propietario: inventario de funciones de cliente y de local, sus flujos y una guía
+para probar toda la app en real con los 3 socios. Solo documentación (sin código, migraciones
+ni despliegues): [GUIA_PRUEBAS_E2E.md](./GUIA_PRUEBAS_E2E.md). Estado leído en Supabase con
+consultas de solo lectura. Avisos clave: en `sandbox` solo los testers pueden verificar la edad
+y pagar (toda cuenta nueva necesita rol tester); Veriff TEST caduca el 16/10; 2 de 3 admins sin
+TOTP; desajustes D1-D3 anotados (roles simulados con backend real, texto «12 horas» de la lista
+de invitados, subtítulo del dashboard).
+Ampliado con la sección 6 «Acceso»: cuándo se pide SMS, código por email, biometría (solo app
+nativa, candado local de 30 s), TOTP del admin y estado de OAuth (no implementado), con 26 casos
+de prueba. Desajustes nuevos: D5 (no hay cambio de teléfono) y D6 (OAuth pendiente de decisión).
+11/10: D2 corregido (aviso de hora de la lista de invitados: «antes de que acabe la noche
+(06:00)») y D3 (subtítulo del dashboard según datos reales o simulados, con prueba unitaria). D1
+descartado: la sección de roles simulados ya solo se muestra con el backend simulado. QR en iPhone:
+Safari/WebKit no expone `BarcodeDetector`; se teclea el código hasta decidir un lector propio o el
+plugin oficial. `npm run check` 545/545 · E2E 60/60.
+D4 resuelto: SMTP de Gmail en Supabase Auth y dos logins reales con código por email el 08/10
+(registros de Auth: `provider=email`, `login_method=otp`, 22:59 y 23:02 Madrid).
+
 ## Bloque 11a — App nativa con Capacitor y desbloqueo biométrico — 10/10/2026
 
 Plan: [BLOCK11_PLAN.md](./BLOCK11_PLAN.md). `main` actualizada a `09e3ebb` antes de empezar
