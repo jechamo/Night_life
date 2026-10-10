@@ -6,6 +6,10 @@ Test Store (`store_product_test`, igual al código) y los identificadores live p
 (`apple_product_id`, `google_product_id`), que solo se usarán tras la puerta del Bloque 12.
 Las ventajas y los créditos los concede el servidor (`store_apply`), nunca RevenueCat ni la app.
 
+Estado comunicado por el propietario el 10/10/2026: catálogo creado en RevenueCat. Pendiente
+de validarlo con «Comprobar catálogo», cotejar precios en el panel y ejecutar las compras
+desde la app; casos manuales en [`GUIA_PRUEBAS_E2E.md`, §7.3 y §8.21](GUIA_PRUEBAS_E2E.md).
+
 ## Por qué los productos de Test Store se crean en el panel
 
 La API v2 de RevenueCat crea productos, pero **no permite fijar el precio de Test Store**, y en
@@ -65,3 +69,5 @@ Hasta entonces `store_apply` ignora cualquier dato live.
 Admin › Pagos › **Comprobar catálogo**: app Test Store, clave pública (`REVENUECAT_SDK_TEST`
 coincide con la del proyecto), permiso de lectura de clientes y estado de cada producto
 (`Correcto`, `Falta`, `No coincide` en tipo o duración). Productos de más se listan aparte.
+El importe mostrado en el informe procede de `plans`: no comprueba el precio configurado
+en RevenueCat. Comparad también los precios del panel y de la pantalla de compra.

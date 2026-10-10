@@ -1,5 +1,22 @@
 # Progreso — Nightlife Connect
 
+## Integración de 11b y ampliación de QA manual — 10/10/2026
+
+El Bloque 11a está fusionado en `main` por el PR #8 (`32eaa44`). Revisión del PR #10:
+Quality se detenía en el formato de `docs/sbom.cdx.json`; SonarCloud señalaba un 8,5 % de
+duplicación en las tres versiones sucesivas de `private.store_apply` de las migraciones
+de 11b. Se formatea el SBOM sin cambiar su contenido JSON y se configura
+`.sonarcloud.properties` para excluir solo esos tres archivos de la detección de copia/pega,
+conservando las migraciones ya aplicadas y su análisis de errores y seguridad.
+
+La [guía E2E](./GUIA_PRUEBAS_E2E.md) incorpora preparación de flags, catálogo y APK actualizado,
+13 casos de Modo viaje y 17 casos de compras nativas, además de la repetición de pagos Stripe
+en navegador/PWA móvil. Distingue las comprobaciones automáticas de la prueba física pendiente,
+incluye restauración e idempotencia, cambio de cuenta, permisos de locales y limpieza.
+El propietario confirma el catálogo de RevenueCat creado; quedan su comprobación desde
+Admin, cotejo de precios y compra/restauración en dispositivo. iOS nativo y el sandbox real
+de Apple/Google no se dan por probados con Test Store ni con la web móvil.
+
 ## Informe funcional y guía de pruebas E2E en real — 10/10/2026
 
 Petición del propietario: inventario de funciones de cliente y de local, sus flujos y una guía
@@ -76,11 +93,12 @@ live, pero solo test activo hasta el Bloque 12.
 - ⚠️ E2E: 57-58/60 en este PC; las 2-3 que fallan son siempre las primeras de cada worker
   (`page.goto` > 60 s con el servidor Vite en frío) y pasan aisladas o con el servidor
   caliente; 11b no cambia la ruta de desarrollo. CI (Linux) es la referencia.
-- ❌ Productos en el panel de Test Store y compra/restauración reales en el emulador: el
-  propietario debe crearlos (10 min, guía) e iniciar sesión (no introduzco credenciales).
+- ✅ Catálogo de Test Store creado en el panel, confirmado por el propietario el 10/10.
+- ❌ Comprobar catálogo y precios, y compra/restauración reales en emulador o dispositivo:
+  pendientes de ejecutar según la guía E2E (§7.3 y §8.21).
 - ❌ Compras live (App Store/Google Play): Bloque 12, con cuentas de desarrollador.
 
-**Cómo probarlo:** crear los 14 productos según [STORE_CATALOG.md](./STORE_CATALOG.md); en
+**Cómo probarlo:** con los 14 productos creados según [STORE_CATALOG.md](./STORE_CATALOG.md), en
 Admin › Pagos pulsar «Comprobar catálogo» (todo «Correcto»); encender `store_payments_enabled`
 (y `travel_mode_enabled` para el Modo viaje) en Admin › Flags; `npm run cap:sync` y ejecutar
 en el emulador con una cuenta tester; Premium › Pase › «Suscribirme en la tienda de pruebas»

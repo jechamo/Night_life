@@ -7,6 +7,11 @@
 > (`src/app/router.tsx`), textos (`src/i18n/locales/es.json`), migraciones SQL y consultas de
 > solo lectura a la base de datos real (sin datos personales).
 
+> Actualización documental del 10/10/2026: incorpora el Bloque 11b del PR #10 (Modo viaje y
+> compras nativas). Los valores de §0.1 son la consulta anterior al bloque; comprobad los
+> flags actuales antes de probar. El propietario confirma que ya ha creado el catálogo de
+> RevenueCat; su validación en la app y las pruebas físicas descritas aquí siguen pendientes.
+
 Índice
 
 0. [Resumen y avisos antes de empezar](#0-resumen-y-avisos-antes-de-empezar)
@@ -92,7 +97,7 @@ algo «no funciona» cuando es una regla.
 6. **Para que dos socios se vean en el swipe** se tienen que cumplir a la vez: los dos con edad
    verificada; semáforo distinto de rojo; sin modo discreto; consentimiento de orientación
    firmado; **preferencias compatibles en ambos sentidos** (género que le interesa y rango de
-   edad) y, en «Todo el mundo cerca», la **misma ciudad** en el perfil; en «Aquí Ahora»/«Esta
+   edad) y, en «Todo el mundo cerca», la **misma ciudad efectiva** (perfil o viaje activo); en «Aquí Ahora»/«Esta
    Noche Voy» de un local, que el otro tenga check-in o «Voy» visible en ese local. Si los
    tres sois del mismo género y no os interesa ese género, **cambiad temporalmente las
    preferencias** para probar y volved a dejarlas después. Además: si le dais «Paso» a un socio
@@ -215,23 +220,30 @@ Leyenda: **G** gratis · **V** requiere edad verificada · **P** de pago (entitl
 | Privacidad y datos: descargar JSON, solicitar rectificación/oposición/limitación, eliminar cuenta (OTP) | G    |
 | Pantalla de cuenta suspendida                                                                           | —    |
 
-### 1.6 Premium y extras (todo en Stripe TEST, solo testers)
+### 1.6 Premium y extras (Stripe TEST en web; RevenueCat Test Store en app nativa)
 
-| Producto             | Precio TEST           | Qué da                                                                                                  |
-| -------------------- | --------------------- | ------------------------------------------------------------------------------------------------------- |
-| Pase                 | 9,99 €/mes            | Likes ilimitados, Deshacer, temas Gold y Sapphire, sin tarjetas patrocinadas, Modo viaje (próximamente) |
-| Pase trimestral      | 26,99 €/3 meses       | Igual que el Pase                                                                                       |
-| Pase anual           | 89,99 €/año           | Igual que el Pase                                                                                       |
-| Pase VIP             | 19,99 €/mes           | Pase + Quién te ha dado like, Prioridad, Incógnito, 1 Foco + 3 Chispas + 2 Mensajes directos por semana |
-| Pase de una noche    | 2,99 € (hasta 06:00)  | Ventajas del Pase esa noche + 1 Foco                                                                    |
-| Chispa ×1 / ×5 / ×15 | 1,49 / 4,99 / 11,99 € | Like destacado; la otra persona recibe «Alguien ha sentido la chispa»                                   |
-| Foco                 | 3,99 €                | 30 min primero en los swipes de tu local (con check-in) o de tu ciudad                                  |
-| Mensaje directo      | 1,99 €                | Escribir sin match (no si su semáforo es rojo); llega como solicitud                                    |
+| Producto             | Precio TEST           | Qué da                                                                                                      |
+| -------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Pase                 | 9,99 €/mes            | Likes ilimitados, Deshacer, temas Gold y Sapphire, sin tarjetas patrocinadas, Modo viaje con su flag activo |
+| Pase trimestral      | 26,99 €/3 meses       | Igual que el Pase                                                                                           |
+| Pase anual           | 89,99 €/año           | Igual que el Pase                                                                                           |
+| Pase VIP             | 19,99 €/mes           | Pase + Quién te ha dado like, Prioridad, Incógnito, 1 Foco + 3 Chispas + 2 Mensajes directos por semana     |
+| Pase de una noche    | 2,99 € (hasta 06:00)  | Ventajas del Pase esa noche + 1 Foco                                                                        |
+| Chispa ×1 / ×5 / ×15 | 1,49 / 4,99 / 11,99 € | Like destacado; la otra persona recibe «Alguien ha sentido la chispa»                                       |
+| Foco                 | 3,99 €                | 30 min primero en los swipes de tu local (con check-in) o de tu ciudad                                      |
+| Mensaje directo      | 1,99 €                | Escribir sin match (no si su semáforo es rojo); llega como solicitud                                        |
 
 Además: «Canjear código» promocional (`XXXX-XXXX-XXXX`), «Mi suscripción» (cancelar en 2
 toques, reactivar, portal de Stripe con facturas y métodos de pago, desistimiento con importe
 calculado: créditos solo si no se ha usado ninguno; suscripciones y pase de una noche,
 prorrateo), una sola suscripción activa a la vez.
+
+En el navegador del móvil y la PWA se compra con **Stripe TEST**, igual que en PC. En la
+**app nativa** se compra con **RevenueCat Test Store**, al habilitarlo para testers (§7.3);
+si está deshabilitado, aparece «Próximamente». Las compras de tienda se restauran desde
+Premium y su cancelación/reembolso corresponde a la tienda, sin portal ni desistimiento
+de Stripe. El catálogo completo, incluidos los productos de locales, está en
+[`STORE_CATALOG.md`](STORE_CATALOG.md). Casos específicos: §8.20 y §8.21.
 
 ### 1.7 Reservas y listas (sin pago)
 
@@ -307,9 +319,20 @@ empezar ya…» › Suscribirme y pagar / Pagar › Stripe Checkout (TEST) › r
 (`/premium/return`: «Confirmando el pago» → «¡Pago completado!»). Gestionar: Mi suscripción
 (`/premium/subscription`). Código: Canjear código (`/premium/redeem`).
 
+En **app nativa**, el mismo recorrido abre la compra de la tienda de pruebas y muestra su
+precio; no pide la casilla ni abre Stripe Checkout. Tras confirmar, el servidor comprueba
+la compra antes de conceder ventajas. Premium › «Restaurar compras» recupera el estado.
+Ver §8.21; abrir la web en un móvil no prueba esta integración nativa.
+
 **F-C12 · Usar ventajas.** Swipe › «Enviar Chispa (saldo)»; «Activar Foco · 30 minutos» en la
 pantalla de swipe; «Deshacer»; Perfil › Modo Incógnito (VIP); Temas › Gold/Sapphire; Perfil de
 otra persona › «Mensaje directo».
+
+**F-C12b · Modo viaje.** Perfil › Modo viaje › Ciudad de destino › Duración (3, 7, 14 o
+30 días) › Activar modo viaje. Muestra «De viaje en [ciudad] hasta el [fecha]» y
+«Volver a [ciudad del perfil]». Requiere edad verificada, flag activo y ventaja del Pase,
+VIP o Pase de una noche. Cambia la ciudad del swipe, sin cambiar la ciudad del perfil ni
+simular el GPS/check-in. Ver §8.20.
 
 **F-C13 · Reservar y lista.** Ficha › «Reservas y lista de invitados» › Reservar mesa › Solicitar
 reserva, o Lista de invitados › Apuntarme › Perfil › Mis reservas (`/reservas`) › enseñar QR en
@@ -608,6 +631,35 @@ Apuntad los nombres exactos de los locales que uséis para deshacer todo al fina
 
 ---
 
+### 7.3 Preparación adicional del Bloque 11b
+
+Haced esta ronda solo en **test**, con cuentas propias. Anotad los valores actuales de los
+flags antes de cambiarlos y restauradlos al terminar; no activéis `payments_mode = live`.
+
+1. **Versión y servidor:** usad una web y un APK que incluyan 11b. El APK anterior de 11a
+   no contiene las compras. Comprobad que están aplicadas las cinco migraciones de 11b y
+   desplegadas las funciones `store`, `store-admin` y `revenuecat-webhook` (ver
+   [`NATIVE.md`](NATIVE.md)). Preparar la guía no verifica ese estado remoto.
+2. **Catálogo ya creado:** Admin › Pagos › «Comprobar catálogo», con TOTP. Debe reconocer
+   la app Test Store, la clave SDK y el acceso a clientes, y mostrar los **14 productos**
+   como «Correcto». Este informe compara identificadores, tipos y duraciones; **no verifica
+   los precios de RevenueCat**: cotejadlos en su panel y en la pantalla de compra con
+   [`STORE_CATALOG.md`](STORE_CATALOG.md).
+3. **Configuración de RevenueCat:** comprobar en Supabase la presencia de
+   `REVENUECAT_SECRET`, `REVENUECAT_PROJECT_ID`, `REVENUECAT_SDK_TEST` y
+   `REVENUECAT_WEBHOOK_AUTH`; el webhook debe apuntar a `revenuecat-webhook` del entorno
+   probado. No copiéis sus valores a la hoja de incidencias ni al repositorio.
+4. **Flags:** mantener `payments_mode = test`, `payments_audience = testers` y
+   `test_tools_enabled = on`. Habilitar `store_payments_enabled` para §8.21 y
+   `travel_mode_enabled` para §8.20. Las pruebas negativas apagan temporalmente estos flags.
+5. **Dispositivos:** navegador Android/iPhone para Stripe móvil, APK Android actualizado
+   para RevenueCat. iOS nativo requiere compilar en Mac; hasta disponer de esa build,
+   registrad sus casos como **pendientes**, sin contarlos como probados en Safari/PWA.
+6. **Cuentas:** D como tester con edad verificada y sin suscripción previa para comprar en
+   tienda. Para viaje, dos cuentas compatibles, sin bloqueos, matches ni swipes previos
+   entre ellas; una con Pase/VIP/una noche vigente. Anotad ciudades y saldos iniciales.
+   Para los casos de locales, usad al gestor autorizado de P/R y una plaza disponible.
+
 ## 8. Casos de prueba E2E
 
 Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anotad incidencias.
@@ -759,11 +811,17 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | LIG-21 | Ver el perfil de otra persona (`/people/:id`) y el Anthem (Perfil › Anthem: guardar y reproducir muestra) | Perfil con badges; muestra sintética reproducible                                  |
 | LIG-22 | Ver «Has visto a todos los de aquí»                                                                       | Estado vacío con lugares cercanos con gente                                        |
 
-### 8.10 Premium y pagos (Stripe TEST) — A, B, C
+### 8.10 Premium y pagos (Stripe TEST, también navegador móvil/PWA) — A, B, C
 
 Cada compra: Confirmar compra (comprobar precio, IVA, renovación, condiciones y casilla «Quiero
 empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retorno «Confirmando el pago» →
 «¡Pago completado!» › Mi suscripción.
+
+Repetid compra, cancelación de la pasarela, rechazo, 3D Secure y retorno (PAY-02 a PAY-07)
+desde Chrome Android y Safari iPhone; si se usa PWA instalada, repetid también el retorno
+allí. Comprobad que vuelve a la sesión correcta, sin conceder ventajas dos veces al
+recargar. Estas tarjetas son solo para Stripe; no se introducen en RevenueCat Test Store.
+Las compras de la app nativa se prueban por separado en §8.21.
 
 | ID     | Quién | Pasos                                                                                                                 | Resultado esperado                                                                                       |
 | ------ | ----- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -954,6 +1012,69 @@ iPhone para enseñar el QR.
 
 ---
 
+### 8.20 Modo viaje (web y app nativa)
+
+Preparación §7.3. Elegid dos cuentas compatibles sin relación previa. Por ejemplo, A con
+Pase y ciudad del perfil Madrid, y D con ciudad Barcelona. Usad «Todo el mundo cerca», sin
+filtro de local. Con todos los perfiles en Madrid, un viaje a Barcelona puede dar un swipe
+vacío correctamente: no demuestra por sí solo que el modo viaje falle.
+
+| ID     | Pasos                                                                                          | Resultado esperado                                                                                                                              |
+| ------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| TRV-01 | Apagar `travel_mode_enabled`; abrir Perfil con Pase                                            | La tarjeta Modo viaje no aparece                                                                                                                |
+| TRV-02 | Activar el flag; entrar con cuenta verificada sin la ventaja                                   | Muestra que está incluido en Pase/VIP/una noche y «Ver Premium»; no permite activar un viaje                                                    |
+| TRV-03 | A con Pase: Perfil › Modo viaje                                                                | Ofrece las ciudades de lanzamiento excepto Madrid y duraciones de 3, 7, 14 y 30 días                                                            |
+| TRV-04 | Sin elegir destino, intentar activar                                                           | El botón permanece deshabilitado                                                                                                                |
+| TRV-05 | Elegir Barcelona y 7 días › Activar modo viaje                                                 | Muestra «De viaje en Barcelona hasta el…» y «Volver a Madrid»; la fecha corresponde a la duración elegida                                       |
+| TRV-06 | A y D: abrir «Todo el mundo cerca» antes de dar like/paso                                      | Se ven en Barcelona si cumplen el resto de preferencias y visibilidad; no aparecen candidatos exclusivos de Madrid por la ciudad de origen de A |
+| TRV-07 | Recargar la web o cerrar y abrir la app; revisar el perfil                                     | El viaje persiste en la misma cuenta; la ciudad del perfil sigue siendo Madrid                                                                  |
+| TRV-08 | Durante el viaje, intentar check-in en un local lejano, fuera del radio real                   | El viaje no simula GPS ni permite saltarse la distancia del check-in                                                                            |
+| TRV-09 | Sin check-in de local ni otro Foco activo, activar un Foco con saldo                           | El Foco usa Barcelona, consume un solo crédito y no cambia la ciudad del perfil                                                                 |
+| TRV-10 | Privacidad y datos › Descargar mis datos                                                       | El JSON propio incluye `travel_plan` con ciudad y fechas; no se expone el plan privado de otra cuenta                                           |
+| TRV-11 | «Volver a Madrid»; recargar                                                                    | El viaje queda desactivado y el swipe vuelve a usar Madrid                                                                                      |
+| TRV-12 | Activar otro viaje y apagar el flag; después restaurar el valor previo                         | Con el flag apagado no se aplica el destino al swipe, aunque el plan no haya caducado                                                           |
+| TRV-13 | Con una cuenta preparada, esperar al vencimiento del viaje o de su Pase de una noche; recargar | Sin viaje vigente o sin ventaja, el swipe vuelve a usar la ciudad del perfil; si no se espera al vencimiento, registrar el caso como pendiente  |
+
+La validación de ciudades y duración 1–30 días en servidor se cubre además en
+`supabase/tests/travel.sql`; no adelantéis el reloj ni modifiquéis fechas de datos reales
+para completar esta ronda manual. Dejad «Volver a…» aplicado y restaurad las ciudades y
+flags al terminar.
+
+### 8.21 Compras desde la app nativa (RevenueCat Test Store)
+
+Preparación §7.3 y catálogo comprobado. Son compras simuladas, sin dinero real. Realizad la
+ronda en APK Android; repetid en iOS nativo cuando exista una build. Una PWA o un navegador
+móvil siguen usando Stripe (§8.10). No marquéis un caso como aprobado solo porque pase una
+prueba automatizada con SDK simulado.
+
+| ID     | Pasos                                                                                                | Resultado esperado                                                                                                                                                          |
+| ------ | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| STO-01 | Admin › Pagos › Comprobar catálogo                                                                   | Test Store identificada, clave SDK y acceso a clientes correctos, 14 productos «Correcto»; revisar los precios por separado                                                 |
+| STO-02 | Apagar `store_payments_enabled`; abrir Premium y un checkout en el APK                               | «Próximamente»; no ofrece comprar con Stripe ni abre su pasarela                                                                                                            |
+| STO-03 | Activar el flag; cuenta tester sin suscripción: Premium › Pase mensual                               | Muestra precio de tienda, aviso «Fase de pruebas: no se cobra nada real» y «Suscribirme en la tienda de pruebas»                                                            |
+| STO-04 | Abrir la compra y cancelarla                                                                         | «Compra cancelada. No se te ha cobrado nada»; no cambia la suscripción ni el saldo                                                                                          |
+| STO-05 | Confirmar Pase mensual en Test Store                                                                 | Tras la comprobación del servidor, muestra compra completada y ventajas del Pase; Mi suscripción indica gestión por la tienda de pruebas                                    |
+| STO-06 | Con esa suscripción, intentar comprar otro Pase/VIP                                                  | Advierte «Ya tienes una suscripción activa»; no permite duplicarla                                                                                                          |
+| STO-07 | Comprar 5 Chispas; recargar y comprobar también en la web con la misma cuenta                        | Se añaden exactamente 5 créditos una vez; la web refleja las mismas ventajas/saldo y conserva Stripe para nuevas compras web                                                |
+| STO-08 | Premium › Restaurar compras; repetir la acción                                                       | Muestra «Compras restauradas» tras comprobar el servidor; no duplica créditos ni suscripciones                                                                              |
+| STO-09 | Cerrar y abrir la app; después cerrar sesión y entrar con otra cuenta tester                         | La primera conserva sus compras; la segunda no hereda sus ventajas ni saldos por compartir el móvil                                                                         |
+| STO-10 | Abrir Mi suscripción de una compra de tienda, también desde la web                                   | Indica que la cancelación/reembolso corresponde a la tienda; no ofrece Cancelar/Portal/Desistir de Stripe para esa suscripción                                              |
+| STO-11 | Intentar «Gestionar en la tienda» si se ofrece                                                       | Solo abre una URL válida de Apple/Google; Test Store puede no tener página de gestión y debe informar de ello                                                               |
+| STO-12 | Si la hoja de pruebas permite simular rechazo o pago pendiente, ejecutar cada opción                 | El rechazo no concede ventajas; el pendiente se comunica sin dar la compra por completada hasta confirmación del servidor; anotar como no ejecutado si esa opción no existe |
+| STO-13 | Abrir Premium con la conexión cortada; recuperarla y volver a intentarlo                             | Muestra indisponibilidad/error sin inventar una compra; tras reconectar recupera el estado confirmado                                                                       |
+| STO-14 | Con cuenta sin tester y audiencia `testers`, intentar el mismo checkout                              | No puede comprar ni recibir ventajas; no aparece Stripe como alternativa dentro de la app                                                                                   |
+| STO-15 | Gestor de R: comprar Destacado/Plus/Top desde el panel, con fechas y cupo disponible                 | Reserva primero la plaza del local; compra en Test Store y aplica el patrocinio a ese local, sin duplicarlo al restaurar                                                    |
+| STO-16 | Gestor de local sin Pro: contratar Estadísticas Pro; después intentar desde otra cuenta sin permisos | Pro corresponde al local reservado y se gestiona en tienda; la cuenta no autorizada no puede contratarlo para ese local                                                     |
+| STO-17 | Comprar por Stripe TEST desde navegador/PWA móvil con el flag de tiendas encendido                   | Continúa el flujo Stripe, incluida la casilla y el retorno; no muestra «Restaurar compras» nativas                                                                          |
+
+Para cubrir todo el catálogo, repetid STO-05/STO-07 con los productos de
+[`STORE_CATALOG.md`](STORE_CATALOG.md): Pases mensual/trimestral/anual, VIP, una noche,
+Chispas ×1/×5/×15, Foco y Mensaje directo; STO-15 cubre los tres patrocinios y STO-16 Pro.
+Usad cuentas sin otra suscripción para los planes y registrad producto, dispositivo y
+resultado. El pase de una noche debe terminar a las 06:00 y sus créditos/ventajas no deben
+duplicarse al restaurar. La cancelación, renovación y reembolso reales de Apple/Google
+quedan pendientes del sandbox de tiendas del Bloque 12; Test Store no los acredita.
+
 ## 9. Guion de una «noche de pruebas»
 
 Propuesta para hacerlo en 2 sesiones con los 3 socios juntos (en el mismo bar = local X) y las
@@ -988,26 +1109,34 @@ cuentas D y E en un móvil/portátil extra. Tiempo estimado: 3-4 h cada sesión.
    privacidad 8.12 (D exporta; E se elimina al final).
 8. (15 min) Admin 8.18 y limpieza §10.
 
+**Ronda adicional 11b (antes de eliminar D/E):** preparar §7.3, probar compras web móviles
+§8.10 y compras nativas §8.21 con una cuenta sin suscripción previa. Después, Modo viaje
+§8.20 con cuentas compatibles sin swipes ni matches previos. Restaurar ciudades, flags y
+datos de prueba al terminar; los vencimientos y el catálogo completo pueden requerir otra
+sesión. Registrar iOS nativo y sandbox Apple/Google como pendientes si no están disponibles.
+
 ---
 
 ## 10. Limpieza y registro de incidencias
 
 ### 10.1 Limpieza tras las pruebas
 
-| Qué                                              | Cómo                                                                       |
-| ------------------------------------------------ | -------------------------------------------------------------------------- |
-| Perfiles, check-ins, eventos y matches `is_test` | Admin › Herramientas › Purgar datos de prueba                              |
-| Suscripciones TEST propias                       | Mi suscripción › Cancelar (o desistir); Pro desde el Portal                |
-| Patrocinios de prueba                            | Admin › Patrocinios › Finalizar                                            |
-| Contrato / empresa de prueba                     | Admin › Partners › Terminar contrato y desvincular locales                 |
-| Gestores de locales                              | Panel › Equipo › Quitar; Admin › Usuarios › Quitar gestor                  |
-| Fotos de locales                                 | Panel › Fotos › Borrar o Admin › Fotos › Retirar                           |
-| Reservas y listas                                | Cancelar reservas y Cerrar lista                                           |
-| Local X creado para la prueba                    | Admin › Locales › Quitar                                                   |
-| Preferencias cambiadas para el match             | Volver a dejarlas como estaban                                             |
-| Flags y ajustes tocados                          | Volver a los valores de §0.1                                               |
-| Cuenta D / E                                     | E eliminada en PRI-05; D eliminar o quitar tester; levantar bans de prueba |
-| Números de prueba de Auth                        | Quitarlos antes del lanzamiento (PRD 6.14)                                 |
+| Qué                                              | Cómo                                                                                                                                                                                      |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Perfiles, check-ins, eventos y matches `is_test` | Admin › Herramientas › Purgar datos de prueba                                                                                                                                             |
+| Suscripciones Stripe TEST propias                | Mi suscripción › Cancelar (o desistir); Pro desde el Portal                                                                                                                               |
+| Compras RevenueCat Test Store                    | Usar las herramientas de Test Store disponibles para finalizar/reembolsar la compra de prueba y comprobar la reconciliación; no usar el portal de Stripe ni borrar solo el registro local |
+| Viajes de prueba                                 | Perfil › Modo viaje › Volver a la ciudad del perfil, antes de apagar el flag; restaurar ciudades cambiadas                                                                                |
+| Patrocinios de prueba                            | Admin › Patrocinios › Finalizar                                                                                                                                                           |
+| Contrato / empresa de prueba                     | Admin › Partners › Terminar contrato y desvincular locales                                                                                                                                |
+| Gestores de locales                              | Panel › Equipo › Quitar; Admin › Usuarios › Quitar gestor                                                                                                                                 |
+| Fotos de locales                                 | Panel › Fotos › Borrar o Admin › Fotos › Retirar                                                                                                                                          |
+| Reservas y listas                                | Cancelar reservas y Cerrar lista                                                                                                                                                          |
+| Local X creado para la prueba                    | Admin › Locales › Quitar                                                                                                                                                                  |
+| Preferencias cambiadas para el match             | Volver a dejarlas como estaban                                                                                                                                                            |
+| Flags y ajustes tocados                          | Volver a los valores de §0.1                                                                                                                                                              |
+| Cuenta D / E                                     | E eliminada en PRI-05; D eliminar o quitar tester; levantar bans de prueba                                                                                                                |
+| Números de prueba de Auth                        | Quitarlos antes del lanzamiento (PRD 6.14)                                                                                                                                                |
 
 ### 10.2 Plantilla de incidencia
 
