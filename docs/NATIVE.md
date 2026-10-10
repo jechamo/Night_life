@@ -21,6 +21,16 @@ Bloque 12. Referencias: PRD 3.3–3.5, Anexo B, [Capacitor](https://capacitorjs.
 - El bundle web no cambia: `@/platform/native` se carga con `import()` dinámico y los
   plugins van en el chunk `vendor-native`, que el HTML web no precarga.
 
+## Dependencias nativas fijadas
+
+- Android: bloqueo de dependencias de Gradle (`buildscript-gradle.lockfile`,
+  `app/gradle.lockfile`; la raíz no tiene dependencias propias). Tras actualizar Capacitor
+  o un plugin: `cd android && gradlew buildEnvironment :app:dependencies --write-locks`.
+- iOS: `Package.resolved` (copia compartida del workspace y junto a `CapApp-SPM`) fija
+  `capacitor-swift-pm` 8.5.3, `ion-ios-camera` 2.0.0, `ion-ios-filesystem` 2.0.0,
+  `ion-ios-geolocation` 3.0.0 y `keychain-swift` 21.0.0 por commit. Escrito a partir de las
+  etiquetas de GitHub; Xcode lo confirmará o actualizará al resolver en el Bloque 12.
+
 ## Selección de la plataforma
 
 `src/app/create-platform.ts` elige la factory por runtime antes de crear servicios. En la

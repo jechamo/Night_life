@@ -30,6 +30,10 @@ Documento vivo (PRD 6.15). Se actualiza en la puerta de seguridad de cada bloque
   acceso: las funciones siguen exigiendo JWT/firma. Redesplegadas 4 funciones sin otro cambio
   (repositorio = desplegado, comprobado por fechas; la única diferencia previa era fijar
   `supabase-js@2.117.2` en `verification`). Preflight: origen nativo permitido, desconocido no.
+- SonarCloud (PR #8) marcó 3 «vulnerabilidades» en los proyectos generados: tráfico en
+  claro implícito en Android antiguo (`usesCleartextTraffic=false`), falta de lockfile de
+  Gradle (bloqueo de dependencias activado) y falta de `Package.resolved` (fijado por
+  commit). Corregidas en el mismo bloque.
 - Dependencias: Capacitor oficial + 2 plugins MIT autorizados; `uuid` del CLI forzado a
   ≥ 11.1.1; `npm audit` 0; SBOM 705 componentes. El bundle web no incluye plugins.
 - Advisors (10/10): 0 errores; 33 INFO conocidos (tablas `private` sin acceso directo) y el

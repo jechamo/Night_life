@@ -24,6 +24,11 @@ android {
     }
 }
 
+// Block 11: pins every dependency packaged into the APK (see gradle.lockfile).
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 repositories {
     flatDir{
         dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'

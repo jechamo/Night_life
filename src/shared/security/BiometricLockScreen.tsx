@@ -12,13 +12,13 @@ export function BiometricLockScreen({
   authenticate,
   onUnlocked,
   onUnavailable,
-}: {
+}: Readonly<{
   ready: boolean
   unavailable: boolean
   authenticate: () => Promise<Result<void, BiometricError>>
   onUnlocked: () => void
   onUnavailable: () => void
-}) {
+}>) {
   const { t } = useTranslation()
   const signOut = useSignOut()
   const [failed, setFailed] = useState(false)

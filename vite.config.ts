@@ -26,12 +26,8 @@ function nativeShell(): Plugin {
 
 export default defineConfig(({ mode }) => {
   const native = mode === 'native'
-  if (
-    native &&
-    !/^https:\/\//.test(
-      loadEnv(mode, fileURLToPath(new URL('.', import.meta.url))).VITE_APP_URL ?? '',
-    )
-  )
+  const appUrl = loadEnv(mode, fileURLToPath(new URL('.', import.meta.url))).VITE_APP_URL ?? ''
+  if (native && !appUrl.startsWith('https://'))
     // Provider return URLs and App Links need the public HTTPS origin (NATIVE.md).
     throw new Error('vite --mode native requires VITE_APP_URL=https://…')
   return {

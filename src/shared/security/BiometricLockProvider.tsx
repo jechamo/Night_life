@@ -14,13 +14,13 @@ import { BiometricLockContext } from './biometric-lock-context'
 export function BiometricLockProvider({
   initialEnabled,
   children,
-}: {
+}: Readonly<{
   initialEnabled: boolean
   children: ReactNode
-}) {
+}>) {
   const { biometrics, preferences, appState } = usePlatform()
   const { t } = useTranslation()
-  const [enabled, setEnabledState] = useState(initialEnabled)
+  const [enabled, setEnabled] = useState(initialEnabled)
   const [available, setAvailable] = useState(false)
   // Never prompt before knowing whether the device can answer.
   const [checked, setChecked] = useState(false)
@@ -67,7 +67,7 @@ export function BiometricLockProvider({
     [biometrics, t],
   )
 
-  const setEnabled = useCallback(
+  const changeEnabled = useCallback(
     async (next: boolean) => {
       if (next) {
         const result = await authenticate()
@@ -76,7 +76,7 @@ export function BiometricLockProvider({
       } else {
         await preferences.remove(PREFERENCE_KEYS.biometricLock)
       }
-      setEnabledState(next)
+      setEnabled(next)
       return true
     },
     [authenticate, preferences],
@@ -84,13 +84,13 @@ export function BiometricLockProvider({
 
   const reset = useCallback(async () => {
     await preferences.remove(PREFERENCE_KEYS.biometricLock)
-    setEnabledState(false)
+    setEnabled(false)
     setStatus('unlocked')
   }, [preferences])
 
   const value = useMemo(
-    () => ({ available, enabled, setEnabled, reset }),
-    [available, enabled, setEnabled, reset],
+    () => ({ available, enabled, setEnabled: changeEnabled, reset }),
+    [available, enabled, changeEnabled, reset],
   )
   const locked = status !== 'unlocked'
 
