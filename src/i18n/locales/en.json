@@ -121,6 +121,19 @@
       "es": "Español",
       "en": "English"
     },
+    "biometricLock": {
+      "title": "Security",
+      "label": "Unlock with Face ID or fingerprint",
+      "description": "When you open the app or come back after 30 seconds away, it asks for your biometrics or phone passcode. It only protects this device.",
+      "reason": "Unlock Nightlife Connect",
+      "enableFailed": "We could not confirm it is you. It was not turned on.",
+      "lockTitle": "Nightlife Connect is locked",
+      "lockBody": "Unlock it with Face ID, fingerprint or your phone passcode.",
+      "unlock": "Unlock",
+      "failed": "Could not unlock. Please try again.",
+      "unavailable": "Biometrics are no longer available on this phone. Sign out and sign back in with your code.",
+      "signOut": "Sign out"
+    },
     "account": {
       "title": "Account",
       "email": "Email",

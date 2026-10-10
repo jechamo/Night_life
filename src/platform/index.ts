@@ -1,10 +1,13 @@
 /**
  * Public surface of the platform layer (PRD 3.3). Import from `@/platform` only.
- * Web adapters are wired in `createWebPlatform`; native ones arrive with Annex B.
+ * Web adapters are wired in `createWebPlatform`. Native ones live behind the separate
+ * `@/platform/native` entry, loaded with a dynamic import only inside the Capacitor shell.
  */
 export type { Platform } from './platform'
 export type { AppUpdatesService, AppUpdateState } from './app-updates'
+export type { AppStateService } from './app-state/app-state'
 export type { PermissionStatus, PlatformRuntime } from './types'
+export type { BiometricError } from './biometrics/biometrics'
 export type { Coordinates, GeolocationError } from './geolocation/geolocation'
 export type { CameraError, LiveCameraStream } from './camera/camera'
 export type { ShareOutcome } from './share/share'

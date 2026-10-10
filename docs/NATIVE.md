@@ -1,76 +1,111 @@
-# Paso a nativa — Bloques 10/11
+# App nativa — Bloque 11
 
-El Bloque 10 prepara los contratos; el empaquetado iOS/Android y la facturación
-de tiendas pertenecen al Bloque 11. No hay proyecto Capacitor, binarios, firma
-de tiendas ni adaptadores nativos implementados. Referencias: PRD 3.3–3.5,
-Anexo B y [guía oficial de Capacitor](https://capacitorjs.com/docs/getting-started).
+Estado tras el **Bloque 11a** (10/10/2026): contenedor Capacitor 8 con adaptadores
+nativos para todos los puertos de `src/platform`, proyectos `android/` e `ios/` versionados
+y desbloqueo biométrico opcional. Las compras en tiendas (RevenueCat Test Store) y el Modo
+viaje son el **Bloque 11b**. Firma, cuentas de desarrollador, fichas y publicación, el
+Bloque 12. Referencias: PRD 3.3–3.5, Anexo B, [Capacitor](https://capacitorjs.com/docs).
 
-## Contrato de zonas seguras antes del bloque 11
+## Identidad y compilación
 
-El documento web usa `viewport-fit=cover`. Las cuatro variables CSS
-`--nl-safe-area-top/bottom/left/right` toman `env(safe-area-inset-*, 0px)`.
-El adaptador nativo podrá sobrescribirlas si su WebView no expone esos valores.
-Nunca sumar a la vez inset de CSS, margen nativo y padding del encabezado.
-`pt-safe`/`pb-safe` añaden el inset y la separación visual del componente;
-`px-safe` protege ambos lados en horizontal. Encabezado y navegación son sus
-respectivos dueños, el área de scroll reserva espacio para la navegación.
+- appId / bundle id `com.nightlifeconnect.app` (decisión del propietario, 10/10/2026).
+- `npm run build:native` = `tsc -b` + `vite build --mode native` → `dist-native/`:
+  sin service worker ni manifest web, CSP como `<meta>` derivada de `vercel.json`
+  (`scripts/native-csp.ts`) y `VITE_APP_URL` público desde `.env.native` (versionado, sin
+  secretos). El build falla si falta un `VITE_APP_URL` HTTPS.
+- `npm run cap:sync` = build nativo + `cap sync` (copia a `android/` e `ios/`).
+- Android: `cd android && gradlew assembleDebug` (JDK de Android Studio en `JAVA_HOME`,
+  SDK en `ANDROID_HOME`). Compilado y probado en emulador API 36.
+- iOS: Swift Package Manager (sin CocoaPods). Generado en Windows; compilar exige macOS +
+  Xcode (Bloque 12). `Info.plist` en inglés y `es.lproj/InfoPlist.strings` en español.
+- El bundle web no cambia: `@/platform/native` se carga con `import()` dinámico y los
+  plugins van en el chunk `vendor-native`, que el HTML web no precarga.
 
-La PWA permite orientación horizontal. Las sheets limitan su altura disponible
-sin alcanzar el inset superior, y el chat mantiene su área de escritura separada
-del borde inferior. Quedan pendientes pruebas físicas de Safari/PWA con notch,
-orientación y teclado, además de la configuración nativa de StatusBar/Keyboard.
-Referencia: [Status Bar de Capacitor](https://capacitorjs.com/docs/apis/status-bar).
+## Dependencias nativas fijadas
 
-## Punto de partida
+- Android: bloqueo de dependencias de Gradle (`buildscript-gradle.lockfile`,
+  `app/gradle.lockfile`; la raíz no tiene dependencias propias). Tras actualizar Capacitor
+  o un plugin: `cd android && gradlew buildEnvironment :app:dependencies --write-locks`.
+- iOS: `Package.resolved` (copia compartida del workspace y junto a `CapApp-SPM`) fija
+  `capacitor-swift-pm` 8.5.3, `ion-ios-camera` 2.0.0, `ion-ios-filesystem` 2.0.0,
+  `ion-ios-geolocation` 3.0.0 y `keychain-swift` 21.0.0 por commit. Escrito a partir de las
+  etiquetas de GitHub; Xcode lo confirmará o actualizará al resolver en el Bloque 12.
 
-`src/platform/platform.ts` reúne las capacidades. Las pantallas reciben puertos
-mediante `usePlatform()`, sin importar implementaciones web. ESLint comprueba
-esta separación. `detectRuntime()` reconoce Capacitor, pero `main.tsx` todavía
-construye `createWebPlatform()` y emite un aviso si detecta una shell nativa.
-Ese aviso no sustituye a `createNativePlatform()` ni acredita compatibilidad.
+## Selección de la plataforma
 
-| Puerto                        | Web actual                                         | Trabajo para nativa                                                                 |
-| ----------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `geolocation`                 | API del navegador, permisos y errores tipados      | Permisos iOS/Android; posición solo para cálculos de proximidad                     |
-| `camera`, `images`            | Selector/cámara y procesamiento de imagen          | Cámara/galería, permisos, orientación, quitar metadatos antes de subir              |
-| `secureStorage`               | `localStorage`, namespace `nl.secure.`             | Keychain/Keystore; probar renovación, logout y borrado de tokens                    |
-| `preferences`                 | Preferencias no sensibles persistidas              | Almacén nativo asíncrono; conservar tema, idioma y movimiento                       |
-| `deviceId`                    | ID local reiniciable                               | ID propio de instalación; sigue siendo señal auxiliar, nunca identidad de confianza |
-| `browser`, `deepLinks`        | HTTPS permitido y retornos al origen               | Navegador del sistema, Universal Links/App Links y recepción validada               |
-| `files`, `share`              | Descarga de Blob y compartir con fallback          | Archivos temporales privados, compartir y limpieza de export/PDF                    |
-| `audio`, `haptics`            | Audio web y vibración/fallback                     | Interrupciones, ciclo de vida y feedback accesible                                  |
-| `biometrics`, `notifications` | Disponibilidad/fallback web limitado               | Autenticación local y push nativo; no conceden roles ni entitlements                |
-| `appUpdates`                  | Service worker, conexión y actualización explícita | Puerto sin registro SW; actualización de binario mediante tiendas                   |
+`src/app/create-platform.ts` elige la factory por runtime antes de crear servicios. En la
+shell nativa nunca se usa la web como respaldo: sin `VITE_APP_URL` el arranque falla.
+`html[data-runtime=native]` activa las variables `--safe-area-inset-*` que inyecta
+`SystemBars` (WebView de Android < 140). `connectNativeBridge` enruta los enlaces abiertos
+por el sistema y el botón atrás de Android (atrás en el historial; en la primera pantalla,
+sale de la app).
 
-El nombre `secureStorage` describe el contrato: la implementación web no cifra
-`localStorage` ni protege frente a código ejecutado en el mismo origen. CSP,
-renderizado seguro y dependencia auditada siguen siendo necesarios.
+| Puerto            | Nativo (Bloque 11a)                                                                                        |
+| ----------------- | ---------------------------------------------------------------------------------------------------------- |
+| `secureStorage`   | `@aparajita/capacitor-secure-storage`: Keychain / Keystore, `afterFirstUnlockThisDeviceOnly`               |
+| `preferences`     | `@capacitor/preferences` (grupo `nl.pref`)                                                                 |
+| `geolocation`     | `@capacitor/geolocation`, solo primer plano y bajo petición; sin caché de posición                         |
+| `camera`          | `@capacitor/camera` (`takePhoto` / `chooseFromGallery`, sin metadatos ni galería); selfie y QR vía WebView |
+| `images`, `audio` | Los mismos de la web (canvas y audio del WebView)                                                          |
+| `haptics`         | `@capacitor/haptics`                                                                                       |
+| `share`           | `@capacitor/share`                                                                                         |
+| `files`           | `@capacitor/filesystem` en caché privada + hoja de compartir; se borra siempre después                     |
+| `browser`         | `@capacitor/browser` (SFSafariViewController / Custom Tabs) con la misma allowlist                         |
+| `deepLinks`       | `@capacitor/app`: esquema `com.nightlifeconnect.app://` y App Links del dominio público                    |
+| `biometrics`      | `@aparajita/capacitor-biometric-auth` (biometría o código del dispositivo)                                 |
+| `notifications`   | Solo permiso (`@capacitor/local-notifications`); push remoto en el Bloque 12                               |
+| `appState`        | `@capacitor/app`: primer plano / segundo plano y botón atrás (nuevo puerto)                                |
+| `appUpdates`      | Solo estado de conexión; el binario se actualiza por las tiendas                                           |
+| `deviceId`        | El mismo ID aleatorio de instalación que la web, guardado en preferencias                                  |
 
-## Secuencia del Bloque 11
+Los dos plugins `@aparajita` (MIT) los autorizó el propietario el 10/10/2026 porque no
+existe plugin oficial `@capacitor/*` para Keychain/Keystore ni biometría.
 
-1. Elegir versiones y plugins desde documentación oficial, comprobar licencias y
-   mantener el catálogo de dependencias autorizado. Crear configuración Capacitor,
-   proyectos de tiendas y `createNativePlatform()`.
-2. Seleccionar la factory por runtime antes de crear servicios. Nunca utilizar la
-   factory web como fallback silencioso en un binario distribuido.
-3. Registrar permisos con explicaciones ES/EN. Probar denegación, permiso limitado,
-   retorno desde ajustes, pérdida de conexión y pausa/reanudación.
-4. Pasar almacenamiento y retornos por los puertos. La sesión conserva su contador
-   de generación para descartar resultados privados tras cambiar de usuario.
-5. Implementar las estrategias `app_store` y `play_store`. Hoy la selección con
-   `runtime=native` devuelve `disabled`; cambiar solo el runtime no implementa pagos.
-   Verificar compras/restauración y eventos de tienda en servidor; el cliente sigue
-   consultando entitlements y nunca concede ventajas por una pantalla de éxito.
-6. Probar enlaces verificados, cancelación/retorno de verificación, fotos, permisos,
-   teclado, safe areas, accesibilidad, borrado/export y suspensión de la app.
+## Desbloqueo biométrico
 
-## Puerta de publicación
+Ajustes › Seguridad (solo si el dispositivo tiene biometría o código). Activarlo exige
+pasar la biometría. Al abrir la app o volver tras 30 s fuera, se tapa la app (inerte, sin
+desmontar) hasta desbloquear. Si la biometría desaparece, la app queda cerrada y solo se
+puede cerrar sesión (después, login normal por OTP). Cerrar sesión desactiva el bloqueo.
+No concede roles, sesión ni ventajas.
 
-- ❌ Binarios iOS/Android firmados, permisos y enlaces asociados reales.
-- ❌ Sandbox de ambas tiendas, restauración, doble entrega y revocación verificadas.
-- ❌ VoiceOver/TalkBack y rendimiento medido en dispositivos reales.
-- ❌ Revisión de políticas vigentes de tiendas, datos de empresa, privacidad y fichas.
-- ✅ Contratos de plataforma y estrategia de pago con fallo cerrado existentes.
+## Permisos
 
-La contratación, secretos live, acuerdos y lanzamiento requieren la puerta del
-Bloque 12. Una PWA instalada desde el navegador no acredita estas pruebas nativas.
+Android pide cámara, ubicación aproximada/precisa (sin segundo plano), biometría y
+notificaciones, cada una al usarla. Se eliminan del manifiesto fusionado
+`SCHEDULE_EXACT_ALARM`, `RECEIVE_BOOT_COMPLETED` y `WAKE_LOCK` (de local-notifications, no
+se usan). `allowBackup=false` y reglas de extracción vacías: la sesión no se copia a la nube
+ni a otro móvil. iOS: textos de cámara, fotos, ubicación en uso y Face ID (EN/ES).
+
+## Enlaces y retornos
+
+Las URL de retorno siguen en el origen HTTPS público (los proveedores exigen HTTPS). Hasta
+verificar App Links (`assetlinks.json` con el certificado de firma de release) y Universal
+Links (Team ID de Apple) en el Bloque 12, Android pregunta con qué abrir y el retorno de
+Veriff puede abrirse en el navegador: la persona cierra la hoja y la app recarga el estado
+al volver (el resultado llega por webhook). Solo se aceptan nuestro host y nuestro esquema.
+
+## Edge Functions y CORS
+
+`_shared/http.ts` admite además `https://localhost` (Android) y `capacitor://localhost`
+(iOS), exactos. Redesplegadas en 11a: `verification` (v11), `signed-documents` (v17),
+`delete-account` (v17) y `test-tools` (v15). Las de pagos (`billing-account`,
+`create-portal-session`, `request-withdrawal`, `create-checkout-session`) se redesplegarán
+con los cambios de tiendas del Bloque 11b.
+
+## Equipos con antivirus que inspecciona TLS
+
+Norton (Web/Mail Shield) sustituye los certificados HTTPS. Para compilar, Gradle necesita
+un truststore temporal con esa raíz (`JAVA_TOOL_OPTIONS=-Djavax.net.ssl.trustStore=…`), y
+para que el emulador llegue a Supabase, un overlay **local y no versionado** en
+`android/app/src/debug/` (`network_security_config` con `debug-overrides`, que Android
+ignora en release). Nunca se sube al repositorio (`.gitignore`).
+
+## Puerta de publicación (Bloque 12)
+
+- ❌ Firma de release, cuentas de Apple/Google, fichas 18+, privacy manifest y
+  «Seguridad de los datos», URL de borrado de cuenta.
+- ❌ App Links / Universal Links verificados; compilación y prueba en iPhone real.
+- ❌ Push remoto (APNs/FCM), VoiceOver/TalkBack y rendimiento en dispositivos reales.
+- ❌ Compras de tiendas reales (en 11b solo Test Store, nunca en una build de release).
+- ✅ Contenedor, adaptadores nativos, permisos, CSP, almacenamiento seguro y biometría.

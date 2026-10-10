@@ -1,5 +1,62 @@
 # Progreso — Nightlife Connect
 
+## Bloque 11a — App nativa con Capacitor y desbloqueo biométrico — 10/10/2026
+
+Plan: [BLOCK11_PLAN.md](./BLOCK11_PLAN.md). `main` actualizada a `09e3ebb` antes de empezar
+(estaba 52 commits por detrás de `origin/main`). Decisiones del propietario: appId
+`com.nightlifeconnect.app`; plugins `@aparajita` autorizados; el Bloque 11 se divide en
+**11a** (nativo + biometría) y **11b** (RevenueCat Test Store con todo el catálogo de pago,
+incluidos los productos añadidos entre los bloques 10 y 11, guía y Modo viaje). La web y sus
+compras con Stripe no cambian; cada dispositivo comprará en su tienda en 11b.
+
+- **Capacitor 8.5.3** con proyectos `android/` e `ios/` versionados (iOS con SPM; compilar
+  exige Mac, Bloque 12). `npm run build:native` / `npm run cap:sync`; `.env.native` con la
+  URL pública; CSP en `<meta>` desde `vercel.json`; sin service worker en la app.
+- **Adaptadores nativos** para todos los puertos (`*.native.ts`) y nuevo puerto `appState`.
+  Selección por runtime antes de crear servicios, sin respaldo web en la shell
+  (`create-platform.ts`). Enlaces (esquema propio y App Links del dominio) y botón atrás de
+  Android conectados al router.
+- **Sesión en Keychain/Keystore**, copia de seguridad desactivada, permisos mínimos (se
+  eliminan alarmas exactas, arranque y wake lock heredados).
+- **Desbloqueo con Face ID / huella** (Ajustes › Seguridad, solo si el dispositivo lo
+  permite): al abrir y al volver tras 30 s; falla cerrado; cerrar sesión lo desactiva.
+- **Edge Functions**: CORS para `https://localhost` y `capacitor://localhost`; redesplegadas
+  `verification` v11, `signed-documents` v17, `delete-account` v17 y `test-tools` v15
+  (las de pagos, en 11b). Sin migraciones.
+- Web intacta: los plugins van en `vendor-native`, que el HTML web no carga; `vendor-ui`
+  vuelve a 411 KB. Textos nuevos ES/EN.
+
+**Hecho cuando**
+
+- ✅ Capacitor y servicios nativos del Anexo B: ubicación (primer plano), cámara, vibración,
+  almacenamiento seguro, biometría, ID de dispositivo, permiso de notificaciones, enlaces,
+  navegador interno y descargas. ❌ Push remoto y ubicación en segundo plano (Bloque 12 /
+  sin requisito activo).
+- ✅ La web sigue igual: `npm run check` 543/543 (13 pruebas nuevas), build web con SW y sin
+  plugins, E2E 60/60. (Con el emulador abierto, 3 pruebas iniciales superaban el límite de
+  60 s por carga del equipo; aisladas y con el emulador cerrado pasan todas.)
+- ✅ APK debug compila (`gradlew assembleDebug`) y arranca en emulador Android 16 (API 36):
+  plugins nativos activos, zonas seguras edge-to-edge correctas, enlace
+  `com.nightlifeconnect.app://legal` abre la pantalla y carga los documentos, atrás vuelve y
+  en la primera pantalla sale de la app.
+- ✅ Edge Functions: 401 sin sesión y preflight nativo permitido en las 4 redesplegadas.
+- ✅ `npm audit` 0 · SBOM 705 · Advisors sin avisos nuevos.
+- ❌ Pruebas con sesión iniciada en el emulador (bloqueo biométrico con huella registrada,
+  foto, ubicación, PDF compartido): requieren que el propietario inicie sesión con su
+  teléfono de prueba (no introduzco credenciales en servicios externos).
+- ❌ iOS: compilar y probar (necesita macOS + Xcode).
+
+**Cómo probarlo:** `npm run cap:sync`, abrir `android/` en Android Studio y ejecutar en el
+emulador (o `cd android && gradlew assembleDebug` y `adb install -r
+app/build/outputs/apk/debug/app-debug.apk`). Para el bloqueo: en el emulador, Ajustes ›
+Seguridad › añadir PIN y huella; en la app, Perfil › Ajustes › Seguridad › activar; enviar
+la app a segundo plano más de 30 s y volver (Extended controls › Fingerprint › Touch).
+En este PC, Norton inspecciona TLS: ver NATIVE.md (truststore temporal y overlay local).
+
+**Siguiente (11b, con OK):** RevenueCat Test Store, catálogo completo test/live (solo test
+activo), `store-config`, `store-sync`, `revenuecat-webhook` (secreto
+`REVENUECAT_WEBHOOK_AUTH` por crear), restaurar compras, gestión en tienda y Modo viaje.
+
 ## Desistimiento según la norma habitual, guías con precios y procesos — 09/10/2026
 
 Petición del propietario: «ojo con reembolsar si contrata Chispas y las usa»; norma: «lo que

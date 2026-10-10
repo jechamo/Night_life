@@ -8,6 +8,9 @@ test('local development and production origins can invoke Edge Functions', () =>
     'http://127.0.0.1:5173',
     'http://127.0.0.1:4173',
     'https://nightlife-connect-beige.vercel.app',
+    // Block 11: Capacitor WebViews (Android / iOS).
+    'https://localhost',
+    'capacitor://localhost',
   ]) {
     expect(corsHeaders(new Request('https://example.com', { headers: { origin } }))).toMatchObject({
       'Access-Control-Allow-Origin': origin,
@@ -20,6 +23,10 @@ test('lookalikes and other local ports are not allowed origins', () => {
     'http://127.0.0.1:9999',
     'http://127.0.0.1.evil.example:5173',
     'https://nightlife-connect-beige.vercel.app.evil.example',
+    'https://localhost:8443',
+    'http://localhost',
+    'capacitor://localhost.evil.example',
+    'ionic://localhost',
   ]) {
     expect(
       corsHeaders(new Request('https://example.com', { headers: { origin } })),

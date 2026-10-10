@@ -23,6 +23,15 @@ falla (ESBOMPROBLEMS) porque no resuelve las `bundleDependencies` del paquete op
 plataforma donde se genera (Linux x64 en CI; el inventario del 04/10 se hizo en Windows).
 `npm audit`: 0 vulnerabilidades.
 
+Actualización 10/10/2026 (Bloque 11a): `sbom.cdx.json` regenerado (705 componentes) tras
+añadir Capacitor 8.5.3 (`core`, `android`, `ios`, `cli` en desarrollo), los plugins oficiales
+`app`, `browser`, `camera`, `filesystem`, `geolocation`, `haptics`, `keyboard`,
+`local-notifications`, `preferences`, `share` y los autorizados
+`@aparajita/capacitor-secure-storage@8.0.1` y `@aparajita/capacitor-biometric-auth@10.0.0`
+(MIT). `@capacitor/cli` arrastraba `uuid<11.1.1` (GHSA-w5hq-g745-h8pq, moderada) a través
+de `xcode`: `overrides` acotado (`xcode › uuid ^11.1.1`, misma API `v4`). `npm audit`: 0.
+El SBOM Edge no cambia (sin dependencias nuevas en funciones).
+
 Regenerar ambos inventarios y ejecutar las auditorías al cambiar dependencias.
 Conservar el lockfile principal y las versiones directas Edge verificadas; no
 resolver imports flotantes durante una corrección de seguridad sin comprobar tipos.

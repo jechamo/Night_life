@@ -6,6 +6,9 @@ const ALLOWED_ORIGINS = [
   /^https:\/\/nightlife-connect(-[a-z0-9-]+)?-chaplications-projects\.vercel\.app$/,
   /^http:\/\/localhost:(5173|4173)$/,
   /^http:\/\/127\.0\.0\.1:(5173|4173)$/,
+  // Block 11: Capacitor WebView origins (Android https://localhost, iOS capacitor://localhost).
+  /^https:\/\/localhost$/,
+  /^capacitor:\/\/localhost$/,
 ]
 
 export function corsHeaders(req: Request): Record<string, string> {

@@ -26,6 +26,7 @@ export function renderApp(
     themeId: 'neon-noir',
     reduceMotion: false,
     language: 'es',
+    biometricLock: false,
     ...options.settings,
   }
   const services = {

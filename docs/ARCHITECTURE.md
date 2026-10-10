@@ -2,6 +2,19 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Bloque 11a — app nativa (Capacitor 8)
+
+`main.tsx` → `createPlatform()` (`app/create-platform.ts`) elige `createWebPlatform` o
+`createNativePlatform` (entrada `@/platform/native`, `import()` dinámico) antes de crear
+servicios; nunca hay respaldo web en la shell. Cada puerto tiene `*.native.ts` junto a su
+`*.web.ts`; ESLint impide importar `@capacitor/*`, `@aparajita/*` o adaptadores nativos
+fuera de `src/platform` (y de `create-platform.ts`). Nuevo puerto `appState` (primer/segundo
+plano, botón atrás). `connectNativeBridge` (`app/native-bridge.ts`) une enlaces y botón
+atrás con el router. Bloqueo biométrico en `shared/security` (`BiometricLockProvider` en
+`AppProviders`, preferencia leída en `bootstrap` antes del primer render, sección en
+Ajustes). Vite `--mode native` → `dist-native/` sin PWA y con CSP en `<meta>`; chunk
+`vendor-native` solo para la shell. Detalle: [NATIVE.md](./NATIVE.md).
+
 ## Roadmap R5 — reservas y lista de invitados
 
 Feature `features/bookings`: modelo (`model/bookings.ts`, zod), hooks (`use-bookings`),
@@ -253,8 +266,8 @@ transaccionales se ejecutan en servidor.
   permiten recuperar con una recarga online. El worker no borra Auth.
 - Pantallas importadas con `React.lazy`, Suspense accesible y boundary por pantalla.
   Mapbox conserva su gate de reserva y queda fuera de HTML inicial/precache.
-- `sw.js` sin caché HTTP duradera; assets con hash inmutables. No hay adaptadores
-  nativos todavía: contratos y pasos en [NATIVE.md](./NATIVE.md).
+- `sw.js` sin caché HTTP duradera; assets con hash inmutables. La shell nativa no
+  registra service worker (Bloque 11a): ver [NATIVE.md](./NATIVE.md).
 
 ## Calidad
 

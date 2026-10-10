@@ -31,7 +31,7 @@ function fixture() {
       platform={platform}
       services={services}
       queryClient={queryClient}
-      settings={{ themeId: 'mono', reduceMotion: true, language: 'es' }}
+      settings={{ themeId: 'mono', reduceMotion: true, language: 'es', biometricLock: false }}
     >
       {children}
     </AppProviders>

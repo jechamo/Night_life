@@ -121,6 +121,19 @@
       "es": "Español",
       "en": "English"
     },
+    "biometricLock": {
+      "title": "Seguridad",
+      "label": "Desbloquear con Face ID o huella",
+      "description": "Al abrir la app o volver a ella tras 30 segundos fuera, pide tu biometría o el código del móvil. Solo protege este dispositivo.",
+      "reason": "Desbloquear Nightlife Connect",
+      "enableFailed": "No se ha podido confirmar tu identidad. No se ha activado.",
+      "lockTitle": "Nightlife Connect está bloqueada",
+      "lockBody": "Desbloquéala con Face ID, huella o el código de tu móvil.",
+      "unlock": "Desbloquear",
+      "failed": "No se ha podido desbloquear. Inténtalo de nuevo.",
+      "unavailable": "La biometría ya no está disponible en este móvil. Cierra sesión y vuelve a entrar con tu código.",
+      "signOut": "Cerrar sesión"
+    },
     "account": {
       "title": "Cuenta",
       "email": "Email",

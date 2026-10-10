@@ -7,6 +7,7 @@ import { SessionBridge } from '@/shared/session/SessionBridge'
 import type { AppServices } from '@/shared/services/services'
 import { ThemeProvider } from '@/shared/theme/ThemeProvider'
 import { AppStatus } from '@/shared/pwa/AppStatus'
+import { BiometricLockProvider } from '@/shared/security/BiometricLockProvider'
 import type { InitialSettings } from './bootstrap'
 import { useEntitlement } from '@/shared/entitlements/use-entitlement'
 
@@ -39,8 +40,10 @@ export function AppProviders({
           <SessionBridge />
           <AppTheme settings={settings}>
             <MotionPreferencesProvider initialReduceMotion={settings.reduceMotion}>
-              <AppStatus />
-              {children}
+              <BiometricLockProvider initialEnabled={settings.biometricLock}>
+                <AppStatus />
+                {children}
+              </BiometricLockProvider>
             </MotionPreferencesProvider>
           </AppTheme>
         </QueryClientProvider>

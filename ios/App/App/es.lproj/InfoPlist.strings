@@ -1,0 +1,5 @@
+/* Block 11: textos de permisos de iOS en español (inglés en Info.plist). */
+"NSCameraUsageDescription" = "Para hacer tus fotos de perfil, el selfie en directo de la foto verificada y escanear los códigos de la lista de invitados en la puerta.";
+"NSPhotoLibraryUsageDescription" = "Para elegir fotos de perfil de tu galería. Se recodifican en tu móvil sin datos de ubicación antes de subirlas.";
+"NSLocationWhenInUseUsageDescription" = "Para mostrarte locales cerca y confirmar un check-in en el local. Nunca se guarda tu ubicación exacta.";
+"NSFaceIDUsageDescription" = "Para desbloquear Nightlife Connect con Face ID si lo activas en Ajustes.";
