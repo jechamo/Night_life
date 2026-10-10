@@ -9,6 +9,9 @@ consultas de solo lectura. Avisos clave: en `sandbox` solo los testers pueden ve
 y pagar (toda cuenta nueva necesita rol tester); Veriff TEST caduca el 16/10; 2 de 3 admins sin
 TOTP; desajustes D1-D3 anotados (roles simulados con backend real, texto «12 horas» de la lista
 de invitados, subtítulo del dashboard).
+Ampliado con la sección 6 «Acceso»: cuándo se pide SMS, código por email, biometría (solo app
+nativa, candado local de 30 s), TOTP del admin y estado de OAuth (no implementado), con 26 casos
+de prueba. Desajustes nuevos: D5 (no hay cambio de teléfono) y D6 (OAuth pendiente de decisión).
 
 ## Bloque 11a — App nativa con Capacitor y desbloqueo biométrico — 10/10/2026
 

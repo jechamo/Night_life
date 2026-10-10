@@ -15,10 +15,11 @@
 3. [Funcionalidades del local](#3-funcionalidades-del-local)
 4. [Flujos del local en la app](#4-flujos-del-local-en-la-app)
 5. [Funcionalidades del admin (necesarias para probar)](#5-funcionalidades-del-admin)
-6. [Preparación de las pruebas](#6-preparación-de-las-pruebas)
-7. [Casos de prueba E2E (todas las casuísticas)](#7-casos-de-prueba-e2e)
-8. [Guion de una «noche de pruebas» con los 3 socios](#8-guion-de-una-noche-de-pruebas)
-9. [Limpieza al terminar y registro de incidencias](#9-limpieza-y-registro-de-incidencias)
+6. [Acceso: SMS, email, biometría, OAuth y TOTP](#6-acceso-cuándo-sms-cuándo-email-cuándo-biometría-cuándo-oauth)
+7. [Preparación de las pruebas](#7-preparación-de-las-pruebas)
+8. [Casos de prueba E2E (todas las casuísticas)](#8-casos-de-prueba-e2e)
+9. [Guion de una «noche de pruebas» con los 3 socios](#9-guion-de-una-noche-de-pruebas)
+10. [Limpieza al terminar y registro de incidencias](#10-limpieza-y-registro-de-incidencias)
 
 ---
 
@@ -100,7 +101,7 @@ algo «no funciona» cuando es una regla.
    hasta levantar el ban. Probadlo solo con una cuenta desechable (número de prueba extra).
 8. **«Eliminar cuenta» es irreversible.** Solo con una cuenta desechable.
 9. **«Purgar datos de prueba» solo borra lo `is_test`.** Lo que hagáis con vuestras cuentas
-   reales (likes, matches, claims, patrocinios, compras TEST, reservas…) se queda. Ver §9.
+   reales (likes, matches, claims, patrocinios, compras TEST, reservas…) se queda. Ver §10.
 10. **Catálogo solo en Madrid.** Para probar el check-in físico (150 m) fuera de Madrid, cread un
     local en Admin › Locales › «Nuevo local» con las coordenadas exactas de donde vais a estar
     (ciudad de la lista: Madrid, Barcelona, Valencia, Sevilla, Málaga, Bilbao, Ibiza, Zaragoza).
@@ -111,7 +112,9 @@ algo «no funciona» cuando es una regla.
 12. **Una sesión por navegador.** Para usar varias cuentas en el mismo móvil/PC usad perfiles de
     navegador distintos o ventanas de incógnito. En iPhone, Safari y la PWA instalada tienen
     sesiones separadas.
-13. **Mapa:** cada apertura del mapa real consume 1 carga del límite propio (1.000/mes). Si se
+13. **Acceso:** SMS solo en el alta (y para borrar la cuenta); después, código por email si la
+    cuenta tiene email confirmado; biometría solo en la app nativa; sin OAuth. Detalle en §6.
+14. **Mapa:** cada apertura del mapa real consume 1 carga del límite propio (1.000/mes). Si se
     agota, sale el «Mapa de prueba» con aviso; el admin puede ampliarlo en Admin ›
     Configuración › Proveedores (sin coste mientras siga dentro de las 50.000 gratis de Mapbox).
 
@@ -123,6 +126,8 @@ algo «no funciona» cuando es una regla.
 | D2  | Panel › Lista de invitados               | El aviso de hora no válida dice «próximas 12 horas», pero la regla desde el 09/10 es «antes de las 06:00»             |
 | D3  | Admin › Dashboard                        | El subtítulo dice «Datos simulados del entorno de pruebas» aunque esté conectado a datos reales                       |
 | D4  | Email login                              | El flag está encendido; si SMTP propio no está configurado en Supabase Auth (ver `AUTH_EMAIL.md`), el código no llega |
+| D5  | Cambiar de teléfono                      | No existe en la app (el PRD pide reautenticación por OTP y aviso al usuario); hoy solo cabe crear otra cuenta         |
+| D6  | OAuth (Google/Apple)                     | No implementado; decisión pendiente (§6.5)                                                                            |
 
 ---
 
@@ -423,20 +428,155 @@ Perfil › Locales y equipo › **Admin** (`/admin`), rol admin + TOTP en cada s
 
 ---
 
-## 6. Preparación de las pruebas
+## 6. Acceso: cuándo SMS, cuándo email, cuándo biometría, cuándo OAuth
 
-### 6.1 Reparto de papeles
+Resumen: **el SMS es obligatorio solo para crear la cuenta** (y para borrarla). Para volver a
+entrar se usa el **código por email** si la cuenta tiene un email verificado, y el SMS si no.
+Mientras no se cierra sesión, la app **no vuelve a pedir nada**. La **biometría** solo existe en
+la app nativa y es un candado del móvil sobre la sesión ya abierta, no un login. **OAuth
+(Google/Apple) no existe hoy.** El admin añade siempre un **TOTP**.
+
+### 6.1 Qué se pide en cada momento
+
+| Momento                                                                         | Qué se pide                                                  | Dónde en la app                                 | Notas                                                                                                                       |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Crear la cuenta                                                                 | **SMS** (código de 6 dígitos)                                | Alta › «Tu teléfono»                            | Siempre. Antes de enviar se comprueban bans (hash del teléfono y del dispositivo) y límites: 20/h por IP y 5/h por teléfono |
+| Añadir email en el alta o después                                               | **Enlace** de confirmación al email                          | Alta (email opcional) o Ajustes › Cuenta        | Es un enlace, no un código. Hasta confirmarlo sale «Sin confirmar»                                                          |
+| Abrir la app con la sesión guardada                                             | **Nada**                                                     | —                                               | La sesión se guarda y se renueva sola (`persistSession` + `autoRefreshToken`)                                               |
+| Abrir la **app nativa** con el bloqueo activado                                 | **Biometría** (Face ID, huella o PIN del móvil)              | Pantalla «Nightlife Connect está bloqueada»     | Al abrir en frío y al volver tras 30 s o más en segundo plano                                                               |
+| Volver a entrar tras cerrar sesión, en otro móvil/navegador o tras borrar datos | **Código por email** si hay email verificado; si no, **SMS** | `/login`: «Entrar con email» o «Entrar con SMS» | Email requiere `email_login_enabled = on` (está on) y el SMTP de Supabase Auth configurado                                  |
+| iPhone: pasar de Safari a la PWA instalada (o al revés)                         | Login otra vez (email o SMS)                                 | `/login`                                        | iOS guarda la sesión de Safari y la de la PWA por separado                                                                  |
+| Entrar en Admin                                                                 | Login normal + **TOTP** (app autenticadora)                  | Admin › «Segundo factor»                        | En cada sesión nueva. La primera vez se configura con un QR                                                                 |
+| Eliminar la cuenta                                                              | **SMS** al teléfono de la cuenta                             | Privacidad y datos › Eliminar mi cuenta         | Siempre SMS, aunque hayas entrado por email o tengas biometría                                                              |
+| Cerrar todas las sesiones                                                       | Nada                                                         | Privacidad y datos › Sesiones                   | Cierra también la de este dispositivo                                                                                       |
+| Cambiar de teléfono                                                             | —                                                            | No existe en la app                             | Hueco frente al PRD 6.15 A07 (ver D5). Hoy habría que crear otra cuenta                                                     |
+| Pagar                                                                           | Lo que pida Stripe (3D Secure del banco)                     | Stripe Checkout                                 | No es un login de la app                                                                                                    |
+| Verificar la edad / identidad                                                   | Documento + selfie en Veriff (o simulación)                  | Centro de verificación                          | No es un login de la app; no cambia la sesión                                                                               |
+| Entrar con Google o Apple                                                       | —                                                            | No existe                                       | Ver §6.5                                                                                                                    |
+
+### 6.2 SMS
+
+- **Cuándo:** alta (obligatorio), login de respaldo y reautenticación para borrar la cuenta.
+- **Por qué es obligatorio en el alta:** una cuenta por teléfono y bans por hash del teléfono. Por
+  eso nunca se crean cuentas por email (`shouldCreateUser: false`).
+- **Pantalla:** prefijo + número › «Enviar código» › 6 dígitos › «Verificar». «Reenviar código»
+  tras una cuenta atrás; «Cambiar número».
+- **Errores que veréis:** «El código no es correcto», «El código ha caducado. Pide otro»,
+  «Demasiados intentos…», «Has pedido demasiados códigos. Espera unos minutos», «No podemos
+  completar el alta con este número» (baneado).
+- **Coste:** cada SMS real se paga al proveedor. En pruebas, números de prueba de Supabase Auth
+  (gratis, código fijo).
+
+### 6.3 Código por email
+
+- **Cuándo:** para volver a entrar sin SMS. Se ofrece primero en `/login`; «Entrar con SMS»
+  queda a un toque.
+- **Requisitos:** email añadido **y confirmado** en la cuenta (hoy solo 1 de vuestras 3 cuentas
+  lo tiene), flag `email_login_enabled = on` y SMTP propio + plantilla con `{{ .Token }}` en
+  Supabase Auth (`docs/AUTH_EMAIL.md`).
+- **Comportamiento:** código de 6 dígitos (no enlace mágico, para que en iPhone no se abra Safari
+  en vez de la PWA); caduca a los 10 minutos según la configuración propuesta. La respuesta es la
+  misma exista o no el email, y nunca entra con un email que no sea de una cuenta.
+- **Coste:** prácticamente cero (Gmail del proyecto, unos 500 envíos/día).
+
+### 6.4 Biometría (Face ID / huella)
+
+- **Solo en la app nativa** (Android probada en emulador; iOS pendiente de compilar en un Mac,
+  Bloque 12). En la web y en la PWA **no aparece**: el navegador no ofrece biometría a la app
+  (no hay passkeys/WebAuthn).
+- **Qué es y qué no:** un candado local sobre la sesión ya guardada en el Keychain/Keystore del
+  móvil. **No crea sesión, no da roles ni ventajas y el servidor no se entera.** Si cierras
+  sesión, la biometría no te hace entrar: hay que usar email o SMS.
+- **Activar:** Perfil › Ajustes › Seguridad › «Desbloquear con Face ID o huella». La sección
+  solo sale si el móvil tiene biometría **o** PIN/código. Al activar pide la huella; si se cancela
+  o falla: «No se ha podido confirmar tu identidad. No se ha activado».
+- **Cuándo la pide:** siempre al abrir la app en frío y al volver de segundo plano tras **30 s o
+  más**. Por debajo de 30 s no (permisos, hoja de compartir, el propio aviso de huella).
+- **Pantalla bloqueada:** «Nightlife Connect está bloqueada · Desbloquéala con Face ID, huella o
+  el código de tu móvil» con «Desbloquear» y «Cerrar sesión». La app sigue cargada debajo
+  (un mensaje a medio escribir no se pierde), pero tapada e inactiva.
+- **Alternativa:** el PIN, patrón o código del móvil sirve igual que la huella.
+- **Si la biometría desaparece** (borras huellas y PIN con el bloqueo activo): la app se queda
+  cerrada por seguridad: «La biometría ya no está disponible en este móvil. Cierra sesión y
+  vuelve a entrar con tu código».
+- **Cerrar sesión desactiva el bloqueo.** Al volver a entrar hay que activarlo otra vez.
+- **Es por dispositivo:** activarlo en un móvil no lo activa en otro; la sesión no se copia en
+  las copias de seguridad.
+- **No sustituye:** al TOTP del admin ni al SMS de borrar cuenta; los pagos siguen en Stripe.
+- **Coste:** cero.
+
+### 6.5 OAuth (Google / Apple)
+
+- **Estado:** no implementado. No hay botones ni proveedores configurados en Supabase Auth.
+- **Decisión registrada** (`ROADMAP_2026-10.md`): opcional más adelante y con vuestro permiso,
+  porque son terceros nuevos (PRD 3.5). Si se ofrece Google en iOS, Apple exige ofrecer también
+  «Iniciar sesión con Apple», que requiere la cuenta de desarrollador de Apple (Bloque 12).
+- **Cómo encajaría sin romper las reglas:** solo como forma rápida de **volver a entrar**,
+  vinculada a una cuenta creada antes con SMS. Nunca para crear cuentas sin teléfono, porque
+  se perderían «una cuenta por teléfono» y los bans por hash.
+- **Coste:** gratis con Google; Apple necesita la cuota anual de desarrollador.
+
+### 6.6 Matriz por dispositivo
+
+| Dispositivo                     | Sesión guardada en                 | SMS | Email | Biometría        | OAuth |
+| ------------------------------- | ---------------------------------- | --- | ----- | ---------------- | ----- |
+| Navegador (móvil o PC)          | Almacenamiento del navegador       | Sí  | Sí    | No               | No    |
+| PWA instalada en Android        | Almacenamiento de Chrome           | Sí  | Sí    | No               | No    |
+| PWA instalada en iPhone         | Propio de la PWA (no el de Safari) | Sí  | Sí    | No               | No    |
+| App Android (APK de pruebas)    | Keystore                           | Sí  | Sí    | **Sí**           | No    |
+| App iOS (pendiente de compilar) | Keychain                           | Sí  | Sí    | **Sí** (Face ID) | No    |
+
+### 6.7 Casos de prueba de acceso
+
+Biometría: en la app Android (APK de `docs/NATIVE.md`) en un móvil real o en el emulador
+(Ajustes del emulador › Seguridad › añadir PIN y huella; para «tocar» la huella: Extended
+controls › Fingerprint › Touch).
+
+| ID     | Pasos                                                                                    | Resultado esperado                                                                        |
+| ------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| AUT-01 | Alta de D: solo con el SMS                                                               | Cuenta creada; ningún paso pide email obligatorio                                         |
+| AUT-02 | Cerrar el navegador o la app y volver a abrir al día siguiente                           | Entra directamente, sin códigos                                                           |
+| AUT-03 | iPhone: con sesión en Safari, instalar la PWA y abrirla                                  | Pide login en la PWA (sesión separada); es lo esperado                                    |
+| AUT-04 | Cerrar sesión › «Entrar con email» con una cuenta **sin** email confirmado               | Mismo mensaje «Si … es el email verificado…»; no llega nada; «Entrar con SMS» funciona    |
+| AUT-05 | Ajustes › Cuenta › añadir email › abrir el enlace                                        | Pasa de «Pendiente de confirmar» a «Verificado»                                           |
+| AUT-06 | Cerrar sesión › «Entrar con email» › código                                              | Entra sin SMS                                                                             |
+| AUT-07 | Código de email pasados 10 minutos                                                       | «El código ha caducado. Pide otro»                                                        |
+| AUT-08 | Email mal escrito (`ana@`)                                                               | «Revisa el email»                                                                         |
+| AUT-09 | Login SMS: «Reenviar código» antes de la cuenta atrás; luego código erróneo varias veces | El botón espera a la cuenta atrás; tras varios fallos «Demasiados intentos…»              |
+| AUT-10 | Entrar en Admin sin TOTP configurado (B o C)                                             | QR para configurarlo; después pide el código de 6 dígitos                                 |
+| AUT-11 | Cerrar sesión, entrar por email y abrir Admin                                            | Vuelve a pedir el TOTP (nueva sesión)                                                     |
+| AUT-12 | Cuenta E entrando por email › Eliminar mi cuenta                                         | Pide el código **por SMS** al teléfono de la cuenta                                       |
+| AUT-13 | Móvil 1 › Privacidad › Cerrar todas las sesiones                                         | Móvil 2 con la misma cuenta pide login al siguiente uso                                   |
+| AUT-14 | Web y PWA › Perfil › Ajustes                                                             | No existe la sección «Seguridad» (biometría)                                              |
+| AUT-15 | App Android en un móvil sin huella ni PIN                                                | Tampoco aparece la sección «Seguridad»                                                    |
+| AUT-16 | App Android › activar el interruptor › cancelar la huella                                | «No se ha podido confirmar tu identidad. No se ha activado»; el interruptor sigue apagado |
+| AUT-17 | Activar con huella › cerrar la app del todo › abrirla                                    | Pantalla bloqueada; con la huella entra                                                   |
+| AUT-18 | Segundo plano 10 s y volver; luego 40 s y volver                                         | A los 10 s no pide nada; a los 40 s pide la huella                                        |
+| AUT-19 | Escribir un mensaje en un chat sin enviarlo › 40 s en segundo plano › desbloquear        | El mensaje a medio escribir sigue ahí                                                     |
+| AUT-20 | Fallar la huella › usar el PIN del móvil                                                 | Entra con el PIN                                                                          |
+| AUT-21 | En la pantalla bloqueada › «Cerrar sesión»                                               | Sale de la cuenta; hay que entrar con email o SMS                                         |
+| AUT-22 | Con el bloqueo activo, quitar huellas y PIN del móvil › abrir la app                     | «La biometría ya no está disponible en este móvil…»; solo deja cerrar sesión              |
+| AUT-23 | Cerrar sesión desde Perfil con el bloqueo activo › volver a entrar                       | El bloqueo está desactivado; hay que activarlo de nuevo                                   |
+| AUT-24 | Misma cuenta en la app Android de otro móvil                                             | Ese móvil no tiene el bloqueo hasta activarlo allí                                        |
+| AUT-25 | Buscar «Entrar con Google/Apple» en la bienvenida y en `/login`                          | No existe (estado actual)                                                                 |
+| AUT-26 | Alta con el teléfono de una cuenta baneada (tras SEG-08)                                 | «No podemos completar el alta con este número»                                            |
+
+---
+
+## 7. Preparación de las pruebas
+
+### 7.1 Reparto de papeles
 
 Con 3 socios se cubre casi todo; 2 cuentas extra (números de prueba) completan los casos que
 exigen un 4.º reportador, un usuario normal o una cuenta que se pueda borrar/banear.
 
-| Cuenta | Quién                    | Papel en las pruebas                                                                        |
-| ------ | ------------------------ | ------------------------------------------------------------------------------------------- |
-| **A**  | Socio 1                  | Admin principal (operador) + **Titular** del local de pruebas                               |
-| **B**  | Socio 2                  | Cliente que liga + **Encargado** del local; admin revisor de lo que haga A                  |
-| **C**  | Socio 3                  | Cliente que liga + admin revisor; titular del local por **claim** (segundo local)           |
-| **D**  | Cuenta extra (nº prueba) | Usuario «normal»: primero **sin** tester (vista pública), luego con tester (4.º reportador) |
-| **E**  | Cuenta extra (nº prueba) | Desechable: suspensión, ban, eliminar cuenta                                                |
+| Cuenta | Quién                    | Papel en las pruebas                                                                                        |
+| ------ | ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| **A**  | Socio 1                  | Admin principal (operador): crea la empresa, el contrato y las invitaciones; cliente en el resto de pruebas |
+| **B**  | Socio 2                  | **Titular** del local P (por invitación de partner) y portero en la lista; admin revisor de lo que haga A   |
+| **C**  | Socio 3                  | Cliente que liga + admin revisor; **Encargado** de P hasta EQU-06 y **Titular** del local R por claim       |
+| **D**  | Cuenta extra (nº prueba) | Usuario «normal»: primero **sin** tester (vista pública), luego con tester (4.º reportador)                 |
+| **E**  | Cuenta extra (nº prueba) | Desechable: suspensión, ban, eliminar cuenta                                                                |
 
 Locales para las pruebas (todos en Madrid salvo que creéis uno donde estéis):
 
@@ -446,9 +586,9 @@ Locales para las pruebas (todos en Madrid salvo que creéis uno donde estéis):
 - **Local X** (físico, opcional): creado con las coordenadas del bar/casa donde os juntéis, para
   probar el check-in real a 150 m sin simulación.
 
-Apuntad los nombres exactos de los locales que uséis para deshacer todo al final (§9).
+Apuntad los nombres exactos de los locales que uséis para deshacer todo al final (§10).
 
-### 6.2 Checklist de preparación
+### 7.2 Checklist de preparación
 
 | ✔   | Paso                                                                                                                                                                          |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -461,15 +601,15 @@ Apuntad los nombres exactos de los locales que uséis para deshacer todo al fina
 | ☐   | Tarjetas Stripe TEST a mano: `4242 4242 4242 4242` (OK), `4000 0025 0000 3155` (3D Secure), `4000 0000 0000 9995` (fondos insuficientes); fecha futura, CVC y CP cualesquiera |
 | ☐   | Comprobar que ninguno de vosotros tiene ya una suscripción activa (Perfil › Premium › Mi suscripción); una de las cuentas tiene 9 entitlements de pruebas anteriores          |
 | ☐   | Anotar la hora: «Esta Noche Voy» es de 18:00 a 06:00 (los testers pueden fuera de hora); listas válidas hasta las 06:00                                                       |
-| ☐   | Hoja compartida de incidencias (plantilla en §9)                                                                                                                              |
+| ☐   | Hoja compartida de incidencias (plantilla en §10)                                                                                                                             |
 
 ---
 
-## 7. Casos de prueba E2E
+## 8. Casos de prueba E2E
 
 Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anotad incidencias.
 
-### 7.1 Web pública (sin sesión) — cualquiera, en una ventana de incógnito
+### 8.1 Web pública (sin sesión) — cualquiera, en una ventana de incógnito
 
 | ID     | Pasos                                                                            | Resultado esperado                                                                               |
 | ------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
@@ -482,7 +622,7 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | PUB-07 | Cambiar idioma (pie público)                                                     | Todo en inglés y vuelta a español                                                                |
 | PUB-08 | Ruta inexistente `/xyz`                                                          | Página 404                                                                                       |
 
-### 7.2 Alta y acceso — cuenta D (y E)
+### 8.2 Alta y acceso — cuenta D (y E)
 
 | ID     | Pasos                                                   | Resultado esperado                                                                              |
 | ------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
@@ -502,7 +642,7 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | ALT-14 | Perfil › Ajustes › Cuenta: añadir/cambiar email         | «Te hemos enviado un enlace…»; email usado por otra cuenta → «Ese email ya está en otra cuenta» |
 | ALT-15 | Perfil › Documentos firmados                            | Aparecen los documentos y el PDF                                                                |
 
-### 7.3 Usuario normal sin tester — cuenta D antes de darle tester
+### 8.3 Usuario normal sin tester — cuenta D antes de darle tester
 
 | ID     | Pasos                                                         | Resultado esperado                                                                      |
 | ------ | ------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -514,7 +654,7 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | NOR-06 | Perfil                                                        | No aparece «Admin»                                                                      |
 | NOR-07 | A: Admin › Usuarios › D › «Dar tester»; D recarga             | D ya ve el checkout y puede verificarse                                                 |
 
-### 7.4 Verificaciones — D (ya tester), E, A/B/C para revisar
+### 8.4 Verificaciones — D (ya tester), E, A/B/C para revisar
 
 | ID     | Pasos                                                                         | Resultado esperado                                                                      |
 | ------ | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -530,7 +670,7 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | VER-10 | C: Identidad verificada › consentimiento › simulación Aprobado                | «Identidad verificada»; nunca se muestra nombre real ni DNI                             |
 | VER-11 | Admin › Herramientas › «Webhook de Yoti» (sobre una cuenta sin verificar)     | Marca la edad como verificada                                                           |
 
-### 7.5 Explorar — cualquiera
+### 8.5 Explorar — cualquiera
 
 | ID     | Pasos                                                                       | Resultado esperado                                                         |
 | ------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
@@ -545,7 +685,7 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | EXP-09 | Marcar favorito y quitarlo                                                  | Aparece/desaparece en Inicio › Tus locales favoritos; persiste al recargar |
 | EXP-10 | Cambiar de tema en Perfil › Temas (los 5) y «Reducir movimiento»            | Cambio instantáneo; con reducir movimiento solo fundidos                   |
 
-### 7.6 Presencia en directo — A, B, C en el mismo local (P o X)
+### 8.6 Presencia en directo — A, B, C en el mismo local (P o X)
 
 | ID     | Pasos                                                                                                          | Resultado esperado                                                                     |
 | ------ | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -560,21 +700,21 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | PRE-09 | B activa modo discreto y hace check-in                                                                         | Cuenta en las estadísticas pero no sale en «Aquí Ahora» de A ni C                      |
 | PRE-10 | D sin edad verificada hace check-in                                                                            | «Check-in invisible hasta que verifiques tu edad»                                      |
 
-### 7.7 «Cómo está ahora», Vibe Check y objetos perdidos — A, B, C con check-in en P
+### 8.7 «Cómo está ahora», Vibe Check y objetos perdidos — A, C y D con check-in en P; B es el titular
 
 | ID     | Pasos                                                                                   | Resultado esperado                                                        |
 | ------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | VIV-01 | Sin check-in: abrir «Cómo está ahora»                                                   | «Haz check-in aquí para responder»                                        |
-| VIV-02 | A, B y C responden Gente/Cola/Música                                                    | Con 1-2 votos «Aún pocos votos»; con 3, porcentajes                       |
+| VIV-02 | A, C y D (D con «Simular») responden Gente/Cola/Música                                  | Con 1-2 votos «Aún pocos votos»; con 3, porcentajes                       |
 | VIV-03 | Cambiar una respuesta                                                                   | Se actualiza sin duplicar                                                 |
-| VIV-04 | El titular del local intenta votar en su local                                          | «Gestionas este local: no puedes votar en él»                             |
+| VIV-04 | B (titular de P) intenta votar en P                                                     | «Gestionas este local: no puedes votar en él»                             |
 | VIV-05 | Titular guarda estilos y line-up (F-L3)                                                 | En la ficha: «El local dice: …» y «Esta noche: …» junto a «La gente dice» |
 | VIV-06 | Vibe Check: votar y cambiar                                                             | Resultado agregado                                                        |
 | VIV-07 | Objetos perdidos: publicar (> 280 caracteres y luego normal), responder, editar, borrar | Rechaza > 280; el resto funciona                                          |
 | VIV-08 | D (sin check-in en las últimas 12 h) intenta publicar                                   | «Necesitas haber hecho check-in aquí en las últimas 12 horas»             |
 | VIV-09 | Admin › Herramientas › «Adelantar caducidades»                                          | Caducan check-ins y objetos perdidos de prueba                            |
 
-### 7.8 Eventos — A crea, B y C confirman, D/E reportan
+### 8.8 Eventos — A crea, B y C confirman, D/E reportan
 
 | ID     | Pasos                                                                    | Resultado esperado                                                           |
 | ------ | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
@@ -589,7 +729,7 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | EVT-09 | Titular publica «Evento oficial» desde el panel                          | Sale como «Oficial» y «Organizado por el local» sin confirmaciones           |
 | EVT-10 | Herramientas › «Importar eventos de prueba» (requiere locales de prueba) | 3 eventos «Confirmado» de «Agenda pública», solo visibles para testers       |
 
-### 7.9 Ligar — B y C (y A), con preferencias compatibles
+### 8.9 Ligar — B y C (y A), con preferencias compatibles
 
 | ID     | Pasos                                                                                                     | Resultado esperado                                                                 |
 | ------ | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -616,7 +756,7 @@ Formato: **ID · Quién · Pasos → Resultado esperado**. Marcad ✅/❌ y anot
 | LIG-21 | Ver el perfil de otra persona (`/people/:id`) y el Anthem (Perfil › Anthem: guardar y reproducir muestra) | Perfil con badges; muestra sintética reproducible                                  |
 | LIG-22 | Ver «Has visto a todos los de aquí»                                                                       | Estado vacío con lugares cercanos con gente                                        |
 
-### 7.10 Premium y pagos (Stripe TEST) — A, B, C
+### 8.10 Premium y pagos (Stripe TEST) — A, B, C
 
 Cada compra: Confirmar compra (comprobar precio, IVA, renovación, condiciones y casilla «Quiero
 empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retorno «Confirmando el pago» →
@@ -654,7 +794,7 @@ empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retor
 | PAY-28 | A     | Flags: `paywall_visibility = hidden` y luego `coming_soon` (con D sin tester, o mirando «Paywall resultante para ti») | «Todo gratis por ahora» / «Próximamente»                                                                 |
 | PAY-29 | A     | Admin › Pagos › Eventos de pago                                                                                       | Cada webhook aparece una vez (idempotencia)                                                              |
 
-### 7.11 Seguridad y moderación — B, C, D reportan; E es el objetivo
+### 8.11 Seguridad y moderación — B, C, D reportan; E es el objetivo
 
 | ID     | Pasos                                                                                               | Resultado esperado                                                                          |
 | ------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -671,7 +811,7 @@ empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retor
 | SEG-11 | SOS: añadir 3 contactos (un 4.º no se permite), quitar uno, «Avisar a un contacto», «Llamar al 112» | Comparte el texto o lo copia; abre la llamada (no completarla)                              |
 | SEG-12 | Formulario público de contenido ilegal (PUB-04) → Admin › Moderación                                | Aparece el aviso DSA                                                                        |
 
-### 7.12 Privacidad y derechos — D y E
+### 8.12 Privacidad y derechos — D y E
 
 | ID     | Pasos                                                         | Resultado esperado                                                                                                     |
 | ------ | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -681,7 +821,7 @@ empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retor
 | PRI-04 | Cerrar todas las sesiones                                     | Sale en todos los dispositivos                                                                                         |
 | PRI-05 | **E**: Eliminar mi cuenta › código › Eliminar definitivamente | Cuenta borrada; matches/mensajes desaparecen para los demás; suscripciones Stripe canceladas; no puede volver a entrar |
 
-### 7.13 Local por claim — C reclama el local R, A aprueba
+### 8.13 Local por claim — C reclama el local R, A aprueba
 
 | ID     | Pasos                                                                           | Resultado esperado                                                                        |
 | ------ | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
@@ -693,7 +833,7 @@ empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retor
 | CLA-06 | C: Ficha (descripción, horario, precio) › guardar                               | Se ve en la ficha pública de R                                                            |
 | CLA-07 | C: Estadísticas con < 5 personas y tras «Llenar» (si es local de prueba)        | Sin edad/semáforo por debajo de 5                                                         |
 
-### 7.14 Escaparate del local — titular de P o R
+### 8.14 Escaparate del local — titular de P o R
 
 | ID     | Pasos                                                                           | Resultado esperado                                                       |
 | ------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -706,7 +846,7 @@ empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retor
 | ESC-07 | Ficha del local: dress code, edad mínima, entrada 0 €, copa, terraza, accesible | Chips en la ficha («Entrada gratis», «Terraza»…)                         |
 | ESC-08 | Resultados: B y C abren la ficha, marcan «Voy» y hacen check-in                 | Con < 5 «Menos de 5»; las vistas del propio gestor no cuentan            |
 
-### 7.15 Patrocinio, Flash Alerts y Estadísticas Pro — titular de R (C), clientes A/B/D
+### 8.15 Patrocinio, Flash Alerts y Estadísticas Pro — titular de R (C), clientes A/B/D
 
 | ID     | Pasos                                                                                                                      | Resultado esperado                                                                                           |
 | ------ | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -720,12 +860,12 @@ empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retor
 | SPO-08 | 4.º patrocinio de pago en Madrid con 3 activos                                                                             | Sin plaza disponible («No se ha podido abrir el pago…»)                                                      |
 | SPO-09 | Flag `sponsorship_self_service_enabled = off` › solicitar › Admin › Patrocinios › Activar con nº de factura; volver a `on` | «Te enviaremos la factura…» → activo con origen factura                                                      |
 | SPO-10 | C: Estadísticas Pro › contratar › Stripe                                                                                   | «Estadísticas Pro activas»: por hora/edad/semáforo, comparativa 5 km, evolución por noche                    |
-| SPO-11 | B (encargado de R, tras EQU-x) abre la gestión de Pro                                                                      | «La suscripción la gestiona la cuenta que la contrató»                                                       |
+| SPO-11 | C invita a B como encargado de R (Equipo); B abre la gestión de Pro                                                        | «La suscripción la gestiona la cuenta que la contrató»                                                       |
 | SPO-12 | C: «Gestionar suscripción Pro» › Portal › cancelar                                                                         | Mantiene el acceso hasta fin de periodo                                                                      |
 | SPO-13 | C intenta desistir de un patrocinio en Mi suscripción                                                                      | Sin botón de desistimiento (B2B)                                                                             |
 | SPO-14 | Resultados de R tras el patrocinio/Flash                                                                                   | Fila del patrocinio con «Durante / Mismos días antes» y fila del Flash                                       |
 
-### 7.16 Partners, contratos, invitaciones y equipo — A admin, B titular de P, C encargado
+### 8.16 Partners, contratos, invitaciones y equipo — A admin, B titular de P, C encargado
 
 | ID     | Pasos                                                                                                     | Resultado esperado                                                                                                                                              |
 | ------ | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -748,9 +888,10 @@ empezar ya…» obligatoria) › Stripe Checkout › tarjeta `4242…` › retor
 | EQU-07 | A: Anular una invitación pendiente de titular                                                             | Estado «Anulada»; su enlace deja de valer                                                                                                                       |
 | PAR-11 | A: Terminar el contrato                                                                                   | Desaparecen las ventajas de contrato; las fotos por encima de 3 se ocultan (no se borran)                                                                       |
 
-### 7.17 Reservas y lista de invitados con QR — titular/encargado de P en la puerta, A/C/D clientes
+### 8.17 Reservas y lista de invitados con QR — B (titular de P) en la puerta, A/C/D clientes
 
-Recomendado: el que hace de **portero con un Android** (Chrome) para escanear; un cliente con
+C tiene que haber dejado de ser encargado de P (EQU-06); si no, el sistema no le deja reservar
+ni apuntarse en P. Recomendado: el que hace de **portero con un Android** (Chrome) para escanear; un cliente con
 iPhone para enseñar el QR.
 
 | ID     | Pasos                                                                                                                | Resultado esperado                                                                   |
@@ -781,7 +922,7 @@ iPhone para enseñar el QR.
 | RES-24 | D sin edad verificada intenta reservar                                                                               | «Para reservar o apuntarte a una lista necesitas la edad verificada»                 |
 | RES-25 | Privacidad › Descargar mis datos (A)                                                                                 | Incluye reservas y entradas sin el código                                            |
 
-### 7.18 Admin y configuración — A (y B como segundo admin)
+### 8.18 Admin y configuración — A (y B como segundo admin)
 
 | ID     | Pasos                                                                    | Resultado esperado                                               |
 | ------ | ------------------------------------------------------------------------ | ---------------------------------------------------------------- |
@@ -797,7 +938,7 @@ iPhone para enseñar el QR.
 | ADM-10 | Configuración › Proveedores                                              | Consumo de Mapbox («N / 1000 reservas este mes»)                 |
 | ADM-11 | Herramientas › Purgar datos de prueba (al final)                         | Desaparecen solo los datos `is_test`; vuestros perfiles intactos |
 
-### 7.19 PWA, dispositivos y app Android (opcional)
+### 8.19 PWA, dispositivos y app Android (opcional)
 
 | ID     | Pasos                                                                                                 | Resultado esperado                                       |
 | ------ | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -810,43 +951,45 @@ iPhone para enseñar el QR.
 
 ---
 
-## 8. Guion de una «noche de pruebas»
+## 9. Guion de una «noche de pruebas»
 
 Propuesta para hacerlo en 2 sesiones con los 3 socios juntos (en el mismo bar = local X) y las
 cuentas D y E en un móvil/portátil extra. Tiempo estimado: 3-4 h cada sesión.
 
 **Sesión 1 (tarde, 18:00-22:00) — cuentas, local y verificación**
 
-1. (15 min) Preparación §6.2: números de prueba D/E, TOTP de A/B/C, preferencias y ciudad.
-2. (20 min) Web pública 7.1 y alta de D y E (7.2). D comprueba 7.3 sin tester; A le da tester.
-3. (30 min) Verificaciones 7.4: D por Veriff real (antes del 16/10), E por simulación con
+1. (15 min) Preparación §7.2: números de prueba D/E, TOTP de A/B/C, preferencias y ciudad.
+2. (20 min) Web pública 8.1 y alta de D y E (8.2). D comprueba 8.3 sin tester; A le da tester.
+3. (30 min) Verificaciones 8.4: D por Veriff real (antes del 16/10), E por simulación con
    rechazo + revisión humana; B foto; C identidad.
-4. (20 min) A crea el local X con las coordenadas del bar (ADM-09). Partners 7.16: A crea
+4. (20 min) A crea el local X con las coordenadas del bar (ADM-09). Partners 8.16: A crea
    empresa + P (= X) + contrato; B canjea como titular; C entra como encargado (EQU).
-5. (20 min) C reclama R (7.13); A rechaza y luego aprueba.
-6. (40 min) Escaparate 7.14 en P y R; patrocinio Destacado de R y Pro (7.15) con tarjetas TEST.
-7. (30 min) Explorar 7.5 y eventos 7.8 (A crea, B y C confirman).
+5. (20 min) C reclama R (8.13); A rechaza y luego aprueba.
+6. (40 min) Escaparate 8.14 en P y R; patrocinio Destacado de R y Pro (8.15) con tarjetas TEST.
+7. (30 min) Explorar 8.5 y eventos 8.8 (A crea, B y C confirman).
+8. (30 min) Acceso §6.7: emails de A/B/C confirmados, login por email, TOTP en Admin y, con el
+   móvil Android que tenga la app, todos los casos de biometría (AUT-14 a AUT-24).
 
 **Sesión 2 (noche, 22:00-02:00) — la noche en directo**
 
-1. (20 min) Presencia 7.6 en X sin simular: A, B y C hacen check-in de verdad; D sigue desde
+1. (20 min) Presencia 8.6 en X sin simular: A, B y C hacen check-in de verdad; D sigue desde
    casa con «Simular» y mira cómo cambian los contadores.
-2. (20 min) «Cómo está ahora», Vibe Check y objetos perdidos 7.7.
-3. (40 min) Ligar 7.9: B y C hacen match a la vez, chat, semáforos, bloqueo; A agota likes.
-4. (40 min) Premium 7.10: A Pase, B VIP (Chispa a C, Foco en X, mensaje directo), C pase de una
+2. (20 min) «Cómo está ahora», Vibe Check y objetos perdidos 8.7.
+3. (40 min) Ligar 8.9: B y C hacen match a la vez, chat, semáforos, bloqueo; A agota likes.
+4. (40 min) Premium 8.10: A Pase, B VIP (Chispa a C, Foco en X, mensaje directo), C pase de una
    noche y Chispas con desistimiento; códigos promo para D.
-5. (30 min) Reservas y puerta 7.17: B (titular) abre lista «Entrada gratis antes de la 1:30»;
+5. (30 min) Reservas y puerta 8.17: B (titular) abre lista «Entrada gratis antes de la 1:30»;
    A, C y D se apuntan; B escanea en la puerta con Android; iPhone teclea; repetición rechazada.
-6. (20 min) Top + Flash Alert en R (7.15) visto por quien tiene consentimiento.
-7. (30 min) Seguridad 7.11 con E (3 strikes con B, C y D; apelación; ban y levantar) y
-   privacidad 7.12 (D exporta; E se elimina al final).
-8. (15 min) Admin 7.18 y limpieza §9.
+6. (20 min) Top + Flash Alert en R (8.15) visto por quien tiene consentimiento.
+7. (30 min) Seguridad 8.11 con E (3 strikes con B, C y D; apelación; ban y levantar) y
+   privacidad 8.12 (D exporta; E se elimina al final).
+8. (15 min) Admin 8.18 y limpieza §10.
 
 ---
 
-## 9. Limpieza y registro de incidencias
+## 10. Limpieza y registro de incidencias
 
-### 9.1 Limpieza tras las pruebas
+### 10.1 Limpieza tras las pruebas
 
 | Qué                                              | Cómo                                                                       |
 | ------------------------------------------------ | -------------------------------------------------------------------------- |
@@ -863,7 +1006,7 @@ cuentas D y E en un móvil/portátil extra. Tiempo estimado: 3-4 h cada sesión.
 | Cuenta D / E                                     | E eliminada en PRI-05; D eliminar o quitar tester; levantar bans de prueba |
 | Números de prueba de Auth                        | Quitarlos antes del lanzamiento (PRD 6.14)                                 |
 
-### 9.2 Plantilla de incidencia
+### 10.2 Plantilla de incidencia
 
 ```text
 ID del caso:        (p. ej. LIG-06)
