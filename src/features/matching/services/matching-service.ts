@@ -22,7 +22,21 @@ export type ReportReason =
  * Port for likes and matches. Mutual-like detection, limits and blocks run on the
  * server (Block 8); the client never decides a match.
  */
+/** Block 11b: travel mode (Pass benefit), validated server-side. */
+export interface TravelState {
+  enabled: boolean
+  entitled: boolean
+  homeCity: string | null
+  city: string | null
+  endsAt: string | null
+  active: boolean
+}
+export type TravelError = 'disabled' | 'premium_required' | 'invalid' | 'same_city'
+
 export interface MatchingService {
+  travelState?(): Promise<TravelState>
+  setTravel?(city: string, days: number): Promise<Result<TravelState, TravelError>>
+  clearTravel?(): Promise<TravelState>
   likesSnapshot?(): Promise<{ count: number; profiles: PublicProfile[]; snapshotId: string }>
   markLikesSeen?(snapshotId: string): Promise<void>
   sponsoredCards?(placeId: string | null): Promise<{ id: string; name: string }[]>

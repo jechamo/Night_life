@@ -108,7 +108,10 @@ export default defineConfig(({ mode }) => {
               },
               { name: 'vendor-map', test: /node_modules[\\/]mapbox-gl[\\/]/ },
               // Block 11: Capacitor plugins load only inside the native shell.
-              { name: 'vendor-native', test: /node_modules[\\/](@capacitor|@aparajita)[\\/]/ },
+              {
+                name: 'vendor-native',
+                test: /node_modules[\\/](@capacitor|@aparajita|@revenuecat)[\\/]/,
+              },
               { name: 'vendor-ui', test: /node_modules[\\/]/ },
             ],
           },

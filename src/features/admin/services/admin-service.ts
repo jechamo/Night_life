@@ -148,12 +148,30 @@ export interface AdminService {
   // Roadmap R4: moderation of venue photos (role + aal2, audited).
   venuePhotos(status: PhotoStatus): Promise<AdminVenuePhoto[]>
   reviewVenuePhoto(photoId: string, approve: boolean, reason?: string): Promise<void>
+  /** Block 11b: RevenueCat Test Store catalogue vs `plans` and key permissions (read-only). */
+  storeCatalog?(): Promise<StoreCatalogReport>
   /** `mock` = simulated back-office (roles can be simulated); `live` = Supabase. */
   readonly mode: 'mock' | 'live'
   /** Second factor (TOTP, PRD 6.12 E): enrolment and the level of this session. */
   mfaStatus(): Promise<{ enrolled: boolean; verified: boolean }>
   enrollMfa(): Promise<{ qrCode: string; secret: string; uri: string }>
   verifyMfa(code: string): Promise<boolean>
+}
+
+export interface StoreCatalogRow {
+  code: string
+  storeId: string | null
+  priceCents: number
+  status: 'ok' | 'missing' | 'mismatch'
+}
+
+export interface StoreCatalogReport {
+  testStoreApp: { id: string; name: string } | null
+  sdkKeyConfigured: boolean
+  sdkKeyMatches: boolean
+  customers: 'ok' | 'denied' | 'error'
+  products: StoreCatalogRow[]
+  extra: string[]
 }
 
 export interface AdminVenuePhoto {

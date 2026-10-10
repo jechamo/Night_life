@@ -109,3 +109,14 @@ importe, moneda y periodo antes de abrir la sesión. No hay que crear productos 
 - ❌ Datos legales finales, fiscalidad, contratos y aprobación de costes.
 - ❌ SMTP real y conciliación operativa de extremo a extremo.
 - ✅ Arquitectura test y retirada documentadas; no se activó live en este bloque.
+
+## Tiendas (RevenueCat) — preparado en el Bloque 11b
+
+Hoy solo Test Store (`payments_mode=test`, testers). Para live: cuentas de Apple y Google,
+productos con los identificadores de [STORE_CATALOG.md](./STORE_CATALOG.md), apps de App Store
+y Play en RevenueCat con sus claves públicas (secretos nuevos en Supabase, nunca en el repo),
+webhook de producción con su propia cabecera, revisión fiscal/precios y, con OK del
+propietario, `payments_mode=live`. Retirada: apagar `store_payments_enabled` (la app vuelve a
+«Próximamente»; las ventajas ya concedidas siguen el estado de la tienda vía webhook).
+
+- ❌ Productos live, claves live de RevenueCat y prueba con sandbox de Apple/Google.

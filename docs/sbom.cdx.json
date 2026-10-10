@@ -5,7 +5,7 @@
   "serialNumber": "urn:uuid:***",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-10-10T09:15:31.543Z",
+    "timestamp": "2026-10-10T16:06:22.409Z",
     "lifecycles": [
       {
         "phase": "build"
@@ -9443,6 +9443,86 @@
         {
           "alg": "SHA-512",
           "content": "733746256874f4b6a9bdcaaded56f4f4a96b5363e1449f3141a23e008b53b83f5a0c9e4c020c674b7f259f2b3a2e5fba44912a3e2694a93c0842154bc05beffb"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@revenuecat/purchases-capacitor@13.7.3",
+      "type": "library",
+      "name": "@revenuecat/purchases-capacitor",
+      "version": "13.7.3",
+      "scope": "required",
+      "author": "RevenueCat, Inc.",
+      "description": "Capacitor in-app purchases and subscriptions made easy. Support for iOS and Android.",
+      "purl": "pkg:npm/%40revenuecat/purchases-capacitor@13.7.3",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@revenuecat/purchases-capacitor/-/purchases-capacitor-13.7.3.tgz"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/RevenueCat/purchases-capacitor.git"
+        },
+        {
+          "type": "issue-tracker",
+          "url": "https://github.com/RevenueCat/purchases-capacitor/issues"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "1ea036bb18d4a1a091f9af0c61fb6cfebfb887e5a9088691302927040b3571df7e5ce93a16dff9a8a7bf0f44a60cc193a6848dd70d2a00abc9bbc15fa24c0b85"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "bom-ref": "@revenuecat/purchases-typescript-internal-esm@19.10.0",
+      "type": "library",
+      "name": "@revenuecat/purchases-typescript-internal-esm",
+      "version": "19.10.0",
+      "scope": "required",
+      "author": "RevenueCat, Inc.",
+      "description": "Typescript code to be used by RevenueCat's hybrid SDKs. Not meant for external usage.",
+      "purl": "pkg:npm/%40revenuecat/purchases-typescript-internal-esm@19.10.0",
+      "properties": [],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://registry.npmjs.org/@revenuecat/purchases-typescript-internal-esm/-/purchases-typescript-internal-esm-19.10.0.tgz"
+        },
+        {
+          "type": "vcs",
+          "url": "git+https://github.com/RevenueCat/purchases-hybrid-common.git"
+        },
+        {
+          "type": "website",
+          "url": "https://github.com/RevenueCat/purchases-hybrid-common#readme"
+        },
+        {
+          "type": "issue-tracker",
+          "url": "https://github.com/RevenueCat/purchases-hybrid-common/issues"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "a4893d3facf3b52258677f0053144d9aebca1a1c28ea62447f3c70da9a05411f0da7992751b58fc001c12cd8349d60e5fbe4414dc1f1bda89b9d4853bce9116e"
         }
       ],
       "licenses": [
@@ -29266,6 +29346,7 @@
         "@capacitor/preferences@8.0.1",
         "@capacitor/share@8.0.3",
         "@hookform/resolvers@5.9.1",
+        "@revenuecat/purchases-capacitor@13.7.3",
         "@supabase/supabase-js@2.117.2",
         "@tanstack/react-query@5.104.1",
         "class-variance-authority@0.7.1",
@@ -31126,6 +31207,17 @@
     },
     {
       "ref": "@remix-run/route-pattern@0.22.1",
+      "dependsOn": []
+    },
+    {
+      "ref": "@revenuecat/purchases-capacitor@13.7.3",
+      "dependsOn": [
+        "@capacitor/core@8.5.3",
+        "@revenuecat/purchases-typescript-internal-esm@19.10.0"
+      ]
+    },
+    {
+      "ref": "@revenuecat/purchases-typescript-internal-esm@19.10.0",
       "dependsOn": []
     },
     {

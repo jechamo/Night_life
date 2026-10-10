@@ -47,6 +47,8 @@ export type WithdrawalError =
   | 'ended'
   | 'business'
   | 'already_refunded'
+  /** Store purchases are refunded by the store, never by our own withdrawal (Block 11b). */
+  | 'store'
   | 'not_found'
   | 'not_paid'
   | 'not_eligible'
@@ -66,6 +68,16 @@ export interface ImmediateStartConsent {
   immediateStart: true
 }
 export type RedeemError = 'invalid' | 'expired' | 'used' | 'rate_limited'
+/** Block 11b: native store purchases (RevenueCat; Test Store while testing). */
+export interface StoreConfig {
+  apiKey: string
+  /** The signed-in account id: the store's app user id, so purchases stay with it. */
+  userId: string
+  mode: 'test' | 'live'
+  /** Product code → store product identifier (server-side catalogue). */
+  products: Partial<Record<ProductCode, string>>
+}
+export type StoreServiceError = 'store_disabled' | 'rate_limited' | 'unavailable'
 export type PaidDmError = 'disabled' | 'no_credits' | 'red_light'
 
 /**
@@ -104,4 +116,14 @@ export interface PremiumService {
   redeem(code: string): Promise<Result<{ productCode: ProductCode; days: number }, RedeemError>>
   setNotifyMe(on: boolean): Promise<PremiumState>
   sendPaidDm(personId: string, text: string): Promise<Result<void, PaidDmError>>
+  /** Block 11b: SDK key and product map for the native store (testers while in TEST). */
+  storeConfig?(): Promise<Result<StoreConfig, StoreServiceError>>
+  /** Re-reads this account's store purchases on the server and applies them. */
+  syncStore?(): Promise<Result<PremiumState, StoreServiceError>>
+  /** Reserves a venue purchase (slot, dates) before paying in the store. */
+  startStoreVenueOrder?(
+    code: VenueProductCode,
+    venueId: string,
+    from?: string,
+  ): Promise<Result<{ productIdentifier: string }, PurchaseError>>
 }

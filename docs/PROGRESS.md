@@ -1,5 +1,22 @@
 # Progreso — Nightlife Connect
 
+## Integración de 11b y ampliación de QA manual — 10/10/2026
+
+El Bloque 11a está fusionado en `main` por el PR #8 (`32eaa44`). Revisión del PR #10:
+Quality se detenía en el formato de `docs/sbom.cdx.json`; SonarCloud señalaba un 8,5 % de
+duplicación en las tres versiones sucesivas de `private.store_apply` de las migraciones
+de 11b. Se formatea el SBOM sin cambiar su contenido JSON y se configura
+`.sonarcloud.properties` para excluir solo esos tres archivos de la detección de copia/pega,
+conservando las migraciones ya aplicadas y su análisis de errores y seguridad.
+
+La [guía E2E](./GUIA_PRUEBAS_E2E.md) incorpora preparación de flags, catálogo y APK actualizado,
+13 casos de Modo viaje y 17 casos de compras nativas, además de la repetición de pagos Stripe
+en navegador/PWA móvil. Distingue las comprobaciones automáticas de la prueba física pendiente,
+incluye restauración e idempotencia, cambio de cuenta, permisos de locales y limpieza.
+El propietario confirma el catálogo de RevenueCat creado; quedan su comprobación desde
+Admin, cotejo de precios y compra/restauración en dispositivo. iOS nativo y el sandbox real
+de Apple/Google no se dan por probados con Test Store ni con la web móvil.
+
 ## Informe funcional y guía de pruebas E2E en real — 10/10/2026
 
 Petición del propietario: inventario de funciones de cliente y de local, sus flujos y una guía
@@ -19,6 +36,74 @@ Safari/WebKit no expone `BarcodeDetector`; se teclea el código hasta decidir un
 plugin oficial. `npm run check` 545/545 · E2E 60/60.
 D4 resuelto: SMTP de Gmail en Supabase Auth y dos logins reales con código por email el 08/10
 (registros de Auth: `provider=email`, `login_method=otp`, 22:59 y 23:02 Madrid).
+
+## Bloque 11b — Compras en tiendas (RevenueCat Test Store) y Modo viaje — 10/10/2026
+
+Plan: [BLOCK11_PLAN.md](./BLOCK11_PLAN.md) (sección 11b). Catálogo y guía:
+[STORE_CATALOG.md](./STORE_CATALOG.md). Decisiones del propietario: clave secreta v2 con
+lectura y escritura, proyecto `proj1484f178`, `REVENUECAT_WEBHOOK_AUTH` y webhook creados por
+el propietario; todo el catálogo de pago (incluidos patrocinios y Pro de locales) en test y
+live, pero solo test activo hasta el Bloque 12.
+
+- **Cada dispositivo compra en su tienda:** web → Stripe (sin cambios); Android/iOS →
+  RevenueCat (`@revenuecat/purchases-capacitor` 13.7.3, PRD 3.5), hoy contra Test Store. La app
+  nativa nunca abre Stripe: con `store_payments_enabled` apagado, el pago muestra
+  «Próximamente», y `create-checkout-session` no admite orígenes nativos (CORS comprobado).
+- **Servidor como única verdad:** la app compra y pide `store` (`sync`); la función lee el
+  cliente en la API v2 de RevenueCat y aplica con `private.store_apply` (idempotente, refs
+  `rc:<id>`, solo `service_role`). El webhook (`revenuecat-webhook`, cabecera `Authorization`
+  en tiempo constante) no concede nada por su contenido: reconcilia desde la API. Datos live
+  ignorados antes del Bloque 12; en test, solo testers (`payments_audience`).
+- **Migraciones (5, aditivas):** `store_billing` (proveedor `test_store`, `plans.store_product_test`,
+  `store_apply/grant/revoke`, `store_access`, `store_start_venue_order`, desistimiento propio
+  negado a compras de tienda), `travel_mode`, dos correcciones de `store_apply` (restricción
+  `on conflict` por nombre y `price_id` = `proveedor:producto`) y `store_admin_and_limits`
+  (`store_admin_catalog` admin+MFA auditado, `store_sync_access` 60/h).
+- **Edge Functions nuevas:** `store` v2 (`config` | `sync`), `revenuecat-webhook` v1,
+  `store-admin` v1 (Admin › Pagos › «Comprobar catálogo»). Las de Stripe no cambian.
+- **App:** puerto `storeBilling` (web: no disponible; nativo: RevenueCat), compra en tienda en
+  el checkout, «Restaurar compras» en Premium, «gestionada en la tienda» en Mi suscripción,
+  compras de locales (patrocinios y Pro) con reserva previa, cierre de sesión que desvincula
+  RevenueCat. Textos ES/EN.
+- **Modo viaje** (`travel_mode_enabled`, ventaja `travel_mode` del Pase, VIP y una noche):
+  ciudad de lanzamiento distinta de la propia, 1–30 días, validada en servidor; el swipe, el
+  Foco y la exportación usan la ciudad efectiva. Tarjeta en Perfil.
+- **Catálogo:** 14 productos (Pases, VIP, una noche, Chispas, Foco, Mensaje directo,
+  patrocinios Destacado/Plus/Top y Estadísticas Pro). Contratos/partners se facturan fuera de
+  la app; extras del escaparate y reservas no se venden por separado. La API v2 no fija
+  precios de Test Store: se crean en el panel (guía) y la app los verifica.
+
+**Hecho cuando**
+
+- ✅ La web sigue con Stripe: `npm run check` (unitarias nuevas: `store-billing`,
+  `travel-mode`, `store-billing.native`, `scripts/revenuecat`) y prueba «la web no muestra
+  compra en tienda ni restaurar».
+- ✅ Nativo compra con el identificador del servidor y solo el servidor aplica; cancelar no
+  cobra ni cambia nada; restaurar pasa por el servidor; la gestión solo abre las páginas de
+  Apple/Google.
+- ✅ SQL en Supabase (transacción con rollback): `store.sql` 26/26, `travel.sql` 17/17,
+  `withdrawal.sql` 29/29, `matching.sql` 62/62, `premium-completion.sql` 45/45,
+  `bookings.sql` 49/49, `rls.sql` 38/38 (la aserción de auditoría de flags se acota a la
+  transacción: contaba 5 cambios reales del 08/10).
+- ✅ Edge Functions: 401 sin sesión/firma, CORS nativo exacto y orígenes ajenos rechazados.
+- ✅ `npm audit` 0 · SBOM 707 · Advisors sin avisos nuevos (34 INFO `private.*` por diseño,
+  incl. `travel_plans`; WARN conocido de contraseñas filtradas).
+- ✅ Android sincronizado (`launchMode=singleTop` que pide RevenueCat, lockfile de Gradle) e
+  iOS con `Package.resolved` fijado (RevenueCat incluido).
+- ⚠️ E2E: 57-58/60 en este PC; las 2-3 que fallan son siempre las primeras de cada worker
+  (`page.goto` > 60 s con el servidor Vite en frío) y pasan aisladas o con el servidor
+  caliente; 11b no cambia la ruta de desarrollo. CI (Linux) es la referencia.
+- ✅ Catálogo de Test Store creado en el panel, confirmado por el propietario el 10/10.
+- ❌ Comprobar catálogo y precios, y compra/restauración reales en emulador o dispositivo:
+  pendientes de ejecutar según la guía E2E (§7.3 y §8.21).
+- ❌ Compras live (App Store/Google Play): Bloque 12, con cuentas de desarrollador.
+
+**Cómo probarlo:** con los 14 productos creados según [STORE_CATALOG.md](./STORE_CATALOG.md), en
+Admin › Pagos pulsar «Comprobar catálogo» (todo «Correcto»); encender `store_payments_enabled`
+(y `travel_mode_enabled` para el Modo viaje) en Admin › Flags; `npm run cap:sync` y ejecutar
+en el emulador con una cuenta tester; Premium › Pase › «Suscribirme en la tienda de pruebas»
+→ hoja de Test Store → ventajas activas; «Restaurar compras»; Perfil › Modo viaje. En web,
+el mismo flujo sigue yendo a Stripe.
 
 ## Bloque 11a — App nativa con Capacitor y desbloqueo biométrico — 10/10/2026
 

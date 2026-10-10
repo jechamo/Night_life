@@ -1123,6 +1123,7 @@ export type Database = {
           price_cents: number
           stripe_price_id_live: string | null
           stripe_price_id_test: string | null
+          store_product_test: string | null
         }
         Insert: {
           active?: boolean
@@ -1139,6 +1140,7 @@ export type Database = {
           price_cents: number
           stripe_price_id_live?: string | null
           stripe_price_id_test?: string | null
+          store_product_test?: string | null
         }
         Update: {
           active?: boolean
@@ -1155,6 +1157,7 @@ export type Database = {
           price_cents?: number
           stripe_price_id_live?: string | null
           stripe_price_id_test?: string | null
+          store_product_test?: string | null
         }
         Relationships: []
       }
@@ -1304,9 +1307,11 @@ export type Database = {
           paid_at: string | null
           plan_code: string
           price_id: string
+          provider: string
           provider_payment_intent_id: string | null
           provider_session_id: string | null
           provider_subscription_id: string | null
+          store_transaction_id: string | null
           refunded_at: string | null
           refunded_cents: number | null
           simulated: boolean
@@ -1324,9 +1329,11 @@ export type Database = {
           paid_at?: string | null
           plan_code: string
           price_id: string
+          provider?: string
           provider_payment_intent_id?: string | null
           provider_session_id?: string | null
           provider_subscription_id?: string | null
+          store_transaction_id?: string | null
           refunded_at?: string | null
           refunded_cents?: number | null
           simulated?: boolean
@@ -1344,9 +1351,11 @@ export type Database = {
           paid_at?: string | null
           plan_code?: string
           price_id?: string
+          provider?: string
           provider_payment_intent_id?: string | null
           provider_session_id?: string | null
           provider_subscription_id?: string | null
+          store_transaction_id?: string | null
           refunded_at?: string | null
           refunded_cents?: number | null
           simulated?: boolean
@@ -2403,7 +2412,18 @@ export type Database = {
         Args: { p_level: string; p_outcome: string }
         Returns: Json
       }
+      store_access: { Args: never; Returns: Json }
+      store_admin_catalog: { Args: never; Returns: Json }
+      store_apply: { Args: { p: Json; p_user: string }; Returns: Json }
+      store_start_venue_order: {
+        Args: { p_code: string; p_from?: string; p_venue: string }
+        Returns: Json
+      }
+      store_sync_access: { Args: never; Returns: Json }
       submit_illegal_content_notice: { Args: { p: Json }; Returns: string }
+      travel_clear: { Args: never; Returns: Json }
+      travel_set: { Args: { p_city: string; p_days: number }; Returns: Json }
+      travel_state: { Args: never; Returns: Json }
       update_my_profile: { Args: { p: Json }; Returns: undefined }
       update_venue_details: {
         Args: { p: Json; p_venue: string }

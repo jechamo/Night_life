@@ -44,6 +44,7 @@ const withdrawalErrorSchema = z.enum([
   'ended',
   'business',
   'already_refunded',
+  'store',
   'not_found',
   'not_paid',
   'not_eligible',
@@ -69,7 +70,7 @@ export const premiumStateSchema = z.object({
     .object({
       id: z.string(),
       productCode: productCodeSchema,
-      provider: z.enum(['stripe', 'apple', 'google']),
+      provider: z.enum(['stripe', 'apple', 'google', 'test_store']),
       status: z.enum(['active', 'cancel_at_period_end', 'withdrawn', 'expired', 'past_due']),
       startedAt: z.string(),
       currentPeriodEnd: z.string(),
@@ -91,6 +92,21 @@ export const premiumStateSchema = z.object({
   ),
   notifyMe: z.boolean(),
 })
+const storeConfigSchema = z.object({
+  apiKey: z.string().min(1),
+  userId: z.uuid(),
+  mode: z.enum(['test', 'live']),
+  products: z.record(productCodeSchema, z.string()),
+})
+
+/** Error body of a non-2xx Edge Function response (supabase-js keeps it in `context`). */
+async function invokeError(error: unknown): Promise<string | null> {
+  const context: unknown = (error as { context?: unknown } | null)?.context
+  if (!(context instanceof Response)) return null
+  const body = (await context.json().catch(() => null)) as { error?: unknown } | null
+  return typeof body?.error === 'string' ? body.error : null
+}
+
 export function createPremiumService(db: Db): PremiumService {
   const state = async () => premiumStateSchema.parse(must(await db.rpc('premium_state')))
   const manage = async (action: string) => {
@@ -182,6 +198,33 @@ export function createPremiumService(db: Db): PremiumService {
     },
     async setNotifyMe(on) {
       return premiumStateSchema.parse(must(await db.rpc('premium_notify', { p_on: on })))
+    },
+    async storeConfig() {
+      const r = await db.functions.invoke('store', { body: { action: 'config' } })
+      if (r.error)
+        return err(
+          (await invokeError(r.error)) === 'store_disabled' ? 'store_disabled' : 'unavailable',
+        )
+      const parsed = storeConfigSchema.safeParse(r.data)
+      return parsed.success ? ok(parsed.data) : err('unavailable')
+    },
+    async syncStore() {
+      const r = await db.functions.invoke('store', { body: { action: 'sync' } })
+      if (r.error) {
+        const code = await invokeError(r.error)
+        return err(code === 'store_disabled' || code === 'rate_limited' ? code : 'unavailable')
+      }
+      return ok(await state())
+    },
+    async startStoreVenueOrder(code, venueId, from) {
+      const r = await db.rpc('store_start_venue_order', {
+        p_code: code,
+        p_venue: venueId,
+        ...(from ? { p_from: from } : {}),
+      })
+      if (r.error) return err(r.error.code === '23505' ? 'already_subscribed' : 'gateway_error')
+      const parsed = z.object({ productIdentifier: z.string().min(1) }).safeParse(r.data)
+      return parsed.success ? ok(parsed.data) : err('gateway_error')
     },
     async sendPaidDm(personId, text) {
       const value = z

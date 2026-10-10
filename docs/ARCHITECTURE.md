@@ -2,6 +2,19 @@
 
 Documento vivo (PRD 3.4). Decisiones detalladas en [`adr/`](./adr).
 
+## Bloque 11b — compras en tiendas y Modo viaje
+
+Puerto `storeBilling` (`platform/store-billing`): web sin tienda (`available: false`); nativo
+con `@revenuecat/purchases-capacitor`. `features/premium/hooks/use-store.ts`
+(`useStoreBilling`, `useStoreProduct`, `useVenueCheckout`) une el puerto con
+`PremiumService.storeConfig/syncStore/startStoreVenueOrder` → `adapters/supabase/billing.ts`
+→ Edge Function `store` (`config` | `sync`) → `private.store_apply`. `StoreCheckout` y
+`RestorePurchasesButton` viven en premium; `ProSubscriptionCard` y `VenueDetailScreen`
+eligen Stripe o tienda con `useVenueCheckout`. `use-paywall-state` muestra «Próximamente» en
+nativo si el flag de tiendas está apagado. Admin: `StoreCatalogCard` → `store-admin`. Modo
+viaje: `MatchingService.travelState/setTravel/clearTravel` (`adapters/supabase/travel.ts`),
+`use-travel` y `TravelModeCard` en Perfil; la ciudad efectiva se resuelve en servidor.
+
 ## Bloque 11a — app nativa (Capacitor 8)
 
 `main.tsx` → `createPlatform()` (`app/create-platform.ts`) elige `createWebPlatform` o

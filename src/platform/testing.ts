@@ -2,6 +2,7 @@ import { err, ok } from '@/shared/lib/result'
 import { createWebDeepLinks } from './deep-links/deep-links.web'
 import type { Platform } from './platform'
 import { createMemoryPreferences } from './preferences/preferences.memory'
+import { createWebStoreBilling } from './store-billing/store-billing.web'
 
 /** Deterministic platform for unit/component tests. Override any service per test. */
 export function createFakePlatform(overrides: Partial<Platform> = {}): Platform {
@@ -66,6 +67,7 @@ export function createFakePlatform(overrides: Partial<Platform> = {}): Platform 
       createPreviewUrl: () => 'blob:test-preview',
       revokePreviewUrl: () => undefined,
     },
+    store: createWebStoreBilling(),
     ...overrides,
   }
 }

@@ -16,12 +16,14 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
 
+        <!-- singleTop (not singleTask): RevenueCat/Play Billing must not lose the purchase
+             activity during payment verification; links still arrive via onNewIntent. -->
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:exported="true">
 
             <intent-filter>

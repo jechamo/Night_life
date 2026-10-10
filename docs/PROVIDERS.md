@@ -11,7 +11,7 @@ Toda disponibilidad/caducidad se comprueba en la cuenta real antes de configurar
 | Mapas                | Mapbox existente dentro de las 50.000 cargas gratis, con límite propio (ADR 0010) | Mapa simulado y datos de Supabase                  |
 | Lugares              | Google Places desactivado (cuenta de pago, EEE); catálogo propio                  | Lugares de prueba en Supabase                      |
 | Pagos web            | Stripe sandbox/test                                                               | Compra y ventajas simuladas en Supabase            |
-| Pagos nativos        | RevenueCat Test Store                                                             | Compras y restauración simuladas en Supabase       |
+| Pagos nativos        | RevenueCat Test Store (integrado en 11b, sin ingresos reales)                     | Compras y restauración simuladas en Supabase       |
 | Anthem               | Spotify con cuenta ya elegible, sin contratar Premium                             | Canciones de prueba persistidas                    |
 | SMS                  | Prueba compatible y sin cargos; teléfonos de prueba de Auth                       | OTP de prueba de Supabase, sin fingir una sesión   |
 | Correo/push          | Cuentas gratuitas disponibles, correo actual del propietario                      | Resultado identificado como simulado y consultable |

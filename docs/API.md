@@ -157,3 +157,17 @@ por usuario para la IP); no se conserva IP en bruto.
 Canal `social:<user_id>` privado con SELECT solo para el dueño verificado y sin
 INSERT para clientes. Eventos: `match`, `message`, `read`, `typing`, `removed`,
 `refresh`. Los datos se vuelven a leer por RPC; la reconexión refresca la caché.
+
+## Implementado (Bloque 11b)
+
+| Función / RPC                                            | Propósito                                                     | Autorización                                                        | Límites                                  |
+| -------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------- |
+| Edge `store` `{action:"config"}`                         | Clave pública del SDK, id de cuenta, modo y mapa de productos | JWT; `store_payments_enabled`, `payments_mode=test`, acceso de pago | —                                        |
+| Edge `store` `{action:"sync"}`                           | Leer el cliente en RevenueCat (API v2) y aplicar              | JWT; mismas condiciones                                             | 60/h por persona y red                   |
+| Edge `revenuecat-webhook`                                | Aviso de RevenueCat → reconciliación desde la API             | Cabecera `Authorization` = `REVENUECAT_WEBHOOK_AUTH`                | 5 clientes por evento                    |
+| Edge `store-admin`                                       | Comprobar clave, permisos y catálogo de Test Store            | JWT admin + aal2 (vía `store_admin_catalog`), auditado              | Solo lectura en RevenueCat               |
+| `store_access`, `store_sync_access`                      | Condiciones de compra en tienda                               | Invocadas por `store` con el JWT del usuario                        | `store_sync_access` 60/h                 |
+| `store_start_venue_order(code, venue, from)`             | Reservar patrocinio/Pro antes de comprar en la tienda         | Gestor del local; cupos y fechas como Stripe                        | Mismas reglas que Stripe                 |
+| `store_apply(snapshot)`                                  | Aplicar suscripciones y compras de la tienda                  | Solo `service_role`                                                 | Idempotente (`rc:<id>`)                  |
+| `store_admin_catalog`                                    | Catálogo esperado para la comprobación                        | Admin + aal2, auditado                                              | —                                        |
+| `travel_state`, `travel_set(city, days)`, `travel_clear` | Modo viaje                                                    | Edad verificada; `set` exige flag y entitlement `travel_mode`       | 1–30 días; ciudades de lanzamiento; 20/h |

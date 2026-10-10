@@ -12,6 +12,7 @@ import type { NotificationsService } from './notifications/notifications'
 import type { PreferencesService } from './preferences/preferences'
 import type { SecureStorageService } from './secure-storage/secure-storage'
 import type { ShareService } from './share/share'
+import type { StoreBillingService } from './store-billing/store-billing'
 import type { PlatformRuntime } from './types'
 import type { AppUpdatesService } from './app-updates'
 import type { AppStateService } from './app-state/app-state'
@@ -39,4 +40,6 @@ export interface Platform {
   browser: InAppBrowserService
   files: FileDownloadService
   images: ImagesService
+  /** App Store / Google Play purchases (Block 11b). Unavailable on the web (Stripe there). */
+  store: StoreBillingService
 }

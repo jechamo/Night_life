@@ -136,3 +136,10 @@ las puertas jurídicas, fiscales, de proveedor y coste siguen en el bloque 12.
 4. Sin anuncios de terceros; tarjetas patrocinadas de locales en el swipe web
    adelantadas al cierre de 8/9 por solicitud expresa del propietario (05/10/2026).
 5. Todos los filtros gratis: se retira `advanced_filters`.
+
+### Bloque 11b — tiendas (10/10/2026)
+
+Implementada la decisión 1-2: un único catálogo (`plans`) para Stripe (web) y App Store /
+Google Play vía RevenueCat (hoy Test Store), con los mismos entitlements y créditos y la
+misma concesión en servidor. Productos e identificadores: [STORE_CATALOG.md](./STORE_CATALOG.md).
+Modo viaje disponible como ventaja del Pase, VIP y una noche (`travel_mode_enabled`).

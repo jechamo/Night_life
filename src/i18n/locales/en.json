@@ -1059,6 +1059,7 @@
           "ended": "This subscription has already ended.",
           "business": "Venue purchases are business-to-business and have no right of withdrawal. For any issue, write to us from Contact.",
           "already_refunded": "This purchase has already been refunded.",
+          "store": "This purchase is managed by the store (App Store or Google Play): request the refund from the store.",
           "not_found": "This purchase cannot be refunded.",
           "not_paid": "This purchase cannot be refunded.",
           "not_eligible": "This purchase cannot be refunded."
@@ -1223,6 +1224,40 @@
       "cta": "Direct message"
     },
     "seePlans": "See Premium",
+    "store": {
+      "names": {
+        "app_store": "App Store",
+        "play_store": "Google Play",
+        "test_store": "the test store"
+      },
+      "buy": "Buy on {{store}}",
+      "subscribe": "Subscribe on {{store}}",
+      "storePrice": "Store price: {{price}}",
+      "managedBy": "The purchase is handled by {{store}}: billing, renewal, cancellation and refunds happen there, under its terms.",
+      "testing": "Testing phase: nothing real is charged.",
+      "restore": "Restore purchases",
+      "restored": "Purchases restored.",
+      "done": "Purchase complete. Your benefits are active.",
+      "pending": "The payment is waiting for the store to confirm. Benefits appear once it is confirmed.",
+      "cancelled": "Purchase cancelled. You have not been charged.",
+      "loading": "Connecting to the store…",
+      "manage": "Manage in the store",
+      "managed": "Subscription managed on {{store}}. Cancel it or request a refund from the store.",
+      "manageUnavailable": "Manage it from your store's subscription settings.",
+      "venueCheckout": "Pay on {{store}}",
+      "errors": {
+        "unavailable": "Store purchases are not available right now.",
+        "failed": "The purchase could not be completed. You have not been charged.",
+        "store_disabled": "Store purchases are not enabled for your account.",
+        "rate_limited": "Too many attempts. Wait a few minutes.",
+        "pending": "The payment is waiting for the store to confirm.",
+        "cancelled": "Purchase cancelled.",
+        "already_subscribed": "You already have an active subscription.",
+        "payments_disabled": "Payments are not enabled.",
+        "not_allowed": "Your account cannot buy right now.",
+        "gateway_error": "The purchase could not be prepared. Please try again."
+      }
+    },
     "intervals": {
       "month": "/ month",
       "quarter": "/ quarter",
@@ -1936,6 +1971,21 @@
         "credits": "Credits"
       },
       "records": "Records",
+      "store": {
+        "title": "Store catalogue (RevenueCat)",
+        "body": "Checks that the Test Store products match the catalogue and that the key has permissions. Products are created in the RevenueCat dashboard (docs/STORE_CATALOG.md).",
+        "check": "Check catalogue",
+        "app": "Test app: {{name}}",
+        "noApp": "There is no Test Store app in the project.",
+        "sdkKey": "Public SDK key",
+        "customers": "Customer read permission",
+        "ok": "OK",
+        "missing": "Missing",
+        "mismatch": "Mismatch",
+        "denied": "No permission",
+        "extra": "Products not in the catalogue: {{list}}",
+        "failed": "Could not query RevenueCat."
+      },
       "promoTitle": "Create promo code",
       "days": "Days",
       "maxUses": "Max uses",
@@ -2328,6 +2378,25 @@
     "place": "Your next place",
     "placeUnavailable": "This place is no longer available.",
     "viewMap": "View on the map"
+  },
+  "travel": {
+    "title": "Travel mode",
+    "description": "Show up in and explore another city's swipe before you arrive. Your real city is never shown.",
+    "city": "Destination city",
+    "days": "Duration",
+    "daysValue": "{{count}} days",
+    "activate": "Turn on travel mode",
+    "active": "Travelling in {{city}} until {{date}}.",
+    "stop": "Back to {{city}}",
+    "upsell": "Included in the Pass, VIP Pass and One-night Pass.",
+    "seePremium": "See Premium",
+    "errors": {
+      "disabled": "Travel mode is not available right now.",
+      "premium_required": "Travel mode is included in the Pass.",
+      "invalid": "Choose a valid city and duration.",
+      "same_city": "Choose a city other than your own.",
+      "network": "Could not save. Please try again."
+    }
   },
   "guide": {
     "nav": {

@@ -116,6 +116,22 @@ const ROLE_ACTION = /^(grant|revoke)_(tester|venue_manager|admin)$/
  * verification reviews, test data and TOTP MFA are real (role admin + aal2 checked by
  * every RPC). Moderation, claims and billing queues use persisted server data.
  */
+const storeCatalogSchema = z.object({
+  testStoreApp: z.object({ id: z.string(), name: z.string() }).nullable(),
+  sdkKeyConfigured: z.boolean(),
+  sdkKeyMatches: z.boolean(),
+  customers: z.enum(['ok', 'denied', 'error']),
+  products: z.array(
+    z.object({
+      code: z.string(),
+      storeId: z.string().nullable(),
+      priceCents: z.number(),
+      status: z.enum(['ok', 'missing', 'mismatch']),
+    }),
+  ),
+  extra: z.array(z.string()),
+})
+
 export function createAdminService(db: Db, base: AdminService): AdminService {
   const service: AdminService = {
     ...createShowcaseAdmin(db),
@@ -123,6 +139,11 @@ export function createAdminService(db: Db, base: AdminService): AdminService {
     mode: 'live',
     setSimulatedRoles() {
       return Promise.reject(new Error('forbidden'))
+    },
+    async storeCatalog() {
+      const { data, failed } = await invokeFunction<unknown>(db, 'store-admin', {})
+      if (failed) throw new Error('store_admin_failed')
+      return storeCatalogSchema.parse(data)
     },
     async createPromoCode(input) {
       return must(

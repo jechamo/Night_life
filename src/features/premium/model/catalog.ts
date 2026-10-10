@@ -173,7 +173,8 @@ export interface Subscription {
   simulated?: boolean
   id: string
   productCode: ProductCode
-  provider: 'stripe' | 'apple' | 'google'
+  /** `test_store` = RevenueCat Test Store (Block 11b); stores manage their own billing. */
+  provider: 'stripe' | 'apple' | 'google' | 'test_store'
   status: SubscriptionStatus
   startedAt: string
   currentPeriodEnd: string

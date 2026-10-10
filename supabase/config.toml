@@ -28,3 +28,9 @@ verify_jwt = false # Stripe signature over the bounded original request body.
 verify_jwt = false # Vault key validated inside the service-only claim RPC.
 [functions.signed-documents]
 verify_jwt = false # requireUser validates the bearer token with Supabase Auth.
+[functions.store]
+verify_jwt = false # requireUser validates the bearer token with Supabase Auth (Block 11b).
+[functions.store-admin]
+verify_jwt = false # requireUser + admin with MFA checked by the store_admin_catalog RPC.
+[functions.revenuecat-webhook]
+verify_jwt = false # RevenueCat Authorization header (REVENUECAT_WEBHOOK_AUTH), never a user JWT.

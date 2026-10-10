@@ -35,3 +35,9 @@ El SBOM Edge no cambia (sin dependencias nuevas en funciones).
 Regenerar ambos inventarios y ejecutar las auditorías al cambiar dependencias.
 Conservar el lockfile principal y las versiones directas Edge verificadas; no
 resolver imports flotantes durante una corrección de seguridad sin comprobar tipos.
+
+Actualización 10/10/2026 (Bloque 11b): `sbom.cdx.json` regenerado (707 componentes) tras
+añadir `@revenuecat/purchases-capacitor@13.7.3` (MIT, PRD 3.5) y su dependencia
+`@revenuecat/purchases-typescript-internal-esm@19.10.0`. `npm audit`: 0. El SBOM Edge no
+cambia: las funciones `store`, `revenuecat-webhook` y `store-admin` usan `fetch` nativo contra
+la API REST v2 de RevenueCat, sin SDK ni dependencias npm nuevas.
