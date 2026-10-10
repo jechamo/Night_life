@@ -17,6 +17,8 @@ de prueba. Desajustes nuevos: D5 (no hay cambio de teléfono) y D6 (OAuth pendie
 descartado: la sección de roles simulados ya solo se muestra con el backend simulado. QR en iPhone:
 Safari/WebKit no expone `BarcodeDetector`; se teclea el código hasta decidir un lector propio o el
 plugin oficial. `npm run check` 545/545 · E2E 60/60.
+D4: el propietario confirma el SMTP de Gmail en Supabase Auth; queda la prueba real AUT-06
+(código de 6 dígitos y plantilla con `{{ .Token }}`).
 
 ## Bloque 11a — App nativa con Capacitor y desbloqueo biométrico — 10/10/2026
 
