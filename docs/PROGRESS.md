@@ -1,5 +1,15 @@
 # Progreso — Nightlife Connect
 
+## Informe funcional y guía de pruebas E2E en real — 10/10/2026
+
+Petición del propietario: inventario de funciones de cliente y de local, sus flujos y una guía
+para probar toda la app en real con los 3 socios. Solo documentación (sin código, migraciones
+ni despliegues): [GUIA_PRUEBAS_E2E.md](./GUIA_PRUEBAS_E2E.md). Estado leído en Supabase con
+consultas de solo lectura. Avisos clave: en `sandbox` solo los testers pueden verificar la edad
+y pagar (toda cuenta nueva necesita rol tester); Veriff TEST caduca el 16/10; 2 de 3 admins sin
+TOTP; desajustes D1-D3 anotados (roles simulados con backend real, texto «12 horas» de la lista
+de invitados, subtítulo del dashboard).
+
 ## Bloque 11a — App nativa con Capacitor y desbloqueo biométrico — 10/10/2026
 
 Plan: [BLOCK11_PLAN.md](./BLOCK11_PLAN.md). `main` actualizada a `09e3ebb` antes de empezar
